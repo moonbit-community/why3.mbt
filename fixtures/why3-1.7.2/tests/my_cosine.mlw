@@ -1,0 +1,65 @@
+module M
+
+  use real.RealInfix
+  use real.Abs
+  use real.Trigonometry
+  use floating_point.Rounding
+  use floating_point.Single
+
+val single_of_real_exact : x:real ->
+  { }
+  single
+  { value result = x }
+
+val add : x:single -> y:single ->
+  { no_overflow NearestTiesToEven ((value x) +. (value y)) }
+  single
+  { value result = round NearestTiesToEven ((value x) +. (value y))}
+
+val sub : x:single -> y:single ->
+  { no_overflow NearestTiesToEven ((value x) -. (value y)) }
+  single
+  { value result = round NearestTiesToEven ((value x) -. (value y))}
+
+val mul : x:single -> y:single ->
+  { no_overflow NearestTiesToEven ((value x) *. (value y)) }
+  single
+  { value result = round NearestTiesToEven ((value x) *. (value y))}
+
+
+lemma method_error
+    "expl:Lemma method_error"
+    #"my_cosine.c" 1 4 111#
+    :
+    "expl:the formula"
+    #"my_cosine.c" 1 24 110#
+    forall x:real.
+    abs x  <=. 0x1p-5 -> abs (1.0 -. x*.x*.0.5 -. cos x) <=. 0x1p-24
+
+let my_cosine "expl:Safety of function my_cosine" #"my_cosine.c" 8 0 153#
+    (x:single) : single =
+{ abs (value x) <=. 0x1p-5 }
+  assert {
+    "expl:user assertion"
+    #"my_cosine.c" 9 13 53#
+    abs (1.0 -. (value x) *. (value x) *. 0.5 -. cos (value x)) <=. 0x1p-24
+  };
+  ("expl:check FP overflow for -"
+   #"my_cosine.c" 10 9 28#
+  sub (single_of_real_exact 1.0)
+      ("expl:check FP overflow for *"
+       #"my_cosine.c" 10 16 28#
+       mul("expl:check FP overflow for second *"
+           #"my_cosine.c" 10 16 21#
+           mul x x) (single_of_real_exact 0.5)))
+{ "expl:post-condition"
+  #"my_cosine.c" 7 12 46#
+  abs (value result -. cos (value x)) <=. 0x1p-23 }
+
+end
+
+(*
+Local Variables:
+compile-command: "../bin/why3ide.byte my_cosine.mlw"
+End:
+*)

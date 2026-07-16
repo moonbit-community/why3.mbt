@@ -1,0 +1,22 @@
+module M
+
+use int.Int
+use ref.Ref
+
+exception Break
+
+let f (n : int) : int ensures { result <= 10 }
+= let i = ref n in
+  try
+    while (!i > 0) do
+      invariant { true }
+      variant { !i }
+      if (!i <= 10) then raise Break;
+      i := !i - 1
+    done
+  with Break -> ()
+  end;
+  !i
+
+end
+

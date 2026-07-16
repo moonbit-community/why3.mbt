@@ -1,0 +1,9 @@
+
+
+module M
+
+  use map.Map
+
+  let f (x:map int int) : int = x[0]
+
+end

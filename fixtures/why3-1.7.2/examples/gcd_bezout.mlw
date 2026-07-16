@@ -1,0 +1,34 @@
+
+(** {1 Greatest common divisor, with Bézout coefficients} *)
+
+module GcdBezout
+
+  use int.Int
+  use int.ComputerDivision
+  use number.Gcd
+  use ref.Ref
+
+  let gcd (x y: int) : (result: int, ghost a: int, ghost b: int)
+    requires { x >= 0 /\ y >= 0 }
+    ensures  { result = gcd x y }
+    ensures  { a*x + b*y = result }
+    =
+    let x = ref x in let y = ref y in
+    label Pre in
+    let ghost a = ref 1 in let ghost b = ref 0 in
+    let ghost c = ref 0 in let ghost d = ref 1 in
+    while !y > 0 do
+       invariant { !x >= 0 /\ !y >= 0 }
+       invariant { gcd !x !y = gcd (!x at Pre) (!y at Pre) }
+       invariant { !a * (!x at Pre) + !b * (!y at Pre) = !x }
+       invariant { !c * (!x at Pre) + !d * (!y at Pre) = !y }
+       variant   { !y }
+       let r = mod !x !y in let ghost q = div !x !y in
+       x := !y; y := r;
+       let ghost ta = !a in let ghost tb = !b in
+       a := !c; b := !d;
+       c := ta - !c * q; d := tb - !d * q;
+    done;
+    !x, !a, !b
+
+end

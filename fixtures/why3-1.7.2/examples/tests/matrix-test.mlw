@@ -1,0 +1,16 @@
+module TestMatrix
+
+  use int.Int
+  use matrix.Matrix
+
+  let test1 () =
+    let m1 = make 3 3 2 in
+    assert { m1.elts 0 0 = 2 };
+    set m1 0 0 4;
+    assert { m1.elts 0 0 = 4 };
+    assert { m1.elts 0 1 = 2 };
+    assert { m1.elts 1 0 = 2 };
+    ()
+
+end
+

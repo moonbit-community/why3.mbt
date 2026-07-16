@@ -1,0 +1,12 @@
+module T
+
+  use int.Int
+
+  exception MyExc
+
+  (* g can raise MyExc *)
+
+  let rec f (_x: int) : int raises {MyExc} = raise MyExc
+  with    g (x : int) : int raises {MyExc} = f x
+
+end

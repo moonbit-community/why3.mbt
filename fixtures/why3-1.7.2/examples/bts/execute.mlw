@@ -1,0 +1,15 @@
+module Test
+
+    use ref.Ref
+
+    let foo () =
+        let (_a1, _a2) = (ref 0, ref 0) in
+        ()
+
+(*
+
+why3 execute execute.mlw Test.foo
+
+*)
+
+end

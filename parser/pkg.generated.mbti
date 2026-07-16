@@ -1,0 +1,513 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonbit-community/why3/parser"
+
+import {
+  "moonbitlang/core/bigint",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn parse_decl(BytesView, filename? : BytesView) -> Decl raise ParseError
+
+pub fn parse_decl_text(StringView, filename? : BytesView) -> Decl raise ParseError
+
+pub fn parse_expr(BytesView, filename? : BytesView) -> Expr raise ParseError
+
+pub fn parse_expr_text(StringView, filename? : BytesView) -> Expr raise ParseError
+
+pub fn parse_list_ident(BytesView, filename? : BytesView) -> Array[Ident] raise ParseError
+
+pub fn parse_list_ident_text(StringView, filename? : BytesView) -> Array[Ident] raise ParseError
+
+pub fn parse_list_qualid(BytesView, filename? : BytesView) -> Array[QualId] raise ParseError
+
+pub fn parse_list_qualid_text(StringView, filename? : BytesView) -> Array[QualId] raise ParseError
+
+pub fn parse_mlw_file(BytesView, filename? : BytesView) -> MlwFile raise ParseError
+
+pub fn parse_mlw_file_text(StringView, filename? : BytesView) -> MlwFile raise ParseError
+
+pub fn parse_qualid(BytesView, filename? : BytesView) -> QualId raise ParseError
+
+pub fn parse_qualid_text(StringView, filename? : BytesView) -> QualId raise ParseError
+
+pub fn parse_term(BytesView, filename? : BytesView) -> Term raise ParseError
+
+pub fn parse_term_list(BytesView, filename? : BytesView) -> Array[Term] raise ParseError
+
+pub fn parse_term_list_text(StringView, filename? : BytesView) -> Array[Term] raise ParseError
+
+pub fn parse_term_text(StringView, filename? : BytesView) -> Term raise ParseError
+
+// Errors
+pub(all) suberror ParseError {
+  ParseError(ParseDiagnostic)
+} derive(Eq, @debug.Debug)
+
+// Types and methods
+pub(all) struct AlgebraicCase {
+  span : Span
+  ident : Ident
+  params : Array[Param]
+} derive(Eq, @debug.Debug)
+
+pub(all) enum AssertionKind {
+  Assert
+  Assume
+  Check
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Assignment {
+  target : Expr
+  field : QualId?
+  value : Expr
+} derive(Eq, @debug.Debug)
+
+pub(all) enum Attribute {
+  Text(Bytes)
+  Position(Span)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum BinaryLogicOp {
+  DTand
+  DTandAsym
+  DTor
+  DTorAsym
+  DTimplies
+  DTiff
+  DTby
+  DTso
+} derive(Eq, @debug.Debug)
+
+pub struct Binder {
+  span : Span
+  ident : Ident?
+  ghost : Bool
+  binder_type : Pty?
+} derive(Eq, @debug.Debug)
+
+pub(all) enum CloneSubstitution {
+  CStsym(QualId, Array[Ident], Pty)
+  CSfsym(QualId, QualId)
+  CSpsym(QualId, QualId)
+  CSvsym(QualId, QualId)
+  CSxsym(QualId, QualId)
+  CSprop(PropositionKind)
+  CSaxiom(QualId)
+  CSlemma(QualId)
+  CSgoal(QualId)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum Constant {
+  ConstInt(IntConstant)
+  ConstReal(RealConstant)
+  ConstStr(Bytes)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum Decl {
+  Dtype(Array[TypeDecl])
+  Dlogic(Array[LogicDecl])
+  Dind(InductiveSign, Array[InductiveDecl])
+  Dprop(PropositionKind, Ident, Term)
+  Dlet(Ident, Bool, RoutineKind, Expr)
+  Drec(Array[FunctionDef])
+  Dexn(Ident, Pty, Mask)
+  Dmeta(Ident, Array[MetaArg])
+  Dcloneexport(Span, QualId, Array[CloneSubstitution])
+  Duseexport(QualId)
+  Dcloneimport(Span, Bool, QualId, Ident?, Array[CloneSubstitution])
+  Duseimport(Span, Bool, Array[(QualId, Ident?)])
+  Dimport(QualId)
+  Dscope(Span, Bool, Ident, Array[Decl])
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ExceptionBranch {
+  exception : QualId
+  pattern : Pattern?
+  body : Expr
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ExceptionalPostCondition {
+  span : Span
+  branches : Array[(QualId, (Pattern, Term)?)]
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Expr {
+  desc : ExprDesc
+  span : Span
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ExprDesc {
+  Eref
+  Etrue
+  Efalse
+  Econst(Constant)
+  Eident(QualId)
+  Easref(QualId)
+  Eidapp(QualId, Array[Expr])
+  Eapply(Expr, Expr)
+  Einfix(Expr, Ident, Expr)
+  Einnfix(Expr, Ident, Expr)
+  Elet(Ident, Bool, RoutineKind, Expr, Expr)
+  Erec(Array[FunctionDef], Expr)
+  Efun(Array[Binder], Pty?, Pattern, Mask, Spec, Expr)
+  Eany(Array[Param], RoutineKind, Pty?, Pattern, Mask, Spec)
+  Etuple(Array[Expr])
+  Erecord(Array[(QualId, Expr)])
+  Eupdate(Expr, Array[(QualId, Expr)])
+  Eassign(Array[Assignment])
+  Esequence(Expr, Expr)
+  Eif(Expr, Expr, Expr)
+  Ewhile(Expr, Invariant, Variant, Expr)
+  Eand(Expr, Expr)
+  Eor(Expr, Expr)
+  Enot(Expr)
+  Ematch(Expr, Array[RegularBranch], Array[ExceptionBranch])
+  Eabsurd
+  Epure(Term)
+  Eidpur(QualId)
+  Eraise(QualId, Expr?)
+  Eexn(Ident, Pty, Mask, Expr)
+  Eoptexn(Ident, Mask, Expr)
+  Efor(Ident, Expr, ForDirection, Expr, Invariant, Expr)
+  Eassert(AssertionKind, Term)
+  Escope(QualId, Expr)
+  Elabel(Ident, Expr)
+  Ecast(Expr, Pty)
+  Eghost(Expr)
+  Eattr(Attribute, Expr)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Field {
+  span : Span
+  ident : Ident
+  field_type : Pty
+  mutable : Bool
+  ghost : Bool
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ForDirection {
+  To
+  DownTo
+} derive(Eq, @debug.Debug)
+
+pub(all) struct FunctionDef {
+  name : Ident
+  ghost : Bool
+  kind : RoutineKind
+  binders : Array[Binder]
+  return_type : Pty?
+  return_pattern : Pattern
+  mask : Mask
+  spec : Spec
+  body : Expr
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Ident {
+  name : Bytes
+  attributes : Array[Attribute]
+  span : Span
+} derive(Eq, @debug.Debug)
+
+pub(all) struct InductiveCase {
+  span : Span
+  ident : Ident
+  body : Term
+} derive(Eq, @debug.Debug)
+
+pub(all) struct InductiveDecl {
+  span : Span
+  ident : Ident
+  params : Array[Param]
+  cases : Array[InductiveCase]
+} derive(Eq, @debug.Debug)
+
+pub(all) enum InductiveSign {
+  Ind
+  Coind
+} derive(Eq, @debug.Debug)
+
+pub(all) struct IntConstant {
+  kind : IntLiteralKind
+  value : @bigint.BigInt
+} derive(Eq, @debug.Debug)
+
+pub(all) enum IntLiteralKind {
+  ILitUnk
+  ILitDec
+  ILitHex
+  ILitOct
+  ILitBin
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Invariant {
+  terms : Array[Term]
+} derive(Eq, @debug.Debug)
+
+pub(all) struct LogicDecl {
+  span : Span
+  ident : Ident
+  params : Array[Param]
+  return_type : Pty?
+  definition : Term?
+} derive(Eq, @debug.Debug)
+
+pub(all) enum Mask {
+  MaskVisible
+  MaskTuple(Array[Mask])
+  MaskGhost
+} derive(Eq, @debug.Debug)
+
+pub(all) enum MetaArg {
+  Mty(Pty)
+  Mfs(QualId)
+  Mps(QualId)
+  Max(QualId)
+  Mlm(QualId)
+  Mgl(QualId)
+  Mval(QualId)
+  Mstr(Bytes)
+  Mint(Int64)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum MlwFile {
+  Modules(Array[MlwModule])
+  Decls(Array[Decl])
+} derive(Eq, @debug.Debug)
+pub fn MlwFile::empty() -> Self
+
+pub(all) struct MlwModule {
+  kind : ModuleKind
+  name : Ident
+  interface : QualId?
+  declarations : Array[Decl]
+  span : Span
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ModuleKind {
+  Theory
+  Module
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Param {
+  span : Span
+  ident : Ident?
+  ghost : Bool
+  param_type : Pty
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ParseDiagnostic {
+  kind : ParseErrorKind
+  span : Span
+  actual : String?
+  expected : Array[String]
+  message : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ParseErrorKind {
+  InvalidUtf16
+  IllegalCharacter
+  UnterminatedComment
+  UnterminatedString
+  IllegalEscape
+  IllegalStringByte
+  InvalidNumericLiteral
+  InvalidPositionDirective
+  UnexpectedToken
+  UnexpectedEof
+  NestingTooDeep
+  NumericOverflow
+  DuplicateVariant
+  InvalidAssignment
+  InvalidParallelAssignment
+  GhostPartialConflict
+  InvalidPartialDeclaration
+  DoubleReference
+  AnonymousReference
+  UndeterminedParameterType
+  IllegalKindQualifier
+  RestrictedAnySpec
+  ReservedCoreIdentifier
+  UnsupportedEpsilon
+  NestedModule
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Pattern {
+  desc : PatternDesc
+  span : Span
+} derive(Eq, @debug.Debug)
+
+pub(all) enum PatternDesc {
+  Pwild
+  Pvar(Ident)
+  Papp(QualId, Array[Pattern])
+  Prec(Array[(QualId, Pattern)])
+  Ptuple(Array[Pattern])
+  Pas(Pattern, Ident, Bool)
+  Por(Pattern, Pattern)
+  Pcast(Pattern, Pty)
+  Pscope(QualId, Pattern)
+  Pparen(Pattern)
+  Pghost(Pattern)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct PostCondition {
+  span : Span
+  branches : Array[(Pattern, Term)]
+} derive(Eq, @debug.Debug)
+
+pub(all) enum PropositionKind {
+  Plemma
+  Paxiom
+  Pgoal
+} derive(Eq, @debug.Debug)
+
+pub(all) enum Pty {
+  PTtyvar(Ident)
+  PTtyapp(QualId, Array[Pty])
+  PTtuple(Array[Pty])
+  PTref(Array[Pty])
+  PTarrow(Pty, Pty)
+  PTscope(QualId, Pty)
+  PTparen(Pty)
+  PTpure(Pty)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum QualId {
+  Qident(Ident)
+  Qdot(QualId, Ident)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum Quantifier {
+  DTforall
+  DTexists
+  DTlambda
+} derive(Eq, @debug.Debug)
+
+pub(all) struct RealConstant {
+  kind : RealLiteralKind
+  value : RealValue
+} derive(Eq, @debug.Debug)
+
+pub(all) enum RealLiteralKind {
+  RLitUnk
+  RLitDec(Int64)
+  RLitHex(Int64)
+} derive(Eq, @debug.Debug)
+
+pub struct RealValue {
+  significand : @bigint.BigInt
+  pow2 : @bigint.BigInt
+  pow5 : @bigint.BigInt
+} derive(Eq, @debug.Debug)
+pub fn RealValue::pow2(Self) -> @bigint.BigInt
+pub fn RealValue::pow5(Self) -> @bigint.BigInt
+pub fn RealValue::significand(Self) -> @bigint.BigInt
+
+pub(all) struct RegularBranch {
+  pattern : Pattern
+  body : Expr
+} derive(Eq, @debug.Debug)
+
+pub(all) enum RoutineKind {
+  RKnone
+  RKlocal
+  RKfunc
+  RKpred
+  RKlemma
+} derive(Eq, @debug.Debug)
+
+pub(all) struct SourcePos {
+  filename : Bytes
+  byte_offset : Int
+  line : Int64
+  column : Int64
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Span {
+  start : SourcePos
+  end : SourcePos
+} derive(Eq, @debug.Debug)
+pub fn Span::empty(SourcePos) -> Self
+pub fn Span::is_empty(Self) -> Bool
+pub fn Span::join(Self, Self) -> Self
+
+pub(all) struct Spec {
+  preconditions : Array[Term]
+  postconditions : Array[PostCondition]
+  exceptional_postconditions : Array[ExceptionalPostCondition]
+  reads : Array[QualId]
+  writes : Array[Term]
+  aliases : Array[(Term, Term)]
+  variant : Variant
+  check_reads_writes : Bool
+  diverges : Bool
+  partial : Bool
+} derive(Eq, @debug.Debug)
+pub fn Spec::empty() -> Self
+
+pub(all) struct Term {
+  desc : TermDesc
+  span : Span
+} derive(Eq, @debug.Debug)
+
+pub(all) enum TermDesc {
+  Ttrue
+  Tfalse
+  Tconst(Constant)
+  Tident(QualId)
+  Tasref(QualId)
+  Tidapp(QualId, Array[Term])
+  Tapply(Term, Term)
+  Tinfix(Term, Ident, Term)
+  Tinnfix(Term, Ident, Term)
+  Tbinop(Term, BinaryLogicOp, Term)
+  Tbinnop(Term, BinaryLogicOp, Term)
+  Tnot(Term)
+  Tif(Term, Term, Term)
+  Tquant(Quantifier, Array[Binder], Array[Array[Term]], Term)
+  Teps(Ident, Pty, Term)
+  Tattr(Attribute, Term)
+  Tlet(Ident, Term, Term)
+  Tcase(Term, Array[(Pattern, Term)])
+  Tcast(Term, Pty)
+  Ttuple(Array[Term])
+  Trecord(Array[(QualId, Term)])
+  Tupdate(Term, Array[(QualId, Term)])
+  Tscope(QualId, Term)
+  Tat(Term, Ident)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct TypeDecl {
+  span : Span
+  ident : Ident
+  params : Array[Ident]
+  visibility : Visibility
+  mutable : Bool
+  invariant : Invariant
+  witness : Expr?
+  definition : TypeDef
+} derive(Eq, @debug.Debug)
+
+pub(all) enum TypeDef {
+  TDalias(Pty)
+  TDalgebraic(Array[AlgebraicCase])
+  TDrecord(Array[Field])
+  TDrange(@bigint.BigInt, @bigint.BigInt)
+  TDfloat(Int64, Int64)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Variant {
+  items : Array[(Term, QualId?)]
+} derive(Eq, @debug.Debug)
+
+pub(all) enum Visibility {
+  Public
+  Private
+  Abstract
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits
+

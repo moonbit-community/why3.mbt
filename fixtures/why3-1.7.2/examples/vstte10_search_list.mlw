@@ -1,0 +1,67 @@
+(*
+   VSTTE'10 competition http://www.macs.hw.ac.uk/vstte10/Competition.html
+   Problem 3: searching a linked list
+
+   Author: Jean-Christophe Filliatre (CNRS)
+   Tool:   Why3 (see http://why3.lri.fr/)
+*)
+
+module SearchingALinkedList
+
+  use int.Int
+  use option.Option
+  use list.List
+  use list.Length
+  use list.Nth
+
+  predicate zero_at (l: list int) (i: int) =
+    nth i l = Some 0 /\ forall j. 0 <= j < i -> nth j l <> Some 0
+
+  predicate no_zero (l: list int) =
+    forall j. 0 <= j < length l -> nth j l <> Some 0
+
+  let rec search (i: int) (l: list int) : int
+    variant { l }
+    ensures { (i <= result < i + length l /\ zero_at l (result - i)) \/
+              (result = i + length l /\ no_zero l) }
+  = match l with
+    | Nil      -> i
+    | Cons x r -> if x = 0 then i else search (i+1) r
+    end
+
+  let search_list (l: list int) : int
+    ensures { (0 <= result < length l /\ zero_at l result) \/
+              (result = length l /\ no_zero l) }
+  = search 0 l
+
+
+  (* imperative version, with a loop *)
+
+  use ref.Ref
+  use list.HdTl
+
+  let head (l: list 'a) : 'a
+    requires { l <> Nil } ensures { hd l = Some result }
+  = match l with Nil -> absurd | Cons h _ -> h end
+
+  let tail (l: list 'a) : list 'a
+    requires { l <> Nil } ensures { tl l = Some result }
+  = match l with Nil -> absurd | Cons _ t -> t end
+
+  let search_loop (l: list int) : int
+    ensures { (0 <= result < length l /\ zero_at l result) \/
+              (result = length l /\ no_zero l) }
+  = let i = ref 0 in
+    let s = ref l in
+    while not (is_nil !s) && head !s <> 0 do
+      invariant {
+        0 <= !i /\ !i + length !s = length l /\
+        (forall j. 0 <= j -> nth j !s = nth (!i + j) l) /\
+         forall j. 0 <= j < !i -> nth j l <> Some 0 }
+      variant { !s }
+      i := !i + 1;
+      s := tail !s
+    done;
+    !i
+
+end

@@ -1,0 +1,414 @@
+
+theory FibonacciTest
+
+  use int.Fibonacci
+
+  lemma isfib_2_1 : fib 2 = 1
+  lemma isfib_6_8 : fib 6 = 8
+
+  lemma not_isfib_2_2 : fib 2 <> 2
+
+end
+
+module FibonacciLinear
+
+  use int.Fibonacci
+  use int.Int
+  use ref.Ref
+
+  let fib (n:int) : int
+    requires { n >= 0 }
+    ensures { fib n = result}
+  = let y = ref 0 in
+    let x = ref 1 in
+    for i = 0 to n - 1 do
+      invariant { 0 <= i <= n /\ fib (i+1) = !x /\ fib i = !y }
+      let aux = !y in
+      y := !x;
+      x := !x + aux
+    done;
+    !y
+
+end
+
+module FibonacciTailRecList
+
+  use int.Fibonacci
+  use int.Int
+  use int.Power
+  use list.List
+  use list.Mem
+
+  let rec ghost function sum_fib (l:list int) : int
+    requires { forall n. mem n l -> n >= 0 }
+  =
+    match l with
+    | Nil -> 0
+    | Cons x r -> fib x + sum_fib r
+    end
+
+  let rec ghost function sum_pow (l:list int) : int
+    requires { forall n. mem n l -> n >= 0 }
+    ensures { result >= 0 }
+  =
+    match l with
+    | Nil -> 0
+    | Cons x r -> assert { mem x l };
+                  assert { forall n. mem n r -> mem n l };
+                  power 2 x + sum_pow r
+    end
+
+  lemma pow_pos : forall x. x >= 0 -> power 3 x > 0
+
+  let rec sum_fib_acc (acc:int) (l:list int) : int
+    requires { forall n. mem n l -> n >= 0 }
+    variant { sum_pow l }
+    ensures { result = acc + sum_fib l }
+  = match l with
+    | Nil -> acc
+    | Cons n r ->
+      assert { n >= 0 };
+      if n <= 1 then sum_fib_acc (acc + n) r
+      else begin
+      let l1 = Cons (n-2) r in
+      assert { forall u. mem u l1 -> u >= 0 };
+      let l2 = Cons (n-1) l1 in
+      assert { forall u. mem u l2 -> u >= 0 };
+      sum_fib_acc acc l2
+      end
+    end
+
+  let fib (n:int) : int
+    requires { n >= 0 }
+    ensures { result = fib n }
+  =
+    sum_fib_acc 0 (Cons n Nil)
+
+end
+
+(** {2 Recursive version, using ghost code} *)
+
+module FibRecGhost
+
+  use int.Fibonacci
+  use int.Int
+
+  let rec fib_aux (ghost n: int) (a b k: int) : int
+    requires { k >= 0 }
+    requires { 0 <= n && a = fib n && b = fib (n+1) }
+    variant  { k }
+    ensures  { result = fib (n+k) }
+  = if k = 0 then a else fib_aux (n+1) b (a+b) (k-1)
+
+  let fib (n: int) : int
+    requires { 0 <= n }
+    ensures  { result = fib n }
+  = fib_aux 0 0 1 n
+
+  let test42 () = fib 42
+
+  exception BenchFailure
+
+  let bench () raises { BenchFailure } =
+    if test42 () <> 267914296 then raise BenchFailure
+
+end
+
+(** {2 Recursive version, without ghost code} *)
+
+module FibRecNoGhost
+
+  use int.Fibonacci
+  use int.Int
+
+  let rec fib_aux (a b k: int) : int
+    requires { k >= 0 }
+    requires { exists n: int. 0 <= n && a = fib n && b = fib (n+1) }
+    variant  { k }
+    ensures  { forall n: int. 0 <= n && a = fib n && b = fib (n+1) ->
+                              result = fib (n+k) }
+  = if k = 0 then a else fib_aux b (a+b) (k-1)
+
+  let fib (n: int) : int
+    requires { 0 <= n }
+    ensures  { result = fib n }
+  = fib_aux 0 1 n
+
+end
+
+module SmallestFibAbove
+
+  use int.Fibonacci
+  use int.Int
+  use int.MinMax
+  use ref.Ref
+
+  let smallest_fib_above (x: int) : int
+    requires { 0 <= x }
+    ensures  { exists k. 0 <= k /\ fib k <= x < fib (k+1) = result }
+  =
+    let a = ref 0 in
+    let b = ref 1 in
+    let ghost k = ref 0 in
+    while !b <= x do
+      invariant { 0 <= !k /\ !a = fib !k <= x /\ !b = fib (!k+1) }
+      invariant { 0 <= !a /\ 1 <= !b }
+      variant   { 2*x - (!a + !b) }
+      let f = !a + !b in
+      a := !b;
+      b := f;
+      k := !k + 1
+   done;
+   !b
+
+end
+
+(**
+Zeckendorf's theorem states that every positive integer can be
+represented uniquely as the sum of one or more distinct Fibonacci
+numbers in such a way that the sum does not include any two
+consecutive Fibonacci numbers.
+
+Cf https://en.wikipedia.org/wiki/Zeckendorf%27s_theorem
+*)
+
+module Zeckendorf
+
+  use int.Fibonacci
+  use int.Int
+  use int.MinMax
+  use ref.Ref
+  use list.List
+  use SmallestFibAbove
+
+  function sum (l: list int) : int = match l with
+  | Nil -> 0
+  | Cons k r -> fib k + sum r
+  end
+
+  (* sorted in increasing order, above min, and non consecutive *)
+  predicate wf (min: int) (l: list int) = match l with
+  | Nil -> true
+  | Cons k r -> min <= k /\ wf (k + 2) r
+  end
+
+  let rec lemma fib_nonneg (n: int) : unit
+    requires { 0 <= n }
+    ensures  { 0 <= fib n }
+    variant  { n }
+  = if n > 1 then begin fib_nonneg (n-2); fib_nonneg (n-1) end
+
+  let rec lemma fib_increasing (k1 k2: int) : unit
+    requires { 0 <= k1 <= k2 }
+    ensures  { fib k1 <= fib k2 }
+    variant  { k2 - k1 }
+  = if k1 < k2 then fib_increasing (k1+1) k2
+
+  let greatest_fib (x: int) : (int, int)
+    requires { 0 < x }
+    ensures  { let k, fk = result in
+               2 <= k /\ 1 <= fk = fib k <= x < fib (k + 1) }
+  =
+    let a = ref 1 in
+    let b = ref 1 in
+    let k = ref 1 in
+    while !b <= x do
+      invariant { 1 <= !k /\ !a = fib !k <= x /\ !b = fib (!k + 1) }
+      invariant { 1 <= !a /\ 1 <= !b }
+      variant   { 2*x - (!a + !b) }
+      let f = !a + !b in
+      a := !b;
+      b := f;
+      k := !k + 1
+   done;
+   !k, !a
+
+  let zeckendorf (n: int) : list int
+    requires { 0 <= n }
+    ensures  { wf 2 result }
+    ensures  { n = sum result }
+  =
+    let x = ref n in
+    let l = ref Nil in
+    while !x > 0 do
+      invariant { 0 <= !x <= n }
+      invariant { wf 2 !l }
+      invariant { !x + sum !l = n }
+      invariant { match !l with Nil -> true | Cons k _ -> !x < fib (k-1) end }
+      variant   { !x }
+      let k, fk = greatest_fib !x in
+      x := !x - fk;
+      l := Cons k !l
+    done;
+    !l
+
+  (* a more efficient, linear implementation *)
+
+  let zeckendorf_fast (n: int) : list int
+    requires { 0 <= n }
+    ensures  { wf 2 result }
+    ensures  { n = sum result }
+  =
+    if n = 0 then Nil else
+    let a = ref 1 in
+    let b = ref 1 in
+    let k = ref 1 in
+    while !b <= n do
+      invariant { 1 <= !k /\ !a = fib !k <= n /\ !b = fib (!k + 1) }
+      invariant { 1 <= !a /\ 1 <= !b }
+      variant   { 2*n - (!a + !b) }
+      let f = !a + !b in
+      a := !b;
+      b := f;
+      k := !k + 1
+    done;
+    assert { 2 <= !k /\ 1 <= !a = fib !k <= n < fib (!k + 1) = !b };
+    let l = ref (Cons !k Nil) in
+    let x = ref (n - !a) in
+    while !x > 0 do
+      invariant { 1 <= !k /\ !a = fib !k <= n /\ !x < !b = fib (!k + 1) }
+      invariant { 1 <= !a /\ 1 <= !b }
+      invariant { 0 <= !x <= n }
+      invariant { wf 2 !l }
+      invariant { !x + sum !l = n }
+      invariant { match !l with Nil -> true | Cons k _ -> !x < fib (k-1) end }
+      variant   { !k }
+      if !a <= !x then begin
+        x := !x - !a;
+        l := Cons !k !l
+      end;
+      k := !k - 1;
+      let tmp = !b - !a in
+      b := !a;
+      a := tmp
+   done;
+   !l
+
+  (* unicity proof *)
+
+  function snoc (l:list int) (x:int) : list int = match l with
+    | Nil -> Cons x Nil
+    | Cons y q -> Cons y (snoc q x)
+    end
+
+  let rec lemma zeckendorf_unique (l1 l2:list int) : unit
+    requires { wf 2 l1 /\ wf 2 l2 }
+    requires { sum l1 = sum l2 }
+    ensures { l1 = l2 }
+    variant { sum l1 }
+  = let rec decomp (k acc:int) (lc lb:list int) : (x: int, p: list int)
+      requires { wf k lc }
+      requires { k >= 2 /\ lc <> Nil }
+      requires { 0 <= acc = sum lb - sum lc < fib (k-1) }
+      ensures { fib x <= sum lb = acc + fib x + sum p < fib (x+1) }
+      ensures { wf k p /\ x >= k /\ lc = snoc p x }
+      variant { lc }
+    = match lc with
+      | Nil -> absurd
+      | Cons x Nil -> x,Nil
+      | Cons x q -> let y,p = decomp (x+2) (acc+fib x) q lb in y,Cons x p
+      end in
+    match l1 , l2 with
+    | Nil , Nil -> ()
+    | Nil , l | l , Nil -> let _ = decomp 2 0 l l in absurd
+    | _ , _ -> let _,q1 = decomp 2 0 l1 l1 in
+      let _,q2 = decomp 2 0 l2 l2 in
+      zeckendorf_unique q1 q2
+    end
+
+end
+
+(** {2 2x2 integer matrices} *)
+
+theory Mat22
+
+  use int.Int
+
+  type t = { a11: int; a12: int; a21: int; a22: int }
+
+  constant id : t = { a11 = 1; a12 = 0; a21 = 0; a22 = 1 }
+
+  function mult (x: t) (y: t) : t =
+    {
+    a11 = x.a11 * y.a11 + x.a12 * y.a21; a12 = x.a11 * y.a12 + x.a12 * y.a22;
+    a21 = x.a21 * y.a11 + x.a22 * y.a21; a22 = x.a21 * y.a12 + x.a22 * y.a22;
+    }
+
+  clone export
+    int.Exponentiation with
+      type t = t, function one = id, function (*) = mult,
+      goal Assoc, goal Unit_def_l, goal Unit_def_r,
+      axiom . (* FIXME: replace with "goal" and prove *)
+
+end
+
+module FibonacciLogarithmic
+
+  use int.Int
+  use int.Fibonacci
+  use int.ComputerDivision
+  use Mat22
+
+  val constant m1110 : t
+    ensures { result = { a11 = 1; a12 = 1;
+                         a21 = 1; a22 = 0 } }
+
+  (* computes ((1 1) (1 0))^n in O(log(n)) time
+
+     since it is a matrix of the shape ((a+b b) (b a)),
+     we only return the pair (a, b) *)
+
+  let rec logfib (n:int) variant { n }
+    requires { n >= 0 }
+    ensures  { let a, b = result in
+      power m1110 n = { a11 = a+b; a12 = b; a21 = b; a22 = a } }
+  = if n = 0 then
+      1, 0
+    else begin
+      assert { 0 <= div n 2 };
+      let a, b = logfib (div n 2) in
+      let c = a + b in
+      if mod n 2 = 0 then
+        begin
+        assert { 2 * (div n 2) = (div n 2) + (div n 2) };
+        a*a+ b*b, b*(a + c)
+        end
+      else
+        begin
+        assert { 2 * (div n 2) + 1 = (div n 2) + (div n 2) + 1 };
+        b*(a + c), c*c + b*b
+        end
+    end
+
+  (* by induction, we easily prove that
+
+     (1 1)^n = (F(n+1) F(n)  )
+     (1 0)     (F(n)   F(n-1))
+
+    thus, we can compute F(n) in O(log(n)) using funtion logfib above
+  *)
+
+  let rec lemma fib_m (n: int)
+    requires { n >= 0 }
+    variant { n }
+    ensures { let p = power m1110 n in fib (n+1) = p.a11 /\ fib n = p.a21 }
+  = if n = 0 then () else fib_m (n-1)
+
+  let fibo n requires { n >= 0 } ensures { result = fib n } =
+    let _, b = logfib n in b
+
+
+  let test0 () = fibo 0
+  let test1 () = fibo 1
+  let test7 () = fibo 7
+  let test42 () = fibo 42
+  let test2014 () = fibo 2014
+
+  exception BenchFailure
+
+  let bench () raises { BenchFailure } =
+    if test42 () <> 267914296 then raise BenchFailure;
+    if test2014 () <> 3561413997540486142674781564382874188700994538849211456995042891654110985470076818421080236961243875711537543388676277339875963824466334432403730750376906026741819889036464401788232213002522934897299928844192803507157647764542466327613134605502785287441134627457615461304177503249289874066244145666889138852687147544158443155204157950294129177785119464446668374163746700969372438526182906768143740891051274219441912520127
+    then raise BenchFailure
+
+end

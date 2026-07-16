@@ -1,0 +1,8 @@
+module M
+
+  use ref.Ref
+  use list.List
+
+  val r : ref (list 'a)
+
+end

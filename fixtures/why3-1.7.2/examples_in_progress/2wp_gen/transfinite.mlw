@@ -1,0 +1,544 @@
+
+(* Definition and lemmas about transfinite sequences and trees,
+   formalized by chain extensions. *)
+
+(* Few Definitions. *)
+module ExtensionDef
+
+  use ho_set.Set
+  use ho_set.SetBigOps
+  use order.Chain
+
+  (* Transfinite extensions of a base chain [chb] respectively to an order [o],
+     and a successor relation [succ]:
+     . [chb] is reachable
+     . If a chain [ch] is reachable, then for all [x] successor of [ch],
+       [ch+{x}] is reachable.
+     . If a we have a sequence (a chain) of reachable chains,
+       then their limit (=union|supremum) is reachable as well. *)
+  inductive tr_ext (erel 'a) (rel (set 'a) 'a) (_ _:set 'a) =
+    | Ext_base : forall o succ,chb:set 'a. tr_ext o succ chb chb
+    | Ext_succ : forall o succ chb ch,x:'a.
+      tr_ext o succ chb ch /\ succ ch x -> tr_ext o succ chb (add ch x)
+    | Ext_sup : forall o succ chb,chh:set (set 'a).
+      chain (subchain o) chh /\ inhabited chh /\
+      (forall ch. chh ch -> tr_ext o succ chb ch) ->
+      tr_ext o succ chb (bigunion chh)
+
+  (* Caracterise the successor relations compatible with
+     transfinite extension. *)
+  predicate tr_succ (o:erel 'a) (succ:rel (set 'a) 'a) =
+    forall h x. succ h x -> upper_bound o h x
+
+  (* Caracterise the transfinite extensions of h1
+     that are reached deterministically by succ. *)
+  inductive tr_ext_det (erel 'a) (rel (set 'a) 'a) (_ _:set 'a) =
+    | DExt_base : forall o succ,chb:set 'a. tr_ext_det o succ chb chb
+    | DExt_succ : forall o succ chb ch,x:'a.
+      tr_ext_det o succ chb ch /\ det_related succ ch /\ succ ch x ->
+      tr_ext_det o succ chb (add ch x)
+    | DExt_sup : forall o succ chb,chh:set (set 'a).
+      chain (subchain o) chh /\ inhabited chh /\
+      (forall ch. chh ch -> tr_ext_det o succ chb ch) ->
+      tr_ext_det o succ chb (bigunion chh)
+
+  (* Equivalent criterion for deterministic reach. *)
+  predicate det_criterion (o:erel 'a) (succ:rel (set 'a) 'a) (h1 h2:set 'a) =
+    forall h. subchain o h1 h /\ subchain o h h2 /\ h <> h2 -> det_related succ h
+
+end
+
+(* Few simple lemmas on general extensions (e.g transfinite trees) *)
+module Extension "W:non_conservative_extension:N" (* => ExtensionProof *)
+
+  use order.Chain
+  use ho_set.Set
+  use ho_set.SetBigOps
+  use export ExtensionDef
+
+  (* Transfinite extension indeed produces extensions. *)
+  axiom tr_ext_compare : forall o succ,h1 h2:set 'a.
+    transitive o /\ tr_succ o succ /\ tr_ext o succ h1 h2 -> subchain o h1 h2
+
+  (* Transfinite extension is transitive. *)
+  axiom tr_ext_transitive : forall o:erel 'a, succ.
+    tr_succ o succ -> transitive (tr_ext o succ)
+
+  (* Transfinite extensions can be decomposed *)
+  axiom tr_ext_decompose : forall o succ,h1 h2 h3:set 'a.
+    order o /\ tr_succ o succ /\ tr_ext o succ h1 h3 ->
+    subchain o h1 h2 /\ subchain o h2 h3 ->
+      tr_ext o succ h1 h2 /\ tr_ext o succ h2 h3
+
+  (* Transfinite extension preserve (well-founded) chains. *)
+  axiom tr_ext_preserve_chain : forall o succ,h1 h2:set 'a.
+    reflexive o /\ tr_succ o succ /\ chain o h1 /\ tr_ext o succ h1 h2 ->
+    chain o h2
+  axiom tr_ext_preserve_wf_chain : forall o succ,h1 h2:set 'a.
+    reflexive o /\ tr_succ o succ /\ wf_chain o h1 /\ tr_ext o succ h1 h2 ->
+    wf_chain o h2
+
+  (* If the transfinite extension of a chain reach
+     a non-progressing element, then this element is maximal among
+     extensions. (As a side-effect, if this element is deterministically
+     reached it is a maximum) *)
+  axiom tr_ext_stop_progress : forall o succ,h1 h2:set 'a.
+    order o /\ tr_succ o succ ->
+    tr_ext o succ h1 h2 /\ subset (succ h2) h2 ->
+    maximal (subchain o) (tr_ext o succ h1) h2
+
+end
+
+(* Extra lemmas for deterministic extensions *)
+module ExtensionDet "W:non_conservative_extension:N" (* => ExtensionProof *)
+
+  use order.Chain
+  use ho_set.Set
+  use ho_set.SetBigOps
+  use export Extension
+
+  (* Obviously, if an extension is deterministic it is an extension. *)
+  axiom tr_ext_det_is_ext : forall o succ,h1 h2:set 'a.
+    tr_ext_det o succ h1 h2 -> tr_ext o succ h1 h2
+
+  (* Reverse criterion:
+     h2 is deterministically reached from h1 iff it is reached
+     from h1 and the deterministic criterion holds, e.g all
+     successors choice for h1 <= h < h2 are deterministic. *)
+  axiom tr_ext_det_alt : forall o succ,h1 h2:set 'a.
+    preorder o /\ tr_succ o succ ->
+    tr_ext o succ h1 h2 /\ det_criterion o succ h1 h2 ->
+    tr_ext_det o succ h1 h2
+  axiom tr_ext_det_criterion : forall o succ,h1 h2:set 'a.
+    order o /\ tr_succ o succ /\ tr_ext_det o succ h1 h2 ->
+    det_criterion o succ h1 h2
+
+  (* As a consequence of the criterion,
+     deterministic transfinite extensions can be decomposed just
+     as non-deterministic ones. *)
+  axiom tr_ext_det_decompose : forall o succ,h1 h2 h3:set 'a.
+    order o /\ tr_succ o succ /\ tr_ext_det o succ h1 h3 /\
+    subchain o h1 h2 /\ subchain o h2 h3 ->
+    tr_ext_det o succ h1 h2 /\ tr_ext_det o succ h2 h3
+
+  (* The deterministic transfinite extensions form a chain.
+     This lemma is even more general: a deterministic extension
+     is in fact comparable with ALL other extensions. *)
+  axiom tr_ext_det_chain : forall o succ,h1 h2 h3:set 'a.
+    transitive o /\ tr_succ o succ /\
+    tr_ext o succ h1 h2 /\ tr_ext_det o succ h1 h3 ->
+      subchain o h2 h3 \/ subchain o h3 h2
+
+  (* Stronger form of the chain property: the history
+     within a deterministic extension form a well-founded
+     chain. *)
+  axiom tr_ext_det_wf_chain : forall o:erel 'a,succ h.
+    transitive o /\ tr_succ o succ ->
+    wf_chain (subchain o) (tr_ext_det o succ h)
+
+  (* Sharper variation on tr_ext_det_chain:
+     the non-deterministic extensions come after deterministic
+     ones. *)
+  axiom tr_ext_det_first : forall o succ,h1 h2 h3:set 'a.
+    transitive o /\ tr_succ o succ /\
+    tr_ext o succ h1 h2 /\ tr_ext_det o succ h1 h3 /\ subchain o h2 h3 ->
+    tr_ext_det o succ h1 h2
+
+  (* If succ is a deterministic relation then
+     all extensions are deterministic. *)
+  axiom tr_ext_all_det : forall o succ,h1 h2:set 'a.
+    tr_succ o succ /\ deterministic succ ->
+    tr_ext o succ h1 h2 -> tr_ext_det o succ h1 h2
+
+  (* In particular, the deterministic transfinite extension of a chain
+     admit a maximum (with a very simple form). *)
+  axiom tr_ext_det_maximum : forall o succ,h:set 'a.
+    transitive o /\ tr_succ o succ ->
+    maximum (subchain o) (tr_ext_det o succ h) (bigunion (tr_ext_det o succ h))
+
+  (* If the transfinite extension of a chain deterministically reach
+     a non-progressing element, this element is maximum among extensions. *)
+  axiom tr_ext_det_stop_progress : forall o succ,h1 h2:set 'a.
+    transitive o /\ tr_succ o succ ->
+    tr_ext_det o succ h1 h2 /\ subset (succ h2) h2 ->
+    maximum (subchain o) (tr_ext o succ h1) h2
+
+  (* If the transfinite extension of a chain deterministically reach
+     an element with two distinct successors, this element is maximum
+     among deterministic extensions. *)
+  axiom tr_ext_stop_det_progress : forall o succ,h1 h2:set 'a.
+    transitive o /\ tr_succ o succ ->
+    tr_ext_det o succ h1 h2 /\ not det_related succ h2 ->
+    maximum (subchain o) (tr_ext_det o succ h1) h2
+
+end
+
+(* Transport module:
+  give necessary/sufficient conditions for extensions
+  of a given relation to be reached by another as well. *)
+module TransportDef
+
+  use ho_set.Set
+  use ho_rel.Rel
+  use order.Chain
+
+  (* If h2 is an extension of h1 for o and some successor relation
+     (notably the 'maximal' upper_bound relation !),
+     then it is an extension for succ as well iff the transport
+     criterion is met. *)
+  predicate transport_criterion (o:erel 'a) (succ:rel (set 'a) 'a)
+    (h1 h2:set 'a) =
+    forall h x.
+      subchain o h1 h /\ subchain o (add h x) h2 /\
+      upper_bound o h x /\ not h x -> succ h x
+
+end
+
+module Transport "W:non_conservative_extension:N" (* => TransportProof *)
+
+  use ho_set.Set
+  use ho_rel.Rel
+  use ExtensionDef
+  use export TransportDef
+
+  axiom transport : forall o succ1 succ2,h1 h2:set 'a.
+    transitive o /\ tr_succ o succ1 /\ tr_ext o succ1 h1 h2 /\
+    transport_criterion o succ2 h1 h2 ->
+    tr_ext o succ2 h1 h2
+
+  axiom transport_criterion : forall o succ,h1 h2:set 'a.
+    order o /\ tr_succ o succ /\ tr_ext o succ h1 h2 ->
+    transport_criterion o succ h1 h2
+
+end
+
+module ExtensionProof
+
+  use ExtensionDef
+  use order.Chain
+  use order.SubChain
+  use fn.Fun
+  use ho_set.Set
+  use ho_set.SetBigOps
+
+  lemma tr_ext_compare : forall o succ,h1 h2:set 'a.
+    (transitive o /\ tr_succ o succ -> ("induction" tr_ext o succ h1 h2) ->
+     subchain o h1 h2)
+    by forall o:erel 'a,succ chh.
+      transitive o /\ tr_succ o succ /\ chain (subchain o) chh ->
+      (forall h. chh h -> subchain o h (bigunion chh))
+
+  lemma tr_ext_transitive : forall o succ,h1 h2 h3:set 'a.
+    tr_succ o succ ->
+    tr_ext o succ h1 h2 -> ("induction" tr_ext o succ h2 h3) ->
+    tr_ext o succ h1 h3
+
+  lemma tr_ext_preserve_chain : forall o succ,h1 h2:set 'a.
+    reflexive o /\ tr_succ o succ /\ chain o h1 ->
+    ("induction" tr_ext o succ h1 h2) -> chain o h2
+
+  lemma tr_ext_preserve_wf_chain : forall o succ,h1 h2:set 'a.
+    reflexive o /\ tr_succ o succ /\ wf_chain o h1 ->
+    ("induction" tr_ext o succ h1 h2) -> wf_chain o h2
+
+  lemma tr_ext_decompose : forall o succ,h1 h2:set 'a.
+    order o /\ tr_succ o succ /\ subchain o h1 h2 ->
+      (forall h3:set 'a.
+        ("induction" tr_ext o succ h1 h3) ->
+        subchain o h2 h3 ->
+          "stop_split" tr_ext o succ h1 h2 /\ tr_ext o succ h2 h3)
+    by (forall h3 x.
+      tr_ext o succ h1 h3 /\ succ h3 x /\ subchain o h2 (add h3 x) /\
+      (subchain o h2 h3 -> tr_ext o succ h1 h2 /\ tr_ext o succ h2 h3) ->
+      tr_ext o succ h1 h2 /\ tr_ext o succ h2 (add h3 x)
+      by if h2 x
+        then sext h2 (add h3 x)
+          by forall y. h3 y -> not (not h2 y so o x y)
+        else subchain o h2 h3
+    ) /\ (forall chh. chain (subchain o) chh /\ inhabited chh /\
+      (forall h. chh h -> tr_ext o succ h1 h /\ (subchain o h2 h ->
+        tr_ext o succ h1 h2 /\ tr_ext o succ h2 h)) ->
+      let hl = bigunion chh in subchain o h2 hl ->
+      tr_ext o succ h1 h2 /\ tr_ext o succ h2 hl
+      by let ch2 = fun h -> chh h /\ subchain o h2 h in
+        if inhabited ch2
+        then exists h0. ch2 h0
+          so bigunion ch2 = hl
+          by supremum (subchain o) ch2 hl
+          by forall u. upper_bound (subchain o) ch2 u ->
+            upper_bound (subchain o) chh u
+          by forall h. chh h -> subchain o h u
+          by if subchain o h2 h then ch2 h else subchain o h h2
+            so subchain o h0 u
+        else sext h2 hl by upper_bound (subchain o) chh h2
+          by forall h. chh h -> not subchain o h2 h
+    )
+
+  lemma tr_ext_stop_progress : forall o succ,h1 h2 h3:set 'a.
+    order o /\ tr_succ o succ ->
+    tr_ext o succ h1 h2 /\ subset (succ h2) h2 /\
+    tr_ext o succ h1 h3 /\ subchain o h2 h3 -> h3 = h2
+    by tr_ext o succ h2 h3
+    so (forall a b c,h3:set 'a. a = o /\ b = succ /\ c = h2 ->
+      ("induction" tr_ext a b c h3) -> h3 = h2)
+    by (forall x. succ h2 x -> h2 = add h2 x by sext h2 (add h2 x))
+    /\ (forall chh. inhabited chh /\ (forall h. chh h -> h = h2) ->
+      bigunion chh = h2 by supremum (subchain o) chh h2)
+
+  lemma tr_ext_det_sub : forall o succ,h1 h2:set 'a.
+    ("induction" tr_ext_det o succ h1 h2) -> tr_ext o succ h1 h2
+
+  lemma tr_ext_det_back : forall o succ,h1:set 'a.
+    preorder o /\ tr_succ o succ ->
+    (forall a b c h2. a = o /\ b = succ /\ c = h1 ->
+      ("induction" tr_ext a b c h2) -> det_criterion o succ h1 h2 ->
+      tr_ext_det o succ h1 h2)
+
+  lemma tr_ext_recover_criterion : forall o succ,h1:set 'a.
+    order o /\ tr_succ o succ ->
+    (forall a b c h2. a = o /\ b = succ /\ c = h1 ->
+      ("induction" tr_ext_det a b c h2) -> det_criterion o succ h1 h2)
+    by (forall h2 x. det_criterion o succ h1 h2 ->
+      det_related succ h2 /\ succ h2 x ->
+      let h3 = add h2 x in det_criterion o succ h1 h3
+      by forall h. subchain o h h3 /\ h <> h3 -> subchain o h h2
+      by not (h x so sext h h3
+              by forall y. h3 y -> not (not h y so o x y))
+      )
+    /\ (forall chh. chain (subchain o) chh ->
+      (forall h. chh h -> det_criterion o succ h1 h) ->
+      let hl = bigunion chh in
+      det_criterion o succ h1 hl
+      by forall h. subchain o h hl /\ h <> hl ->
+        not (not (exists h2. chh h2 /\ subchain o h h2 /\ h <> h2)
+          so upper_bound (subchain o) chh h
+          by forall h2. chh h2 -> subchain o h2 h))
+
+  lemma tr_ext_det_decompose : forall o succ,h1 h2 h3:set 'a.
+    order o /\ tr_succ o succ /\ tr_ext_det o succ h1 h3 /\
+    subchain o h1 h2 /\ subchain o h2 h3 ->
+    tr_ext_det o succ h1 h2 /\ tr_ext_det o succ h2 h3
+    by tr_ext o succ h1 h2 /\ tr_ext o succ h2 h3 /\ det_criterion o succ h1 h3
+    so det_criterion o succ h1 h2 /\ det_criterion o succ h2 h3
+
+  predicate separator (o:erel 'a) (succ:rel (set 'a) 'a) (h1 h3:set 'a) =
+    forall h2. tr_ext_det o succ h1 h2 -> subchain o h2 h3 \/ subchain o h3 h2
+
+  lemma tr_ext_next_separator : forall o succ h1 h3,x:'a.
+    transitive o /\ tr_succ o succ ->
+    tr_ext o succ h1 h3 /\ separator o succ h1 h3 /\ succ h3 x ->
+    let h4 = add h3 x in
+    separator o succ h1 h4
+    by if h3 x then sext h3 h4 else
+      subchain o h3 h4
+    so (forall a b c h2. a = o /\ b = succ /\ c = h1 ->
+      ("induction" tr_ext_det a b c h2) ->
+      subchain o h2 h4 \/ subchain o h4 h2)
+    by (forall h2 y. (subchain o h2 h4 \/ subchain o h4 h2) ->
+      tr_ext_det o succ h1 h2 /\ det_related succ h2 /\ succ h2 y ->
+      let h5 = add h2 y in
+      (subchain o h5 h4 \/ subchain o h4 h5)
+      by if subchain o h4 h2 then true else
+        if subchain o h5 h3 then true else
+        subchain o h3 h5
+        so (h2 = h3 by subchain o h2 h3 /\ subchain o h3 h2)
+    )
+    /\ (forall chh. chain (subchain o) chh /\
+        (forall h. chh h -> (subchain o h h4 \/ subchain o h h4)) ->
+        let hl = bigunion chh in
+        subchain o hl h4 \/ subchain o h4 hl)
+
+  lemma tr_ext_all_separator : forall o succ,h1:set 'a.
+    transitive o /\ tr_succ o succ ->
+    (forall a b c h2. a = o /\ b = succ /\ c = h1 ->
+      ("induction" tr_ext a b c h2) -> separator o succ h1 h2)
+    by forall chh. chain (subchain o) chh /\
+      (forall h. chh h -> separator o succ h1 h) ->
+      let hl = bigunion chh in
+      separator o succ h1 hl
+      by forall h2. tr_ext_det o succ h1 h2 ->
+        subchain o h2 hl \/ subchain o hl h2
+      by (forall h. chh h -> subchain o h h2 \/ subchain o h2 h)
+      so (exists h. chh h /\ subchain o h2 h so subchain o h2 hl)
+      || (subchain o hl h2 by upper_bound (subchain o) chh h2)
+
+  lemma tr_ext_det_chain : forall o succ,h1 h2 h3:set 'a.
+    transitive o /\ tr_succ o succ ->
+    tr_ext_det o succ h1 h2 /\ tr_ext o succ h1 h3 ->
+    subchain o h2 h3 \/ subchain o h3 h2
+
+  lemma tr_ext_all_det : forall o succ,h1 h2:set 'a.
+    tr_succ o succ /\ deterministic succ ->
+    ("induction" tr_ext o succ h1 h2) -> tr_ext_det o succ h1 h2
+
+  lemma tr_ext_det_maximum : forall o succ,h:set 'a.
+    transitive o /\ tr_succ o succ ->
+    let s = tr_ext_det o succ h in
+    let mx = bigunion s in
+    maximum (subchain o) s mx
+    by supremum (subchain o) s mx
+    /\ (s mx by chain (subchain o) s /\ s h)
+
+  lemma tr_ext_stop_det_progress : forall o succ,h1 h2:set 'a.
+    transitive o /\ tr_succ o succ ->
+    tr_ext_det o succ h1 h2 /\ not det_related succ h2 ->
+    maximum (subchain o) (tr_ext_det o succ h1) h2
+    by (forall a b c h3. a = o /\ b = succ /\ c = h1 ->
+      ("induction" tr_ext_det a b c h3) -> subchain o h3 h2)
+    by (forall h3 x. tr_ext_det o succ h1 h3 /\ det_related succ h3 ->
+      succ h3 x /\ subchain o h3 h2 ->
+      let h4 = add h3 x in subchain o h4 h2
+      by if subchain o h4 h2 then true else
+        subchain o h2 h4
+      so not subchain o h2 h3
+      so subchain o h3 h2
+    ) /\ (forall chh. chain (subchain o) chh /\
+      upper_bound (subchain o) chh h2 ->
+      let hl = bigunion chh in subchain o hl h2)
+
+  lemma tr_ext_det_first : forall o succ,h1 h2 h3:set 'a.
+    transitive o /\ tr_succ o succ /\ tr_ext o succ h1 h2 /\
+    tr_ext_det o succ h1 h3 /\ subchain o h2 h3 ->
+    tr_ext_det o succ h1 h2
+    by (forall a b c h2. a = o /\ b = succ /\ c = h1 ->
+      "induction" tr_ext a b c h2 -> subchain o h2 h3 ->
+      tr_ext_det o succ h1 h2)
+    by (forall h2 x.
+      (subchain o h2 h3 -> tr_ext_det o succ h1 h2) /\
+      succ h2 x ->
+      let h4 = add h2 x in subchain o h4 h3 -> tr_ext_det o succ h1 h4
+      by if h2 x then sext h2 h4 else
+        not (not det_related succ h2 so subchain o h3 h2))
+
+  lemma tr_ext_det_stop_progress : forall o succ,h1 h2:set 'a.
+    transitive o /\ tr_succ o succ ->
+    tr_ext_det o succ h1 h2 /\ subset (succ h2) h2 ->
+    maximum (subchain o) (tr_ext o succ h1) h2
+    by (forall a b c h3. a = o /\ b = succ /\ c = h1 ->
+      ("induction" tr_ext a b c h3) -> subchain o h3 h2)
+    by (forall h3 x.
+      tr_ext o succ h1 h3 /\ subchain o h3 h2 /\ succ h3 x ->
+      let h4 = add h3 x in
+      subchain o h4 h2
+      by tr_ext_det o succ h1 h3
+      so if h3 x then sext h3 h4 else
+        not (not det_related succ h3 so subchain o h2 h3)
+        so if subchain o h4 h2 then true else
+          false by subchain o h2 h4
+        so if h2 x then sext h2 h4 else sext h2 h3
+    ) /\ (forall chh.
+      chain (subchain o) chh /\ upper_bound (subchain o) chh h2 ->
+      let hl = bigunion chh in subchain o hl h2)
+
+  lemma tr_ext_det_wf_chain : forall o:erel 'a,succ h0.
+    transitive o /\ tr_succ o succ ->
+    let s0 = tr_ext_det o succ h0 in
+    wf_chain (subchain o) s0
+    by forall hs. subset hs s0 /\ inhabited hs ->
+    not (not (exists h1. minimum (subchain o) hs h1)
+      so exists h2. hs h2
+      so (exists h3. hs h3 /\ subchain o h3 h2 /\ h3 <> h2)
+         \/ minimum (subchain o) hs h2
+      so (forall a b c h. a = o /\ b = succ /\ c = h0 ->
+        ("induction" tr_ext_det a b c h) -> lower_bound (subchain o) hs h)
+      by (forall ch h2. chain (subchain o) ch /\ hs h2 ->
+        (forall h1. ch h1 -> lower_bound (subchain o) hs h1) ->
+        let hl = bigunion ch in
+        subchain o hl h2 by upper_bound (subchain o) ch h2
+      ) /\ (forall h x. succ h x /\ tr_ext_det o succ h0 h ->
+        det_related succ h /\ lower_bound (subchain o) hs h ->
+        let h2 = add h x in
+        lower_bound (subchain o) hs h2
+        by forall h3. hs h3 -> if subchain o h2 h3 then true else
+          minimum (subchain o) hs h
+          by sext h h3
+          by (subchain o h3 h2 by tr_ext_det o succ h0 h2)
+          so subchain o h h3
+      )
+    )
+
+  clone Extension with goal tr_ext_compare,
+    goal tr_ext_transitive,
+    goal tr_ext_decompose,
+    goal tr_ext_preserve_chain,
+    goal tr_ext_preserve_wf_chain,
+    goal tr_ext_stop_progress
+
+  clone ExtensionDet with goal tr_ext_det_is_ext,
+    goal tr_ext_det_alt,
+    goal tr_ext_det_criterion,
+    goal tr_ext_det_decompose,
+    goal tr_ext_det_chain,
+    goal tr_ext_det_wf_chain,
+    goal tr_ext_det_first,
+    goal tr_ext_all_det,
+    goal tr_ext_det_maximum,
+    goal tr_ext_det_stop_progress,
+    goal tr_ext_stop_det_progress
+
+end
+
+
+module TransportProof
+
+  use TransportDef
+  use Extension
+  use order.Chain
+  use order.SubChain
+  use fn.Fun
+  use ho_set.Set
+  use ho_set.SetBigOps
+
+  lemma transport : forall o succ1 succ2,h1 h2:set 'a.
+    transitive o /\ tr_succ o succ1 /\ tr_ext o succ1 h1 h2 /\
+    transport_criterion o succ2 h1 h2 ->
+    tr_ext o succ2 h1 h2
+    by (forall a b c h2. a = o /\ b = succ1 /\ c = h1 ->
+      ("induction" tr_ext a b c h2) ->
+      transport_criterion o succ2 h1 h2 -> tr_ext o succ2 h1 h2)
+    by (forall h2 x. tr_ext o succ1 h1 h2 /\ tr_ext o succ2 h1 h2 /\
+      succ1 h2 x ->
+      let h3 = add h2 x in
+      transport_criterion o succ2 h1 h3 -> tr_ext o succ2 h1 h3
+      by (h2 x -> sext h2 h3)
+    )
+
+  lemma transport_criterion : forall o succ,h1 h2:set 'a.
+    order o /\ tr_succ o succ /\ tr_ext o succ h1 h2 ->
+    transport_criterion o succ h1 h2
+    by (forall a b c h2. a = o /\ b = succ /\ c = h1 ->
+      ("induction" tr_ext a b c h2) ->
+      transport_criterion o succ h1 h2)
+    by (forall h2 x. tr_ext o succ h1 h2 /\ succ h2 x /\
+      transport_criterion o succ h1 h2 ->
+      let h3 = add h2 x in
+      transport_criterion o succ h1 h3
+      by forall h y. subchain o h1 h /\ subchain o (add h y) h3 /\
+        upper_bound o h y /\ not h y ->
+        if subchain o (add h y) h2 then true else
+        h = h2 /\ y = x
+        by subchain o h2 (add h y)
+        so subchain o h2 h (* h2 <= h < h+y <= h2+x *)
+        so sext h h2 by forall z. h z -> not (not h2 z
+          so h3 z so z = x so y <> x so not h2 y so h3 y)
+    ) /\ (forall chh. chain (subchain o) chh /\
+      (forall h. chh h -> transport_criterion o succ h1 h) ->
+      let hl = bigunion chh in
+      transport_criterion o succ h1 hl
+      by forall h y. subchain o (add h y) hl /\ upper_bound o h y ->
+        exists h3. subchain o (add h y) h3 /\ chh h3
+        by chh h3 /\ h3 y
+        so subchain o h3 hl
+        so if subchain o (add h y) h3 then true else
+          false by subchain o h3 (add h y)
+        so sext h3 (add h y)
+        (* exploit subchain ordering condition *)
+        by forall z. add h y z -> not (not h3 z
+          so o y z so o z y so z = y)
+    )
+
+  clone Transport with goal transport,
+    goal transport_criterion
+
+end
+

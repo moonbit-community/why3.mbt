@@ -1,0 +1,42 @@
+module Sum_extended
+
+  use int.Int
+  use int.Sum
+
+  function addf (f g:int -> int) : int -> int = fun x -> f x + g x
+
+  function smulf (f:int -> int) (l:int) : int -> int = fun x -> l * f x
+
+  let rec lemma sum_mult (f:int -> int) (a b l:int) : unit
+    ensures { sum (smulf f l) a b = l * sum f a b }
+    variant { b - a }
+  = if b > a then sum_mult f a (b-1) l
+
+
+  let rec lemma sum_add (f g:int -> int) (a b:int) : unit
+    ensures { sum (addf f g) a b = sum f a b + sum g a b }
+    variant { b - a }
+  = if b > a then sum_add f g a (b-1)
+
+
+  function sumf (f:int -> int -> int) (a b:int) : int -> int = fun x -> sum (f x) a b
+
+  let rec lemma fubini (f1 f2: int -> int -> int) (a b c d: int) : unit
+    requires { forall x y. a <= x < b /\ c <= y < d -> f1 x y = f2 y x }
+    ensures  { sum (sumf f1 c d) a b = sum (sumf f2 a b) c d }
+    variant  { b - a }
+  = if b <= a
+    then assert { forall x. sumf f2 a b x = 0 }
+    else begin
+      fubini f1 f2 a (b-1) c d;
+      assert { let ha = addf (sumf f2 a (b-1)) (f1 (b-1)) in
+        sum (sumf f2 a b) c d = sum ha c d
+        by forall y. c <= y < d -> sumf f2 a b y = ha y }
+    end
+
+   let ghost sum_ext (f g: int -> int) (a b: int) : unit
+     requires {forall i. a <= i < b -> f i = g i }
+     ensures  { sum f a b  = sum g a b }
+   = ()
+
+end

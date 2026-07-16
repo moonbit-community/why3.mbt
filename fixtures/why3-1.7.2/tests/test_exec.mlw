@@ -1,0 +1,294 @@
+
+
+module M
+
+  use int.Int
+
+  let x0 () : int = 13 * 3 + 7 - 4
+
+  let x1 () : bool = 2 + 2 = 4
+
+  use ref.Ref
+
+  let x2 () : int =
+    let x = ref 13 in
+    if !x <> 3 then 7 else 4
+
+  use list.List
+  use list.Append
+
+  let y () : list int =
+    Cons 12 (Cons 34 (Cons 56 Nil)) ++ Cons 78 (Cons 90 Nil)
+
+end
+
+module Map
+
+  use int.Int
+  use map.Map
+  use map.Const
+
+  exception Found int
+
+  let search (t:map int int) (len:int) (v:int) : int =
+    try
+      for i=0 to len-1 do
+        if t[i] = v then raise (Found i)
+      done;
+      -1
+    with Found i -> i
+    end
+
+  constant t : map int int = (const 0)[0 <- 12][1 <- 42][2 <- 67]
+
+  let ghost test12 () = search t 3 12
+  let ghost test42 () = search t 3 42
+  let ghost test67 () = search t 3 67
+  let ghost test0 () = search t 3 0
+
+end
+
+module Mut
+
+  use int.Int
+
+  type t = { mutable a : int; c: int ; mutable b : int }
+
+  let e0 () =
+    let y = { a = 1; c = 43; b = 2 } in
+    y
+
+  let e1 () =
+    let y = { a = 1; c = 43; b = 2 } in
+    y.a <- 3;
+    y.b <- 7;
+    y
+
+  let t0 () =
+    let y = { a = 1; c = 43; b = 2 } in
+    y.a + y.b (* should be 3 *)
+
+  let t1 () =
+    let y = { a = 1; c = 43; b = 2 } in
+    let z = y in
+    y.a + z.b (* should be 3 *)
+
+  let t2 () =
+    let y = { a = 1; c = 43; b = 2 } in
+    y.a <- 3;
+    y.a + y.b (* should be 5 *)
+
+  let t3 () =
+    let y = { a = 1; c = 43; b = 2 } in
+    let z = y in
+    z.a <- 3;
+    y.a (* should be 3 *)
+
+  type refint = { mutable i : int }
+
+  let y () : refint = { i = 0 }
+
+  let z () : int =
+    let r = { i = 0 } in r.i <- 42; r.i
+
+
+  let test () =
+    let x = { i = 0 } in
+    let s = { i = 0 } in
+    while x.i <= 10 do
+      variant { 10 - x.i }
+      s.i <- s.i + x.i;
+      x.i <- x.i + 1
+    done;
+    s.i (* should be 55 *)
+
+
+  let f m : int
+  = let x = { i = 2 } in
+    let y = { i = 8 } in
+    let sum = { i = 0 } in
+    while x.i <= m do
+      variant { m - x.i }
+      let tmp = x.i in
+      x.i <- y.i;
+      y.i <- 4 * y.i + tmp;
+      sum.i <- sum.i + tmp
+    done;
+    sum.i
+
+  let run1 () = f 10 (* should be 10 *)
+
+  let run2 () = f 4000000 (* should be 4613732 *)
+
+  (* use of a global mutable variable *)
+
+  val x : refint
+
+  let j0 () = x.i
+
+  let j () = x.i <- 42; x.i
+
+end
+
+module Ref
+
+  use ref.Ref
+
+  let y () : ref int = { contents = 0 }
+
+  let z () : int =
+    let r = ref 0 in r := 42; !r
+
+  use int.Int
+
+  let f m : int
+  = let x = ref 2 in
+    let y = ref 8 in
+    let sum = ref 0 in
+    while !x <= m do
+      variant { m - !x }
+      let tmp = !x in
+      x := !y;
+      y := 4 * !y + tmp;
+      sum := !sum + tmp
+    done;
+    !sum
+
+  let run1 () = f 10 (* should be 10 *)
+
+  let run2 () = f 4000000 (* should be 4613732 *)
+
+
+  let g () : int =
+    for i=1 to 10 do
+       let x = ref i in
+       x := !x + 1
+    done;
+    42
+
+  let rec h n : int
+    variant { n }
+  =
+    let x = ref 0 in
+    x := !x + 1;
+    if n = 0 then 0 else h (n-1) + !x
+
+  let hh () = h 10
+
+  (* use of a global ref *)
+
+  val x : ref int
+
+  let j () =
+    x := 42;
+    !x
+
+end
+
+
+module Pair
+
+  use ref.Ref
+
+  type t = { left : ref int ; middle : int; right : ref int }
+
+  let a () = { left = ref 13 ; middle = 5; right = ref 42 }
+
+  let b () =
+    let x = a () in
+    x.left := 57;
+    x.right := 98;
+    x
+
+  type u = { u1 : t ; u2 : t }
+
+  let c () =
+    let x = { left = ref 1; middle = 2; right = ref 3} in
+    let y = { left = ref 4; middle = 5; right = ref 6} in
+    let u = { u1 = x ; u2 = y } in
+    u.u2.left := 7;
+    u
+
+end
+
+module Array
+
+  use int.Int
+  use array.Array
+
+  exception Found int
+
+  let search (t:array int) (v:int) : int =
+    try
+      for i=0 to t.length - 1 do
+        if t[i] = v then raise (Found i)
+      done;
+      -1
+    with Found i -> i
+    end
+
+  let incr (t:array int) : unit =
+    for i=0 to t.length - 1 do
+      t[i] <- t[i]+1
+    done
+
+  let test0 () =
+    let t = Array.make 2 21 in
+    t[0]+t[1]
+    (* should be 42 *)
+
+  let test1 () =
+    let t = Array.make 2 21 in
+    t[1] <- 17;
+    t[0]+t[1]
+    (* should be 38 *)
+
+  let test2 () =
+    let t = Array.make 2 21 in
+    t[1] <- 17;
+    t[0] <- 7;
+    t[0]+t[1]
+    (* should be 24 *)
+
+  let t () : array int =
+     let t = Array.make 3 0 in
+     t[0] <- 12;
+     t[1] <- 42;
+     t[2] <- 67;
+     t
+
+  let t1 () =
+    let t = t () in
+    t[0] + t[1] + t[2] (* 121 *)
+
+  let i () = incr (t ())
+
+  let test12 () = search (t ()) 12
+  let test42 () = search (t ()) 42
+  let test67 () = search (t ()) 67
+  let test7 () = search (t ()) 7
+
+
+  use array.ArraySwap
+
+  let test_swap () =
+     let t = Array.make 3 0 in
+     t[0] <- 12;
+     t[1] <- 42;
+     t[2] <- 67;
+     swap t 1 2;
+     t[1] (* 67 *)
+
+
+  let test_loop () =
+     let t = Array.make 3 0 in
+     for i=0 to 2 do t[i] <- i done;
+     t[0] + t[1] + t[2] (* 3 *)
+
+  (* global arrays *)
+
+  val g : array int
+
+  let j () = g[0] <- 42
+
+end

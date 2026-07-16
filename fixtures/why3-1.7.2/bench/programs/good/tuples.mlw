@@ -1,0 +1,5 @@
+
+module T
+  let test () =
+    let _a,_b,_c,_d = (1,2,3,4) in ()
+end

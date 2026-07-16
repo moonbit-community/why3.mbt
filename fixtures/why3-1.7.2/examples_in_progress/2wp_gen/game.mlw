@@ -1,0 +1,402 @@
+
+(* Asymetric transfinite perfect information games on
+   ordered sets. The two player (existential and universal,
+   or (shorter) angel and demon) reflect respectively existential and
+   universal behavior.
+   Definition is mostly intended for angel side having a winning
+   strategy, hence the asymetry. *)
+module Game
+
+  use ho_set.Set
+  use ho_rel.Rel
+  use order.LimUniq
+  use order.Chain
+  use transfinite.ExtensionDef
+
+  type game 'a = {
+    (* Progress relation: a play must follow the progression
+       relation, and supremum are used to get limit behaviors.
+       In case there is no such limit, the angel is assumed to
+       win (in practice, there should be limits for all feasible
+       chains) *)
+    progress : erel 'a;
+    (* Transition relation: from a state [x], the angel
+       choose a set of possibility for the next state, then
+       the demon choose among that set of possibilities.
+       Another view is that 'a are angel states, and (set 'a) are
+       demon states. *)
+    transition : 'a -> set (set 'a);
+  } invariant { order progress }
+  invariant { forall x s y. transition x s /\ s y -> progress x y }
+  by { progress = {(=)}; transition = fun _ _ -> false }
+
+  (* Angel strategy: from a game history (a chain) admitting some max,
+     choose a set of states. *)
+  type angel 'a = set 'a -> set 'a
+  (* Demon strategy: choice function.
+     This is asymetrical with respect to the angel, since the
+     demon cannot use history to take decisions. However, this
+     does not change the ability of the demon to prevent existence
+     of winning strategy, as the demon is aware of the
+     angel strategy/starting point and may implicitly reconstruct
+     the full history => we keep this for simplicity. *)
+  type demon 'a = set 'a -> 'a
+
+  (* Step relation: relate an history with the next chosen element. *)
+  predicate step (g:game 'a) (ang:angel 'a) (dmn:demon 'a) (h:set 'a) (n:'a) =
+    let x = sup g.progress h in
+    let a = ang h in
+    let d = dmn a in
+    supremum g.progress h x /\
+    if h x then g.transition x a /\ a d /\ n = d else n = x
+
+  (* Small lemmas justifying that step can be used to create
+     deterministic transfinite extensions. *)
+  lemma step_is_tr_succ : forall g:game 'a,ang dmn.
+    tr_succ g.progress (step g ang dmn)
+    by let o = g.progress in
+      forall h n. step g ang dmn h n -> upper_bound o h n
+      by o (sup g.progress h) n
+  lemma step_deterministic : forall g:game 'a,ang dmn.
+    deterministic (step g ang dmn)
+
+  (* The angel win at some point if:
+     - Either he reached the target set
+     - Either the demon did an illegal move
+     - Either he reached a non-existing limit.
+       (This last choice is asymetric, and was chosen for
+        technical reasons -- it make some statements about
+        winning existence simpler, without bringing in
+        chain-completeness everywhere. In practical games, this
+        should not make a difference as all reachable chains should
+        have such limits) *)
+  predicate win_at (g:game 'a) (win:set 'a)
+                   (ang:angel 'a) (dmn:demon 'a) (h:set 'a) =
+    let o = g.progress in let x = sup o h in
+    not supremum o h x \/ maximum g.progress h x /\
+      (win x \/ let a = ang h in g.transition x a /\ not a (dmn a))
+
+  (* Angel win against demon for start [x] and target set [win]
+     if the transfinite extension process (=the play) reach a winning
+     configuration. *)
+  predicate win_against (g:game 'a) (x:'a) (win:set 'a)
+                        (ang:angel 'a) (dmn:demon 'a) =
+    exists h. tr_ext g.progress (step g ang dmn) ((=) x) h /\
+      win_at g win ang dmn h
+
+  (* Winning strategy *)
+  predicate winning_strat (g:game 'a) (x:'a) (win:set 'a) (ang:angel 'a) =
+    forall dmn. win_against g x win ang dmn
+  predicate uniform_winning_strat (g:game 'a) (strt win:set 'a) (ang:angel 'a) =
+    forall x. strt x -> winning_strat g x win ang
+
+  predicate have_winning_strat (g:game 'a) (x:'a) (win:set 'a) =
+    exists ang. winning_strat g x win ang
+
+  predicate have_uniform_winning_strat (g:game 'a) (start win:set 'a) =
+    exists ang. uniform_winning_strat g start win ang
+
+end
+
+(* A few basic properties of strategies on such games. *)
+module BasicStrats "W:non_conservative_extension:N" (* => BasicStratsProof *)
+
+  use Game
+  use ho_set.Set
+
+  axiom have_uniform_winning_strat_quantifier_inversion :
+    forall g:game 'a,start win.
+      (have_uniform_winning_strat g start win <->
+        (forall x. start x -> have_winning_strat g x win))
+
+  axiom have_winning_strat_local_criterion : forall g,x:'a,win.
+      (have_winning_strat g x win <->
+        win x \/
+        exists s. g.transition x s /\ have_uniform_winning_strat g s win)
+
+  axiom uniform_winning_strat_subset :
+    forall g:game 'a,start win ang.
+     subset start win -> uniform_winning_strat g start win ang
+
+  axiom uniform_winning_strat_mono :
+    forall g:game 'a,start1 start2 win1 win2 ang.
+      subset start2 start1 /\ subset win1 win2 ->
+      uniform_winning_strat g start1 win1 ang ->
+      uniform_winning_strat g start2 win2 ang
+
+  axiom winning_strat_progress :
+    forall g:game 'a,x win ang.
+      winning_strat g x win ang ->
+      winning_strat g x (inter win (g.progress x)) ang
+
+end
+
+module BasicStratsProof
+
+  use Game
+  use ho_set.Set
+  use ho_set.SetBigOps
+  use choice.Choice
+  use order.SubChain
+  use order.LimUniq
+  use fn.Fun
+  use transfinite.ExtensionDet
+  use transfinite.Transport
+
+  (* Obvious way of the equivalence. *)
+  lemma have_uniform_winning_strat_quantifier_inversion_1 :
+    forall g:game 'a,start win x.
+      have_uniform_winning_strat g start win /\ start x ->
+      have_winning_strat g x win
+
+  (* Reverse way: build strategy by choosing strategies for all
+     elements. *)
+  lemma have_uniform_winning_strat_quantifier_inversion_2 :
+    forall g:game 'a,start win.
+      (forall x. start x -> have_winning_strat g x win) ->
+      have_uniform_winning_strat g start win
+      by let o = g.progress in
+        let ang_of = fun min -> choice (winning_strat g min win) in
+        let ang = fun h -> ang_of (inf o h) h in
+        uniform_winning_strat g start win ang
+      by forall x dmn. start x -> win_against g x win ang dmn
+      by let st = step g ang dmn in
+        let st_x = step g (ang_of x) dmn in
+        let ex = (=) x in
+        win_against g x win (ang_of x) dmn
+        so exists h. tr_ext o st ex h /\ win_at g win ang dmn h
+        by tr_ext o st_x ex h /\ win_at g win (ang_of x) dmn h
+        so (forall h. subchain o ex h -> ang h = ang_of x h by minimum o h x)
+        so forall h0. tr_ext o st_x ex h0 -> tr_ext o st ex h0
+        by transport_criterion o st ex h0
+        by forall h y. subchain o ex h /\ subchain o (add h y) h0 /\
+          upper_bound o h y /\ not h y -> st_x h y
+
+  (* Proof is mostly definition unfolding. *)
+  lemma uniform_winning_strat_subset : forall g:game 'a,start win ang.
+    subset start win ->
+    uniform_winning_strat g start win ang
+    by forall dmn x. start x ->
+      win_against g x win ang dmn
+    by let ex = (=) x in
+      tr_ext g.progress (step g ang dmn) ex ex
+    so win_at g win ang dmn ex
+    by maximum g.progress ex x
+
+  (* Obtain set witness by unfolding first step of strategy,
+     and get the later uniform strategy by restriction to s. *)
+  lemma have_winning_strat_local_criterion_1 :
+    forall g,x:'a,win. have_winning_strat g x win /\ not win x ->
+      exists s. g.transition x s /\ have_uniform_winning_strat g s win
+      by let ex = (=) x in let o = g.progress in
+        exists ang. winning_strat g x win ang /\ s = ang ex
+      so maximum o ex x
+      (* Justify that transition is valid, because otherwise the
+         extension would be stuck at ex. *)
+      so ("stop_split"  not (not g.transition x s
+          so exists dmn. true
+          so win_against g x win ang dmn
+          so let st = step g ang dmn in
+            exists h. tr_ext o st ex h /\ win_at g win ang dmn h
+          so maximum (subchain o) (tr_ext o st ex) ex
+          so h = ex
+         ))
+      (* Eliminate x from s thanks to quantifier inversion lemma. *)
+      so forall y. s y -> have_winning_strat g y win
+      by if x = y then true else
+      (* Derive the winning strategy by adding x to history. *)
+        let ang2 = fun h -> ang (add h x) in
+        o x y
+        so forall dmn2. "stop_split" win_against g y win ang2 dmn2
+      by let dmn = update dmn2 s y in
+        let st = step g ang dmn in
+        let st2 = step g ang2 dmn2 in
+        let ey = (=) y in let exy = add ex y in
+        win_against g x win ang dmn
+        so exists h2. tr_ext o st2 ey h2 /\ win_at g win ang2 dmn2 h2
+        by exists h. tr_ext o st ex h /\ win_at g win ang dmn h
+          /\ h2 = remove h x
+        (* Few crucial 'boilerplate' sub-lemmas: if for some h,exy <= h,
+           then h\{x} have same sup/max as h. *)
+        so ("stop_split" forall h. subchain o exy h ->
+          let h2 = remove h x in
+          ((forall u. supremum o h2 u <-> supremum o h u)
+           by sext (upper_bound o h2) (upper_bound o h)
+           by forall u z. upper_bound o h2 u /\ h z -> o z u
+             by if h2 z then true else z = x so o z y so o y u
+          ) && forall u. (maximum o h u <-> maximum o h2 u)
+          by h2 y
+          so (maximum o h u -> supremum o h2 u so h2 u by o y u)
+          so (maximum o h2 u -> supremum o h u so maximum o h u)
+        )
+        so tr_ext o st ex exy
+        so (subchain o exy h by if subchain o exy h then true else
+            subchain o h exy so sext h ex)
+        so (add h2 x = h by sext (add h2 x) h)
+        (* Transfer history from one strategy to the other *)
+        so "stop_split" (forall a b c h. a = o /\ b = st /\ c = ex ->
+          ("induction" tr_ext a b c h) -> subchain o exy h ->
+          tr_ext o st2 ey (remove h x))
+        by (* Nasty order details to prove that the behaviors
+              at [h] for first strategy and [remove h x] for second
+              one coincide. *)
+          ("stop_split" forall h z. tr_ext o st ex h /\ st h z ->
+          let rh = remove h x in
+          (subchain o exy h -> tr_ext o st2 ey rh) ->
+          let h2 = add h z in let rh2 = remove h2 x in
+          subchain o exy h2 -> tr_ext o st2 ey rh2
+          by if h z then sext h h2 so rh = rh2 else
+            if subchain o exy h
+            then (st2 rh z by sext (add rh x) h
+                so let u = sup o h in
+                  supremum o rh u so u = sup o rh
+                so not (u = x so o y x by h y )
+                so let a = ang h in a = ang2 rh
+                so (h u <-> rh u)
+                so (rh u /\ g.transition u a -> dmn a = dmn2 a))
+              so (rh2 = add rh z by sext rh2 (add rh z) by z <> x by o y z)
+            else rh2 = ey by sext rh2 ey by subchain o h exy so sext h ex
+        )
+        (* Proof of limit case: prove that the 'chain of removals'
+           is indeed a non-empty chain whose supremum is the removal of
+           the sup of the initial chain. *)
+        /\ ("stop_split" forall chh. chain (subchain o) chh /\ inhabited chh ->
+          (forall h. chh h -> tr_ext o st ex h /\
+            (subchain o exy h -> tr_ext o st2 ey (remove h x))) ->
+          let hl = bigunion chh in let rhl = remove hl x in
+          subchain o exy hl -> tr_ext o st2 ey rhl
+          by let ch2 = fun h ->
+              exists h'. subchain o exy h' /\ chh h' /\ h = remove h' x
+            in
+            (inhabited ch2 by exists h0. ch2 h0
+              by exists h. chh h /\ h y /\ h0 = remove h x
+              so not (not subchain o exy h so subchain o h exy)
+            )
+          so (chain (subchain o) ch2 by forall h1 h2. ch2 h1 /\ ch2 h2 ->
+            subchain o h1 h2 \/ subchain o h2 h1
+            by exists h3. h1 = remove h3 x /\ chh h3
+            so exists h4. h2 = remove h4 x /\ chh h4
+            so subchain o h3 h4 \/ subchain o h4 h3
+          )
+          so (rhl = bigunion ch2
+            by sext rhl (bigunion ch2)
+            by (forall z. bigunion ch2 z -> rhl z
+              by exists h0. ch2 h0 /\ h0 z
+              so exists h1. chh h1 /\ h0 = remove h1 x
+            )
+            /\ (forall z. rhl z -> bigunion ch2 z
+              by exists h0. chh h0 /\ h0 z
+              so not (not subchain o exy h0 so subchain o h0 exy
+                so z = x \/ z = y)
+              so let h1 = remove h0 x in ch2 h1 /\ h1 z
+            )
+          )
+          so (forall h. ch2 h -> tr_ext o st2 ey h)
+        )
+
+  (* Create witness for x by making s the first step,
+     then using the other strategy. *)
+  lemma have_winning_strat_local_criterion_2 :
+    forall g,x:'a,s win. g.transition x s /\
+      have_uniform_winning_strat g s win ->
+      have_winning_strat g x win
+      by let o = g.progress in
+        exists ang. uniform_winning_strat g s win ang
+      so if s x then winning_strat g x win ang else
+        let ex = (=) x in
+        let ang2 = fun h -> if h = ex then s else ang (remove h x) in
+        winning_strat g x win ang2
+      by forall dmn. win_against g x win ang2 dmn
+      by let y = dmn s in
+        let ey = (=) y in
+        let exy = add ey x in
+        maximum o ex x
+      so if not s y then win_at g win ang2 dmn ex else
+        let st = step g ang dmn in
+        let st2 = step g ang2 dmn in
+        o x y
+      so exists h2. tr_ext o st2 ex h2 /\ win_at g win ang2 dmn h2
+      by exists h. tr_ext o st ey h /\ win_at g win ang dmn h /\ h2 = add h x
+      (* As before, few crucial 'boilerplate' sub-lemmas:
+           if for some h,ey <= h,
+           then h+{x} have same sup/max as h (and x\notin h) *)
+      so ("stop_split" forall h. subchain o ey h ->
+        let h2 = add h x in
+        not (h x so o y x) &&
+        ((forall u. supremum o h2 u <-> supremum o h u)
+          by sext (upper_bound o h2) (upper_bound o h)
+          by forall u z. upper_bound o h u /\ h2 z -> o z u
+        ) && forall u. (maximum o h u <-> maximum o h2 u)
+      )
+      so (remove h2 x = h by sext (remove h2 x) h)
+      (* Transfer history from one strategy to the other *)
+      so "stop_split" (forall a b c h. a = o /\ b = st /\ c = ey ->
+        ("induction" tr_ext a b c h) ->
+        tr_ext o st2 ex (add h x))
+      by (tr_ext o st2 ex exy by sext exy (add ex y) /\ st2 ex y
+      ) /\ (* A few details to prove that the behaviors at [h] for
+              first strategy and [add h x] for second one coincide. *)
+      ("stop_split" forall h z. tr_ext o st ey h /\ st h z ->
+        let ah = add h x in tr_ext o st2 ex ah ->
+        let h2 = add h z in let ah2 = add h2 x in
+        tr_ext o st2 ex ah2
+        by sext ah2 (add ah z)
+        so st2 ah z
+        by sext (remove ah x) h
+        so let u = sup o h in supremum o ah u so u = sup o ah
+        so let a = ang h in a = ang2 ah
+        so (h u <-> ah u)
+      ) /\ (* Limit case: prove that the 'chains of add'
+          has for supremum the 'add of sup'. *)
+      ("stop_split" forall chh. chain (subchain o) chh /\ inhabited chh ->
+        (forall h. chh h -> tr_ext o st ey h /\ tr_ext o st2 ex (add h x)) ->
+        let ch2 = fun h -> exists h'. chh h' /\ h = add h' x in
+        let hl = bigunion chh in let ahl = add hl x in
+        tr_ext o st2 ex ahl
+        by inhabited ch2
+        so (chain (subchain o) ch2 by forall h1 h2. ch2 h1 /\ ch2 h2 ->
+          subchain o h1 h2 \/ subchain o h2 h1
+          by exists h3. chh h3 /\ h1 = add h3 x
+          so exists h4. chh h4 /\ h2 = add h4 x
+          so subchain o h3 h4 \/ subchain o h4 h3)
+        so ahl = bigunion ch2 by sext (bigunion ch2) ahl
+          by (forall z. bigunion ch2 z -> ahl z
+            by exists h0. ch2 h0 /\ h0 z
+            so exists h1. chh h1 /\ h0 = add h1 x)
+          /\ (forall z. ahl z -> bigunion ch2 z
+            by if z = x then exists h. ch2 h so h x else
+              exists h. chh h /\ h z
+            so ch2 (add h x) /\ add h x z
+          )
+      )
+
+  lemma have_winning_strat_local_criterion_3 :
+    forall g,x:'a,win. win x -> have_winning_strat g x win
+    by exists ang. true
+    so uniform_winning_strat g ((=) x) win ang
+
+  lemma uniform_winning_strat_mono :
+    forall g:game 'a,start1 start2 win1 win2 ang.
+      subset start2 start1 /\ subset win1 win2 ->
+      uniform_winning_strat g start1 win1 ang ->
+      uniform_winning_strat g start2 win2 ang
+      by forall dmn x. start2 x -> win_against g x win2 ang dmn
+      by win_against g x win1 ang dmn
+
+  lemma winning_strat_progress :
+    forall g:game 'a,x win ang.
+      let o = g.progress in let q = inter win (o x) in
+      winning_strat g x win ang -> winning_strat g x q ang
+      by forall dmn. win_against g x q ang dmn
+      by win_against g x win ang dmn
+      so exists h. tr_ext o (step g ang dmn) ((=) x) h /\
+        win_at g win ang dmn h
+      so win_at g q ang dmn h
+
+  clone BasicStrats with goal have_uniform_winning_strat_quantifier_inversion,
+    goal have_winning_strat_local_criterion,
+    goal uniform_winning_strat_subset,
+    goal uniform_winning_strat_mono,
+    goal winning_strat_progress
+
+end

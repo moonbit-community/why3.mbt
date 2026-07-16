@@ -1,0 +1,16 @@
+module Bad
+
+  use int.Int
+  use ref.Ref
+
+  let f (x y : ref int) : unit
+    requires { !x = !y }
+    ensures  { !x = !y + 1 }
+  = x := !x + 1
+
+  let g () : unit =
+    let r = ref 0 in
+    f r r;
+    absurd
+
+end

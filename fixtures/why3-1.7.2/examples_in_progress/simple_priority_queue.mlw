@@ -1,0 +1,89 @@
+
+(* Simple priority queue implementation
+   (inspired by Tinelli's lecture http://www.divms.uiowa.edu/~tinelli/181/) *)
+
+module SimplePrioriyQueue
+
+  use int.Int
+  use ref.Ref
+  use array.Array
+  use bag.Bag
+
+  type elt
+  val function priority elt : int
+
+  use array.NumOfEq
+
+  type t = {
+    elems: array elt;
+    mutable size : int; (* size elements, stored in elems[0..size[ *)
+    mutable h    : int; (* index of the highest priority element, if any *)
+    ghost mutable bag: bag elt;
+  }
+  invariant { 0 <= size <= elems.length }
+  invariant { size = 0 \/ 0 <= h < size }
+  invariant { forall e: elt.
+              numof elems e 0 size = nb_occ e bag }
+  invariant { size > 0 -> forall e: elt. mem e bag ->
+              priority e <= priority elems[h] }
+
+  lemma numof_occ:
+    forall a: array elt, e: elt, l u: int.
+    numof a e l u > 0 <-> exists i: int. l <= i < u /\ a[i] = e
+
+  lemma numof_add:
+    forall a: array elt, e: elt, l u: int. l <= u ->
+    e = a[u] -> numof a e l (u+1) = 1 + numof a e l u
+
+  let create (n: int) (dummy: elt) : t
+    requires { 0 <= n }
+    ensures  {result. size = 0 }
+  = { elems = Array.make n dummy; size = 0; h = 0; bag = empty_bag }
+
+  predicate is_empty (q: t) = q.size = 0
+
+  predicate is_full (q: t) = q.size = length q.elems
+
+  let add (q: t) (x: elt) : unit
+    requires { not (is_full q) }
+    writes   { q.elems.elts, q.h, q.size, q.bag }
+    ensures  { q.bag = add x (old q.bag) }
+  = q.elems[q.size] <- x;
+    if q.size = 0 then
+      q.h <- 0
+    else if priority x > priority q.elems[q.h] then
+      q.h <- q.size;
+    q.size <- q.size + 1;
+    q.bag <- add x q.bag
+
+  let highest (q: t) : elt
+    requires { not (is_empty q) }
+    ensures  { mem result q.bag }
+    ensures  { forall e: elt. mem e q.bag -> priority e <= priority result }
+  = q.elems[q.h]
+
+  let remove (q: t) : elt
+    requires { not (is_empty q) }
+    writes   { q.elems.elts, q.h, q.size, q.bag }
+    ensures  { old q.bag = add result q.bag }
+    ensures  { mem result q.bag }
+    ensures  { forall e: elt. mem e q.bag -> priority e <= priority result }
+  = q.size <- q.size - 1;
+    let r = q.elems[q.h] in
+    q.elems[q.h] <- q.elems[q.size];
+    if q.size > 0 then begin
+      let m = ref (priority q.elems[0]) in
+      q.h <- 0;
+      for i = 1 to q.size - 1 do
+        invariant { 0 <= q.h < q.size }
+        invariant { forall j: int. 0 <= j < i ->
+                    priority q.elems[j] <= priority q.elems[q.h] }
+        let p = priority q.elems[i] in
+        if p > !m then begin q.h <- i; m := p end
+      done
+    end;
+    q.bag <- diff q.bag (singleton r);
+    r
+
+end
+

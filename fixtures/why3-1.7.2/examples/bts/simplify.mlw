@@ -1,0 +1,13 @@
+
+
+module M
+
+  use ref.Ref
+
+  val x : ref int
+
+  let f () : int
+    ensures  { result = !x }
+  = !x
+
+end

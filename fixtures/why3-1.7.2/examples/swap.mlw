@@ -1,0 +1,88 @@
+
+(** Swapping two integers in-place *)
+
+module Swap
+
+  use int.Int
+  use ref.Ref
+
+  let swap (ref a b: int) : unit
+    writes  { a, b }
+    ensures { a = old b /\ b = old a }
+  =
+    a <- a + b;
+    b <- a - b;
+    a <- a - b
+
+end
+
+(** It also works fine with machine integers, even with overflows *)
+
+module SwapInt32
+
+  use int.Int
+  use ref.Ref
+
+  (** a simple model of 32-bit integers with addition, subtraction,
+      and possible overflows *)
+
+  type int32 = < range -0x8000_0000 0x7fff_ffff >
+
+  meta coercion function int32'int
+
+  constant width : int = int32'maxInt - int32'minInt + 1
+
+  val (+) (a: int32) (b: int32) : int32
+    ensures { result =
+         if a + b < int32'minInt then a + b + width
+    else if a + b > int32'maxInt then a + b - width
+    else    a + b }
+
+  val (-) (a: int32) (b: int32) : int32
+    ensures { result =
+         if a - b < int32'minInt then a - b + width
+    else if a - b > int32'maxInt then a - b - width
+    else    a - b }
+
+  predicate in_bounds (n: int32) = int32'minInt <= n <= int32'maxInt
+
+  (** purely applicative version first *)
+
+  let swap (a b: int32) : (x: int32, y: int32)
+    requires { in_bounds a /\ in_bounds b }
+    ensures  { int32'int x = b /\ int32'int y = a }
+  =
+    let a = a + b in
+    let b = a - b in
+    let a = a - b in
+    a, b
+
+  (** then rephrased with mutable variables *)
+
+  let swap_ref (ref a b: int32) : unit
+    requires { in_bounds a /\ in_bounds b }
+    writes   { a, b }
+    ensures  { int32'int a = old b /\ int32'int b = old a }
+  =
+    a <- a + b;
+    b <- a - b;
+    a <- a - b
+
+end
+
+(** with bitwise XOR this time *)
+
+module SwapInt32xor
+
+  use bv.BV32
+  use ref.Ref
+
+  let swap (ref a b: t) : unit
+    writes   { a, b }
+    ensures  { a = old b /\ b = old a }
+  = a <- bw_xor a b;
+    b <- bw_xor a b;
+    a <- bw_xor a b
+
+end
+

@@ -1,0 +1,81 @@
+module M
+
+use int.Int
+use ref.Ref
+
+(* for loop with invariant *)
+let test1 () =
+  let x = ref 0 in
+  for i = 1 to 10 do
+    invariant { !x = i-1 }
+    x := !x + 1
+  done;
+  assert { !x = 10 }
+
+(* we don't even enter *)
+let test2 () =
+  let x = ref 0 in
+  for i = 2 to 1 do invariant { !x = 0 }
+    x := 1
+  done;
+  assert { !x = 0 }
+
+exception E
+
+(* the body raises an exception (for sure)
+   subtle: the invariant is required *)
+let test3 ()
+  ensures { false } raises { E -> true }
+= for i = 1 to 10 do invariant { i >= 2 -> false }
+    raise E
+  done
+
+(* the body may raise an exception *)
+let test4 x
+  ensures { result=True <-> 0 <= x <= 10 }
+= try
+    for i = 0 to 10 do
+      invariant { x < 0 \/ x >= i }
+      if i = x then raise E
+    done;
+    False
+  with E ->
+    True
+  end
+
+(* and now downto *)
+
+let test1d () =
+  let x = ref 11 in
+  for i = 10 downto 1 do
+    invariant { !x = i+1 }
+    x := !x - 1
+  done;
+  assert { !x = 1 }
+
+let test2d () =
+  let x = ref 0 in
+  for i = 1 downto 2 do invariant { !x = 0 }
+    x := 1
+  done;
+  assert { !x = 0 }
+
+let test3d ()
+  ensures { false } raises { E -> true }
+= for i = 10 downto 1 do invariant { i < 10 -> false }
+    raise E
+  done
+
+let test4d x
+  ensures { result=True <-> 0 <= x <= 10 }
+= try
+    for i = 10 downto 0 do
+      invariant { x > 10 \/ x <= i }
+      if i = x then raise E
+    done;
+    False
+  with E ->
+    True
+  end
+
+end

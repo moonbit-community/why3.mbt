@@ -1,0 +1,81 @@
+
+(** {1 Abstract monoids}
+    Author: Martin Clochard *)
+
+(** {2 Abstract logic monoid} *)
+
+module Monoid
+
+  (** Elements of the monoid. *)
+  type t
+
+  (** Neutral element. *)
+  constant zero : t
+
+  (** Composition law. *)
+  function op (a b:t) : t
+
+  (** Monoid properties. *)
+  axiom assoc : forall a b c:t. op a (op b c) = op (op a b) c
+  axiom neutral : forall x:t. op x zero = x = op zero x
+
+end
+
+(** {2 Abstract monoid with aggregation} *)
+module MonoidSum
+
+  use seq.Seq
+  clone import Monoid as M with axiom .
+
+  function agg (f:'a -> t) (s:seq 'a) : t
+  axiom agg_empty : forall f:'a -> t. agg f empty = zero
+  axiom agg_sing : forall f,s:seq 'a.
+    length s = 1 -> agg f s = f s[0]
+  axiom agg_cat : forall f,s1 s2:seq 'a.
+    agg f (s1 ++ s2) = op (agg f s1) (agg f s2)
+
+end
+
+(** {2 Definition of aggregation (refinement of MonoidSum} *)
+module MonoidSumDef
+
+  use seq.Seq
+  use seq.FreeMonoid
+
+  (* TODO: do that refinement correctly ! *)
+  clone import Monoid as M with axiom .
+
+  let rec ghost function agg (f:'a -> t) (s:seq 'a) : M.t
+    variant { length s }
+  = if length s = 0 then zero else op (f s[0]) (agg f s[1 ..])
+
+  lemma agg_sing_core : forall s:seq 'a. length s = 1 -> s[1 ..] == empty
+
+  let rec lemma agg_cat (f:'a -> t) (s1 s2:seq 'a)
+    ensures { agg f (s1++s2) = op (agg f s1) (agg f s2) }
+    variant { length s1 }
+  = if length s1 <> 0 then let s3 = s1[1 ..] in agg_cat f s3 s2
+
+  clone MonoidSum as MS with type M.t = M.t,
+    constant M.zero = M.zero,
+    function M.op = M.op,
+    goal M.assoc,
+    goal M.neutral,
+    function agg = agg,
+    goal agg_empty,
+    goal agg_sing,
+    goal agg_cat
+
+end
+
+(** {2 Computable monoid} *)
+module ComputableMonoid
+
+  clone export Monoid with axiom .
+
+  (** Abstract routines computing operations in the monoid. *)
+  val zero () : t ensures { result = zero }
+
+  val op (a b:t) : t ensures { result = op a b }
+
+end

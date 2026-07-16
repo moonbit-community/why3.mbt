@@ -1,0 +1,26 @@
+
+(* yet another binary search *)
+
+module BinarySearch
+
+  use int.Int
+  use int.ComputerDivision
+
+  val function f int : int
+
+  axiom f_monotonic : forall x y : int. x <= y -> f x <= f y
+
+  let rec binary_search target lo hi variant { hi-lo }
+    requires { f lo < target <= f hi }
+    ensures  { f result >= target /\
+      forall x : int. x < result -> f x < target }
+  = if lo < hi-1 then
+      let mid = div (lo + hi) 2 in
+      if f mid < target then
+        binary_search target mid hi
+      else
+        binary_search target lo mid
+    else
+      hi
+
+end

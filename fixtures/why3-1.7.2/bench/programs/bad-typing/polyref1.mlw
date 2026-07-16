@@ -1,0 +1,7 @@
+module M
+
+  use ref.Ref
+
+  val r : ref 'a
+
+end
