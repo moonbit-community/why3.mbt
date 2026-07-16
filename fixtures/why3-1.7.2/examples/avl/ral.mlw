@@ -1,0 +1,278 @@
+
+(** {1 Logarithmic-time Random-access list implementation on top
+       of AVL trees}
+    Author: Martin Clochard *)
+
+module RAL
+
+  (** {2 Instantiation of the AVL tree module} *)
+
+  use int.Int
+  use import mach.peano.Peano as I
+  use seq.Seq
+  use seq.FreeMonoid
+  use option.Option
+  use avl.SelectionTypes
+  use ref.Ref
+
+  (** Remaining parameters. A fully concrete implementation would
+      have to provide an explicit positive integer. *)
+  val constant balancing : I.t
+    ensures { result > 0 }
+
+  (** Use the integer monoid in order to measure sequence of elements
+      by their length. *)
+  scope M
+    type m = int
+    type t = int
+    constant zero : int = 0
+    function op (x y:int) : int = x + y
+    clone export monoid.Monoid with type t = m,
+      constant zero = zero,function op = op,lemma assoc,lemma neutral
+    clone export monoid.MonoidSumDef with type M.t = m,
+      constant M.zero = zero,function M.op = op,goal M.assoc,goal M.neutral
+    function m (x:'a) : 'a = x
+    predicate c (_:'a) = true
+    let zero () : int ensures { result = 0 } = 0
+    let op (x y:int) : int ensures { result = x + y } = x + y
+  end
+
+  (** The stored elements are measured by 1. *)
+  scope D
+    type t 'a = 'a
+    let function measure 'a : int = 1
+    meta "inline:no" function measure
+  end
+
+  (** The monoidal summary of a list is indeed its length. *)
+  let rec lemma agg_measure_is_length (s:seq 'a) : unit
+    ensures { M.agg D.measure s = length s }
+    variant { length s }
+  = if length s <> 0
+    then agg_measure_is_length s[1 ..]
+    else assert { s = empty }
+
+  (** Select either an element or the hole before him: the n-th hole is
+      the position between (n-1)-th element (if any)
+      and n-th element (if any). *)
+  type selector = { index : int; hole : bool }
+
+  (** Selection is possible iff the index is between the sequence bounds. *)
+  predicate selection_possible (s:selector) (l:seq 'a) =
+    0 <= s.index && (if s.hole then s.index <= length l else s.index < length l)
+
+  (** Selection predicate: We are exactly at the `index`-th position of the
+     rebuild sequence, and there is an element in the middle iff we are
+     not trying to select a hole. *)
+  predicate selected (s:selector) (e:split 'a) =
+    s.index = length e.left /\ (s.hole <-> e.middle = None)
+
+  (** Reduction of positional search using the size information. *)
+  let selected_part (ghost lseq:seq 'a) (ghost rseq:seq 'a)
+    (s:selector) (sl:int) (d:'a) (sr:int) : part_base selector
+    requires { selection_possible s (lseq ++ cons d rseq) }
+    requires { sl = length lseq /\ sr = length rseq }
+    returns { Here -> let e2 = { left = lseq;
+        middle = Some d;
+        right = rseq } in selected s e2
+      | Left rsl -> selection_possible rsl lseq /\
+        forall e. selected rsl e /\ rebuild e = lseq ->
+          selected s (right_extend e d rseq)
+      | Right rsr -> selection_possible rsr rseq /\
+        forall e. selected rsr e /\ rebuild e = rseq ->
+          selected s (left_extend lseq d e) }
+  = let ind = s.index in
+    if ind > sl
+    then Right { s with index = ind - sl - 1 }
+    else if ind < sl
+    then Left s
+    else if s.hole
+    then Left s
+    else Here
+
+  (** Full instantiation of the AVL module. *)
+  clone avl.AVL as Sel with type selector = selector,
+    predicate selection_possible = selection_possible,
+    predicate selected = selected,
+    val selected_part = selected_part,
+    goal selection_empty,
+    val balancing = balancing,
+    type D.t = D.t,
+    val D.measure = D.measure,
+    type M.t = M.t,
+    constant M.zero = M.zero,
+    function M.op = M.op,
+    goal M.assoc,
+    goal M.neutral,
+    function M.agg = M.agg,
+    goal M.agg_empty,
+    goal M.agg_sing,
+    goal M.agg_cat,
+    val M.zero = M.zero,
+    val M.op = M.op
+
+  (** {2 Adaptation of specification to random-access lists}
+
+      A priori, the specification expected for random-access lists
+      is different from the one obtained from the raw instance. *)
+
+  (** Adapt the logical model to random-access lists, i.e strip the height
+      from the accessible information. *)
+  type t 'a = Sel.t 'a
+  type m 'a = seq 'a
+
+  (** Create an empty random-access list. *)
+  let empty () : t 'a
+    ensures { result = empty }
+  = Sel.empty ()
+
+  (** Create a list with a single element. *)
+  let singleton (d:'a) : t 'a
+    ensures { result = singleton d }
+  = Sel.singleton d
+
+  (** Emptyness test. *)
+  let is_empty (r:t 'a) : bool
+    ensures { length r = 0 -> result }
+    ensures { result -> r = empty }
+  = Sel.is_empty r
+
+  (** Pattern-matching over the list front. *)
+  let decompose_front (r:t 'a) : option ('a,t 'a)
+    returns { None -> r = empty | Some (hd,tl:t 'a) -> r = cons hd tl }
+  = Sel.decompose_front r
+
+  (** Pattern-matching over the list back. *)
+  let decompose_back (r:t 'a) : option (t 'a,'a)
+    returns { None -> r = empty | Some (lt:t 'a,dh) -> r = snoc lt dh }
+  = Sel.decompose_back r
+
+  (** Get the first element of a non-empty list. *)
+  let front (r:t 'a) : 'a
+    requires { length r <> 0 }
+    ensures { result = r[0] }
+  = Sel.front r
+
+  (** Get the last element of a non-empty list. *)
+  let back (r:t 'a) : 'a
+    requires { length r <> 0 }
+    ensures { result = r[length r - 1] }
+  = Sel.back r
+
+  (** Add an element at the list front. *)
+  let cons (d:'a) (r:t 'a) : t 'a
+    ensures { result = cons d r }
+  = Sel.cons d r
+
+  (** Add an element at the list back. *)
+  let snoc (r:t 'a) (d:'a) : t 'a
+    ensures { result = snoc r d }
+  = Sel.snoc r d
+
+  (** Append two lists. *)
+  let concat (l:t 'a) (r:t 'a) : t 'a
+    ensures { result = l ++ r }
+  = Sel.concat l r
+
+  (** Get the length of a list. *)
+  let length (l:t 'a) : int
+    ensures { result = length l }
+  = Sel.total l
+
+  (** Set the n-th element. *)
+  let set (n:int) (d:'a) (l:t 'a) : t 'a
+    requires { 0 <= n < length l }
+    ensures { result = l[n <- d] }
+    ensures { length result = length l }
+    ensures { forall i:int. 0 <= i < length l /\ i <> n -> result[i] = l[i] }
+    ensures { result[n] = d }
+  = let ghost r = Sel.default_split () in
+    let res = Sel.insert r { index = n; hole = false } d l in
+    assert { res == l[n <- d] };
+    res
+
+  (** Get the n-th element. *)
+  let get (n:int) (l:t 'a) : 'a
+    requires { 0 <= n < length l }
+    ensures { result = l[n] }
+  = let ghost r = Sel.default_split () in
+    match Sel.get r { index = n; hole = false } l with
+    | None -> absurd
+    | Some d -> d
+    end
+
+  (** Insert an element in the n-th position of the list,
+     i.e between the (n-1)-th and n-th elements of the initial list. *)
+  let insert (n:int) (d:'a) (l:t 'a) : t 'a
+    requires { 0 <= n <= length l }
+    ensures { result = l[.. n] ++ cons d l[n ..] }
+    ensures { length result = 1 + length l }
+    ensures { forall i:int. 0 <= i < n -> result[i] = l[i] }
+    ensures { forall i:int. n < i < length result -> result[i] = l[i-1] }
+    ensures { result[n] = d }
+  = let ghost r = Sel.default_split () in
+    Sel.insert r { index = n; hole = true } d l
+
+  (** Remove the n-th element. *)
+  let remove (n:int) (l:t 'a) : t 'a
+    requires { 0 <= n < length l }
+    ensures { result = l[.. n] ++ l[(n+1) ..] }
+    ensures { length result = length l - 1 }
+    ensures { forall i:int. 0 <= i < n -> result[i] = l[i] }
+    ensures { forall i:int. n <= i < length result -> result[i] = l[i+1] }
+  = let ghost r = Sel.default_split () in
+    Sel.remove r { index = n; hole = false } l
+
+  (** Cut the list between the (n-1)-th and n-th elements. *)
+  let cut (n:int) (l:t 'a) : (t 'a,t 'a)
+    requires { 0 <= n <= length l }
+    returns { (lf:t 'a,rg:t 'a) ->
+      l = lf ++ rg /\ lf = l[.. n] /\ rg = l[n ..] }
+  = let ghost r = Sel.default_split () in
+    let sel = { index = n; hole = true } in
+    let (lf,_,rg) = Sel.split r sel l in
+    (lf,rg)
+
+  (** Split the list on the n-th element. *)
+  let split (n:int) (l:t 'a) : (t 'a,'a,t 'a)
+    requires { 0 <= n < length l }
+    returns { (lf:t 'a,md,rg:t 'a) ->
+      l = lf ++ cons md rg /\ lf = l[.. n] /\ rg = l[(n+1) ..] }
+  = let ghost r = Sel.default_split () in
+    let sel = { index = n; hole = false } in
+    let (lf,md,rg) = Sel.split r sel l in
+    match md with None -> absurd | Some md -> (lf,md,rg) end
+
+  (** tests *)
+  let harness (a b:t int) : unit
+    requires { length a > 43 /\ length b > 43 }
+    requires { forall n. 0 <= n < length a -> a[n] = 0 }
+    requires { forall n. 0 <= n < length b -> b[n] = 1 }
+  = let a = set 1 1 a in
+    let b = set 1 10 b in
+    let a = set 2 2 a in
+    let b = set 2 20 b in
+    check { a[1] = 1 /\ a[42] = 0 };
+    check { b[1] = 10 /\ b[42] = 1 };
+    let a = remove 1 a in
+    let b = remove 2 b in
+    check { a[1] = 2 /\ a[42] = 0 };
+    check { b[2] = 1 /\ b[42] = 1 }
+
+  let harness2 () : unit
+  = (* [] *)
+    let a = empty () in
+    (* [2] *)
+    let a = cons 2 a in
+    (* [2;3] *)
+    let a = snoc a 3 in
+    (* [3] *)
+    let b = match decompose_front a with
+      | None -> absurd
+      | Some (d,tl) -> check { d = 2 }; tl
+    end in
+    (* [3;2;3] *)
+    let a = concat b a in
+    check { a[1] = 2 }
+
+end

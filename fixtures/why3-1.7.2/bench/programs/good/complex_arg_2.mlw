@@ -1,0 +1,10 @@
+
+exception Exception int
+
+use ref.Ref
+
+val t : ref int
+
+val m (_a:int) (_b:int) : unit raises { Exception }
+
+let test () raises { Exception } = (m ( assert { true } ; 0) 0)

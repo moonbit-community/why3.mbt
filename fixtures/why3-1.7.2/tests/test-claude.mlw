@@ -1,0 +1,72 @@
+
+
+module TestBool
+
+  use bool.Bool
+
+  let f (x:bool) : bool
+  ensures { result = True }
+  =
+    if x then False else x
+
+end
+
+
+module M
+
+  use int.Int
+  use ref.Ref
+
+  val f (n:int) : bool
+    ensures { if result then n >= 0 else n <= 0 }
+end
+
+
+module Termination
+
+
+  type t = A t | B
+
+  predicate p (x:t) =
+    match x with
+    | A y -> p y
+    | B -> true
+    end
+
+  predicate q (x:t) =
+    match x with
+    | A (A y) -> q y
+    | A _y -> false
+    | B -> true
+    end
+
+  type t1 = E t2
+  with t2 = C t1 | D
+
+  predicate r (x:t1) =
+    match x with
+    | E (C y) -> r y
+    | E D -> true
+    end
+
+
+  let rec f "W:diverges:N" (x:t) : t =
+    let _y = 42 in
+    f x
+
+  let g "W:diverges:N" (x:t) : t =
+    while true do () done; x
+
+end
+
+
+module Absurd
+
+use int.Int
+
+let f (x:int) : int =
+  if x = 0 then 0 else
+  if x > 0 then (assert {1=1} ; 1) else
+  if x < 0 then -1 else(assert {1=1}; absurd)
+
+end

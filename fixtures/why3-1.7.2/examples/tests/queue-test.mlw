@@ -1,0 +1,25 @@
+
+module Test
+
+  use int.Int
+  use seq.Seq
+  use queue.Queue
+
+  let test0 () =
+    let s = create () : t 'a in
+    assert { s = empty };
+    let b = is_empty s in
+    assert { b = True };
+    let n = length s in
+    assert { n = 0 }
+
+  let test1 ()
+    raises { Empty }
+  = let s = create () in
+    push 1 s;
+    let x = peek s in assert { x = 1 };
+    push 2 s;
+    let x = peek s in assert { x = 1 };
+    ()
+
+end

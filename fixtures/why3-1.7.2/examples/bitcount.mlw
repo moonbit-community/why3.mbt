@@ -1,0 +1,495 @@
+module BitCount8bit_fact
+
+  use int.Int
+  use int.NumOf
+  use bv.BV8
+  use ref.Ref
+
+  function nth_as_bv (a i : t) : t =
+    if nth_bv a i
+    then (1 : t)
+    else zeros
+
+  function nth_as_int (a : t) (i : int) : int =
+    if nth a i
+    then 1
+    else 0
+
+  lemma nth_as_bv_is_int : forall a i.
+    t'int (nth_as_bv a i) = nth_as_int a (t'int i)
+
+  use int.EuclideanDivision
+
+  let ghost step1 (n x1 : t) (i : int) : unit
+    requires { 0 <= i < 4 }
+    requires { x1 = sub n (bw_and (lsr_bv n (1 : t)) (0x55 : t)) }
+    ensures { t'int (bw_and (lsr x1 (2*i)) (0x03 : t))
+            = numof (nth n) (2*i) (2*i + 2) }
+    ensures { ule (bw_and (lsr x1 (2*i)) (0x03 : t)) (2 : t) }
+  =
+    assert { let i' = of_int i in
+             let twoi = mul (2 : t) i' in
+                 bw_and (lsr_bv x1 twoi) (0x03 : t)
+               = add (nth_as_bv n twoi) (nth_as_bv n (add twoi (1 : t)))
+             &&
+                 t'int (bw_and (lsr_bv x1 twoi) (0x03 : t))
+               = numof (nth n) (t'int twoi) (t'int twoi + 2) }
+
+  let ghost step2 (n x1 x2 : t) (i : int) : unit
+    requires { 0 <= i < 2 }
+    requires { x1 = sub n (bw_and (lsr_bv n (1 : t)) (0x55 : t)) }
+    requires { x2 = add
+               (bw_and x1 (0x33 : t))
+               (bw_and (lsr_bv x1 (2 : t)) (0x33 : t)) }
+    ensures  { t'int (bw_and (lsr x2 (4*i)) (0x0F : t))
+             = numof (nth n) (4*i) (4*i+4) }
+    ensures  { ule (bw_and (lsr_bv x2 (of_int (4*i))) (0x0F : t))
+                   (4 : t) }
+  =
+     step1 n x1 (2*i);
+     step1 n x1 (2*i+1);
+
+     assert { let i' = of_int i in
+                  ult i' (2 : t)
+                &&
+                  of_int (4*i) = mul (4 : t) i'
+                &&
+                  t'int (bw_and (lsr x2 (4*i)) (0x0F : t))
+                = t'int (bw_and (lsr_bv x2 (mul (4 : t) i')) (0x0F : t))
+                = t'int (add (bw_and (lsr_bv x1 (mul (4 : t) i')) (0x03 : t))
+                           (bw_and (lsr_bv x1 (add (mul (4 : t) i') (2 : t))) (0x03 : t)))
+                = t'int (add (bw_and (lsr x1 (4*i)) (0x03 : t))
+                               (bw_and (lsr x1 ((4*i)+2)) (0x03 : t)))}
+
+  let ghost prove (n x1 x2 x3 : t) : unit
+    requires { x1 = sub n (bw_and (lsr_bv n (1 : t)) (0x55 : t)) }
+    requires { x2 = add
+               (bw_and x1 (0x33 : t))
+               (bw_and (lsr_bv x1 (2 : t)) (0x33 : t)) }
+    requires { x3 = bw_and (add x2 (lsr_bv x2 (4 : t))) (0x0F : t) }
+    ensures { t'int x3 = numof (nth n) 0 8 }
+  =
+    step2 n x1 x2 0;
+    step2 n x1 x2 1;
+
+    assert {  t'int (bw_and x2 (0x0F : t)) +
+              t'int (bw_and (lsr_bv x2 (4 : t)) (0x0F : t))
+            = t'int (bw_and (lsr x2 0) (0x0F : t)) +
+              t'int (bw_and (lsr x2 4) (0x0F : t)) }
+
+  let count (n : t) : t
+    ensures { t'int result = numof (nth n) 0 8 }
+  =
+    let x = ref n in
+
+    x := sub !x (bw_and (lsr_bv !x (1 : t)) (0x55 : t));
+    let ghost x1 = !x in
+
+    x := add
+               (bw_and !x (0x33 : t))
+               (bw_and (lsr_bv !x (2 : t)) (0x33 : t));
+    let ghost x2 = !x in
+
+    x := bw_and (add !x (lsr_bv !x (4 : t))) (0x0F : t);
+
+    prove n x1 x2 !x;
+
+    !x
+
+end
+
+module BitCounting32
+
+  use int.Int
+  use int.NumOf
+  use bv.BV32
+  use ref.Ref
+
+  predicate step0 (n x1 : t) =
+    x1 = sub n (bw_and (lsr_bv n (1 : t)) (0x55555555 : t))
+
+  let ghost proof0 (n x1 : t) (i : int) : unit
+    requires { 0 <= i < 16 }
+    requires { step0 n x1 }
+    ensures { t'int (bw_and (lsr x1 (2*i)) (0x03 : t))
+              = numof (nth n) (2*i) (2*i + 2) }
+  =
+    let i' = of_int i in
+    let twoi = mul (2 : t) i' in
+    assert { t'int twoi = 2 * i };
+    assert { t'int (add twoi (1 : t)) = t'int twoi + 1 };
+    assert { t'int (bw_and (lsr_bv x1 twoi) (0x03 : t))
+             = (if nth_bv n twoi then 1 else 0) +
+               (if nth_bv n (add twoi (1 : t)) then 1 else 0)
+             = (if nth n (t'int twoi) then 1 else 0) +
+               (if nth n (t'int twoi + 1) then 1 else 0)
+             = numof (nth n) (t'int twoi) (t'int twoi + 2) }
+
+  predicate step1 (x1 x2 : t) =
+    x2 = add (bw_and x1 (0x33333333 : t))
+             (bw_and (lsr_bv x1 (2 : t)) (0x33333333 : t))
+
+  let ghost proof1 (n x1 x2 : t) (i : int) : unit
+    requires { 0 <= i < 8 }
+    requires { step0 n x1  }
+    requires { step1 x1 x2 }
+    ensures  { t'int (bw_and (lsr x2 (4*i)) (0x07 : t))
+               = numof (nth n) (4*i) (4*i+4) }
+  =
+     proof0 n x1 (2*i);
+     proof0 n x1 (2*i+1);
+     let i' = of_int i in
+     assert { ult i' (8 : t) };
+     assert { t'int (mul (4 : t) i') = 4*i };
+     assert { bw_and (lsr x2 (4*i)) (0x07 : t)
+              = bw_and (lsr_bv x2 (mul (4 : t) i')) (0x07 : t)
+              = add (bw_and (lsr_bv x1 (mul (4 : t) i')) (0x03 : t))
+                      (bw_and (lsr_bv x1 (add (mul (4 : t) i') (2 : t)))
+                              (0x03 : t))
+              = add (bw_and (lsr x1 (4*i)) (0x03 : t))
+                      (bw_and (lsr x1 ((4*i)+2)) (0x03 : t)) }
+
+  predicate step2 (x2:t) (x3:t) =
+    x3 = bw_and (add x2 (lsr_bv x2 (4 : t))) (0x0F0F0F0F : t)
+
+  let ghost proof2 (n x1 x2 x3 : t) (i : int) : unit
+    requires { 0 <= i < 4 }
+    requires { step0 n x1 }
+    requires { step1 x1 x2 }
+    requires { step2 x2 x3 }
+    ensures  { t'int (bw_and (lsr x3 (8*i)) (0x0F : t))
+             = numof (nth n) (8*i) (8*i+8) }
+  =
+    proof1 n x1 x2 (2*i);
+    proof1 n x1 x2 (2*i+1);
+    let i' = of_int i in
+    assert { ult i' (4 : t) };
+    assert { t'int (mul (8 : t) i') = 8*i };
+    assert { t'int (add (mul (8 : t) i') (4 : t)) = 8*i+4 };
+    assert { bw_and (lsr x3 (8*i)) (0x0F : t)
+             = bw_and (lsr_bv x3 (mul (8 : t) i')) (0x0F : t)
+             = add (bw_and (lsr_bv x2 (mul (8 : t) i')) (0x07 : t))
+                   (bw_and (lsr_bv x2 (add (mul (8 : t) i') (4 : t))) (0x07 : t))
+             = add (bw_and (lsr x2 (8*i)) (0x07 : t))
+                   (bw_and (lsr x2 ((8*i)+4)) (0x07 : t)) }
+
+  predicate step3 (x3:t) (x4:t) =
+    x4 = add x3 (lsr_bv x3 (8 : t))
+
+  let ghost proof3 (n x1 x2 x3 x4 : t) (i : int) : unit
+    requires { 0 <= i < 2 }
+    requires { step0 n x1 }
+    requires { step1 x1 x2 }
+    requires { step2 x2 x3 }
+    requires { step3 x3 x4 }
+    ensures  { t'int (bw_and (lsr x4 (16*i)) (0x1F : t))
+               = numof (nth n) (16*i) (16*i+16) }
+  =
+    proof2 n x1 x2 x3 (2*i);
+    proof2 n x1 x2 x3 (2*i+1);
+    let i' = of_int i in
+    assert { ult i' (2 : t) };
+    assert { t'int (mul (16 : t) i') = 16*i };
+    assert { t'int (add (mul (16 : t) i') (8 : t)) = 16*i+8 };
+    assert { bw_and (lsr x4 (16*i)) (0x1F : t)
+             = bw_and (lsr_bv x4 (mul (16 : t) i')) (0x1F : t)
+             = add (bw_and (lsr_bv x3 (mul (16 : t) i')) (0x0F : t))
+                   (bw_and (lsr_bv x3 (add (mul (16 : t) i') (8 : t))) (0x0F : t))
+             = add (bw_and (lsr x3 (16*i)) (0x0F : t))
+                   (bw_and (lsr x3 ((16*i)+8)) (0x0F : t)) }
+
+  predicate step4 (x4:t) (x5:t) =
+    x5 = add x4 (lsr_bv x4 (16 : t))
+
+  let ghost prove (n x1 x2 x3 x4 x5 : t) : unit
+    requires { step0 n x1 }
+    requires { step1 x1 x2 }
+    requires { step2 x2 x3 }
+    requires { step3 x3 x4 }
+    requires { step4 x4 x5 }
+    ensures { t'int (bw_and x5 (0x3F : t)) = numof (nth n) 0 32 }
+  =
+    proof3 n x1 x2 x3 x4 0;
+    proof3 n x1 x2 x3 x4 1;
+(* moved to the stdlib
+    assert { x4 = lsr x4 0 };
+*)
+    assert { bw_and x5 (0x3F : t)
+             = add (bw_and x4 (0x1F : t)) (bw_and (lsr_bv x4 (16 : t)) (0x1F : t))
+             = add (bw_and (lsr x4 0) (0x1F : t)) (bw_and (lsr x4 16) (0x1F : t)) }
+
+  function count_logic (n:t) : int = numof (nth n) 0 32
+
+  let count (n : t) : t
+    ensures { t'int result = count_logic n }
+  =
+    let x = ref n in
+    (* x = x - ( (x >> 1) & 0x55555555) *)
+    x := sub !x (bw_and (lsr_bv !x (1 : t)) (0x55555555 : t));
+    let ghost x1 = !x in
+    (* x = (x & 0x33333333) + ((x >> 2) & 0x33333333) *)
+    x := add (bw_and !x (0x33333333 : t))
+             (bw_and (lsr_bv !x (2 : t)) (0x33333333 : t));
+    let ghost x2 = !x in
+    (* x = (x + (x >> 4)) & 0x0F0F0F0F *)
+    x := bw_and (add !x (lsr_bv !x (4 : t))) (0x0F0F0F0F : t);
+    let ghost x3 = !x in
+    (* x = x + (x >> 8) *)
+    x := add !x (lsr_bv !x (8 : t));
+    let ghost x4 = !x in
+    (* x = x + (x >> 16) *)
+    x := add !x (lsr_bv !x (16 : t));
+
+    prove n x1 x2 x3 x4 !x;
+
+    (* return (x & 0x0000003F) *)
+    bw_and !x (0x0000003F : t)
+
+end
+
+
+module Hamming
+  use int.Int
+  use int.NumOf
+  use mach.bv.BVCheck32
+  use BitCounting32
+
+  predicate nth_diff (a b : t) (i : int) = nth a i <> nth b i
+
+  function hammingD_logic (a b : t) : int = NumOf.numof (nth_diff a b) 0 32
+
+  let hammingD (a b : t) : t
+    ensures { t'int result = hammingD_logic a b }
+  =
+    assert { forall i. 0 <= i < 32 -> nth (bw_xor a b) i <-> (nth_diff a b i) };
+    count (bw_xor a b)
+
+  lemma symmetric: forall a b. hammingD_logic a b = hammingD_logic b a
+
+  lemma numof_ytpmE :
+    forall p : int -> bool, a b : int.
+    numof p a b = 0 -> (forall n : int. a <= n < b -> not p n)
+
+  let lemma separation (a b : t)
+    ensures { hammingD_logic a b = 0 <-> a = b }
+  =
+    assert { hammingD_logic a b = 0 -> eq_sub a b 0 32 }
+
+  function fun_or (f g : 'a -> bool) : 'a -> bool = fun x -> f x \/ g x
+
+  let rec lemma numof_or (p q : int -> bool) (a b: int) : unit
+    variant {b - a}
+    ensures {numof (fun_or p q) a b <= numof p a b + numof q a b}
+  =
+    if a < b then
+    numof_or p q a (b-1)
+
+  let lemma triangleInequalityInt (a b c : t) : unit
+    ensures {hammingD_logic a b + hammingD_logic b c >= hammingD_logic a c}
+  =
+    assert {numof (nth_diff a b) 0 32 + numof (nth_diff b c) 0 32 >=
+    numof (fun_or (nth_diff a b) (nth_diff b c)) 0 32 >=
+    numof (nth_diff a c) 0 32}
+
+  lemma triangleInequality: forall a b c.
+    (hammingD_logic a b) + (hammingD_logic b c) >= hammingD_logic a c
+
+end
+
+(** {2 ASCII checksum}
+
+    In the beginning the encoding of an ascii character was done on 8
+    bits: the first 7 bits were used for the character itself while
+    the 8th bit was used as a checksum, i.e. a mean to detect errors. The
+    checksum value was the binary sum of the 7 other bits, allowing the
+    detection of any change of an odd number of bits in the initial
+    value. Let's prove it! *)
+
+module AsciiCode
+  use int.Int
+  use int.NumOf
+  use number.Parity
+  use bool.Bool
+  use mach.bv.BVCheck32
+  use BitCounting32
+
+  constant one : t = 1 : t
+  constant lastbit : t = sub size_bv one
+
+  (* let lastbit () = (sub_check size_bv one) : t *)
+
+  (** {4 Checksum computation and correctness} *)
+
+  (** A ascii character is valid if its number of 1-bits is even.
+      (Remember that a binary number is odd if and only if its first
+      bit is 1.) *)
+  predicate validAscii (b : t) = even (count_logic b)
+
+  let lemma bv_even (b:t)
+    ensures { even (t'int b) <-> not (nth b 0) }
+  =
+    assert { not (nth_bv b zeros) <-> b = mul (2 : t) (lsr_bv b one) };
+    assert { (exists k. b = mul (2 : t) k) -> not (nth_bv b zeros) };
+    assert { (exists k. t'int b = 2 * k) -> (exists k. b = mul (2 : t) k) };
+    assert { not (nth b 0) <-> t'int b = 2 * t'int (lsr b 1) }
+
+  lemma bv_odd : forall b : t. odd (t'int b) <-> nth b 0
+
+  (* use Numofbit *)
+
+  function fun_or (f g : 'a -> bool) : 'a -> bool = fun x -> f x \/ g x
+
+  let rec lemma numof_or (p q : int -> bool) (a b: int) : unit
+    requires { forall i. a <= i < b -> not (p i) \/ not (q i) }
+    variant {b - a}
+    ensures {numof (fun_or p q) a b = numof p a b + numof q a b}
+  =
+    if a < b then
+    numof_or p q a (b-1)
+
+  let lemma count_or (b c : t)
+    requires { bw_and b c = zeros }
+    ensures  { count_logic (bw_or b c) = count_logic b + count_logic c }
+  =
+    assert { forall i. ult i size_bv ->
+               not (nth_bv b i) \/ not (nth_bv c i) };
+    assert { forall i. not (nth_bv b (of_int i)) \/ not (nth_bv c (of_int i))
+          -> not (nth b i) \/ not (nth c i) };
+    assert { numof (fun_or (nth b) (nth c)) 0 32 = numof (nth b) 0 32 + numof (nth c) 0 32 };
+    assert { numof (nth (bw_or b c)) 0 32 = numof (fun_or (nth b) (nth c)) 0 32 }
+
+  (** The `ascii` function makes any character valid in the
+      sense that we just defined. One way to implement it is to count
+      the number of 1-bits of a character encoded on 7 bits, and if this
+      number is odd, set the 8th bit to 1 if not, do nothing. *)
+
+  let ascii (b : t) =
+    requires { not (nth_bv b lastbit) }
+    ensures  { eq_sub_bv result b zeros lastbit }
+    ensures  { validAscii result }
+    let c = count b in
+    let maskbit = u_lsl c (31:t) in
+    assert { bw_and b maskbit = zeros };
+    assert { even (t'int c) ->
+               not (nth_bv c zeros)
+            && count_logic maskbit    = 0 };
+    assert { odd  (t'int c) ->
+               nth_bv c zeros
+            && nth maskbit 31
+            && (forall i. 0 <= i < 31 -> not (nth maskbit i))
+            && count_logic maskbit    = 1 };
+    let code = bw_or b maskbit in
+    assert { count_logic code = count_logic b + count_logic maskbit };
+    code
+
+  (** Now, for the correctness of the checksum:
+
+      We prove that two numbers differ by an odd number of bits,
+      i.e. are of odd hamming distance, iff one is a valid ascii
+      character while the other is not. This implies that if there is an
+      odd number of changes on a valid ascii character, the result
+      will be invalid, hence the validity of the encoding. *)
+
+  use Hamming
+
+  let rec lemma tmp (a b : t) (i j : int)
+      requires { i < j }
+      variant { j - i }
+      ensures { (even (numof (nth a) i j) /\ odd (numof (nth b) i j)) \/ (odd (numof (nth a) i j) /\ even (numof (nth b) i j))
+             <-> odd (NumOf.numof (Hamming.nth_diff a b) i j) }
+  =
+    if i < j - 1 then
+      tmp a b i (j-1)
+
+  lemma asciiProp : forall a b.
+          ((validAscii a /\ not validAscii b) \/ (validAscii b /\ not validAscii a))
+      <-> odd (Hamming.hammingD_logic a b)
+
+end
+
+(*** unfinished
+
+module GrayCode
+  use int.Int
+  use int.NumOf
+  use number.Parity
+  use bool.Bool
+  use mach.bv.BVCheck32
+  use BitCounting32
+  use Hamming
+
+  constant one : t = 1 : t
+  constant lastbit : t = sub size_bv one
+
+  (** {2 Gray code}
+    Gray codes are bit-wise representations of integers with the
+    property that every integer differs from its predecessor by only
+    one bit.
+
+    In this section we look at the "reflected binary Gray code"
+    discussed in Chapter 13, p.311.
+  *)
+
+  (** {4 The two transformations, to and from Gray-coded integer} *)
+
+  function toGray (bv : t) : t =
+    bw_xor bv (lsr_bv bv one)
+
+  function fromGray (gr : t) : t =
+    let b = bw_xor gr (lsr_bv gr (1 : t)) in
+    let b = bw_xor b (lsr_bv b (2 : t)) in
+    let b = bw_xor b (lsr_bv b (4 : t)) in
+    let b = bw_xor b (lsr_bv b (8 : t)) in
+      bw_xor b (lsr_bv b (16 : t))
+
+  (** Which define an isomorphism. *)
+
+  lemma iso: forall b.
+    toGray (fromGray b) = b /\ fromGray (toGray b) = b
+
+  (** {4 Some properties of the reflected binary Gray code} *)
+
+  (** The first property that we want to check is that the reflected
+     binary Gray code is indeed a Gray code. *)
+
+  let lemma grayIsGray (b:t)
+    ensures { Hamming.hammingD_logic (toGray b) (toGray (add b one)) = 1 }
+  =
+    assert { b <> ones -> toGray (add b one) = bw_xor (toGray b) (bw_and (bw_not b) (add b one)) };
+    assert { b <> ones -> exists k. (bw_and (bw_not b) (add b one)) = lsl one k };
+    assert { b <> ones -> count_logic (bw_and (bw_not b) (add b one)) = 1 };
+    assert { b = ones -> (toGray b) = 0x80000000 : t /\ (toGray (add b one)) = zeros }
+
+  (** Now, a couple of property between the Gray code and the binary
+      representation.
+
+      Bit i of a Gray coded integer is the parity of the bit i and the
+      bit to the left of i in the corresponding binary integer *)
+
+  lemma nthGray: forall b i.
+    ult i lastbit ->
+      xorb (nth_bv b i) (nth_bv b (add i one)) <-> nth_bv (toGray b) i
+
+  (** (using 0 if there is no bit to the left of i) *)
+
+  lemma lastNthGray: forall b.
+    nth_bv (toGray b) lastbit <-> nth_bv b lastbit
+
+  (** Bit i of a binary integer is the parity of all the bits at and
+      to the left of position i in the corresponding Gray coded
+      integer. *)
+
+  lemma nthBinary: forall b i.
+    ult i size_bv ->
+      nth_bv (fromGray b) i <-> even (count_logic (lsr_bv b i))
+
+  (** The last property that we check is that, if an integer is even,
+      its encoding has an even number of 1-bits, and if it is odd, its
+      encoding has an odd number of 1-bits. *)
+
+  lemma evenOdd : forall b.
+    nth_bv b zeros <-> even (count_logic (toGray b))
+
+end
+
+*)

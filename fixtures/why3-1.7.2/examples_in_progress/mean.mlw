@@ -1,0 +1,12 @@
+module M
+
+  use int.Int
+  use int.EuclideanDivision as ED
+  use int.ComputerDivision
+
+  let mean (x:int) (y:int)
+    requires { 0 <= x <= y }
+    ensures { result = ED.div (x + y) 2 = div (x + y) 2 }
+  = x + div (y - x) 2
+
+end

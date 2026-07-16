@@ -1,0 +1,10 @@
+module M
+
+  use int.Int
+  use real.RealInfix
+
+  let f (x:int) ensures { result = x + 1 } = x + 1
+
+  let g (x:real) ensures { result = -. x +. 1.0 } = -. x +. 1.0
+
+end

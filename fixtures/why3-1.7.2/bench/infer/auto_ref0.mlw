@@ -1,0 +1,34 @@
+
+module Test
+	use array.Array
+	use ref.Ref
+	use int.Int
+
+	let b [@bddinfer] [@infer](_:unit): unit
+	=
+		let k = ref 0 in
+		while (true) do
+		variant { 0 }
+		invariant { !k = 0 }
+		()
+		done; ()
+
+	let b2 [@bddinfer] [@infer:oct](_:unit): unit
+	=
+		let k = ref 0 in
+		while (true) do
+		variant { 0 }
+		invariant { !k = 0 }
+		()
+		done; ()
+
+	let b3 [@bddinfer] [@infer:box](_:unit): unit
+	=
+		let k = ref 0 in
+		while (true) do
+		variant { 0 }
+		invariant { !k = 0 }
+		()
+		done; ()
+
+end

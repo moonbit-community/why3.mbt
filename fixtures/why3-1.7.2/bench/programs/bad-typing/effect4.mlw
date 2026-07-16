@@ -1,0 +1,10 @@
+
+module M
+
+  use ref.Ref
+
+  val foo (_x : int) : int
+
+  val f (x:int) : unit writes { foo.contents }
+
+end

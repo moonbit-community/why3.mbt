@@ -1,0 +1,66 @@
+
+(* Full preorder theory,
+   containing lt and eq as well. *)
+theory FullParam
+  
+  type t 'a
+  type order 'a
+  predicate le (order 'a) (t 'a) (t 'a)
+  clone export relations_params.PreOrderParam with type t = t,
+    type param = order, predicate rel = le
+  predicate eq (order 'a) (t 'a) (t 'a)
+  axiom eq_def : forall o:order 'a,x y:t 'a.
+    correct_for o x /\ correct_for o y ->
+      (eq o x y <-> le o x y /\ le o y x)
+  predicate lt (order 'a) (t 'a) (t 'a)
+  axiom lt_def : forall o:order 'a,x y:t 'a.
+    correct_for o x /\ correct_for o y ->
+      (lt o x y <-> le o x y /\ not le o y x)
+  
+  clone relations_params.EquivalenceParam as Eq with type t = t,
+    type param = order, predicate correct_for = correct_for,
+    predicate rel = eq, lemma trans, lemma refl, lemma symm
+  
+  clone relations_params.PartialStrictOrderParam as Lt with type t = t,
+    type param = order, predicate correct_for = correct_for,
+    predicate rel = lt, lemma trans, lemma asymm
+  
+end
+
+theory TotalFullParam
+  
+  clone export FullParam
+  clone export relations_params.TotalParam with type t = t,
+    type param = order, predicate correct_for = correct_for,
+    predicate rel = le
+  clone relations_params.TotalParam as Lt with type t = t,
+    type param = order, predicate correct_for = correct_for,
+    predicate rel = le, goal total
+  lemma lt_def2 : forall o:order 'a,x y:t 'a.
+    correct_for o x /\ correct_for o y -> lt o x y <-> not le o y x
+  
+end
+
+(* Total preorder + corresponding program types and computable comparison. *)
+module ComputableParam
+  
+  use int.Int
+  use program_type.TypeParams
+  clone program_type.Type1 as T
+  clone program_type.Type1 as O
+  clone export TotalFullParam with type t = T.m, type order = O.m
+  
+  (* Comparison is computable. *)
+  val compare (ghost p:type_params 'a 'b) (o:O.t 'a 'b) (x y:T.t 'a 'b) : int
+    requires { let op = O.make_params p in let tp = T.make_params p in
+      op.inv o /\ tp.inv x /\ tp.inv y /\
+      correct_for (op.mdl o) (tp.mdl x) /\
+      correct_for (op.mdl o) (tp.mdl y) }
+    ensures { let om = p.O.make_params.mdl o in
+      let mt = p.T.make_params.mdl in let xm = mt x in let ym = mt y in
+        (result > 0 <-> lt om ym xm) /\
+        (result < 0 <-> lt om xm ym) /\
+        (result = 0 <-> eq om xm ym) }
+  
+end
+

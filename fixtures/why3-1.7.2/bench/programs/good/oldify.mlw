@@ -1,0 +1,20 @@
+module M
+
+  use ref.Ref
+
+  predicate q1 int int int
+
+  val r : ref int
+
+  val f1 (y:int) : unit writes {r} ensures { q1 !r (old !r) y }
+
+  let g1 () ensures { q1 !r (old !r) (old !r) } = f1 !r
+
+  val function foo int : int
+  predicate q int int int
+
+  val f (t:ref int) (x:int) : unit writes {t} ensures { q !t (old !t) x }
+
+  let g (t:ref int) ensures { q !t (old !t) (foo (old !t)) } = f t (foo !t)
+
+end

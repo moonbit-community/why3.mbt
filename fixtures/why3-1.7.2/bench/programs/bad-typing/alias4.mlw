@@ -1,0 +1,14 @@
+module M
+
+  use ref.Ref
+
+  val r : ref int
+
+  let foo (x : ref int) =
+    x := 1;
+    r := 2
+
+  let test () =
+    foo r
+
+end

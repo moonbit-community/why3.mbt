@@ -1,0 +1,5 @@
+
+module M
+  use int.Int
+  let foo () = for i = 1 to () do () done
+end

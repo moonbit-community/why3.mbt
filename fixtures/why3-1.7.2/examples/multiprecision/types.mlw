@@ -1,0 +1,47 @@
+module Config
+
+  meta "select_inst" "goal"
+  meta "select_lskept" "goal"
+  meta "select_lsinst" "goal"
+
+end
+
+module Types
+
+  use Config
+  use mach.c.C
+  use mach.int.Int32
+  use import mach.int.UInt64GMP as Limb
+
+  type limb = uint64
+  type t = ptr limb
+
+  exception Break
+  exception Return32 int32
+  exception ReturnLimb limb
+
+end
+
+module Int32Eq
+
+  use int.Int
+  use mach.int.Int32
+
+  let (=) [@extraction:inline] (a:int32) (b:int32) : bool
+    ensures { to_int a = to_int b -> result }
+    ensures { result -> a = b }
+  = a = b
+
+end
+
+module UInt64Eq
+
+  use int.Int
+  use mach.int.UInt64GMP
+
+  let (=) [@extraction:inline] (a:uint64) (b:uint64) : bool
+    ensures { to_int a = to_int b -> result }
+    ensures { result -> a = b }
+  = a = b
+
+end
