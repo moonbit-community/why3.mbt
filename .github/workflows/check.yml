@@ -1,0 +1,71 @@
+name: check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  stable-build:
+    name: stable
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up OCaml
+        uses: ocaml/setup-ocaml@v3
+        with:
+          ocaml-compiler: 4.14.2
+
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+      - name: moon update
+        run: |
+          moon update
+
+      - name: Install Why3 1.7.2 with S-expression support
+        run: opam install -y sexplib ppx_deriving ppx_sexp_conv why3.1.7.2
+
+      - name: Show tool versions
+        run: |
+          moon version --all
+          moonrun --version
+
+      - name: Show Why3 version
+        run: opam exec -- why3 --version
+
+      - name: Check all targets
+        run: moon check --target all --warn-list +73
+
+      - name: Test all targets
+        run: |
+          moon test --target all --serial --release
+          moon test --target all --serial
+
+      - name: Test Node.js tools
+        run: node --test tools/*.test.mjs
+
+      - name: Check Why3 fixtures
+        run: opam exec -- node tools/check_why3_fixtures.mjs
+
+      - name: Check generated interfaces
+        run: |
+          moon info
+          git diff --exit-code
+
+      - name: Check formatting
+        run: |
+          moon fmt
+          git diff --exit-code
