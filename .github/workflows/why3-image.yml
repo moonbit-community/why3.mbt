@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - optmizing-ci
+      - update-why3-image
     paths:
       - Dockerfile
       - .dockerignore
