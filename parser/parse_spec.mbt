@@ -10,10 +10,7 @@ fn QualId::full_span(self : QualId) -> Span {
 
 ///|
 fn named_term(name : Ident?, fallback : Bytes, term : Term) -> Term {
-  let name = match name {
-    Some(ident) => ident.name
-    None => fallback
-  }
+  let name = if name is Some(ident) { ident.name } else { fallback }
   make_term(Tattr(Text(b"hyp_name:" + name), term), term.span)
 }
 

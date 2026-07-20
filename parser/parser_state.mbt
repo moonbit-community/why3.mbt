@@ -219,9 +219,10 @@ fn Parser::expect_kind(
   kind : TokenKind,
   expected : String,
 ) -> LocatedToken raise {
-  match self.consume_kind(kind) {
-    Some(token) => token
-    None => self.fail_syntax(expected)
+  if self.consume_kind(kind) is Some(token) {
+    token
+  } else {
+    self.fail_syntax(expected)
   }
 }
 
@@ -230,17 +231,19 @@ fn Parser::expect_keyword(
   self : Parser,
   keyword : Keyword,
 ) -> LocatedToken raise {
-  match self.consume_keyword(keyword) {
-    Some(token) => token
-    None => self.fail_syntax(keyword.spelling())
+  if self.consume_keyword(keyword) is Some(token) {
+    token
+  } else {
+    self.fail_syntax(keyword.spelling())
   }
 }
 
 ///|
 fn Parser::expect_symbol(self : Parser, symbol : Symbol) -> LocatedToken raise {
-  match self.consume_symbol(symbol) {
-    Some(token) => token
-    None => self.fail_syntax(symbol.spelling())
+  if self.consume_symbol(symbol) is Some(token) {
+    token
+  } else {
+    self.fail_syntax(symbol.spelling())
   }
 }
 
@@ -344,17 +347,14 @@ fn[A] parse_comma_list2(
   first? : A? = None,
 ) -> Array[A] raise {
   let result : Array[A] = []
-  match first {
-    None => {
-      guard starts(parser) else { parser.fail_syntax(expected) }
-      result.push(parse_item(parser))
-      parser.record_list_push()
-      ignore(parser.expect_symbol(Comma))
-    }
-    Some(item) => {
-      result.push(item)
-      parser.record_list_push()
-    }
+  if first is Some(item) {
+    result.push(item)
+    parser.record_list_push()
+  } else {
+    guard starts(parser) else { parser.fail_syntax(expected) }
+    result.push(parse_item(parser))
+    parser.record_list_push()
+    ignore(parser.expect_symbol(Comma))
   }
   guard starts(parser) else { parser.fail_syntax(expected) }
   result.push(parse_item(parser))

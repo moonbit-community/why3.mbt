@@ -64,9 +64,10 @@ fn diagnostic_message(
   match kind {
     InvalidUtf16 => "invalid UTF-16 source text"
     IllegalCharacter =>
-      match actual {
-        Some(actual) => "illegal character: \{actual}"
-        None => "illegal character"
+      if actual is Some(actual) {
+        "illegal character: \{actual}"
+      } else {
+        "illegal character"
       }
     UnterminatedComment => "unterminated comment"
     UnterminatedString => "unterminated string literal"
@@ -75,10 +76,7 @@ fn diagnostic_message(
     InvalidNumericLiteral => "invalid numeric literal"
     InvalidPositionDirective => "invalid source position directive"
     UnexpectedToken => {
-      let token = match actual {
-        Some(actual) => actual
-        None => "token"
-      }
+      let token = if actual is Some(actual) { actual } else { "token" }
       if expected.is_empty() {
         "unexpected \{token}"
       } else {

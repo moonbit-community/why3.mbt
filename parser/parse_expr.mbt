@@ -113,9 +113,10 @@ fn Parser::parse_expr_block(self : Parser) -> Expr raise {
         }
         ignore(self.expect_keyword(End))
         let span = self.span_from(mark)
-        let body = match body {
-          Some(body) => body
-          None => make_expr(Etuple([]), span)
+        let body = if body is Some(body) {
+          body
+        } else {
+          make_expr(Etuple([]), span)
         }
         Efun(
           [],
@@ -573,9 +574,10 @@ fn Parser::parse_single_expr_bp(
       self.at_symbol(Semicolon) {
       break
     }
-    let binding = match self.peek_kind_n(0) {
-      Some(kind) => pratt_binding(kind, true)
-      None => None
+    let binding = if self.peek_kind_n(0) is Some(kind) {
+      pratt_binding(kind, true)
+    } else {
+      None
     }
     guard binding is Some((power, associativity)) && power >= minimum_binding else {
       break
@@ -753,9 +755,10 @@ fn Parser::parse_constant_definition(self : Parser) -> Expr raise {
   }
   ignore(self.expect_symbol(Equal))
   let body = self.parse_seq_expr()
-  match return_type {
-    Some(return_type) => { ..body, desc: Ecast(body, return_type) }
-    None => body
+  if return_type is Some(return_type) {
+    { ..body, desc: Ecast(body, return_type) }
+  } else {
+    body
   }
 }
 
@@ -901,15 +904,14 @@ fn Parser::parse_let_expr(self : Parser) -> Expr raise {
       let kind_mark = self.mark()
       let kind = self.parse_routine_kind()
       let kind_span = self.span_from(kind_mark)
-      match self.consume_keyword(Ref) {
-        Some(reference_token) =>
-          self.parse_reference_let_expr(partiality, reference_token)
-        None =>
-          parse_alternative(
-            self,
-            parser => parser.parse_pattern_let_expr(partiality, kind, kind_span),
-            parser => parser.parse_named_let_expr(partiality, kind),
-          )
+      if self.consume_keyword(Ref) is Some(reference_token) {
+        self.parse_reference_let_expr(partiality, reference_token)
+      } else {
+        parse_alternative(
+          self,
+          parser => parser.parse_pattern_let_expr(partiality, kind, kind_span),
+          parser => parser.parse_named_let_expr(partiality, kind),
+        )
       }
     }
     make_expr(desc, self.span_from(mark))
@@ -1043,34 +1045,30 @@ fn Parser::parse_val_expr(self : Parser) -> Expr raise {
   let result = try {
     let partiality = self.parse_partiality()
     let kind = self.parse_routine_kind()
-    let desc = match self.consume_keyword(Ref) {
-      Some(reference_token) =>
-        self.parse_reference_val_expr(partiality, reference_token)
-      None => {
-        let (name, declaration) = if self.at_symbol(Amp) {
-          let name = self.parse_sym_binder()
-          (name, self.parse_constant_declaration())
+    let desc = if self.consume_keyword(Ref) is Some(reference_token) {
+      self.parse_reference_val_expr(partiality, reference_token)
+    } else {
+      let (name, declaration) = if self.at_symbol(Amp) {
+        let name = self.parse_sym_binder()
+        (name, self.parse_constant_declaration())
+      } else {
+        let name = parse_attrs_ident(self, parser => parser.parse_lident_rich())
+        let declaration = if starts_binder_or_param(self) &&
+          !self.at_symbol(Colon) {
+          self.parse_function_declaration()
         } else {
-          let name = parse_attrs_ident(self, parser => {
-            parser.parse_lident_rich()
-          })
-          let declaration = if starts_binder_or_param(self) &&
-            !self.at_symbol(Colon) {
-            self.parse_function_declaration()
-          } else {
-            self.parse_constant_declaration()
-          }
-          (name, declaration)
+          self.parse_constant_declaration()
         }
-        ignore(self.expect_keyword(In))
-        Elet(
-          name,
-          partiality.is_ghost(),
-          kind,
-          apply_partial_expr(partiality, declaration),
-          self.parse_seq_expr(),
-        )
+        (name, declaration)
       }
+      ignore(self.expect_keyword(In))
+      Elet(
+        name,
+        partiality.is_ghost(),
+        kind,
+        apply_partial_expr(partiality, declaration),
+        self.parse_seq_expr(),
+      )
     }
     make_expr(desc, self.span_from(mark))
   } catch {
