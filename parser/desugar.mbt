@@ -96,13 +96,12 @@ fn reduce_term_function_literal(
     return default
   }
   let mut index = mappings.length() - 1
-  let mut result = match default {
-    Some(default) => default
-    None => {
-      let last = mappings[index]
-      index = index - 1
-      function_literal_branch(variable, last, last.1)
-    }
+  let mut result = if default is Some(default) {
+    default
+  } else {
+    let last = mappings[index]
+    index = index - 1
+    function_literal_branch(variable, last, last.1)
   }
   while index >= 0 {
     result = function_literal_branch(variable, mappings[index], result)
@@ -498,13 +497,12 @@ fn reduce_expr_function_literal(
     return default
   }
   let mut index = mappings.length() - 1
-  let mut result = match default {
-    Some(default) => default
-    None => {
-      let last = mappings[index]
-      index = index - 1
-      function_literal_expr_branch(variable, last, last.1)
-    }
+  let mut result = if default is Some(default) {
+    default
+  } else {
+    let last = mappings[index]
+    index = index - 1
+    function_literal_expr_branch(variable, last, last.1)
   }
   while index >= 0 {
     result = function_literal_expr_branch(variable, mappings[index], result)
@@ -531,9 +529,10 @@ fn desugar_expr_function_literal(
       ),
     )
   }
-  let default_proxy = match default {
-    Some(value) => Some(proxy_expr(b"def'e", value.span))
-    None => None
+  let default_proxy = if default is Some(value) {
+    Some(proxy_expr(b"def'e", value.span))
+  } else {
+    None
   }
   let function_ident = Ident::{
     name: if mappings.is_empty() {

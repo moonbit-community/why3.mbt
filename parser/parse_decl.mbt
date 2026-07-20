@@ -117,9 +117,10 @@ fn Parser::parse_type_field(self : Parser) -> Field raise {
   let field_type = self.parse_cast()
   let span = self.span_from(mark)
   {
-    span: match inherited_start {
-      Some(start) => start.join(span)
-      None => span
+    span: if inherited_start is Some(start) {
+      start.join(span)
+    } else {
+      span
     },
     ident,
     field_type: if wrap_reference {

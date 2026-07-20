@@ -132,10 +132,10 @@ fn[A] fail_binder_semantic(
   span : Span,
   actual? : String,
 ) -> A raise ParseError {
-  match actual {
-    Some(actual) =>
-      fail_with_diagnostic(make_parse_diagnostic(kind, span, actual~))
-    None => fail_with_diagnostic(make_parse_diagnostic(kind, span))
+  if actual is Some(actual) {
+    fail_with_diagnostic(make_parse_diagnostic(kind, span, actual~))
+  } else {
+    fail_with_diagnostic(make_parse_diagnostic(kind, span))
   }
 }
 
@@ -254,9 +254,10 @@ fn apply_group_reference(
   if !reference {
     return slot.ident
   }
-  match slot.ident {
-    Some(ident) => Some(set_reference(ident))
-    None => fail_binder_semantic(AnonymousReference, slot.span)
+  if slot.ident is Some(ident) {
+    Some(set_reference(ident))
+  } else {
+    fail_binder_semantic(AnonymousReference, slot.span)
   }
 }
 

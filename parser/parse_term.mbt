@@ -471,10 +471,7 @@ fn Parser::parse_named_let_head(self : Parser) -> TermLetHead raise {
   } else {
     None
   }
-  let binders = match binder_start {
-    Some(_) => self.parse_binders()
-    None => []
-  }
+  let binders = if binder_start is Some(_) { self.parse_binders() } else { [] }
   ignore(self.expect_symbol(Equal))
   NamedLetHead(ident, binders, binder_start)
 }
@@ -498,13 +495,13 @@ fn Parser::parse_let_term(self : Parser) -> Term raise {
     let desc = match head {
       PatternLetHead(pattern) => unfold_term_pattern_let(pattern, value, body)
       NamedLetHead(ident, binders, binder_start) => {
-        let bound_value = match binder_start {
-          Some(start) =>
-            make_term(
-              Tquant(DTlambda, binders, [], value),
-              start.join(value.span),
-            )
-          None => value
+        let bound_value = if binder_start is Some(start) {
+          make_term(
+            Tquant(DTlambda, binders, [], value),
+            start.join(value.span),
+          )
+        } else {
+          value
         }
         Tlet(ident, bound_value, body)
       }
@@ -756,9 +753,10 @@ fn Parser::parse_single_term_bp(
     if self.at_symbol(Comma) {
       break
     }
-    let binding = match self.peek_kind_n(0) {
-      Some(kind) => pratt_binding(kind, false)
-      None => None
+    let binding = if self.peek_kind_n(0) is Some(kind) {
+      pratt_binding(kind, false)
+    } else {
+      None
     }
     guard binding is Some((power, associativity)) && power >= minimum_binding else {
       break

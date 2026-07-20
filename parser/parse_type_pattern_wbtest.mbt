@@ -191,11 +191,11 @@ fn make_nested_source(
   let builder = StringBuilder(
     size_hint=(prefix.length() + suffix.length()) * depth + atom.length(),
   )
-  for index = 0; index < depth; index = index + 1 {
+  for _ in 0..<depth {
     builder.write_string(prefix)
   }
   builder.write_string(atom)
-  for index = 0; index < depth; index = index + 1 {
+  for _ in 0..<depth {
     builder.write_string(suffix)
   }
   @utf8.encode(builder.to_string())

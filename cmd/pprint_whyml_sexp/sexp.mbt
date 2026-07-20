@@ -45,9 +45,10 @@ fn[A] sexp_array(values : Array[A], project : (A) -> Sexp) -> Sexp {
 
 ///|
 fn[A] sexp_option(value : A?, project : (A) -> Sexp) -> Sexp {
-  match value {
-    None => sexp_list([])
-    Some(value) => sexp_list([project(value)])
+  if value is Some(value) {
+    sexp_list([project(value)])
+  } else {
+    sexp_list([])
   }
 }
 

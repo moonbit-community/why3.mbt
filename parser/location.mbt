@@ -102,9 +102,10 @@ fn SourcePos::switch_logical_location(
   line : Int64,
   column : Int64,
 ) -> SourcePos {
-  let filename = match filename {
-    Some(filename) => filename
-    None => self.filename
+  let filename = if filename is Some(filename) {
+    filename
+  } else {
+    self.filename
   }
   { ..self, filename, line, column }
 }

@@ -145,7 +145,6 @@ test "AST file: complete nested tree derives Debug and Eq" {
   assert_eq(file, Modules([module_]))
   let rendered = to_repr(file).to_string()
   assert_true(rendered.has_prefix("Modules("))
-  debug_inspect(rendered.has_prefix("Modules("), content="true")
 }
 
 ///|

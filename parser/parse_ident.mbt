@@ -135,9 +135,10 @@ fn notation_decode(name : Bytes) -> Notation {
   } else if name.view(end=6) == b"prefix" {
     7
   } else if name.view(end=6) == b"mixfix" {
-    match find_closing_bracket(name, 7) {
-      Some(index) => index + 1
-      None => 0
+    if find_closing_bracket(name, 7) is Some(index) {
+      index + 1
+    } else {
+      0
     }
   } else {
     0
@@ -477,24 +478,27 @@ fn parse_lident_op_string(parser : Parser) -> (Bytes, Span) raise {
     }
     Symbol(Minus) => {
       ignore(parser.advance())
-      match parser.consume_symbol(Underscore) {
-        Some(underscore) => (op_prefix(b"-"), first.span.join(underscore.span))
-        None => (op_infix(b"-"), first.span)
+      if parser.consume_symbol(Underscore) is Some(underscore) {
+        (op_prefix(b"-"), first.span.join(underscore.span))
+      } else {
+        (op_infix(b"-"), first.span)
       }
     }
     OpPref(operator) => {
       ignore(parser.advance())
-      let span = match parser.consume_symbol(Underscore) {
-        Some(underscore) => first.span.join(underscore.span)
-        None => first.span
+      let span = if parser.consume_symbol(Underscore) is Some(underscore) {
+        first.span.join(underscore.span)
+      } else {
+        first.span
       }
       (op_prefix(operator), span)
     }
     _ => {
       let (operator, span) = parse_op_symbol(parser)
-      match parser.consume_symbol(Underscore) {
-        Some(underscore) => (op_prefix(operator), span.join(underscore.span))
-        None => (op_infix(operator), span)
+      if parser.consume_symbol(Underscore) is Some(underscore) {
+        (op_prefix(operator), span.join(underscore.span))
+      } else {
+        (op_infix(operator), span)
       }
     }
   }

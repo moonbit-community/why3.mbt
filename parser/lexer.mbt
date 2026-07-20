@@ -164,9 +164,10 @@ fn scan_core_identifier_tail(input : BytesView, core_start : Int) -> Int {
       next_core_start + 2,
     )
     result = suffix_end
-    match next_boundary {
-      Some(next) => next_core_start = next
-      None => finished = true
+    if next_boundary is Some(next) {
+      next_core_start = next
+    } else {
+      finished = true
     }
   }
   result
@@ -191,9 +192,10 @@ fn scan_identifier(cursor : LexerCursor) -> LocatedToken? {
   } else if first == b'_' && end == start + 1 {
     Symbol(Underscore)
   } else if is_ascii_lower(first) || first == b'_' {
-    match keyword_of(text) {
-      Some(keyword) => Keyword(keyword)
-      None => Lident(text)
+    if keyword_of(text) is Some(keyword) {
+      Keyword(keyword)
+    } else {
+      Lident(text)
     }
   } else {
     Uident(text)
@@ -239,18 +241,18 @@ fn choose_numeric_candidate(
   current : NumericCandidate?,
   candidate : NumericCandidate,
 ) -> NumericCandidate? {
-  match current {
-    None => Some(candidate)
-    Some(previous) =>
-      if candidate.matched_end > previous.matched_end ||
-        (
-          candidate.matched_end == previous.matched_end &&
-          candidate.priority < previous.priority
-        ) {
-        Some(candidate)
-      } else {
-        current
-      }
+  if current is Some(previous) {
+    if candidate.matched_end > previous.matched_end ||
+      (
+        candidate.matched_end == previous.matched_end &&
+        candidate.priority < previous.priority
+      ) {
+      Some(candidate)
+    } else {
+      current
+    }
+  } else {
+    Some(candidate)
   }
 }
 
@@ -320,22 +322,20 @@ fn scan_number(cursor : LexerCursor) -> LocatedToken? raise ParseError {
         form: DecimalInteger(start, decimal_end),
       })
     }
-    match exponent_end(input, decimal_end, false) {
-      Some(end) =>
-        best = choose_numeric_candidate(best, {
-          matched_end: end,
-          consumed_end: end,
-          priority: 6,
-          form: DecimalReal(
-            start,
-            decimal_end,
-            decimal_end,
-            decimal_end,
-            decimal_end + 1,
-            end,
-          ),
-        })
-      None => ()
+    if exponent_end(input, decimal_end, false) is Some(end) {
+      best = choose_numeric_candidate(best, {
+        matched_end: end,
+        consumed_end: end,
+        priority: 6,
+        form: DecimalReal(
+          start,
+          decimal_end,
+          decimal_end,
+          decimal_end,
+          decimal_end + 1,
+          end,
+        ),
+      })
     }
   }
   if decimal_end > start &&
@@ -343,10 +343,13 @@ fn scan_number(cursor : LexerCursor) -> LocatedToken? raise ParseError {
     input[decimal_end] == b'.' {
     let fraction_start = decimal_end + 1
     let fraction_end = scan_decimal_digits(input, fraction_start)
-    let (matched_end, exponent_start, exponent_finish) = match
-      exponent_end(input, fraction_end, false) {
-      Some(end) => (end, fraction_end + 1, end)
-      None => (fraction_end, fraction_end, fraction_end)
+    let (matched_end, exponent_start, exponent_finish) = if exponent_end(
+        input, fraction_end, false,
+      )
+      is Some(end) {
+      (end, fraction_end + 1, end)
+    } else {
+      (fraction_end, fraction_end, fraction_end)
     }
     best = choose_numeric_candidate(best, {
       matched_end,
@@ -361,10 +364,13 @@ fn scan_number(cursor : LexerCursor) -> LocatedToken? raise ParseError {
     let fraction_start = start + 1
     let fraction_end = scan_decimal_digits(input, fraction_start)
     if fraction_end > fraction_start {
-      let (matched_end, exponent_start, exponent_finish) = match
-        exponent_end(input, fraction_end, false) {
-        Some(end) => (end, fraction_end + 1, end)
-        None => (fraction_end, fraction_end, fraction_end)
+      let (matched_end, exponent_start, exponent_finish) = if exponent_end(
+          input, fraction_end, false,
+        )
+        is Some(end) {
+        (end, fraction_end + 1, end)
+      } else {
+        (fraction_end, fraction_end, fraction_end)
       }
       best = choose_numeric_candidate(best, {
         matched_end,
@@ -399,30 +405,31 @@ fn scan_number(cursor : LexerCursor) -> LocatedToken? raise ParseError {
           form: HexInteger(digits_start, hexadecimal_end),
         })
       }
-      match exponent_end(input, hexadecimal_end, true) {
-        Some(end) =>
-          best = choose_numeric_candidate(best, {
-            matched_end: end,
-            consumed_end: end,
-            priority: 6,
-            form: HexReal(
-              digits_start,
-              hexadecimal_end,
-              hexadecimal_end,
-              hexadecimal_end,
-              hexadecimal_end + 1,
-              end,
-            ),
-          })
-        None => ()
+      if exponent_end(input, hexadecimal_end, true) is Some(end) {
+        best = choose_numeric_candidate(best, {
+          matched_end: end,
+          consumed_end: end,
+          priority: 6,
+          form: HexReal(
+            digits_start,
+            hexadecimal_end,
+            hexadecimal_end,
+            hexadecimal_end,
+            hexadecimal_end + 1,
+            end,
+          ),
+        })
       }
       if hexadecimal_end < input.length() && input[hexadecimal_end] == b'.' {
         let fraction_start = hexadecimal_end + 1
         let fraction_end = scan_radix_digits(input, fraction_start, 16, false)
-        let (matched_end, exponent_start, exponent_finish) = match
-          exponent_end(input, fraction_end, true) {
-          Some(end) => (end, fraction_end + 1, end)
-          None => (fraction_end, fraction_end, fraction_end)
+        let (matched_end, exponent_start, exponent_finish) = if exponent_end(
+            input, fraction_end, true,
+          )
+          is Some(end) {
+          (end, fraction_end + 1, end)
+        } else {
+          (fraction_end, fraction_end, fraction_end)
         }
         best = choose_numeric_candidate(best, {
           matched_end,
@@ -438,10 +445,13 @@ fn scan_number(cursor : LexerCursor) -> LocatedToken? raise ParseError {
       let fraction_start = digits_start + 1
       let fraction_end = scan_radix_digits(input, fraction_start, 16, false)
       if fraction_end > fraction_start {
-        let (matched_end, exponent_start, exponent_finish) = match
-          exponent_end(input, fraction_end, true) {
-          Some(end) => (end, fraction_end + 1, end)
-          None => (fraction_end, fraction_end, fraction_end)
+        let (matched_end, exponent_start, exponent_finish) = if exponent_end(
+            input, fraction_end, true,
+          )
+          is Some(end) {
+          (end, fraction_end + 1, end)
+        } else {
+          (fraction_end, fraction_end, fraction_end)
         }
         best = choose_numeric_candidate(best, {
           matched_end,
@@ -539,18 +549,18 @@ fn choose_token_candidate(
   current : TokenCandidate?,
   candidate : TokenCandidate,
 ) -> TokenCandidate? {
-  match current {
-    None => Some(candidate)
-    Some(previous) =>
-      if candidate.matched_end > previous.matched_end ||
-        (
-          candidate.matched_end == previous.matched_end &&
-          candidate.priority < previous.priority
-        ) {
-        Some(candidate)
-      } else {
-        current
-      }
+  if current is Some(previous) {
+    if candidate.matched_end > previous.matched_end ||
+      (
+        candidate.matched_end == previous.matched_end &&
+        candidate.priority < previous.priority
+      ) {
+      Some(candidate)
+    } else {
+      current
+    }
+  } else {
+    Some(candidate)
   }
 }
 
@@ -868,49 +878,37 @@ fn scan_string(cursor : LexerCursor) -> LocatedToken raise ParseError {
         }
         continue
       }
-      match three_decimal_escape(cursor.input, after_slash) {
-        Some(value) => {
+      if three_decimal_escape(cursor.input, after_slash) is Some(value) {
+        output.push(value)
+        cursor.advance_raw(4)
+        continue
+      }
+      if cursor.input[after_slash] == b'x' {
+        if two_hex_escape(cursor.input, after_slash + 1) is Some(value) {
           output.push(value)
           cursor.advance_raw(4)
           continue
         }
-        None => ()
-      }
-      if cursor.input[after_slash] == b'x' {
-        match two_hex_escape(cursor.input, after_slash + 1) {
-          Some(value) => {
-            output.push(value)
-            cursor.advance_raw(4)
-            continue
-          }
-          None => ()
-        }
       }
       if cursor.input[after_slash] == b'o' {
-        match three_octal_escape(cursor.input, after_slash + 1) {
-          Some(value) => {
-            output.push(value)
-            cursor.advance_raw(5)
-            continue
-          }
-          None => ()
-        }
-      }
-      match escaped_ascii(cursor.input[after_slash]) {
-        Some(value) => {
+        if three_octal_escape(cursor.input, after_slash + 1) is Some(value) {
           output.push(value)
-          cursor.advance_raw(2)
+          cursor.advance_raw(5)
           continue
         }
-        None => {
-          cursor.advance_raw(2)
-          fail_with_diagnostic(
-            make_parse_diagnostic(IllegalEscape, {
-              start: escape_start,
-              end: cursor.position,
-            }),
-          )
-        }
+      }
+      if escaped_ascii(cursor.input[after_slash]) is Some(value) {
+        output.push(value)
+        cursor.advance_raw(2)
+        continue
+      } else {
+        cursor.advance_raw(2)
+        fail_with_diagnostic(
+          make_parse_diagnostic(IllegalEscape, {
+            start: escape_start,
+            end: cursor.position,
+          }),
+        )
       }
     }
     if byte >= b' ' && byte <= b'~' {
@@ -1072,7 +1070,7 @@ fn scan_position_directive(
   let filename = input[filename_start:index].to_owned()
   index = skip_spaces_at(input, index + 1)
   let ranges : Array[(Int, Int)] = []
-  for number_index = 0; number_index < 4; number_index = number_index + 1 {
+  for _ in 0..<4 {
     guard decimal_range(input, index) is Some(range) else {
       return fail_invalid_directive(cursor)
     }
@@ -1192,12 +1190,9 @@ fn skip_comment(cursor : LexerCursor) -> Unit raise ParseError {
       cursor.comment_depth = cursor.comment_depth + 1
       continue
     }
-    match comment_newline_length(cursor) {
-      Some(length) => {
-        cursor.advance_newline(length)
-        continue
-      }
-      None => ()
+    if comment_newline_length(cursor) is Some(length) {
+      cursor.advance_newline(length)
+      continue
     }
     cursor.advance_comment_byte()
   }
@@ -1248,23 +1243,19 @@ fn scan_next_token(cursor : LexerCursor) -> LocatedToken raise ParseError {
   if cursor.peek() is Some(byte) && byte == b'"' {
     return scan_string(cursor)
   }
-  match scan_identifier(cursor) {
-    Some(token) => return token
-    None => ()
+  if scan_identifier(cursor) is Some(token) {
+    return token
   }
   if cursor.peek() is Some(byte) && (is_decimal_digit(byte) || byte == b'.') {
-    match scan_number(cursor) {
-      Some(token) => return token
-      None => ()
+    if scan_number(cursor) is Some(token) {
+      return token
     }
   }
-  match scan_quote_lident(cursor) {
-    Some(token) => return token
-    None => ()
+  if scan_quote_lident(cursor) is Some(token) {
+    return token
   }
-  match scan_operator_or_symbol(cursor) {
-    Some(token) => return token
-    None => ()
+  if scan_operator_or_symbol(cursor) is Some(token) {
+    return token
   }
   guard cursor.peek() is Some(_) else {
     return located_token(Eof, cursor.empty_span())
