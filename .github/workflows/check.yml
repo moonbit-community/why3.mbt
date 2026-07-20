@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  packages: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -17,26 +18,25 @@ concurrency:
 jobs:
   stable-build:
     name: stable
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/${{ github.repository }}-why3:1.7.2
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v6
 
-      - name: Set up OCaml
-        uses: ocaml/setup-ocaml@v3
-        with:
-          ocaml-compiler: 4.14.2
+      - name: Trust checkout workspace
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-      - name: Install MoonBit
-        run: |
-          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
-          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Setup Moon
+        uses: moonbit-community/setup-moonbit@main
+        with: 
+          version: stable
 
       - name: moon update
-        run: |
-          moon update
-
-      - name: Install Why3 1.7.2 with S-expression support
-        run: opam install -y sexplib ppx_deriving ppx_sexp_conv why3.1.7.2
+        run: moon update
 
       - name: Show tool versions
         run: |
@@ -44,7 +44,7 @@ jobs:
           moonrun --version
 
       - name: Show Why3 version
-        run: opam exec -- why3 --version
+        run: why3 --version
 
       - name: Check all targets
         run: moon check --target all --warn-list +73
@@ -58,7 +58,7 @@ jobs:
         run: node --test tools/*.test.mjs
 
       - name: Check Why3 fixtures
-        run: opam exec -- node tools/check_why3_fixtures.mjs
+        run: node tools/check_why3_fixtures.mjs
 
       - name: Check generated interfaces
         run: |
