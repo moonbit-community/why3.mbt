@@ -1,0 +1,7 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+theory LogicPolymorphicDefinition
+  predicate reflexive (x : 'a) = x = x
+
+  goal reflexive_goal : forall x : 'a. reflexive x
+end

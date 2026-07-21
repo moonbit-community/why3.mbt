@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "oraclePlatform": {
+    "os": "linux",
+    "architecture": "amd64",
+    "oci": "linux/amd64"
+  },
+  "baseImage": {
+    "repository": "ocaml/opam",
+    "tagAtResolution": "ubuntu-24.04-ocaml-4.14",
+    "platform": "linux/amd64",
+    "digest": "sha256:bea12da0ea6d56cbaa254dd8bbfe010eebf4d6e315accd8ee2f397daad655bc6"
+  },
+  "buildRecipe": {
+    "path": "Dockerfile",
+    "sha256": "bbc4df8722aa4e9c3eb8e1be5d7aedcd2676c1f06fb4a35035e585d44914fbb6",
+    "frontendImage": {
+      "repository": "docker/dockerfile",
+      "tagAtResolution": "1.7.0",
+      "digest": "sha256:dbbd5e059e8a07ff7ea6233b213b36aa516b4c53c645f1817a4dd18b83cbea56"
+    },
+    "sourceArchiveKeptInImage": "/opt/why3-reference/why3-source.tar.gz"
+  },
+  "githubActions": [
+    {
+      "workflow": ".github/workflows/check.yml",
+      "action": "actions/checkout",
+      "commit": "d23441a48e516b6c34aea4fa41551a30e30af803"
+    },
+    {
+      "workflow": ".github/workflows/check.yml",
+      "action": "moonbit-community/setup-moonbit",
+      "commit": "04293a8a813bfd4b6c2fce22701b52ae1050d100"
+    },
+    {
+      "workflow": ".github/workflows/nightly-oracle.yml",
+      "action": "actions/checkout",
+      "commit": "d23441a48e516b6c34aea4fa41551a30e30af803"
+    },
+    {
+      "workflow": ".github/workflows/nightly-oracle.yml",
+      "action": "actions/upload-artifact",
+      "commit": "ea165f8d65b6e75b540449e92b4886f43607fa02"
+    },
+    {
+      "workflow": ".github/workflows/nightly-oracle.yml",
+      "action": "moonbit-community/setup-moonbit",
+      "commit": "04293a8a813bfd4b6c2fce22701b52ae1050d100"
+    },
+    {
+      "workflow": ".github/workflows/update-oracle.yml",
+      "action": "actions/checkout",
+      "commit": "d23441a48e516b6c34aea4fa41551a30e30af803"
+    },
+    {
+      "workflow": ".github/workflows/update-oracle.yml",
+      "action": "actions/upload-artifact",
+      "commit": "ea165f8d65b6e75b540449e92b4886f43607fa02"
+    },
+    {
+      "workflow": ".github/workflows/update-oracle.yml",
+      "action": "moonbit-community/setup-moonbit",
+      "commit": "04293a8a813bfd4b6c2fce22701b52ae1050d100"
+    },
+    {
+      "workflow": ".github/workflows/why3-image.yml",
+      "action": "actions/checkout",
+      "commit": "d23441a48e516b6c34aea4fa41551a30e30af803"
+    },
+    {
+      "workflow": ".github/workflows/why3-image.yml",
+      "action": "actions/upload-artifact",
+      "commit": "ea165f8d65b6e75b540449e92b4886f43607fa02"
+    },
+    {
+      "workflow": ".github/workflows/why3-image.yml",
+      "action": "docker/build-push-action",
+      "commit": "10e90e3645eae34f1e60eeb005ba3a3d33f178e8"
+    },
+    {
+      "workflow": ".github/workflows/why3-image.yml",
+      "action": "docker/login-action",
+      "commit": "c94ce9fb468520275223c153574b00df6fe4bcc9"
+    },
+    {
+      "workflow": ".github/workflows/why3-image.yml",
+      "action": "docker/setup-buildx-action",
+      "commit": "8d2750c68a42422c14e847fe6c8ac0403b4cbd6f"
+    },
+    {
+      "workflow": ".github/workflows/why3-image.yml",
+      "action": "moonbit-community/setup-moonbit",
+      "commit": "04293a8a813bfd4b6c2fce22701b52ae1050d100"
+    }
+  ],
+  "why3": {
+    "version": "1.7.2",
+    "commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
+    "gitTree": "f5e82693620413d7d8e3ebcba69addcb6a65f877",
+    "shapeVersion": 6,
+    "referenceArchive": {
+      "url": "https://gitlab.inria.fr/why3/why3/-/archive/1343338d3bb1941c0d4f134283bb0790816113c4/why3-1343338d3bb1941c0d4f134283bb0790816113c4.tar.gz",
+      "sha256": "c7bf782933a5d8ef9e78638cbf18e480eef895dca95317ba50231f20d45e92c7"
+    },
+    "opamRecipe": {
+      "path": "tools/why3_oracle/why3-1.7.2.opam",
+      "sha256": "24d4eae07494af13d313fd9ebb82e15d565c45d250dc04d5d029a06cf0534081",
+      "upstream": {
+        "repository": "ocaml/opam-repository",
+        "commit": "bfeb42d61bb49c607b888d38dadd2cc4c9d98358",
+        "path": "packages/why3/why3.1.7.2/opam",
+        "gitBlob": "6811b48fa50e6160ed7f812696e0939a1c40bd0d"
+      }
+    },
+    "executablePath": "/home/opam/.opam/4.14/bin/why3",
+    "datadirPath": "/home/opam/.opam/4.14/share/why3",
+    "driverManifest": "tools/contracts/driver-closure-v1.json",
+    "driverManifestSha256": "204f8393df7c5259d6bd727b14abfea9889992bd976223631d3de5a805a8873a",
+    "driverClosureSha256": "c2cddacc1c95919326ef23dc97f5cd6db88b1abc902c73a72cf595a20ec624c2",
+    "semanticSnapshotSha256": "918163f06f16f3969bfc59c17ff0e2a0ec5b1e45629c879366f42b3952aeba1d",
+    "stdlibTreeSha256": "355ec847dee8c9083ed6392ad5fa121285ce36f682950accc7982e3ba343dcc6",
+    "proverDetectionSha256": "4b27f49c6d17b8c66ac2187d0405373d73c7fc2d6aed0f1ae564b1906b1cb427"
+  },
+  "z3": {
+    "version": "4.8.12",
+    "commit": "3a402ca2c14c3891d24658318406f80ce59b719f",
+    "archive": {
+      "url": "https://github.com/Z3Prover/z3/releases/download/z3-4.8.12/z3-4.8.12-x64-glibc-2.31.zip",
+      "sha256": "648e8a7afb57445440ad711b733bd675e3888da2767c14ae5122582c924d8d52"
+    },
+    "executable": {
+      "path": "/opt/z3/bin/z3",
+      "sha256": "350bb28360df8694db72068a26fcb779797889599f584ed3146b899a98204824"
+    }
+  },
+  "environment": {
+    "LC_ALL": "C",
+    "LANG": "C",
+    "TZ": "UTC",
+    "HOME": "isolated Whyconf directory",
+    "TMPDIR": "isolated Whyconf directory",
+    "defaultPlugins": "disabled",
+    "standardLibrary": "explicit --no-stdlib plus manifest loadpaths"
+  },
+  "toolchainInputsSha256": "fb8c5b4e71737c3f6ab5980ee7e3db07d397cceac18ec90d510ba51d2da3d583"
+}

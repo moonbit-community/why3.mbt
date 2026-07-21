@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "profile": "why3-1.7.2-z3-4.8.12-mvp-v1",
+  "why3Commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
+  "canonicalSchemaVersion": 2,
+  "driverProfile": "z3_487",
+  "policy": {
+    "portableOnly": true,
+    "excludesMachineEnvironmentAndAbsolutePaths": true,
+    "hashInput": "compact JSON artifact array plus one LF",
+    "artifactOrder": "the fixed order in this manifest"
+  },
+  "artifacts": [
+    {
+      "id": "canonical-schema-v2",
+      "path": "tools/contracts/canonical-schema-v2.json",
+      "sha256": "bc28d45938fa34011106e060ae07074c318448946d7f6732b280ae8710194432"
+    },
+    {
+      "id": "canonical-record-v2-json-schema",
+      "path": "tools/contracts/schema/canonical-record-v2.schema.json",
+      "sha256": "5cc010a12c52655fb159438cde9cd1504ad5168e3433f28a36235466774645c7"
+    },
+    {
+      "id": "driver-closure-v1",
+      "path": "tools/contracts/driver-closure-v1.json",
+      "sha256": "204f8393df7c5259d6bd727b14abfea9889992bd976223631d3de5a805a8873a"
+    },
+    {
+      "id": "features-v1",
+      "path": "tools/contracts/features-v1.json",
+      "sha256": "e8400d57eded7dab189eb2a97e2e2db241a1ebae9b059e3a2dc2cdde7522fb53"
+    },
+    {
+      "id": "transform-profile-v1",
+      "path": "tools/contracts/transform-profile-v1.json",
+      "sha256": "39d4f9ecde65b7ffb72c61ae83bca5b4e86a7d2434a1c60d70fe8cb07beb46f4"
+    },
+    {
+      "id": "z3-static-profile-v1",
+      "path": "prover/z3/z3-static-profile-v1.json",
+      "sha256": "60533198652eff7d450970c5529b78c4aa7cbd4ae144a54ab6093ae75062d2d4"
+    },
+    {
+      "id": "trusted-snapshot-schema-v1",
+      "path": "tools/contracts/trusted-snapshot-schema-v1.json",
+      "sha256": "12ff786934d001a726bf319322445689d68ad2efa47dd1c59bd4756c8e7a7a7e"
+    }
+  ],
+  "semanticProfileSha256": "f788bd465967b186e1db9f910b8e04e3f4803413a705b661bafc2da5d07658ab"
+}

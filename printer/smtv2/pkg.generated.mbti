@@ -1,0 +1,80 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonbit-community/why3/printer/smtv2"
+
+import {
+  "moonbit-community/why3/core/identity",
+  "moonbit-community/why3/core/theory",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn lex_smt_tokens(BytesView) -> Array[SmtToken] raise PrinterError
+
+pub fn normalize_smt_query(SmtQuery) -> NormalizedSmtTokens raise PrinterError
+
+pub fn print_task(SmtV26Query, @theory.Task) -> SmtQuery raise PrinterError
+
+// Errors
+pub(all) suberror PrinterError {
+  PrinterError(PrinterDiagnostic)
+} derive(Eq, @debug.Debug)
+
+// Types and methods
+type NormalizedSmtTokens
+pub fn NormalizedSmtTokens::tokens(Self) -> ArrayView[Bytes]
+
+pub(all) struct PrintedIdentifier {
+  start : Int
+  end : Int
+  semantic_id : @identity.SemanticId
+  origin : @identity.Origin
+}
+
+pub(all) struct PrinterDiagnostic {
+  kind : PrinterErrorKind
+  message : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum PrinterErrorKind {
+  ContextMismatch
+  InvalidTask
+  InvalidSyntaxMeta
+  InvalidSyntaxTemplate
+  ResidualTypeVariable
+  UnsupportedType
+  UnsupportedTerm
+  UnsupportedDeclaration
+  UnsupportedDatatype
+  MissingBuiltinSyntax
+  InvalidIdentifierOccurrence
+  InvalidSmtToken
+} derive(Eq, @debug.Debug)
+
+type SmtQuery
+pub fn SmtQuery::bytes(Self) -> BytesView
+pub fn SmtQuery::identifiers(Self) -> ArrayView[PrintedIdentifier]
+
+pub(all) struct SmtToken {
+  kind : SmtTokenKind
+  bytes : Bytes
+  start : Int
+  end : Int
+} derive(Eq, @debug.Debug)
+
+pub(all) enum SmtTokenKind {
+  LeftParenthesis
+  RightParenthesis
+  Atom
+  QuotedSymbol
+  StringLiteral
+} derive(Eq, @debug.Debug)
+
+type SmtV26Query
+pub fn SmtV26Query::context_anchor(Self) -> @identity.SemanticId
+pub fn SmtV26Query::new(@identity.SemanticId, ArrayView[Bytes]) -> Self
+pub fn SmtV26Query::preludes(Self) -> ArrayView[Bytes]
+
+// Type aliases
+
+// Traits
+

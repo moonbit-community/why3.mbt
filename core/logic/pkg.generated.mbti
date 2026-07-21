@@ -1,0 +1,401 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonbit-community/why3/core/logic"
+
+import {
+  "moonbit-community/why3/core/identity",
+  "moonbit-community/why3/parser",
+  "moonbitlang/core/bigint",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn[A] fail_type(TypeErrorKind, @identity.SourceSpan?, String) -> A raise TypeError
+
+pub fn[A] fail_type_with_types(TypeErrorKind, @identity.SourceSpan?, BytesView, BytesView, String) -> A raise TypeError
+
+pub fn type_match(Ty, Ty, @identity.SourceSpan?) -> TySubstitution raise TypeError
+
+// Errors
+pub(all) suberror TypeError {
+  TypeError(TypeDiagnostic)
+} derive(Eq, @debug.Debug)
+
+// Types and methods
+pub(all) enum BinaryLogicOp {
+  And
+  Or
+  Implies
+  Iff
+} derive(Eq, @debug.Debug)
+
+pub(all) enum BuiltinTypeKind {
+  BuiltinInteger
+  BuiltinReal
+  BuiltinBoolean
+  BuiltinString
+} derive(Eq, @debug.Debug)
+
+type Constant derive(Eq, @debug.Debug)
+pub fn Constant::from_parser(@parser.Constant) -> Self
+pub fn Constant::integer(IntegerLiteralKind, @bigint.BigInt) -> Self
+pub fn Constant::real(RealLiteralKind, @parser.RealValue) -> Self
+pub fn Constant::string(BytesView) -> Self
+pub fn Constant::view(Self) -> ConstantView
+
+pub(all) enum ConstantView {
+  IntegerConstant(IntegerLiteralKind, @bigint.BigInt)
+  RealConstant(RealLiteralKind, @parser.RealValue)
+  StringConstant(BytesView)
+}
+
+type DataConstructor
+pub fn DataConstructor::trusted_new(LSymbol, ArrayView[LSymbol?], @identity.SourceSpan?) -> Self raise TypeError
+pub fn DataConstructor::view(Self) -> DataConstructorView
+
+pub(all) struct DataConstructorView {
+  symbol : LSymbol
+  projections : ArrayView[LSymbol?]
+}
+
+type DataDeclaration
+pub fn DataDeclaration::trusted_new(TypeSymbol, ArrayView[DataConstructor], @identity.SourceSpan?) -> Self raise TypeError
+pub fn DataDeclaration::view(Self) -> DataDeclarationView
+
+pub(all) struct DataDeclarationView {
+  type_symbol : TypeSymbol
+  constructors : ArrayView[DataConstructor]
+}
+
+type Decl
+pub fn Decl::dependencies(Self) -> ArrayView[DeclDependency]
+pub fn Decl::introduced_symbols(Self) -> ArrayView[DeclDependency]
+pub fn Decl::logic(@identity.CompilationContext, @identity.Origin, ArrayView[LogicDefinition], @identity.SourceSpan?) -> Self raise TypeError
+pub fn Decl::origin(Self) -> @identity.Origin
+pub fn Decl::parameter(@identity.CompilationContext, @identity.Origin, LSymbol, @identity.SourceSpan?) -> Self raise TypeError
+pub fn Decl::proposition(@identity.CompilationContext, @identity.Origin, PropositionKind, PrSymbol, Term, @identity.SourceSpan?) -> Self raise TypeError
+pub fn Decl::reclassify_proposition(Self, @identity.CompilationContext, PropositionKind, @identity.SourceSpan?) -> Self raise TypeError
+pub fn Decl::trusted_data(@identity.CompilationContext, @identity.Origin, ArrayView[DataDeclaration], @identity.SourceSpan?) -> Self raise TypeError
+pub fn Decl::trusted_inductive(@identity.CompilationContext, @identity.Origin, ArrayView[InductiveDeclaration], @identity.SourceSpan?) -> Self raise TypeError
+pub fn Decl::trusted_logic(@identity.CompilationContext, @identity.Origin, ArrayView[LogicDefinition], @identity.SourceSpan?) -> Self raise TypeError
+pub fn Decl::trusted_type_declaration(@identity.CompilationContext, @identity.Origin, ArrayView[TypeSymbol], @identity.SourceSpan?) -> Self raise TypeError
+pub fn Decl::type_declaration(@identity.CompilationContext, @identity.Origin, ArrayView[TypeSymbol], @identity.SourceSpan?) -> Self raise TypeError
+pub fn Decl::view(Self) -> DeclView
+
+pub(all) enum DeclDependency {
+  TypeDependency(TypeSymbol)
+  LogicDependency(LSymbol)
+  PropositionDependency(PrSymbol)
+}
+pub fn DeclDependency::semantic_id(Self) -> @identity.SemanticId
+pub impl Eq for DeclDependency
+pub impl Hash for DeclDependency
+
+pub(all) enum DeclView {
+  Dtype(ArrayView[TypeSymbol])
+  Ddata(ArrayView[DataDeclaration])
+  Dparam(LSymbol)
+  Dlogic(ArrayView[LogicDefinition])
+  Dind(ArrayView[InductiveDeclaration])
+  Dprop(PropositionKind, PrSymbol, Term)
+}
+
+type InductiveCase
+pub fn InductiveCase::trusted_new(@identity.CompilationContext, PrSymbol, Term, @identity.SourceSpan?) -> Self raise TypeError
+pub fn InductiveCase::view(Self) -> InductiveCaseView
+
+pub(all) struct InductiveCaseView {
+  proposition : PrSymbol
+  formula : Term
+}
+
+type InductiveDeclaration
+pub fn InductiveDeclaration::trusted_new(LSymbol, ArrayView[InductiveCase], @identity.SourceSpan?) -> Self raise TypeError
+pub fn InductiveDeclaration::view(Self) -> InductiveDeclarationView
+
+pub(all) struct InductiveDeclarationView {
+  predicate : LSymbol
+  cases : ArrayView[InductiveCase]
+}
+
+pub(all) enum IntegerLiteralKind {
+  IntegerUnknown
+  IntegerDecimal
+  IntegerHexadecimal
+  IntegerOctal
+  IntegerBinary
+} derive(Eq, @debug.Debug)
+
+type KnownMap
+pub fn KnownMap::add(Self, Decl, @identity.SourceSpan?) -> Self raise TypeError
+pub fn KnownMap::contains(Self, DeclDependency) -> Bool
+pub fn KnownMap::merge(Self, Self, @identity.SourceSpan?) -> Self raise TypeError
+pub fn KnownMap::new(@identity.CompilationContext) -> Self
+pub fn KnownMap::trusted_add_snapshot(Self, Decl, @identity.SourceSpan?) -> Self raise TypeError
+
+type LSymbol
+pub fn LSymbol::new_function(@identity.CompilationContext, BytesView, @identity.Origin, ArrayView[Ty], Ty, @identity.SourceSpan?) -> Self raise TypeError
+pub fn LSymbol::new_predicate(@identity.CompilationContext, BytesView, @identity.Origin, ArrayView[Ty], @identity.SourceSpan?) -> Self raise TypeError
+pub fn LSymbol::semantic_id(Self) -> @identity.SemanticId
+pub fn LSymbol::trusted_constructor(@identity.CompilationContext, BytesView, @identity.Origin, ArrayView[Ty], Ty, Int, @identity.SourceSpan?) -> Self raise TypeError
+pub fn LSymbol::trusted_projection(@identity.CompilationContext, BytesView, @identity.Origin, Ty, Ty, @identity.SourceSpan?) -> Self raise TypeError
+pub fn LSymbol::view(Self) -> LSymbolView
+pub impl Eq for LSymbol
+pub impl Hash for LSymbol
+
+pub(all) struct LSymbolView {
+  id : @identity.SemanticId
+  name : Bytes
+  origin : @identity.Origin
+  type_parameters : ArrayView[TyVarSymbol]
+  argument_types : ArrayView[Ty]
+  result_type : Ty?
+  role : LogicSymbolRoleView
+}
+
+type LogicDefinition
+pub fn LogicDefinition::new(@identity.CompilationContext, LSymbol, ArrayView[VSymbol], Term, @identity.SourceSpan?) -> Self raise TypeError
+pub fn LogicDefinition::trusted_recursive(@identity.CompilationContext, LSymbol, ArrayView[VSymbol], Term, @identity.SourceSpan?) -> Self raise TypeError
+pub fn LogicDefinition::view(Self) -> LogicDefinitionView
+
+pub(all) struct LogicDefinitionView {
+  symbol : LSymbol
+  parameters : ArrayView[VSymbol]
+  body : Term
+}
+
+pub(all) enum LogicSymbolRoleView {
+  Ordinary
+  Constructor(Int)
+  Projection
+} derive(Eq, @debug.Debug)
+
+type Pattern
+pub fn Pattern::bound_variables(Self) -> ArrayView[VSymbol]
+pub fn Pattern::trusted_app(LSymbol, ArrayView[Self], Ty, @identity.SourceSpan?) -> Self raise TypeError
+pub fn Pattern::trusted_as(Self, VSymbol, @identity.SourceSpan?) -> Self raise TypeError
+pub fn Pattern::trusted_or(Self, Self, @identity.SourceSpan?) -> Self raise TypeError
+pub fn Pattern::trusted_variable(VSymbol) -> Self
+pub fn Pattern::trusted_wild(Ty) -> Self
+pub fn Pattern::ty(Self) -> Ty
+pub fn Pattern::view(Self) -> PatternView
+
+pub(all) enum PatternView {
+  Pwild(Ty)
+  Pvar(VSymbol)
+  Papp(LSymbol, ArrayView[Pattern], Ty)
+  Por(Pattern, Pattern, Ty)
+  Pas(Pattern, VSymbol, Ty)
+}
+
+type PrSymbol
+pub fn PrSymbol::new(@identity.CompilationContext, BytesView, @identity.Origin) -> Self
+pub fn PrSymbol::semantic_id(Self) -> @identity.SemanticId
+pub fn PrSymbol::view(Self) -> PrSymbolView
+pub impl Eq for PrSymbol
+pub impl Hash for PrSymbol
+
+pub(all) struct PrSymbolView {
+  id : @identity.SemanticId
+  name : Bytes
+  origin : @identity.Origin
+}
+
+pub(all) enum PropositionKind {
+  Paxiom
+  Plemma
+  Pgoal
+} derive(Eq, @debug.Debug)
+
+pub(all) enum Quantifier {
+  ForallQuantifier
+  ExistsQuantifier
+} derive(Eq, @debug.Debug)
+
+pub(all) enum RealLiteralKind {
+  RealUnknown
+  RealDecimal(Int64)
+  RealHexadecimal(Int64)
+} derive(Eq, @debug.Debug)
+
+type Term
+pub fn Term::add_attributes(Self, ArrayView[Bytes]) -> Self
+pub fn Term::alpha_equivalent(Self, Self) -> Bool
+pub fn Term::apply(LSymbol, ArrayView[Self], @identity.SourceSpan?) -> Self raise TypeError
+pub fn Term::apply_function(LSymbol, ArrayView[Self], @identity.SourceSpan?) -> Self raise TypeError
+pub fn Term::apply_predicate(LSymbol, ArrayView[Self], @identity.SourceSpan?) -> Self raise TypeError
+pub fn Term::attributes(Self) -> ArrayView[Bytes]
+pub fn Term::binary(BinaryLogicOp, Self, Self, @identity.SourceSpan?) -> Self raise TypeError
+pub fn Term::constant(Constant, Ty, @identity.SourceSpan?) -> Self raise TypeError
+pub fn Term::contains_logic_symbol(Self, LSymbol) -> Bool
+pub fn Term::decorate(Self, @identity.Origin, ArrayView[Bytes]) -> Self
+pub fn Term::elaborated_apply(LSymbol, ArrayView[Self], Ty?, @identity.SourceSpan?) -> Self raise TypeError
+pub fn Term::false_formula() -> Self
+pub fn Term::free_type_variables(Self) -> Array[TyVarSymbol]
+pub fn Term::free_variables(Self) -> Array[VSymbol]
+pub fn Term::if_then_else(Self, Self, Self, @identity.SourceSpan?) -> Self raise TypeError
+pub fn Term::is_formula(Self) -> Bool
+pub fn Term::is_value(Self) -> Bool
+pub fn Term::let_in(VSymbol, Self, Self, @identity.SourceSpan?) -> Self raise TypeError
+pub fn Term::not(Self, @identity.SourceSpan?) -> Self raise TypeError
+pub fn Term::origin(Self) -> @identity.Origin?
+pub fn Term::quantify(Quantifier, ArrayView[VSymbol], ArrayView[Array[Self]], Self, @identity.SourceSpan?) -> Self raise TypeError
+pub fn Term::source_decorate(Self, @identity.SourceSpan?, ArrayView[Bytes]) -> Self
+pub fn Term::source_span(Self) -> @identity.SourceSpan?
+pub fn Term::true_formula() -> Self
+pub fn Term::trusted_case(Self, ArrayView[(Pattern, Self)], @identity.SourceSpan?) -> Self raise TypeError
+pub fn Term::trusted_epsilon(VSymbol, Self, @identity.SourceSpan?) -> Self raise TypeError
+pub fn Term::trusted_snapshot_apply(LSymbol, ArrayView[Self], Ty?, @identity.SourceSpan?) -> Self raise TypeError
+pub fn Term::trusted_snapshot_decorate(Self, @identity.SourceSpan?, ArrayView[Bytes]) -> Self
+pub fn Term::ty(Self) -> Ty?
+pub fn Term::variable(VSymbol) -> Self
+pub fn Term::view(Self) -> TermView
+pub impl Eq for Term
+
+type TermBranch
+pub fn TermBranch::view(Self) -> TermBranchView
+
+pub(all) struct TermBranchView {
+  pattern : Pattern
+  body : Term
+}
+
+type TermSubstitution
+pub fn TermSubstitution::apply(Self, @identity.CompilationContext, Term, @identity.SourceSpan?) -> Term raise TypeError
+pub fn TermSubstitution::bind(Self, VSymbol, Term, @identity.SourceSpan?) -> Self raise TypeError
+pub fn TermSubstitution::bindings(Self) -> Array[(VSymbol, Term)]
+pub fn TermSubstitution::new() -> Self
+
+pub(all) enum TermView {
+  Tvar(VSymbol)
+  Tconst(Constant)
+  Tapp(LSymbol, ArrayView[(TyVarSymbol, Ty)], ArrayView[Term])
+  Tif(Term, Term, Term)
+  Tlet(VSymbol, Term, Term)
+  Tcase(Term, ArrayView[TermBranch])
+  Teps(VSymbol, Term)
+  Tquant(Quantifier, ArrayView[VSymbol], ArrayView[Array[Term]], Term)
+  Tbinop(BinaryLogicOp, Term, Term)
+  Tnot(Term)
+  Ttrue
+  Tfalse
+}
+
+type Ty
+pub fn Ty::app(TypeSymbol, ArrayView[Self], @identity.SourceSpan?) -> Self raise TypeError
+pub fn Ty::context_anchor(Self) -> @identity.SemanticId
+pub fn Ty::free_variables(Self) -> Array[TyVarSymbol]
+pub fn Ty::is_closed(Self) -> Bool
+pub fn Ty::variable(TyVarSymbol) -> Self
+pub fn Ty::view(Self) -> TyView
+pub impl Eq for Ty
+pub impl Hash for Ty
+
+type TySubstitution
+pub fn TySubstitution::apply(Self, Ty, @identity.SourceSpan?) -> Ty raise TypeError
+pub fn TySubstitution::bind(Self, TyVarSymbol, Ty, @identity.SourceSpan?) -> Self raise TypeError
+pub fn TySubstitution::bindings(Self) -> Array[(TyVarSymbol, Ty)]
+pub fn TySubstitution::get(Self, TyVarSymbol) -> Ty?
+pub fn TySubstitution::is_empty(Self) -> Bool
+pub fn TySubstitution::match_type(Self, Ty, Ty, @identity.SourceSpan?) -> Self raise TypeError
+pub fn TySubstitution::new() -> Self
+pub fn TySubstitution::then(Self, Self, @identity.SourceSpan?) -> Self raise TypeError
+
+type TyVarSymbol
+pub fn TyVarSymbol::name(Self) -> BytesView
+pub fn TyVarSymbol::new(@identity.CompilationContext, BytesView, @identity.Origin) -> Self
+pub fn TyVarSymbol::origin(Self) -> @identity.Origin
+pub fn TyVarSymbol::semantic_id(Self) -> @identity.SemanticId
+pub impl Eq for TyVarSymbol
+pub impl Hash for TyVarSymbol
+
+pub(all) enum TyView {
+  TyVar(TyVarSymbol)
+  TyApp(TypeSymbol, ArrayView[Ty])
+}
+
+pub(all) enum TypeDefinitionView {
+  NoDef
+  Alias(Ty)
+  Range(@bigint.BigInt, @bigint.BigInt)
+  Float(Int, Int)
+}
+
+pub(all) struct TypeDiagnostic {
+  kind : TypeErrorKind
+  span : @identity.SourceSpan?
+  actual_type : Bytes?
+  expected_type : Bytes?
+  message : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum TypeErrorKind {
+  ArityMismatch
+  DuplicateTypeParameter
+  UnboundTypeVariable
+  ContextMismatch
+  SnapshotOriginRequired
+  InvalidRange
+  InvalidFloat
+  TypeMismatch
+  OccursCheck
+  UnresolvedTypeVariable
+  PolymorphicProgramRoutine
+  ValueExpected
+  FormulaExpected
+  FunctionExpected
+  PredicateExpected
+  InvalidConstantType
+  ConstantOutOfRange
+  NonRepresentableFloat
+  DuplicateBinder
+  InvalidTrigger
+  UnboundVariable
+  DuplicateDeclarationSymbol
+  UnknownDependency
+  CyclicDefinition
+  InvalidDeclaration
+  EmptyDeclaration
+} derive(Eq, @debug.Debug)
+
+type TypeSymbol
+pub fn TypeSymbol::arity(Self) -> Int
+pub fn TypeSymbol::builtin_kind(Self) -> BuiltinTypeKind?
+pub fn TypeSymbol::name(Self) -> BytesView
+pub fn TypeSymbol::new_abstract(@identity.CompilationContext, BytesView, @identity.Origin, ArrayView[TyVarSymbol], @identity.SourceSpan?) -> Self raise TypeError
+pub fn TypeSymbol::new_alias(@identity.CompilationContext, BytesView, @identity.Origin, ArrayView[TyVarSymbol], Ty, @identity.SourceSpan?) -> Self raise TypeError
+pub fn TypeSymbol::origin(Self) -> @identity.Origin
+pub fn TypeSymbol::semantic_id(Self) -> @identity.SemanticId
+pub fn TypeSymbol::trusted_builtin(@identity.CompilationContext, BytesView, @identity.Origin, BuiltinTypeKind, @identity.SourceSpan?) -> Self raise TypeError
+pub fn TypeSymbol::trusted_float(@identity.CompilationContext, BytesView, @identity.Origin, Int, Int, @identity.SourceSpan?) -> Self raise TypeError
+pub fn TypeSymbol::trusted_range(@identity.CompilationContext, BytesView, @identity.Origin, @bigint.BigInt, @bigint.BigInt, @identity.SourceSpan?) -> Self raise TypeError
+pub fn TypeSymbol::view(Self) -> TypeSymbolView
+pub impl Eq for TypeSymbol
+pub impl Hash for TypeSymbol
+
+pub(all) struct TypeSymbolView {
+  id : @identity.SemanticId
+  name : Bytes
+  origin : @identity.Origin
+  parameters : ArrayView[TyVarSymbol]
+  definition : TypeDefinitionView
+}
+
+type VSymbol
+pub fn VSymbol::new(@identity.CompilationContext, BytesView, @identity.Origin, Ty, @identity.SourceSpan?) -> Self raise TypeError
+pub fn VSymbol::semantic_id(Self) -> @identity.SemanticId
+pub fn VSymbol::ty(Self) -> Ty
+pub fn VSymbol::view(Self) -> VSymbolView
+pub impl Eq for VSymbol
+pub impl Hash for VSymbol
+
+pub(all) struct VSymbolView {
+  id : @identity.SemanticId
+  name : Bytes
+  origin : @identity.Origin
+  ty : Ty
+}
+
+// Type aliases
+
+// Traits
+

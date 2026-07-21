@@ -1,0 +1,260 @@
+{
+  "schemaVersion": 1,
+  "canonicalSchemaVersion": 2,
+  "hashInputIncludesFinalLf": true,
+  "vectors": [
+    {
+      "name": "bytes-are-lowercase-hex-without-utf8-decoding",
+      "purpose": "Raw identifier bytes remain lossless, including invalid UTF-8.",
+      "abstractInput": {
+        "bytes": [
+          0,
+          195,
+          169,
+          255
+        ]
+      },
+      "canonical": [
+        "bytes",
+        "00c3a9ff"
+      ],
+      "canonicalBytesUtf8": "[\"bytes\",\"00c3a9ff\"]\n",
+      "canonicalSha256": "9375766da1df1db79ae9d71bfd0be4d65cdb9a37fa406f6cc3499c5decc85d89"
+    },
+    {
+      "name": "option-none-has-an-explicit-sentinel",
+      "purpose": "An absent field cannot disappear from a canonical node.",
+      "abstractInput": {
+        "option": null
+      },
+      "canonical": [
+        "none"
+      ],
+      "canonicalBytesUtf8": "[\"none\"]\n",
+      "canonicalSha256": "58ff281c738cce6bed1f900a49106507450f36beb15857f836836a24589a316f"
+    },
+    {
+      "name": "option-some-wraps-the-value",
+      "purpose": "Some(value) remains distinct from value and from None.",
+      "abstractInput": {
+        "option": {
+          "bytes": [
+            65
+          ]
+        }
+      },
+      "canonical": [
+        "some",
+        [
+          "bytes",
+          "41"
+        ]
+      ],
+      "canonicalBytesUtf8": "[\"some\",[\"bytes\",\"41\"]]\n",
+      "canonicalSha256": "f956418260de4db8ddbf2b167385b212f3e18b62aa1204e3a4500e33fdb3641a"
+    },
+    {
+      "name": "semantic-map-sorts-by-canonical-byte-key",
+      "purpose": "Map insertion order cannot affect canonical output.",
+      "abstractInput": {
+        "insertionOrder": [
+          [
+            "62",
+            "b"
+          ],
+          [
+            "6161",
+            "aa"
+          ],
+          [
+            "00",
+            "zero"
+          ],
+          [
+            "61",
+            "a"
+          ]
+        ]
+      },
+      "canonical": [
+        "map",
+        [
+          [
+            "00",
+            "zero"
+          ],
+          [
+            "61",
+            "a"
+          ],
+          [
+            "6161",
+            "aa"
+          ],
+          [
+            "62",
+            "b"
+          ]
+        ]
+      ],
+      "canonicalBytesUtf8": "[\"map\",[[\"00\",\"zero\"],[\"61\",\"a\"],[\"6161\",\"aa\"],[\"62\",\"b\"]]]\n",
+      "canonicalSha256": "77061378829763596e121882302a8a2071663f0a24450bee1c7006cb3495b0fe"
+    },
+    {
+      "name": "global-symbols-number-at-first-preorder-encounter",
+      "purpose": "A reference before declaration owns index zero; equal names do not merge identities.",
+      "abstractInput": {
+        "events": [
+          [
+            "reference",
+            "logic-symbol-A-named-x"
+          ],
+          [
+            "declaration",
+            "logic-symbol-A-named-x"
+          ],
+          [
+            "declaration",
+            "logic-symbol-B-named-x"
+          ]
+        ]
+      },
+      "canonical": [
+        "events",
+        [
+          [
+            "reference",
+            [
+              "logic",
+              0
+            ],
+            "78"
+          ],
+          [
+            "declaration",
+            [
+              "logic",
+              0
+            ],
+            "78"
+          ],
+          [
+            "declaration",
+            [
+              "logic",
+              1
+            ],
+            "78"
+          ]
+        ]
+      ],
+      "canonicalBytesUtf8": "[\"events\",[[\"reference\",[\"logic\",0],\"78\"],[\"declaration\",[\"logic\",0],\"78\"],[\"declaration\",[\"logic\",1],\"78\"]]]\n",
+      "canonicalSha256": "da2b3f17e1e491486d984e354cfd79352477e3eb4d503693d531d29562ab0a14"
+    },
+    {
+      "name": "bound-variables-use-de-bruijn-indices",
+      "purpose": "Binder spelling and runtime identity do not affect canonical output.",
+      "abstractInput": "forall x. exists y. pair(x,y)",
+      "canonical": [
+        "forall",
+        [
+          [
+            "type",
+            "int"
+          ]
+        ],
+        [
+          "exists",
+          [
+            [
+              "type",
+              "int"
+            ]
+          ],
+          [
+            "app",
+            "pair",
+            [
+              [
+                "bound",
+                1
+              ],
+              [
+                "bound",
+                0
+              ]
+            ]
+          ]
+        ]
+      ],
+      "canonicalBytesUtf8": "[\"forall\",[[\"type\",\"int\"]],[\"exists\",[[\"type\",\"int\"]],[\"app\",\"pair\",[[\"bound\",1],[\"bound\",0]]]]]\n",
+      "canonicalSha256": "edc71685f6074f1127ac0b3c27453f89cf5abd5d9f904448ea2399b6db6d4d0f"
+    },
+    {
+      "name": "clone-witness-preserves-source-and-sorts-instantiations",
+      "purpose": "Clone history cannot collapse into its expanded declarations.",
+      "abstractInput": {
+        "source": "theory-key-T",
+        "sourceItemIdentity": 7,
+        "typeInstantiationInsertionOrder": [
+          [
+            "62",
+            "int"
+          ],
+          [
+            "61",
+            "bool"
+          ]
+        ]
+      },
+      "canonical": [
+        "CloneWitness",
+        [
+          "theory-key",
+          "54"
+        ],
+        7,
+        [
+          [
+            "61",
+            "bool"
+          ],
+          [
+            "62",
+            "int"
+          ]
+        ],
+        [],
+        []
+      ],
+      "canonicalBytesUtf8": "[\"CloneWitness\",[\"theory-key\",\"54\"],7,[[\"61\",\"bool\"],[\"62\",\"int\"]],[],[]]\n",
+      "canonicalSha256": "bb29170ec2ed3e91ef964f0b9c24ce6cc67ff105ca6e16b5b55c37cec2cbb0ff"
+    },
+    {
+      "name": "generated-origin-carries-stage-but-no-context-token",
+      "purpose": "SMT alpha normalization is eligible only for explicit generated provenance.",
+      "abstractInput": {
+        "contextToken": "must-not-serialize",
+        "origin": {
+          "kind": "Generated",
+          "stage": "wp",
+          "displayNameBytes": [
+            118,
+            99
+          ]
+        }
+      },
+      "canonical": [
+        "Origin.Generated",
+        "wp",
+        "7663",
+        [
+          "none"
+        ],
+        []
+      ],
+      "canonicalBytesUtf8": "[\"Origin.Generated\",\"wp\",\"7663\",[\"none\"],[]]\n",
+      "canonicalSha256": "3991f38c6ebf1a1f761cf2ec902730425b984777681e6375753886a3167482ab"
+    }
+  ]
+}

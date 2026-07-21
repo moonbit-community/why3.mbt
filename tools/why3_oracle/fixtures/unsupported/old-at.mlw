@@ -1,0 +1,11 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+module OldAt
+  use int.Int
+  use ref.Ref
+  val cell : ref int
+  let preserve () : unit
+    ensures { !cell = old !cell }
+  = label Before in
+    assert { !cell = !cell at Before }
+end

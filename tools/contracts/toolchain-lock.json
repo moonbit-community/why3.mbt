@@ -1,0 +1,255 @@
+{
+  "schemaVersion": 1,
+  "profile": "why3-1.7.2-z3-4.8.12-mvp-v1",
+  "platform": {
+    "os": "linux",
+    "architecture": "amd64",
+    "oci": "linux/amd64"
+  },
+  "image": {
+    "repository": "ghcr.io/moonbit-community/why3.mbt-why3",
+    "digest": "sha256:fe30c5e0b8254f989de466476809c05e388cf675553f9ca86a4171999bd74da8",
+    "reference": "ghcr.io/moonbit-community/why3.mbt-why3@sha256:fe30c5e0b8254f989de466476809c05e388cf675553f9ca86a4171999bd74da8"
+  },
+  "buildRecipe": {
+    "commit": "a586ad365a7df02bf67864b7e627efaf3a22faf4",
+    "path": "Dockerfile",
+    "sha256": "bbc4df8722aa4e9c3eb8e1be5d7aedcd2676c1f06fb4a35035e585d44914fbb6",
+    "frontendImage": {
+      "repository": "docker/dockerfile",
+      "tagAtResolution": "1.7.0",
+      "digest": "sha256:dbbd5e059e8a07ff7ea6233b213b36aa516b4c53c645f1817a4dd18b83cbea56"
+    },
+    "baseImage": {
+      "repository": "ocaml/opam",
+      "tagAtResolution": "ubuntu-24.04-ocaml-4.14",
+      "platform": "linux/amd64",
+      "digest": "sha256:bea12da0ea6d56cbaa254dd8bbfe010eebf4d6e315accd8ee2f397daad655bc6"
+    },
+    "sourceArchiveKeptInImage": "/opt/why3-reference/why3-source.tar.gz"
+  },
+  "githubActions": [
+    {
+      "workflow": ".github/workflows/check.yml",
+      "action": "actions/checkout",
+      "commit": "d23441a48e516b6c34aea4fa41551a30e30af803"
+    },
+    {
+      "workflow": ".github/workflows/check.yml",
+      "action": "moonbit-community/setup-moonbit",
+      "commit": "04293a8a813bfd4b6c2fce22701b52ae1050d100"
+    },
+    {
+      "workflow": ".github/workflows/nightly-oracle.yml",
+      "action": "actions/checkout",
+      "commit": "d23441a48e516b6c34aea4fa41551a30e30af803"
+    },
+    {
+      "workflow": ".github/workflows/nightly-oracle.yml",
+      "action": "actions/upload-artifact",
+      "commit": "ea165f8d65b6e75b540449e92b4886f43607fa02"
+    },
+    {
+      "workflow": ".github/workflows/nightly-oracle.yml",
+      "action": "moonbit-community/setup-moonbit",
+      "commit": "04293a8a813bfd4b6c2fce22701b52ae1050d100"
+    },
+    {
+      "workflow": ".github/workflows/update-oracle.yml",
+      "action": "actions/checkout",
+      "commit": "d23441a48e516b6c34aea4fa41551a30e30af803"
+    },
+    {
+      "workflow": ".github/workflows/update-oracle.yml",
+      "action": "actions/upload-artifact",
+      "commit": "ea165f8d65b6e75b540449e92b4886f43607fa02"
+    },
+    {
+      "workflow": ".github/workflows/update-oracle.yml",
+      "action": "moonbit-community/setup-moonbit",
+      "commit": "04293a8a813bfd4b6c2fce22701b52ae1050d100"
+    },
+    {
+      "workflow": ".github/workflows/why3-image.yml",
+      "action": "actions/checkout",
+      "commit": "d23441a48e516b6c34aea4fa41551a30e30af803"
+    },
+    {
+      "workflow": ".github/workflows/why3-image.yml",
+      "action": "actions/upload-artifact",
+      "commit": "ea165f8d65b6e75b540449e92b4886f43607fa02"
+    },
+    {
+      "workflow": ".github/workflows/why3-image.yml",
+      "action": "docker/build-push-action",
+      "commit": "10e90e3645eae34f1e60eeb005ba3a3d33f178e8"
+    },
+    {
+      "workflow": ".github/workflows/why3-image.yml",
+      "action": "docker/login-action",
+      "commit": "c94ce9fb468520275223c153574b00df6fe4bcc9"
+    },
+    {
+      "workflow": ".github/workflows/why3-image.yml",
+      "action": "docker/setup-buildx-action",
+      "commit": "8d2750c68a42422c14e847fe6c8ac0403b4cbd6f"
+    },
+    {
+      "workflow": ".github/workflows/why3-image.yml",
+      "action": "moonbit-community/setup-moonbit",
+      "commit": "04293a8a813bfd4b6c2fce22701b52ae1050d100"
+    }
+  ],
+  "why3": {
+    "version": "1.7.2",
+    "versionOutput": "Why3 platform, version 1.7.2",
+    "commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
+    "shapeVersion": 6,
+    "executable": {
+      "path": "/home/opam/.opam/4.14/bin/why3",
+      "sha256": "cc1b01e7eb1f007ea89ddb074c1f9da389a95e7bf2e9c3d44650137f9f3924b1"
+    },
+    "datadir": {
+      "path": "/home/opam/.opam/4.14/share/why3",
+      "treeSha256": "371ecbed3100dacd24a3fbd1eb989ccbe43a3cb4afa285c4635898144627cc47",
+      "stdlibTreeSha256": "355ec847dee8c9083ed6392ad5fa121285ce36f682950accc7982e3ba343dcc6"
+    },
+    "driverClosureSha256": "c2cddacc1c95919326ef23dc97f5cd6db88b1abc902c73a72cf595a20ec624c2",
+    "proverDetectionSha256": "4b27f49c6d17b8c66ac2187d0405373d73c7fc2d6aed0f1ae564b1906b1cb427",
+    "sourceArchiveSha256": "c7bf782933a5d8ef9e78638cbf18e480eef895dca95317ba50231f20d45e92c7",
+    "semanticSnapshotSha256": "918163f06f16f3969bfc59c17ff0e2a0ec5b1e45629c879366f42b3952aeba1d",
+    "referenceArchive": {
+      "url": "https://gitlab.inria.fr/why3/why3/-/archive/1343338d3bb1941c0d4f134283bb0790816113c4/why3-1343338d3bb1941c0d4f134283bb0790816113c4.tar.gz",
+      "sha256": "c7bf782933a5d8ef9e78638cbf18e480eef895dca95317ba50231f20d45e92c7"
+    },
+    "opamRecipe": {
+      "path": "tools/why3_oracle/why3-1.7.2.opam",
+      "sha256": "24d4eae07494af13d313fd9ebb82e15d565c45d250dc04d5d029a06cf0534081",
+      "upstream": {
+        "repository": "ocaml/opam-repository",
+        "commit": "bfeb42d61bb49c607b888d38dadd2cc4c9d98358",
+        "path": "packages/why3/why3.1.7.2/opam",
+        "gitBlob": "6811b48fa50e6160ed7f812696e0939a1c40bd0d"
+      }
+    }
+  },
+  "z3": {
+    "version": "4.8.12",
+    "versionOutput": "Z3 version 4.8.12 - 64 bit",
+    "executable": {
+      "path": "/opt/z3/bin/z3",
+      "sha256": "350bb28360df8694db72068a26fcb779797889599f584ed3146b899a98204824"
+    },
+    "commit": "3a402ca2c14c3891d24658318406f80ce59b719f",
+    "archive": {
+      "url": "https://github.com/Z3Prover/z3/releases/download/z3-4.8.12/z3-4.8.12-x64-glibc-2.31.zip",
+      "sha256": "648e8a7afb57445440ad711b733bd675e3888da2767c14ae5122582c924d8d52"
+    }
+  },
+  "contracts": {
+    "semanticProfileSha256": "f788bd465967b186e1db9f910b8e04e3f4803413a705b661bafc2da5d07658ab",
+    "prCorpusSha256": "1a03dfdc4f95b0d0e4c525a85528f6e8aff2239c4d47e87125275f58f2eeae90",
+    "artifacts": [
+      {
+        "id": "canonical-schema-v2",
+        "path": "tools/contracts/canonical-schema-v2.json",
+        "sha256": "bc28d45938fa34011106e060ae07074c318448946d7f6732b280ae8710194432"
+      },
+      {
+        "id": "canonical-vectors-v1",
+        "path": "tools/contracts/canonical-vectors-v1.json",
+        "sha256": "055c3f02e582f510d0368447ed5a4880c430c3a8a4bfd64a2c2c8816fa3e52d3"
+      },
+      {
+        "id": "canonical-record-v2-json-schema",
+        "path": "tools/contracts/schema/canonical-record-v2.schema.json",
+        "sha256": "5cc010a12c52655fb159438cde9cd1504ad5168e3433f28a36235466774645c7"
+      },
+      {
+        "id": "driver-closure-v1",
+        "path": "tools/contracts/driver-closure-v1.json",
+        "sha256": "204f8393df7c5259d6bd727b14abfea9889992bd976223631d3de5a805a8873a"
+      },
+      {
+        "id": "features-v1",
+        "path": "tools/contracts/features-v1.json",
+        "sha256": "e8400d57eded7dab189eb2a97e2e2db241a1ebae9b059e3a2dc2cdde7522fb53"
+      },
+      {
+        "id": "moon-dependencies-v1",
+        "path": "tools/contracts/moon-dependencies-v1.json",
+        "sha256": "c52a1a0ad3f862b96530d012e6eab6e48abc9b788dee8287fe9c1cc7c6bc8383"
+      },
+      {
+        "id": "oracle-goal-envelope-v1-json-schema",
+        "path": "tools/contracts/schema/oracle-goal-envelope-v1.schema.json",
+        "sha256": "27a2b6007d1ba9550eda3d2454b6a6b7f21568d98e36431d36ce3d10fabdc5a1"
+      },
+      {
+        "id": "pr-corpus-v1",
+        "path": "tools/contracts/pr-corpus-v1.json",
+        "sha256": "1a03dfdc4f95b0d0e4c525a85528f6e8aff2239c4d47e87125275f58f2eeae90"
+      },
+      {
+        "id": "pr-golden-manifest-v1",
+        "path": "tools/why3_oracle/goldens/pr-v1/manifest.json",
+        "sha256": "d76649d764a3352ecee33ec62ca8a9e7ca4ee0f7bd34bfa18bf3a5433baeb9a9"
+      },
+      {
+        "id": "pr-prover-result-v1",
+        "path": "tools/why3_oracle/goldens/pr-v1/prover-result.json",
+        "sha256": "666fefeb27b49655900c97ad0a32d86c463b03a64fb9aea4a25ab3b33001c41a"
+      },
+      {
+        "id": "runner-vectors-v1",
+        "path": "tools/contracts/runner-vectors-v1.json",
+        "sha256": "f2a5441c778ddaead3c7ebae7bff12f79a39d78e83eca7491f840670a8f955c7"
+      },
+      {
+        "id": "semantic-profile-v1",
+        "path": "tools/contracts/semantic-profile-v1.json",
+        "sha256": "81077c886eff8d3a360e2ca95089f68b44ad085ee43815dc4c00150e81dc6884"
+      },
+      {
+        "id": "toolchain-inputs-v1",
+        "path": "tools/contracts/toolchain-inputs-v1.json",
+        "sha256": "62fc081479145c5d6547992ac40eaf6dd7d638b199436fe7b268245e4aa3c731"
+      },
+      {
+        "id": "toolchain-lock-v1-json-schema",
+        "path": "tools/contracts/schema/toolchain-lock-v1.schema.json",
+        "sha256": "03b162d6d1467a6785b710fe0ccdc3898a494ed17237428df1ea5075a4441000"
+      },
+      {
+        "id": "transform-profile-v1",
+        "path": "tools/contracts/transform-profile-v1.json",
+        "sha256": "39d4f9ecde65b7ffb72c61ae83bca5b4e86a7d2434a1c60d70fe8cb07beb46f4"
+      },
+      {
+        "id": "translated-files-v1",
+        "path": "tools/contracts/translated-files-v1.json",
+        "sha256": "1372f57ca2c3bb4a6e81442fd6bf928f8eee3195019c59f1861c056d18c9a45e"
+      },
+      {
+        "id": "trusted-snapshot-schema-v1",
+        "path": "tools/contracts/trusted-snapshot-schema-v1.json",
+        "sha256": "12ff786934d001a726bf319322445689d68ad2efa47dd1c59bd4756c8e7a7a7e"
+      },
+      {
+        "id": "z3-static-profile-v1",
+        "path": "prover/z3/z3-static-profile-v1.json",
+        "sha256": "60533198652eff7d450970c5529b78c4aa7cbd4ae144a54ab6093ae75062d2d4"
+      }
+    ]
+  },
+  "environment": {
+    "LC_ALL": "C",
+    "LANG": "C",
+    "TZ": "UTC",
+    "HOME": "isolated Whyconf directory",
+    "TMPDIR": "isolated Whyconf directory",
+    "defaultPlugins": "disabled",
+    "standardLibrary": "explicit --no-stdlib plus manifest loadpaths"
+  },
+  "lockSha256": "162a687d755a3b941a15b12454f2a22525fcdd3b2882ebdd424b89b069863988"
+}

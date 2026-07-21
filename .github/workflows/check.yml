@@ -16,35 +16,74 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  stable-build:
-    name: stable
+  oracle-build:
+    name: fixed oracle
     runs-on: ubuntu-24.04
+    env:
+      WHY3_ORACLE_IMAGE_DIGEST: sha256:fe30c5e0b8254f989de466476809c05e388cf675553f9ca86a4171999bd74da8
     container:
-      image: ghcr.io/${{ github.repository }}-why3:1.7.2
+      image: ghcr.io/moonbit-community/why3.mbt-why3@sha256:fe30c5e0b8254f989de466476809c05e388cf675553f9ca86a4171999bd74da8
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
 
       - name: Trust checkout workspace
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-      - name: Setup Moon
-        uses: moonbit-community/setup-moonbit@main
-        with: 
+      - name: Set up MoonBit stable
+        uses: moonbit-community/setup-moonbit@04293a8a813bfd4b6c2fce22701b52ae1050d100
+        with:
           version: stable
-
-      - name: moon update
-        run: moon update
 
       - name: Show tool versions
         run: |
           moon version --all
           moonrun --version
+          why3 --version
+          z3 --version
 
-      - name: Show Why3 version
-        run: why3 --version
+      - name: Update registry, check project, and verify exact Moon dependencies
+        run: |
+          moon update && moon check
+          node tools/why3_oracle/generate_moon_dependency_inventory.mjs \
+            --check tools/contracts/moon-dependencies-v1.json
+
+      - name: Verify fixed image contents
+        run: |
+          node tools/why3_oracle/inspect_toolchain.mjs \
+            > "$RUNNER_TEMP/toolchain-report.json"
+          jq -e \
+            '.platform.oci == "linux/amd64" and
+             .why3.version == "1.7.2" and
+             .why3.shapeVersion == 6 and
+             .z3.version == "4.8.12"' \
+            "$RUNNER_TEMP/toolchain-report.json"
+
+      - name: Check PR-00 contracts and inventories
+        run: |
+          node tools/check_pr00_contracts.mjs \
+            --why3-archive "$WHY3_REFERENCE_ARCHIVE" \
+            --require-toolchain-lock
+
+      - name: Smoke fixed Why3 entrypoint
+        run: |
+          tools/why3_oracle/run-fixed mvp.abs -- \
+            prove --parse-only tools/why3_oracle/fixtures/mvp.mlw
+
+      - name: Check curated oracle layers and fail-closed boundaries
+        run: |
+          node tools/why3_oracle/run_elab_differential.mjs \
+            --why3-archive "$WHY3_REFERENCE_ARCHIVE"
+          node tools/why3_oracle/run_transform_differential.mjs \
+            --why3-archive "$WHY3_REFERENCE_ARCHIVE"
+          node tools/why3_oracle/run_smt_differential.mjs \
+            --why3-archive "$WHY3_REFERENCE_ARCHIVE"
+          node tools/why3_oracle/manage_pr_goldens.mjs --check
+          node tools/why3_oracle/sync_pr_golden_lock.mjs --check
+          node tools/why3_oracle/run_unsupported_gate.mjs
+          node tools/why3_oracle/run_result_differential.mjs
 
       - name: Check all targets
         run: moon check --target all --warn-list +73
@@ -53,6 +92,9 @@ jobs:
         run: |
           moon test --target all --serial --release
           moon test --target all --serial
+
+      - name: Validate native process-group fallback with sanitizers
+        run: sh tools/check_native_runner_asan.sh
 
       - name: Test Node.js tools
         run: node --test tools/*.test.mjs

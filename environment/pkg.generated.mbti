@@ -1,0 +1,59 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonbit-community/why3/environment"
+
+import {
+  "moonbit-community/why3/core/identity",
+  "moonbit-community/why3/core/logic",
+  "moonbit-community/why3/core/theory",
+  "moonbit-community/why3/mlw",
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+pub(all) suberror EnvironmentError {
+  EnvironmentError(EnvironmentDiagnostic)
+} derive(Eq, @debug.Debug)
+
+// Types and methods
+type Environment
+pub fn Environment::add_module_alias(Self, @theory.TheoryKey, @theory.TheoryKey, @identity.SourceSpan?) -> Unit raise EnvironmentError
+pub fn Environment::add_theory_alias(Self, @theory.TheoryKey, @theory.TheoryKey, @identity.SourceSpan?) -> Unit raise EnvironmentError
+pub fn Environment::context_anchor(Self) -> @identity.SemanticId
+pub fn Environment::intern_type_variable(Self, @identity.CompilationContext, BytesView, @identity.Origin, @identity.SourceSpan?) -> @logic.TyVarSymbol raise EnvironmentError
+pub fn Environment::is_driver_only_theory(Self, @theory.TheoryKey) -> Bool
+pub fn Environment::new(@identity.CompilationContext) -> Self
+pub fn Environment::register_module(Self, @mlw.Pmodule, Bool, @identity.SourceSpan?) -> Unit raise EnvironmentError
+pub fn Environment::register_theory(Self, @theory.Theory, Bool, @identity.SourceSpan?) -> Unit raise EnvironmentError
+pub fn Environment::resolve_module(Self, @theory.TheoryKey, @identity.SourceSpan?) -> @mlw.Pmodule raise EnvironmentError
+pub fn Environment::resolve_theory(Self, @theory.TheoryKey, @identity.SourceSpan?) -> @theory.Theory raise EnvironmentError
+pub fn Environment::use_module(Self, @mlw.PmoduleBuilder, @theory.TheoryKey, Bool, @identity.SourceSpan?) -> Unit raise
+pub fn Environment::use_theory(Self, @theory.TheoryBuilder, @theory.TheoryKey, Bool, @identity.SourceSpan?) -> Unit raise
+pub fn Environment::view(Self) -> EnvironmentView
+
+pub(all) struct EnvironmentDiagnostic {
+  kind : EnvironmentErrorKind
+  span : @identity.SourceSpan?
+  message : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum EnvironmentErrorKind {
+  DuplicateTheory
+  DuplicateModule
+  EnvironmentContextMismatch
+  ResolveError
+  DriverOnlyTheory
+} derive(Eq, @debug.Debug)
+
+pub(all) struct EnvironmentView {
+  theory_keys : Array[@theory.TheoryKey]
+  module_keys : Array[@theory.TheoryKey]
+  visible_theory_aliases : Array[(@theory.TheoryKey, @theory.TheoryKey)]
+  visible_module_aliases : Array[(@theory.TheoryKey, @theory.TheoryKey)]
+}
+
+// Type aliases
+
+// Traits
+
