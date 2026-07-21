@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
+// Derived from Why3 1.7.2 (Copyright 2010-2023 Inria, CNRS, Paris-Saclay University).
+// MoonBit translation and semantic modifications recorded on 2026-07-21.
+
 ///|
 pub(all) enum IntLiteralKind {
   ILitUnk
@@ -163,6 +167,17 @@ fn normalized_real_value(
     BigInt::from_int(1),
   )
   { significand, pow2: pow2 + factor2, pow5: pow5 + factor5 }
+}
+
+///|
+/// Constructs the same normalized exact representation used by parsed real
+/// literals. Semantic consumers use this for trusted snapshot constants.
+pub fn RealValue::normalized(
+  significand : BigInt,
+  pow2 : BigInt,
+  pow5 : BigInt,
+) -> RealValue {
+  normalized_real_value(significand, pow2, pow5)
 }
 
 ///|

@@ -1,0 +1,10 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+module Recursion
+  use int.Int
+  let rec countdown (value : int) : int
+    requires { value >= 0 }
+    ensures { result = 0 }
+    variant { value }
+  = if value = 0 then 0 else countdown (value - 1)
+end

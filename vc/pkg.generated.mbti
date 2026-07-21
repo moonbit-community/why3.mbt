@@ -1,0 +1,57 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonbit-community/why3/vc"
+
+import {
+  "moonbit-community/why3/core/identity",
+  "moonbit-community/why3/core/logic",
+  "moonbit-community/why3/mlw",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn classical_wp(@identity.CompilationContext, @mlw.Pmodule, Kode) -> @logic.Term raise
+
+pub fn generate_module(@identity.CompilationContext, @mlw.Pmodule) -> @mlw.Pmodule raise
+
+pub fn generate_routine_vc(@identity.CompilationContext, @mlw.Pmodule, @mlw.RoutineSymbol, @mlw.Cty, @mlw.Expr) -> @logic.Decl? raise
+
+pub fn lower_routine(@identity.CompilationContext, @mlw.Pmodule, @mlw.Cty, @mlw.Expr) -> Kode raise
+
+// Errors
+pub(all) suberror VcError {
+  VcError(VcDiagnostic)
+} derive(Eq, @debug.Debug)
+
+// Types and methods
+type Kode
+pub fn Kode::continue_normally() -> Self
+pub fn Kode::view(Self) -> KodeView
+
+pub(all) enum KodeView {
+  Kseq(Kode, Int, Kode)
+  Kpar(Kode, Kode)
+  Kif(@mlw.PVariable, Kode, Kode)
+  Klet(@mlw.PVariable, @logic.Term, @logic.Term)
+  Kval(ArrayView[@mlw.PVariable], @logic.Term)
+  Kcut(@logic.Term)
+  Kstop(@logic.Term)
+  Kcont(Int)
+}
+
+pub(all) struct VcDiagnostic {
+  kind : VcErrorKind
+  span : @identity.SourceSpan?
+  message : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum VcErrorKind {
+  ContextMismatch
+  UnsupportedControlAttribute
+  UnsupportedComputation
+  InvariantFailure
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits
+

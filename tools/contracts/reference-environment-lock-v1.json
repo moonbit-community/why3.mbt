@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "platform": {
+    "os": "linux",
+    "architecture": "amd64",
+    "oci": "linux/amd64"
+  },
+  "image": {
+    "repository": "ghcr.io/moonbit-community/why3.mbt-why3",
+    "digest": "sha256:7733151a936bb9fc054372dad82143ab16ca53b0b451a5d6b6875f3bd5b1726a"
+  },
+  "ocaml": {
+    "base": {
+      "repository": "ocaml/opam",
+      "tag": "ubuntu-24.04-ocaml-4.14",
+      "digest": "sha256:bea12da0ea6d56cbaa254dd8bbfe010eebf4d6e315accd8ee2f397daad655bc6"
+    },
+    "version": "4.14.4"
+  },
+  "why3": {
+    "version": "1.7.2",
+    "commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
+    "tree": "f5e82693620413d7d8e3ebcba69addcb6a65f877",
+    "archive": {
+      "url": "https://gitlab.inria.fr/why3/why3/-/archive/1343338d3bb1941c0d4f134283bb0790816113c4/why3-1343338d3bb1941c0d4f134283bb0790816113c4.tar.gz",
+      "sha256": "c7bf782933a5d8ef9e78638cbf18e480eef895dca95317ba50231f20d45e92c7",
+      "path": "/opt/reference-env/why3-source.tar.gz"
+    },
+    "runtime": {
+      "executable": "/home/opam/.opam/4.14/bin/why3",
+      "datadir": "/home/opam/.opam/4.14/share/why3"
+    }
+  },
+  "z3": {
+    "version": "4.8.12",
+    "runtime": {
+      "executable": "/opt/z3/bin/z3"
+    }
+  },
+  "manifest": {
+    "path": "/opt/reference-env/manifest.json",
+    "sha256": "d842c4413353e620a6ee409f58cef8f5572db7e3d0a6dd50c007981f44fee2eb"
+  }
+}

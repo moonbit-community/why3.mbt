@@ -1,0 +1,8 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+theory HigherOrder
+  constant transformer : (int -> int) -> int
+  constant identity : int -> int
+  goal application : transformer identity = transformer identity
+  goal higher_application : (if true then identity else identity) 0 = 0
+end

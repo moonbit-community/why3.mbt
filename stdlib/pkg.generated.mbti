@@ -1,0 +1,140 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonbit-community/why3/stdlib"
+
+import {
+  "moonbit-community/why3/core/identity",
+  "moonbit-community/why3/core/logic",
+  "moonbit-community/why3/core/theory",
+  "moonbit-community/why3/environment",
+  "moonbit-community/why3/mlw",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn minimal_env(@identity.CompilationContext) -> FrozenEnvironment raise
+
+// Errors
+pub(all) suberror BindError {
+  BindError(BindDiagnostic)
+} derive(Eq, @debug.Debug)
+
+pub(all) suberror SnapshotError {
+  SnapshotError(SnapshotDiagnostic)
+} derive(Eq, @debug.Debug)
+
+// Types and methods
+pub(all) struct BindDiagnostic {
+  kind : BindErrorKind
+  message : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum BindErrorKind {
+  MissingSymbol
+  SymbolDigestMismatch
+  SymbolKindMismatch
+  CatalogContextMismatch
+} derive(Eq, @debug.Debug)
+
+pub(all) enum DriverSymbol {
+  DriverType(@logic.TypeSymbol)
+  DriverLogic(@logic.LSymbol)
+  DriverProposition(@logic.PrSymbol)
+  DriverProgramType(@mlw.ProgramTypeSymbol)
+  DriverRoutine(@mlw.RoutineSymbol)
+}
+
+type DriverSymbolCatalog
+pub fn DriverSymbolCatalog::context_anchor(Self) -> @identity.SemanticId
+pub fn DriverSymbolCatalog::keys(Self) -> ArrayView[@identity.SnapshotSymbolKey]
+pub fn DriverSymbolCatalog::length(Self) -> Int
+pub fn DriverSymbolCatalog::resolve_logic(Self, @identity.SnapshotSymbolKey) -> @logic.LSymbol raise BindError
+pub fn DriverSymbolCatalog::resolve_program_type(Self, @identity.SnapshotSymbolKey) -> @mlw.ProgramTypeSymbol raise BindError
+pub fn DriverSymbolCatalog::resolve_proposition(Self, @identity.SnapshotSymbolKey) -> @logic.PrSymbol raise BindError
+pub fn DriverSymbolCatalog::resolve_routine(Self, @identity.SnapshotSymbolKey) -> @mlw.RoutineSymbol raise BindError
+pub fn DriverSymbolCatalog::resolve_symbol(Self, @identity.SnapshotSymbolKey) -> DriverSymbol raise BindError
+pub fn DriverSymbolCatalog::resolve_type(Self, @identity.SnapshotSymbolKey) -> @logic.TypeSymbol raise BindError
+pub fn DriverSymbolCatalog::validate_context(Self, @identity.CompilationContext) -> Unit raise BindError
+
+type FrozenEnvironment
+pub fn FrozenEnvironment::driver_catalog(Self) -> DriverSymbolCatalog
+pub fn FrozenEnvironment::handles(Self) -> StdlibHandles
+pub fn FrozenEnvironment::manifest(Self) -> SnapshotManifestView
+pub fn FrozenEnvironment::resolve_module(Self, @theory.TheoryKey, @identity.SourceSpan?) -> @mlw.Pmodule raise @environment.EnvironmentError
+pub fn FrozenEnvironment::resolve_theory(Self, @theory.TheoryKey, @identity.SourceSpan?) -> @theory.Theory raise @environment.EnvironmentError
+pub fn FrozenEnvironment::semantic_environment(Self) -> @environment.Environment
+pub fn FrozenEnvironment::semantic_projection(Self) -> FrozenSemanticProjectionView
+pub fn FrozenEnvironment::use_module(Self, @mlw.PmoduleBuilder, @theory.TheoryKey, Bool, @identity.SourceSpan?) -> Unit raise
+pub fn FrozenEnvironment::use_theory(Self, @theory.TheoryBuilder, @theory.TheoryKey, Bool, @identity.SourceSpan?) -> Unit raise
+pub fn FrozenEnvironment::view(Self) -> @environment.EnvironmentView
+
+pub(all) struct FrozenSemanticProjectionView {
+  theory_sha256 : Bytes
+  module_sha256 : Bytes
+}
+
+pub(all) struct SnapshotDiagnostic {
+  kind : SnapshotErrorKind
+  path : String
+  message : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum SnapshotErrorKind {
+  PayloadLengthMismatch
+  PayloadDigestMismatch
+  InvalidUtf8
+  InvalidJson
+  SchemaMismatch
+  MalformedSnapshot
+  UnknownReference
+  DuplicateCatalogEntry
+  UnsupportedSnapshotVariant
+  SemanticInvariantFailure
+} derive(Eq, @debug.Debug)
+
+type SnapshotManifest
+pub fn SnapshotManifest::view(Self) -> SnapshotManifestView
+
+pub(all) struct SnapshotManifestView {
+  schema_version : Int
+  snapshot_schema_version : Int
+  why3_version : Bytes
+  why3_commit : Bytes
+  why3_tree : Bytes
+  driver_profile : Bytes
+  payload_length : Int
+  payload_sha256 : Bytes
+  theory_count : Int
+  module_count : Int
+  symbol_count : Int
+  type_variable_count : Int
+}
+
+type StdlibHandles
+pub fn StdlibHandles::view(Self) -> StdlibHandlesView
+
+pub(all) struct StdlibHandlesView {
+  builtin_module : @mlw.Pmodule
+  bool_module : @mlw.Pmodule
+  unit_module : @mlw.Pmodule
+  int_module : @mlw.Pmodule
+  real_module : @mlw.Pmodule
+  bool_type : @mlw.ProgramTypeSymbol
+  unit_type : @mlw.ProgramTypeSymbol
+  int_type : @mlw.ProgramTypeSymbol
+  real_type : @mlw.ProgramTypeSymbol
+  int_negate : @mlw.RoutineSymbol
+  int_less_than : @mlw.RoutineSymbol
+  int_greater_equal : @mlw.RoutineSymbol
+  real_negate : @mlw.RoutineSymbol
+  real_add : @mlw.RoutineSymbol
+  real_subtract : @mlw.RoutineSymbol
+  real_multiply : @mlw.RoutineSymbol
+  real_divide : @mlw.RoutineSymbol
+  real_less_than : @mlw.RoutineSymbol
+  real_greater_equal : @mlw.RoutineSymbol
+}
+
+// Type aliases
+
+// Traits
+

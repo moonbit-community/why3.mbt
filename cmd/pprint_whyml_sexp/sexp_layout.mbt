@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
+// Derived from Why3 1.7.2 (Copyright 2010-2023 Inria, CNRS, Paris-Saclay University).
+// MoonBit translation and semantic modifications recorded on 2026-07-21.
+
 // Why3 1.7.2 prints S-expressions with an OCaml Format hv box at offset 2.
 // Format.std_formatter uses a margin of 78 and a maximum indentation of 68.
 

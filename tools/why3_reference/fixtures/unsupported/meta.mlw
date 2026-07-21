@@ -1,0 +1,8 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+theory UserMeta
+  type source
+  type target
+  function convert (x : source) : target
+  meta coercion function convert
+end

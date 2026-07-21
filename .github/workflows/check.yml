@@ -16,56 +16,64 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  stable-build:
-    name: stable
+  environment:
+    name: resolve reference environment
+    runs-on: ubuntu-24.04
+    outputs:
+      image: ${{ steps.lock.outputs.image }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+
+      - name: Read the unique environment lock
+        id: lock
+        run: |
+          image="$(node -e '
+            const { readEnvironmentLock } = require("./tools/why3_reference/reference_environment.cjs");
+            const lock = readEnvironmentLock();
+            process.stdout.write(`${lock.image.repository}@${lock.image.digest}`);
+          ')"
+          echo "image=$image" >> "$GITHUB_OUTPUT"
+
+  project:
+    name: project
+    needs:
+      - environment
     runs-on: ubuntu-24.04
     container:
-      image: ghcr.io/${{ github.repository }}-why3:1.7.2
+      image: ${{ needs.environment.outputs.image }}
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      WHY3_REFERENCE_CACHE_DIR: ${{ github.workspace }}/.cache/why3-reference
+      WHY3_REFERENCE_CONTEXT_DIR: ${{ github.workspace }}/_build/reference-context
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
 
       - name: Trust checkout workspace
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-      - name: Setup Moon
-        uses: moonbit-community/setup-moonbit@main
-        with: 
+      - name: Restore patched Why3 runtime
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ env.WHY3_REFERENCE_CACHE_DIR }}
+          key: reference-runtime-${{ runner.os }}-${{ hashFiles('tools/contracts/reference-environment-lock-v1.json', 'tools/why3_reference/reference_runtime.mjs', 'tools/why3_reference/patches/driver-trace.patch') }}
+
+      - name: Set up MoonBit stable
+        uses: moonbit-community/setup-moonbit@04293a8a813bfd4b6c2fce22701b52ae1050d100
+        with:
           version: stable
 
-      - name: moon update
-        run: moon update
-
-      - name: Show tool versions
+      - name: Bootstrap and run the complete check
         run: |
-          moon version --all
-          moonrun --version
+          node tools/run.mjs bootstrap
+          node tools/run.mjs check \
+            --why3-archive "$WHY3_REFERENCE_ARCHIVE"
 
-      - name: Show Why3 version
-        run: why3 --version
-
-      - name: Check all targets
-        run: moon check --target all --warn-list +73
-
-      - name: Test all targets
-        run: |
-          moon test --target all --serial --release
-          moon test --target all --serial
-
-      - name: Test Node.js tools
-        run: node --test tools/*.test.mjs
-
-      - name: Check Why3 fixtures
-        run: node tools/check_why3_fixtures.mjs
-
-      - name: Check generated interfaces
-        run: |
-          moon info
-          git diff --exit-code
-
-      - name: Check formatting
-        run: |
-          moon fmt
-          git diff --exit-code
+      - name: Upload resolved environment provenance
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: reference-context-${{ github.sha }}
+          path: ${{ env.WHY3_REFERENCE_CONTEXT_DIR }}
+          if-no-files-found: warn

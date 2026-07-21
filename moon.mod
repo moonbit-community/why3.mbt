@@ -17,7 +17,7 @@ readme = "README.mbt.md"
 
 repository = ""
 
-license = "Apache-2.0"
+license = "LGPL-2.1-only WITH OCaml-LGPL-linking-exception"
 
 keywords = [ ]
 
@@ -28,4 +28,5 @@ description = ""
 import {
   "moonbitlang/async@0.20.2",
   "moonbit-community/prettyprinter@0.4.10",
+  "moonbitlang/x@0.4.46",
 }

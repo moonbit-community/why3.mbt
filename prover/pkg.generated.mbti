@@ -1,0 +1,137 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonbit-community/why3/prover"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn default_solver_seconds() -> Int
+
+pub fn maximum_solver_seconds() -> Int
+
+pub fn parent_deadline_seconds(Int) -> Int? raise ConfigError
+
+pub fn prover_stream_limit_bytes() -> Int
+
+pub fn validate_solver_seconds(Int) -> Int raise ConfigError
+
+// Errors
+pub(all) suberror ConfigError {
+  ConfigError(ConfigDiagnostic)
+} derive(Eq, @debug.Debug)
+
+pub(all) suberror MalformedProverOutput {
+  MalformedProverOutput(MalformedProverOutputDiagnostic)
+} derive(Eq, @debug.Debug)
+
+pub(all) suberror OutputLimitExceeded {
+  OutputLimitExceeded(OutputLimitDiagnostic)
+} derive(Eq, @debug.Debug)
+
+pub(all) suberror ProcessError {
+  ProcessError(ProcessDiagnostic)
+} derive(Eq, @debug.Debug)
+
+// Types and methods
+type CommandSpec
+pub fn CommandSpec::new(BytesView, ProverTransport, BytesView, ArrayView[Bytes], Int) -> Self raise ConfigError
+pub fn CommandSpec::view(Self) -> CommandSpecView
+
+pub(all) struct CommandSpecView {
+  profile_id : Bytes
+  transport : ProverTransport
+  executable_request : Bytes
+  arguments : ArrayView[Bytes]
+  solver_seconds : Int
+  parent_deadline_policy : ParentDeadlinePolicy
+  stdout_limit_bytes : Int
+  stderr_limit_bytes : Int
+}
+
+pub(all) struct ConfigDiagnostic {
+  kind : ConfigErrorKind
+  message : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ConfigErrorKind {
+  InvalidTimeout
+  InvalidCommand
+  NonUtf8Path
+} derive(Eq, @debug.Debug)
+
+pub(all) struct MalformedProverOutputDiagnostic {
+  kind : MalformedProverOutputKind
+  message : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum MalformedProverOutputKind {
+  InvalidUtf8
+  UnrecognizedOutput
+} derive(Eq, @debug.Debug)
+
+pub(all) struct OutputLimitDiagnostic {
+  stream : ProverStream
+  limit_bytes : Int
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ParentDeadlinePolicy {
+  NoAutomaticDeadline
+  DeadlineAfterSeconds(Int)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ProcessDiagnostic {
+  kind : ProcessErrorKind
+  exit_code : Int?
+  signal : Bytes?
+  message : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ProcessErrorKind {
+  ExecutableNotFound
+  SpawnFailed
+  BrokenPipe
+  ReadFailed
+  WaitFailed
+  UnclassifiedExit
+  SignaledProcess
+  Cancelled
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ProcessExitStatus {
+  Exited(Int)
+  Signaled(Bytes)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ProverResult {
+  Valid
+  Invalid
+  Unknown(Bytes)
+  Timeout
+  OutOfMemory
+  StepLimitExceeded
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ProverStream {
+  StandardOutput
+  StandardError
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ProverTransport {
+  StandardInput
+} derive(Eq, @debug.Debug)
+
+type RawProcessOutcome
+pub fn RawProcessOutcome::new(BytesView, BytesView, ProcessExitStatus) -> Self
+pub fn RawProcessOutcome::view(Self) -> RawProcessOutcomeView
+
+pub(all) struct RawProcessOutcomeView {
+  stdout : BytesView
+  stderr : BytesView
+  status : ProcessExitStatus
+}
+
+// Type aliases
+
+// Traits
+

@@ -1,0 +1,6 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+module ProgramExpression
+  type empty
+  let impossible (_value : empty) : unit = absurd
+end

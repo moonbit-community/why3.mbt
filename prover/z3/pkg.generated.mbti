@@ -1,0 +1,210 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonbit-community/why3/prover/z3"
+
+import {
+  "moonbit-community/why3/core/identity",
+  "moonbit-community/why3/core/logic",
+  "moonbit-community/why3/core/theory",
+  "moonbit-community/why3/printer/smtv2",
+  "moonbit-community/why3/prover",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn bind_profile(Z3StaticSpec, DriverSymbolResolver, @identity.CompilationContext) -> Z3Profile raise BindError
+
+pub fn parse_result(@prover.RawProcessOutcome) -> @prover.ProverResult raise
+
+pub fn z3_static_spec() -> Z3StaticSpec raise BindError
+
+// Errors
+pub(all) suberror BindError {
+  BindError(BindDiagnostic)
+} derive(Eq, @debug.Debug)
+
+// Types and methods
+pub(all) struct BindDiagnostic {
+  kind : BindErrorKind
+  path : String
+  message : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum BindErrorKind {
+  InvalidProfile
+  MissingSymbol
+  SymbolDigestMismatch
+  SymbolKindMismatch
+  ContextMismatch
+  InvalidTask
+  UnsupportedTransformInput
+  ResidualTypeVariable
+  ResidualEpsilon
+  UnsupportedDatatype
+} derive(Eq, @debug.Debug)
+
+type DriverSymbolResolver
+pub fn DriverSymbolResolver::context_anchor(Self) -> @identity.SemanticId
+pub fn DriverSymbolResolver::new(@identity.SemanticId, ArrayView[(@identity.SnapshotSymbolKey, ResolvedDriverSymbol)]) -> Self raise BindError
+pub fn DriverSymbolResolver::resolve_logic(Self, @identity.SnapshotSymbolKey, path? : String) -> @logic.LSymbol raise BindError
+pub fn DriverSymbolResolver::resolve_proposition(Self, @identity.SnapshotSymbolKey, path? : String) -> @logic.PrSymbol raise BindError
+pub fn DriverSymbolResolver::resolve_type(Self, @identity.SnapshotSymbolKey, path? : String) -> @logic.TypeSymbol raise BindError
+
+type GoalInfo
+pub fn GoalInfo::new(GoalUnitKind, BytesView, @logic.PrSymbol, Int) -> Self
+pub fn GoalInfo::view(Self) -> GoalInfoView
+
+pub(all) struct GoalInfoView {
+  unit_kind : GoalUnitKind
+  unit_name : Bytes
+  goal : @logic.PrSymbol
+  display_name : Bytes
+  ordinal : Int
+  origin : @identity.Origin
+  expl_attributes : ArrayView[Bytes]
+}
+
+pub(all) enum GoalUnitKind {
+  TheoryUnit
+  ModuleUnit
+} derive(Eq, @debug.Debug)
+
+type PreparedCall
+pub fn PreparedCall::command(Self) -> @prover.CommandSpec
+pub fn PreparedCall::goal_info(Self) -> GoalInfo
+pub fn PreparedCall::new(@theory.Task, @theory.Task, @smtv2.SmtQuery, @prover.CommandSpec, GoalInfo) -> Self raise BindError
+pub fn PreparedCall::prepared_task(Self) -> @theory.Task
+pub fn PreparedCall::query(Self) -> @smtv2.SmtQuery
+pub fn PreparedCall::raw_task(Self) -> @theory.Task
+
+pub(all) enum ProverAnswerRule {
+  RuleValid
+  RuleInvalid
+  RuleTimeout
+  RuleOutOfMemory
+  RuleStepLimitExceeded
+  RuleUnknown(Bytes)
+  RuleFailure(Bytes)
+  RuleHighFailure
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ResolvedDriverSymbol {
+  ResolvedType(@logic.TypeSymbol)
+  ResolvedLogic(@logic.LSymbol)
+  ResolvedProposition(@logic.PrSymbol)
+}
+
+pub(all) struct ResultExitCodeView {
+  code : Int
+  answer : ProverAnswerRule
+}
+
+pub(all) struct ResultRegexpView {
+  pattern : Bytes
+  answer : ProverAnswerRule
+}
+
+pub(all) enum SyntaxKind {
+  TypeSyntax
+  LogicSyntax
+  LiteralSyntax
+} derive(Eq, @debug.Debug)
+
+pub(all) enum TransformId {
+  CounterexamplesDependentIntros
+  InlineTrivial
+  EliminateBuiltin
+  RemoveUnusedKeepConstants
+  DetectPolymorphism
+  EliminateDefinitionConditionally
+  EliminateInductive
+  EliminateEpsilon
+  EliminateLiteral
+  SimplifyFormula
+  PrepareForCounterexmp
+  EliminateProjectionsSums
+  DiscriminateIfPoly
+  EliminateAlgebraicIfPoly
+  EncodingSmtIfPoly
+} derive(Eq, @debug.Debug)
+pub fn TransformId::canonical_name(Self) -> BytesView
+
+type Z3CommandTemplate
+pub fn Z3CommandTemplate::view(Self) -> Z3CommandTemplateView
+
+pub(all) struct Z3CommandTemplateView {
+  executable : Bytes
+  common_arguments : ArrayView[Bytes]
+  time_limit_argument : Bytes
+  step_limit_argument : Bytes
+}
+
+pub(all) enum Z3Printer {
+  SmtV26
+} derive(Eq, @debug.Debug)
+
+type Z3Profile
+pub fn Z3Profile::builtin_type(Self, @logic.BuiltinTypeKind) -> @logic.TypeSymbol?
+pub fn Z3Profile::checkpoint_sequence(Self, Bool) -> ArrayView[Bytes]
+pub fn Z3Profile::command(Self) -> Z3CommandTemplate
+pub fn Z3Profile::command_spec(Self, solver_seconds? : Int, executable_request? : BytesView?) -> @prover.CommandSpec raise @prover.ConfigError
+pub fn Z3Profile::driver_update(Self, @theory.Task) -> @theory.Task raise BindError
+pub fn Z3Profile::printer_query(Self, @theory.Task) -> @smtv2.SmtV26Query raise BindError
+pub fn Z3Profile::result_exit_code_rules(Self) -> Array[ResultExitCodeView]
+pub fn Z3Profile::result_regexp_rules(Self) -> Array[ResultRegexpView]
+pub fn Z3Profile::syntax_entries(Self) -> Array[Z3SyntaxEntry]
+pub fn Z3Profile::view(Self) -> Z3ProfileView
+
+pub(all) struct Z3ProfileView {
+  context_anchor : @identity.SemanticId
+  transforms : ArrayView[TransformId]
+  driver_meta_group_count : Int
+  driver_meta_count : Int
+  validated_snapshot_meta_count : Int
+  syntax_count : Int
+  remove_count : Int
+  preludes : ArrayView[Bytes]
+  theory_prelude_count : Int
+  result_regexp_count : Int
+  result_exit_code_count : Int
+  command : Z3CommandTemplate
+}
+
+type Z3StaticSpec
+pub fn Z3StaticSpec::command_spec(Self, solver_seconds? : Int, executable_request? : BytesView?) -> @prover.CommandSpec raise @prover.ConfigError
+pub fn Z3StaticSpec::required_keys(Self) -> Array[@identity.SnapshotSymbolKey]
+pub fn Z3StaticSpec::view(Self) -> Z3StaticSpecView
+
+pub(all) struct Z3StaticSpecView {
+  printer : Z3Printer
+  transforms : ArrayView[TransformId]
+  driver_meta_group_count : Int
+  driver_meta_count : Int
+  snapshot_meta_group_count : Int
+  snapshot_meta_count : Int
+  syntax_count : Int
+  remove_count : Int
+  preludes : ArrayView[Bytes]
+  theory_prelude_count : Int
+  result_regexp_count : Int
+  result_exit_code_count : Int
+  command : Z3CommandTemplate
+  monomorphic_checkpoints : ArrayView[Bytes]
+  polymorphic_checkpoints : ArrayView[Bytes]
+}
+
+pub(all) struct Z3SyntaxEntry {
+  kind : SyntaxKind
+  symbol : Z3SyntaxSymbol
+  template : Bytes
+  overriding : Bool
+}
+
+pub(all) enum Z3SyntaxSymbol {
+  Z3SyntaxType(@logic.TypeSymbol)
+  Z3SyntaxLogic(@logic.LSymbol)
+}
+
+// Type aliases
+
+// Traits
+

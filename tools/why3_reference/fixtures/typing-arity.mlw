@@ -1,0 +1,6 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+theory ArityMismatch
+  function pair (x y : int) : int
+  goal arity : pair 0 = 0
+end

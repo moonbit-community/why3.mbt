@@ -1,0 +1,13 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+theory SmtIdentifiers
+  use int.Int
+
+  function probe (a b c d : int) : int
+  function identity (value : 'a) : 'a
+
+  goal reserved_and_collision :
+    forall select store sort witness generated_0 generated_1 : int.
+      probe select store sort witness = generated_0 /\
+      identity generated_0 = generated_1
+end

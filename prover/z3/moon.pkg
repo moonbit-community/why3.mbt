@@ -1,0 +1,10 @@
+import {
+  "moonbit-community/why3/core/identity",
+  "moonbit-community/why3/core/logic",
+  "moonbit-community/why3/core/theory",
+  "moonbit-community/why3/prover",
+  "moonbit-community/why3/printer/smtv2",
+  "moonbitlang/core/buffer",
+  "moonbitlang/core/encoding/utf8",
+  "moonbitlang/core/json",
+}

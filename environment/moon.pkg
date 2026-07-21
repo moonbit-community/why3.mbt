@@ -1,0 +1,6 @@
+import {
+  "moonbit-community/why3/core/identity",
+  "moonbit-community/why3/core/logic",
+  "moonbit-community/why3/core/theory",
+  "moonbit-community/why3/mlw",
+}

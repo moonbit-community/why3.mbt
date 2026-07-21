@@ -1,0 +1,29 @@
+why3.mbt
+========
+
+This project implements and translates portions of the Why3 Verification
+Platform, fixed for compatibility work at Why3 1.7.2 commit
+1343338d3bb1941c0d4f134283bb0790816113c4.
+
+Why3 upstream attribution
+-------------------------
+
+The Why3 Verification Platform / The Why3 Development Team
+Copyright 2010-2023 Inria, CNRS, and Paris-Saclay University.
+
+Why3 is distributed under the GNU Lesser General Public License version 2.1
+with the special linking exception reproduced verbatim at the beginning of
+this repository's LICENSE file.
+
+Translation and modification policy
+-----------------------------------
+
+MoonBit files or blocks translated line-by-line or structurally from Why3,
+and test-only OCaml reference adapters derived from its internals, must retain
+the corresponding Why3 copyright notice, identify their pinned upstream
+source paths, and record the translation or last semantic modification date.
+The checked-in translated-file manifest is the machine-readable source of
+truth for this attribution and is validated by CI. New translated files or
+adapters must be added to that manifest in the same change.
+
+Project-wide licensing decision recorded: 2026-07-21.

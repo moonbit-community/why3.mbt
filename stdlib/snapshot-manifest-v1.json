@@ -1,0 +1,1120 @@
+{
+  "schemaVersion": 1,
+  "snapshotSchemaVersion": 1,
+  "exporterVersion": 1,
+  "why3": {
+    "version": "1.7.2",
+    "commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
+    "tree": "f5e82693620413d7d8e3ebcba69addcb6a65f877",
+    "shapeVersion": 6
+  },
+  "driver": {
+    "profile": "z3_487",
+    "closureSha256": "c2cddacc1c95919326ef23dc97f5cd6db88b1abc902c73a72cf595a20ec624c2",
+    "files": [
+      {
+        "path": "discrimination.gen",
+        "sha256": "a68d1b651bf9649d0b12dc137b7b364742e71841a5e7ca56a34d076e14e58671",
+        "imports": [],
+        "theories": [
+          "BuiltIn"
+        ],
+        "transformations": []
+      },
+      {
+        "path": "smt-libv2-bv.gen",
+        "sha256": "180cc6b6abb21d59d6a852539a71b893dcc145db77b2166748f9616463ccc1cb",
+        "imports": [],
+        "theories": [
+          "bv.BV_Gen",
+          "bv.BV256",
+          "bv.BV128",
+          "bv.BV64",
+          "bv.BV32",
+          "bv.BV16",
+          "bv.BV8",
+          "bv.BVConverter_Gen",
+          "bv.BVConverter_128_256",
+          "bv.BVConverter_64_128",
+          "bv.BVConverter_32_128",
+          "bv.BVConverter_16_128",
+          "bv.BVConverter_8_128",
+          "bv.BVConverter_32_64",
+          "bv.BVConverter_16_64",
+          "bv.BVConverter_8_64",
+          "bv.BVConverter_16_32",
+          "bv.BVConverter_8_32",
+          "bv.BVConverter_8_16",
+          "bv.Pow2int"
+        ],
+        "transformations": []
+      },
+      {
+        "path": "smt-libv2-floats.gen",
+        "sha256": "0a920898ee2dc742538bfa47cdd06aa0abb68541591a6bc2bc3b502ab0540317",
+        "imports": [],
+        "theories": [
+          "ieee_float.RoundingMode",
+          "ieee_float.GenericFloat",
+          "ieee_float.Float32",
+          "ieee_float.Float64",
+          "ieee_float.FloatConverter",
+          "ieee_float.Float_BV_Converter",
+          "ieee_float.Float32_BV_Converter",
+          "ieee_float.Float64_BV_Converter"
+        ],
+        "transformations": []
+      },
+      {
+        "path": "smt-libv2.gen",
+        "sha256": "73687a2e3626e569f4a2bf5cb74dfd6c33c7019f8d816150538840cb4fca878a",
+        "imports": [],
+        "theories": [
+          "BuiltIn",
+          "Ignore",
+          "int.Int",
+          "real.Real",
+          "real.Abs",
+          "real.MinMax",
+          "real.FromInt",
+          "real.Truncate",
+          "Bool",
+          "bool.Bool",
+          "bool.Ite",
+          "HighOrd",
+          "bv.BV_Gen",
+          "map.Map",
+          "map.Const"
+        ],
+        "transformations": []
+      },
+      {
+        "path": "smtlib-strings.gen",
+        "sha256": "87ed000e23c79f5347649836fbd0fd06c18af3e32e87677124abe4616679de05",
+        "imports": [],
+        "theories": [
+          "BuiltIn",
+          "string.String",
+          "string.StringRealization"
+        ],
+        "transformations": []
+      },
+      {
+        "path": "z3_487.drv",
+        "sha256": "e9a25b112d47c672757d9e25da2da420ad8ef53f9a93f2eb7dfcc3437ebb4ff0",
+        "imports": [
+          "smt-libv2.gen",
+          "smt-libv2-bv.gen",
+          "z3_bv.gen",
+          "smt-libv2-floats.gen",
+          "discrimination.gen",
+          "smtlib-strings.gen"
+        ],
+        "theories": [
+          "BuiltIn",
+          "BuiltIn",
+          "int.Int",
+          "int.EuclideanDivision",
+          "int.MinMax",
+          "real.FromInt",
+          "ieee_float.Float64",
+          "ieee_float.Float32",
+          "real.Real",
+          "real.Square",
+          "string.RegExpr"
+        ],
+        "transformations": [
+          "counterexamples_dependent_intros",
+          "inline_trivial",
+          "eliminate_builtin",
+          "remove_unused_keep_constants",
+          "detect_polymorphism",
+          "eliminate_definition_conditionally",
+          "eliminate_inductive",
+          "eliminate_epsilon",
+          "eliminate_literal",
+          "simplify_formula",
+          "prepare_for_counterexmp",
+          "eliminate_projections_sums",
+          "discriminate_if_poly",
+          "eliminate_algebraic_if_poly",
+          "encoding_smt_if_poly"
+        ]
+      },
+      {
+        "path": "z3_bv.gen",
+        "sha256": "a3607c94ce344ca28b85925ac3ede6df1970d5eaea8cee6e0987dc0e7409b4d8",
+        "imports": [],
+        "theories": [
+          "bv.BV_Gen",
+          "bv.BV256",
+          "bv.BV128",
+          "bv.BV64",
+          "bv.BV32",
+          "bv.BV16",
+          "bv.BV8"
+        ],
+        "transformations": []
+      }
+    ],
+    "loadOrder": [
+      "z3_487.drv",
+      "smt-libv2.gen",
+      "smt-libv2-bv.gen",
+      "z3_bv.gen",
+      "smt-libv2-floats.gen",
+      "discrimination.gen",
+      "smtlib-strings.gen"
+    ],
+    "theoryRoots": [
+      "BuiltIn",
+      "Ignore",
+      "int.Int",
+      "real.Real",
+      "real.Abs",
+      "real.MinMax",
+      "real.FromInt",
+      "real.Truncate",
+      "Bool",
+      "bool.Bool",
+      "bool.Ite",
+      "HighOrd",
+      "bv.BV_Gen",
+      "map.Map",
+      "map.Const",
+      "bv.BV256",
+      "bv.BV128",
+      "bv.BV64",
+      "bv.BV32",
+      "bv.BV16",
+      "bv.BV8",
+      "bv.BVConverter_Gen",
+      "bv.BVConverter_128_256",
+      "bv.BVConverter_64_128",
+      "bv.BVConverter_32_128",
+      "bv.BVConverter_16_128",
+      "bv.BVConverter_8_128",
+      "bv.BVConverter_32_64",
+      "bv.BVConverter_16_64",
+      "bv.BVConverter_8_64",
+      "bv.BVConverter_16_32",
+      "bv.BVConverter_8_32",
+      "bv.BVConverter_8_16",
+      "bv.Pow2int",
+      "ieee_float.RoundingMode",
+      "ieee_float.GenericFloat",
+      "ieee_float.Float32",
+      "ieee_float.Float64",
+      "ieee_float.FloatConverter",
+      "ieee_float.Float_BV_Converter",
+      "ieee_float.Float32_BV_Converter",
+      "ieee_float.Float64_BV_Converter",
+      "int.EuclideanDivision",
+      "int.MinMax",
+      "real.Square",
+      "string.String",
+      "string.StringRealization",
+      "string.RegExpr"
+    ],
+    "transformations": [
+      "counterexamples_dependent_intros",
+      "inline_trivial",
+      "eliminate_builtin",
+      "remove_unused_keep_constants",
+      "detect_polymorphism",
+      "eliminate_definition_conditionally",
+      "eliminate_inductive",
+      "eliminate_epsilon",
+      "eliminate_literal",
+      "simplify_formula",
+      "prepare_for_counterexmp",
+      "eliminate_projections_sums",
+      "discriminate_if_poly",
+      "eliminate_algebraic_if_poly",
+      "encoding_smt_if_poly"
+    ]
+  },
+  "closure": {
+    "userVisibleProgramRoots": [
+      "BuiltIn",
+      "Bool",
+      "Unit",
+      "int.Int",
+      "real.Real"
+    ],
+    "rootMappings": {
+      "theories": [
+        {
+          "requested": "BuiltIn",
+          "resolvedKey": "why3.BuiltIn.BuiltIn"
+        },
+        {
+          "requested": "Ignore",
+          "resolvedKey": "why3.Ignore.Ignore"
+        },
+        {
+          "requested": "int.Int",
+          "resolvedKey": "int.Int"
+        },
+        {
+          "requested": "real.Real",
+          "resolvedKey": "real.Real"
+        },
+        {
+          "requested": "real.Abs",
+          "resolvedKey": "real.Abs"
+        },
+        {
+          "requested": "real.MinMax",
+          "resolvedKey": "real.MinMax"
+        },
+        {
+          "requested": "real.FromInt",
+          "resolvedKey": "real.FromInt"
+        },
+        {
+          "requested": "real.Truncate",
+          "resolvedKey": "real.Truncate"
+        },
+        {
+          "requested": "Bool",
+          "resolvedKey": "why3.Bool.Bool"
+        },
+        {
+          "requested": "bool.Bool",
+          "resolvedKey": "bool.Bool"
+        },
+        {
+          "requested": "bool.Ite",
+          "resolvedKey": "bool.Ite"
+        },
+        {
+          "requested": "HighOrd",
+          "resolvedKey": "why3.HighOrd.HighOrd"
+        },
+        {
+          "requested": "bv.BV_Gen",
+          "resolvedKey": "bv.BV_Gen"
+        },
+        {
+          "requested": "map.Map",
+          "resolvedKey": "map.Map"
+        },
+        {
+          "requested": "map.Const",
+          "resolvedKey": "map.Const"
+        },
+        {
+          "requested": "bv.BV256",
+          "resolvedKey": "bv.BV256"
+        },
+        {
+          "requested": "bv.BV128",
+          "resolvedKey": "bv.BV128"
+        },
+        {
+          "requested": "bv.BV64",
+          "resolvedKey": "bv.BV64"
+        },
+        {
+          "requested": "bv.BV32",
+          "resolvedKey": "bv.BV32"
+        },
+        {
+          "requested": "bv.BV16",
+          "resolvedKey": "bv.BV16"
+        },
+        {
+          "requested": "bv.BV8",
+          "resolvedKey": "bv.BV8"
+        },
+        {
+          "requested": "bv.BVConverter_Gen",
+          "resolvedKey": "bv.BVConverter_Gen"
+        },
+        {
+          "requested": "bv.BVConverter_128_256",
+          "resolvedKey": "bv.BVConverter_128_256"
+        },
+        {
+          "requested": "bv.BVConverter_64_128",
+          "resolvedKey": "bv.BVConverter_64_128"
+        },
+        {
+          "requested": "bv.BVConverter_32_128",
+          "resolvedKey": "bv.BVConverter_32_128"
+        },
+        {
+          "requested": "bv.BVConverter_16_128",
+          "resolvedKey": "bv.BVConverter_16_128"
+        },
+        {
+          "requested": "bv.BVConverter_8_128",
+          "resolvedKey": "bv.BVConverter_8_128"
+        },
+        {
+          "requested": "bv.BVConverter_32_64",
+          "resolvedKey": "bv.BVConverter_32_64"
+        },
+        {
+          "requested": "bv.BVConverter_16_64",
+          "resolvedKey": "bv.BVConverter_16_64"
+        },
+        {
+          "requested": "bv.BVConverter_8_64",
+          "resolvedKey": "bv.BVConverter_8_64"
+        },
+        {
+          "requested": "bv.BVConverter_16_32",
+          "resolvedKey": "bv.BVConverter_16_32"
+        },
+        {
+          "requested": "bv.BVConverter_8_32",
+          "resolvedKey": "bv.BVConverter_8_32"
+        },
+        {
+          "requested": "bv.BVConverter_8_16",
+          "resolvedKey": "bv.BVConverter_8_16"
+        },
+        {
+          "requested": "bv.Pow2int",
+          "resolvedKey": "bv.Pow2int"
+        },
+        {
+          "requested": "ieee_float.RoundingMode",
+          "resolvedKey": "ieee_float.RoundingMode"
+        },
+        {
+          "requested": "ieee_float.GenericFloat",
+          "resolvedKey": "ieee_float.GenericFloat"
+        },
+        {
+          "requested": "ieee_float.Float32",
+          "resolvedKey": "ieee_float.Float32"
+        },
+        {
+          "requested": "ieee_float.Float64",
+          "resolvedKey": "ieee_float.Float64"
+        },
+        {
+          "requested": "ieee_float.FloatConverter",
+          "resolvedKey": "ieee_float.FloatConverter"
+        },
+        {
+          "requested": "ieee_float.Float_BV_Converter",
+          "resolvedKey": "ieee_float.Float_BV_Converter"
+        },
+        {
+          "requested": "ieee_float.Float32_BV_Converter",
+          "resolvedKey": "ieee_float.Float32_BV_Converter"
+        },
+        {
+          "requested": "ieee_float.Float64_BV_Converter",
+          "resolvedKey": "ieee_float.Float64_BV_Converter"
+        },
+        {
+          "requested": "int.EuclideanDivision",
+          "resolvedKey": "int.EuclideanDivision"
+        },
+        {
+          "requested": "int.MinMax",
+          "resolvedKey": "int.MinMax"
+        },
+        {
+          "requested": "real.Square",
+          "resolvedKey": "real.Square"
+        },
+        {
+          "requested": "string.String",
+          "resolvedKey": "string.String"
+        },
+        {
+          "requested": "string.StringRealization",
+          "resolvedKey": "string.StringRealization"
+        },
+        {
+          "requested": "string.RegExpr",
+          "resolvedKey": "string.RegExpr"
+        }
+      ],
+      "modules": [
+        {
+          "requested": "BuiltIn",
+          "resolvedKey": "why3.BuiltIn.BuiltIn"
+        },
+        {
+          "requested": "Bool",
+          "resolvedKey": "why3.Bool.Bool"
+        },
+        {
+          "requested": "Unit",
+          "resolvedKey": "why3.Unit.Unit"
+        },
+        {
+          "requested": "int.Int",
+          "resolvedKey": "int.Int"
+        },
+        {
+          "requested": "real.Real",
+          "resolvedKey": "real.Real"
+        }
+      ]
+    },
+    "theories": [
+      "algebra.Assoc",
+      "algebra.Comm",
+      "algebra.CommutativeGroup",
+      "algebra.CommutativeRing",
+      "algebra.Field",
+      "algebra.Group",
+      "algebra.Monoid",
+      "algebra.OrderedField",
+      "algebra.OrderedUnitaryCommutativeRing",
+      "algebra.Ring",
+      "algebra.UnitaryCommutativeRing",
+      "bool.Bool",
+      "bool.Ite",
+      "bv.BV128",
+      "bv.BV16",
+      "bv.BV256",
+      "bv.BV32",
+      "bv.BV64",
+      "bv.BV8",
+      "bv.BVConverter_128_256",
+      "bv.BVConverter_16_128",
+      "bv.BVConverter_16_32",
+      "bv.BVConverter_16_64",
+      "bv.BVConverter_32_128",
+      "bv.BVConverter_32_64",
+      "bv.BVConverter_64_128",
+      "bv.BVConverter_8_128",
+      "bv.BVConverter_8_16",
+      "bv.BVConverter_8_32",
+      "bv.BVConverter_8_64",
+      "bv.BVConverter_Gen",
+      "bv.BV_Gen",
+      "bv.Pow2int",
+      "ieee_float.Float32",
+      "ieee_float.Float32_BV_Converter",
+      "ieee_float.Float64",
+      "ieee_float.Float64_BV_Converter",
+      "ieee_float.FloatConverter",
+      "ieee_float.Float_BV_Converter",
+      "ieee_float.GenericFloat",
+      "ieee_float.RoundingMode",
+      "int.Abs",
+      "int.EuclideanDivision",
+      "int.Int",
+      "int.MinMax",
+      "map.Const",
+      "map.Map",
+      "real.Abs",
+      "real.FromInt",
+      "real.MinMax",
+      "real.Real",
+      "real.RealInfix",
+      "real.Square",
+      "real.Truncate",
+      "relations.Antisymmetric",
+      "relations.EndoRelation",
+      "relations.MinMax",
+      "relations.PartialOrder",
+      "relations.PreOrder",
+      "relations.Reflexive",
+      "relations.Total",
+      "relations.TotalOrder",
+      "relations.Transitive",
+      "string.RegExpr",
+      "string.String",
+      "string.StringRealization",
+      "why3.Bool.Bool",
+      "why3.BuiltIn.BuiltIn",
+      "why3.HighOrd.HighOrd",
+      "why3.Ignore.Ignore",
+      "why3.Tuple0.Tuple0",
+      "why3.Unit.Unit",
+      "why3.WellFounded.WellFounded"
+    ],
+    "modules": [
+      "algebra.Assoc",
+      "algebra.Comm",
+      "algebra.CommutativeGroup",
+      "algebra.CommutativeRing",
+      "algebra.Field",
+      "algebra.Group",
+      "algebra.Monoid",
+      "algebra.OrderedField",
+      "algebra.OrderedUnitaryCommutativeRing",
+      "algebra.Ring",
+      "algebra.UnitaryCommutativeRing",
+      "int.Int",
+      "real.Real",
+      "relations.Antisymmetric",
+      "relations.EndoRelation",
+      "relations.PartialOrder",
+      "relations.PreOrder",
+      "relations.Reflexive",
+      "relations.Total",
+      "relations.TotalOrder",
+      "relations.Transitive",
+      "why3.Bool.Bool",
+      "why3.BuiltIn.BuiltIn",
+      "why3.Tuple0.Tuple0",
+      "why3.Unit.Unit"
+    ],
+    "semanticInventorySha256": "918163f06f16f3969bfc59c17ff0e2a0ec5b1e45629c879366f42b3952aeba1d",
+    "stdlibTreeSha256": "355ec847dee8c9083ed6392ad5fa121285ce36f682950accc7982e3ba343dcc6",
+    "theoryCanonical": [
+      {
+        "key": "algebra.Assoc",
+        "canonicalSha256": "ae8183778cadcefb7423bca6ee021c0669d7cb423541142439de572e036bca81"
+      },
+      {
+        "key": "algebra.Comm",
+        "canonicalSha256": "2e3835f23f84c7a2c9fcbb1c68406f0f98542d0f7c0586e148805cf781a690d9"
+      },
+      {
+        "key": "algebra.CommutativeGroup",
+        "canonicalSha256": "beb6d4c934c0080c0752887912a56456e79c5e00fae83ea8e95667071ef2170c"
+      },
+      {
+        "key": "algebra.CommutativeRing",
+        "canonicalSha256": "422018ac26a8be4069e9414b0999784a7adb41ac740a91b6a2a2e51245be91e9"
+      },
+      {
+        "key": "algebra.Field",
+        "canonicalSha256": "9c9bde3ddf84daf2acb93083308e9b419b45ad7ceac6c6bdab15183118afd514"
+      },
+      {
+        "key": "algebra.Group",
+        "canonicalSha256": "3c566e60af85cd3855c564982f19c71ec79a1981f25208f85683d6ad4e8c23c7"
+      },
+      {
+        "key": "algebra.Monoid",
+        "canonicalSha256": "295decc162d2897ee3781749174235c7ab1a792263f19c59b2dce82e06ed4761"
+      },
+      {
+        "key": "algebra.OrderedField",
+        "canonicalSha256": "afe0aa00edaa439943de15ee6bc0910830ad054a2e633fba3e28ac7d359a8139"
+      },
+      {
+        "key": "algebra.OrderedUnitaryCommutativeRing",
+        "canonicalSha256": "66a67a66961bfeb76b66ebfc730c3ecd2998529e6defe7a70f40e45a8ce9938e"
+      },
+      {
+        "key": "algebra.Ring",
+        "canonicalSha256": "58c6de9dfd05588c0661273078a6f800adc083f83ff67687799b404db2411ad4"
+      },
+      {
+        "key": "algebra.UnitaryCommutativeRing",
+        "canonicalSha256": "8ee30064ccd06b2d8ce76bd832f5c77a324e01d7dcae99e52a9040da00fc0d84"
+      },
+      {
+        "key": "bool.Bool",
+        "canonicalSha256": "4a50b7acf9eb2176fc0a96f4beef72b8e11359af4895dad936ab00b51aa10e97"
+      },
+      {
+        "key": "bool.Ite",
+        "canonicalSha256": "ae96cf9b02f00ab7e7c032418ab7d1c3d5df729aa11038c264505c803b58b059"
+      },
+      {
+        "key": "bv.BV128",
+        "canonicalSha256": "8b78da83bab6ad0d2ddccdd8c89960e51ce3c0203da20dff0fc0b81340741da2"
+      },
+      {
+        "key": "bv.BV16",
+        "canonicalSha256": "04bfdf9719182292a079689fdb857ec5dbe4989d1533ecd0f248b87380bfb4ce"
+      },
+      {
+        "key": "bv.BV256",
+        "canonicalSha256": "f50621d7e1cf03c22ee27dd654ae19d07d0bc35ee2738895cf939dd6ad7fd3b5"
+      },
+      {
+        "key": "bv.BV32",
+        "canonicalSha256": "743dec65dc771daab141b077a66f2f5cac93fcf46f5d0dc3d5bda5ba18b5e63d"
+      },
+      {
+        "key": "bv.BV64",
+        "canonicalSha256": "756ab59e670afb9a61eb37e133397625e30a855e147f8af06e5df7c01621296f"
+      },
+      {
+        "key": "bv.BV8",
+        "canonicalSha256": "e667bd88451a4760887ebff2a7b0add537d328ac84c2a3033477ad8ecb13708d"
+      },
+      {
+        "key": "bv.BVConverter_128_256",
+        "canonicalSha256": "aaf8a8a3e30761b547137277469c888c563398b9ea414f8110422077d9bd8dec"
+      },
+      {
+        "key": "bv.BVConverter_16_128",
+        "canonicalSha256": "68262832153cd36ffd26ed73e449f3510e1b312bbf34aea706001379c00ac9a8"
+      },
+      {
+        "key": "bv.BVConverter_16_32",
+        "canonicalSha256": "b6b30e29e46a778e24da76768cc25f4b95f4775f885940759637b41e3febfc16"
+      },
+      {
+        "key": "bv.BVConverter_16_64",
+        "canonicalSha256": "dd47a752092297f81eb082808740e625fb58ceb53d8fa246d9b2414ac88ce5a0"
+      },
+      {
+        "key": "bv.BVConverter_32_128",
+        "canonicalSha256": "eb818378359c87ad164673a8c3c68c747832c06a5e9760b1663e355b889f5c9a"
+      },
+      {
+        "key": "bv.BVConverter_32_64",
+        "canonicalSha256": "7904650d8b59193baf8b84fda06322ed5b2a88eb63c759dd1b27670f27910bdb"
+      },
+      {
+        "key": "bv.BVConverter_64_128",
+        "canonicalSha256": "9cb50cf38d250860100142eba4b5c31973d3416678fcebc95440be0930d99571"
+      },
+      {
+        "key": "bv.BVConverter_8_128",
+        "canonicalSha256": "7382735f1794875468fa3558996858d380d41d6e5fc068a5ce74a097ef7704cf"
+      },
+      {
+        "key": "bv.BVConverter_8_16",
+        "canonicalSha256": "5f53afc11f9234c06a8cc72e7c1d283240e1aa00f58049a5e187d81a08b5b967"
+      },
+      {
+        "key": "bv.BVConverter_8_32",
+        "canonicalSha256": "93f54c37d8c062c2e5e91f15837acc76f55786bfcf72708b39f0f28065f5e096"
+      },
+      {
+        "key": "bv.BVConverter_8_64",
+        "canonicalSha256": "302aa51d1375455bed6e3842c6a4771bda761b69547b970ac5554635ef87dde6"
+      },
+      {
+        "key": "bv.BVConverter_Gen",
+        "canonicalSha256": "94eb9e13924fd7fb46e12542bd8fdda5246247f378102ba9aa778175ee7da2e1"
+      },
+      {
+        "key": "bv.BV_Gen",
+        "canonicalSha256": "a3243e9f582e8570dd08713c93726bc52c1fb79d1f71915403d2a90f5a8f85f5"
+      },
+      {
+        "key": "bv.Pow2int",
+        "canonicalSha256": "bf58df0a75690aea064deff6b43e0df32a1cb41f729f38b3a8d914b34b046280"
+      },
+      {
+        "key": "ieee_float.Float32",
+        "canonicalSha256": "89e620a08a6dea58d0853f4fa8cbbb9d627423617a39c09919a288e803a4be1e"
+      },
+      {
+        "key": "ieee_float.Float32_BV_Converter",
+        "canonicalSha256": "3525a99084c179e26d55e3187eaee1747fa4438be4d8bb836aa4161225d66a38"
+      },
+      {
+        "key": "ieee_float.Float64",
+        "canonicalSha256": "755fff31faf5fe5fce8e95e973a1e1eb18ca78e86cf45f7e92d57076b05ca62b"
+      },
+      {
+        "key": "ieee_float.Float64_BV_Converter",
+        "canonicalSha256": "0777b1d44e8e16b04d9eab62ac3966ad8048591851b7aae77d32a0f1d198ffa3"
+      },
+      {
+        "key": "ieee_float.FloatConverter",
+        "canonicalSha256": "b97368810001438c6755d8548d54c967cca2c87fa22d8387b4d1368a92e04b99"
+      },
+      {
+        "key": "ieee_float.Float_BV_Converter",
+        "canonicalSha256": "354f6829e83cd173228d61e470fb51d4c2fad7a7f2d5288d722df4be25be9cab"
+      },
+      {
+        "key": "ieee_float.GenericFloat",
+        "canonicalSha256": "69dc3818d05df66e618fb41286496b75cb37d2f06dad9a022fe12d8a89862778"
+      },
+      {
+        "key": "ieee_float.RoundingMode",
+        "canonicalSha256": "f1d9702c7457ddccca6d8d34e89bd3c66c87f917217a34a883e8b106d24831db"
+      },
+      {
+        "key": "int.Abs",
+        "canonicalSha256": "fbbb23a9b6c033cce93314ed4cbb95566a9a66fd1913166330f7f54bbd6f252c"
+      },
+      {
+        "key": "int.EuclideanDivision",
+        "canonicalSha256": "23d4e846b6258fc86f3e503ff9a82e75d2e00ab8bdce1bbcb7fce3ea829b4074"
+      },
+      {
+        "key": "int.Int",
+        "canonicalSha256": "cccb183d37ae4f248b8bd3c98f1ee75af2e77ce3013a4a8a35c8c2980df99feb"
+      },
+      {
+        "key": "int.MinMax",
+        "canonicalSha256": "92347f4c261072fd3e53ffd90cd8ceb5850b554fc2f773b74efaf68451936ccb"
+      },
+      {
+        "key": "map.Const",
+        "canonicalSha256": "0162067518cbfc97e4957bc8f73244b3483b88b9e419d8517e849057d2a84f70"
+      },
+      {
+        "key": "map.Map",
+        "canonicalSha256": "3cace091ad87e932cdce96ef91e1861c014bf3522c532a0706479553ec593db5"
+      },
+      {
+        "key": "real.Abs",
+        "canonicalSha256": "4c65563703659a63903f1a69c42f4dd113766d3cd46930f9f55bcaaee6654eea"
+      },
+      {
+        "key": "real.FromInt",
+        "canonicalSha256": "82b4d187ec416cab6cd504a6b6b49edb2ce7ea6359e299bb2b68644b08a06dea"
+      },
+      {
+        "key": "real.MinMax",
+        "canonicalSha256": "29dc87d153bc5bcb9b6f9fbefcef4bf30094fec8ad08722159c58bfd333efd8a"
+      },
+      {
+        "key": "real.Real",
+        "canonicalSha256": "84f93826e83d734c1a833f3b7674822f9bf2d8747b5bf83d7a66d732874d5189"
+      },
+      {
+        "key": "real.RealInfix",
+        "canonicalSha256": "b61c91182706ad12bbed3a35595e07dd33c461dfb608e9141c145ce22bbd7649"
+      },
+      {
+        "key": "real.Square",
+        "canonicalSha256": "f9a71688b1fb8dc9dd53813aeabcf59acb09db7514a6ddf4a7685a990f5bf981"
+      },
+      {
+        "key": "real.Truncate",
+        "canonicalSha256": "ba4be7a0aed5d1dd5a3dd299c8a8a0f6ba8947dae700adcb76f02ad183263301"
+      },
+      {
+        "key": "relations.Antisymmetric",
+        "canonicalSha256": "367c48cfe3c77db3c54495c3bfbaf4e70701284e5c72feb053a5cd804d7a3331"
+      },
+      {
+        "key": "relations.EndoRelation",
+        "canonicalSha256": "38d2e429a8e4bd90bd841ac6233757a1a04779019a6bd3a8bda13d2d1c7497fe"
+      },
+      {
+        "key": "relations.MinMax",
+        "canonicalSha256": "2776a84464ec2873c1fa2d67ecbed52563adf9e6d143877cb45cadf55e699bf6"
+      },
+      {
+        "key": "relations.PartialOrder",
+        "canonicalSha256": "8614819484ebf7e8c6b61276a5e64a02a23263ddf2e4e02dbeaf75887e8cc925"
+      },
+      {
+        "key": "relations.PreOrder",
+        "canonicalSha256": "153f7f52a2126874ce1b046bb8b0a461a702df7c6e8552a2df34ee2e54a28e97"
+      },
+      {
+        "key": "relations.Reflexive",
+        "canonicalSha256": "0e7fdda45c26050bee6cc5e74fb80c20895144ffe56a237b87754500f890a351"
+      },
+      {
+        "key": "relations.Total",
+        "canonicalSha256": "98ea29d53f6118ed6f3af5957f72d06ba7b4e33133d4f6bbeea08b3bb713d279"
+      },
+      {
+        "key": "relations.TotalOrder",
+        "canonicalSha256": "72cfa7376262c7518482a7f818a7f3f1dd4df858e60f1cf8cb8dec12ca754f65"
+      },
+      {
+        "key": "relations.Transitive",
+        "canonicalSha256": "941d2d76a9c91a96132245fed7c8f644d5610f7c1e0ad45703c287230c6f25eb"
+      },
+      {
+        "key": "string.RegExpr",
+        "canonicalSha256": "04d92e5b02d9f0c71cdfc2b597b05a9e0a96cd2e307e5ae756282810eae66ee9"
+      },
+      {
+        "key": "string.String",
+        "canonicalSha256": "ef0a8a06ea9611876b52728410bc2bee0881f705688fe15bab309d6ce7c68bfd"
+      },
+      {
+        "key": "string.StringRealization",
+        "canonicalSha256": "4bb4aa4533e21b5aeff59ba9b130bddbc60271c36965b28c83cbfe9680fe8792"
+      },
+      {
+        "key": "why3.Bool.Bool",
+        "canonicalSha256": "49f6a7331b6da9993411dc8e9f130601488ed7175e26fe76c183e1a80d34b546"
+      },
+      {
+        "key": "why3.BuiltIn.BuiltIn",
+        "canonicalSha256": "432a5bec224a6f3e1b57426c58c8aeefcb530c5181a465b23e89d64cea3a3c2c"
+      },
+      {
+        "key": "why3.HighOrd.HighOrd",
+        "canonicalSha256": "851ba7fbe176159bbe7489525f82e6f2b5931f02c2d9246f35ec3fe5a27c4f15"
+      },
+      {
+        "key": "why3.Ignore.Ignore",
+        "canonicalSha256": "5003f82c29c3ac3e2df463c28eb9c6fc51a84eea77aa722ed6ec82e6f385efd1"
+      },
+      {
+        "key": "why3.Tuple0.Tuple0",
+        "canonicalSha256": "1dad7b857c41b0777f4a8f40822140c70db7b00156d4efd66211a468803e0684"
+      },
+      {
+        "key": "why3.Unit.Unit",
+        "canonicalSha256": "067fa70ebc114a8de9564fdd5c76e6c69d4e8eb1282cc0ab3e50b7c41006587f"
+      },
+      {
+        "key": "why3.WellFounded.WellFounded",
+        "canonicalSha256": "b6016ce6fa488fbea1f34580df5aef2390844f44e17e84dcd7dc8991b0025eb0"
+      }
+    ],
+    "moduleCanonical": [
+      {
+        "key": "algebra.Assoc",
+        "canonicalSha256": "0bc9ac9ae2b0f3fa5fcff95e47aafd3fb699f00536ef900c39442d64bc045ff0"
+      },
+      {
+        "key": "algebra.Comm",
+        "canonicalSha256": "d48ed2ba37b9d0ee963ea4b29c6f7a4578a809ab67912933c5b50e35e0053824"
+      },
+      {
+        "key": "algebra.CommutativeGroup",
+        "canonicalSha256": "2e953cd6a144797990a97ead25d8eab948578937a5012e9a1a8e020d2e4f5fce"
+      },
+      {
+        "key": "algebra.CommutativeRing",
+        "canonicalSha256": "464d434400b48a0ed4a1ca6c4115dd5df876c7927ba09a755931c529dc934c0c"
+      },
+      {
+        "key": "algebra.Field",
+        "canonicalSha256": "386031ec519b1891bb3066615a19fe019accad47bb3bdcd146f9646cb89933e7"
+      },
+      {
+        "key": "algebra.Group",
+        "canonicalSha256": "da303295bac2d65c683d0615371e316d586a634f16cdff749f20a869b2ca6b25"
+      },
+      {
+        "key": "algebra.Monoid",
+        "canonicalSha256": "036555122baed204c7f10a749d944f401108ee99327425e766aced0bc48de550"
+      },
+      {
+        "key": "algebra.OrderedField",
+        "canonicalSha256": "d6d5f4683f1991a6e79415550bbeb7b7fd3cc1900578c995e7f0236df19ac22a"
+      },
+      {
+        "key": "algebra.OrderedUnitaryCommutativeRing",
+        "canonicalSha256": "ef1b84ccf86019eb10adee5abfbd71e9ecddb728ad3850c38e1397de27c0761b"
+      },
+      {
+        "key": "algebra.Ring",
+        "canonicalSha256": "3309f8ca44d249708b0c5a607afe6b68700719919d4a9d5906a9ab2f43264ed5"
+      },
+      {
+        "key": "algebra.UnitaryCommutativeRing",
+        "canonicalSha256": "e6d3662bf97e8543dd3daa442f98699499587d64a6912238791d490f46e44fb2"
+      },
+      {
+        "key": "int.Int",
+        "canonicalSha256": "4accc348d2e013b232a2acf71395ce8774314b89ccd15d1dc4fd961df7bd8024"
+      },
+      {
+        "key": "real.Real",
+        "canonicalSha256": "82833738356bcbc8a25e4bccb92e8ea6db711e75ed98628edc7c26ca67ebfbdf"
+      },
+      {
+        "key": "relations.Antisymmetric",
+        "canonicalSha256": "df23e845e894bf8b1df7b08735757a9b4bf36d0e5e63fd73559391b4efd34d1c"
+      },
+      {
+        "key": "relations.EndoRelation",
+        "canonicalSha256": "ca73d0f18cd307ba66462176f2dafd5d638f1b805c6a02bd2db8b3f2a836aa1d"
+      },
+      {
+        "key": "relations.PartialOrder",
+        "canonicalSha256": "9e8a66c44b6e7e799e604834b0b97264d6e26d70d58f6c96ab1f604e9b3b70b8"
+      },
+      {
+        "key": "relations.PreOrder",
+        "canonicalSha256": "a7f70e4f9bc05ea05af9f048ddab6fe27edebe93d08c8eb4a7333cf4cbee75d9"
+      },
+      {
+        "key": "relations.Reflexive",
+        "canonicalSha256": "d8c975b5cf2e44b17e62514dc0a2e6cacd060a4bfed13c70fc75388729d934cc"
+      },
+      {
+        "key": "relations.Total",
+        "canonicalSha256": "ac8e85f65769883098cd5f276a43852bcfaf816349552b81177425ecc805d531"
+      },
+      {
+        "key": "relations.TotalOrder",
+        "canonicalSha256": "8d9c36880695652e7c0cbd5a7738424b59fa86e400729e0e327571d4e90f3998"
+      },
+      {
+        "key": "relations.Transitive",
+        "canonicalSha256": "eaf7697fc0534e5adc667e9147f542ae3377efa7c1553804d439a0defe66e159"
+      },
+      {
+        "key": "why3.Bool.Bool",
+        "canonicalSha256": "255c8c0d61d8f3f7892f018f6e2552bd9ad67ea97cf668345a8c9bea78fe1900"
+      },
+      {
+        "key": "why3.BuiltIn.BuiltIn",
+        "canonicalSha256": "f97248d25af0b5dc2328678e2fc8729cb589d12176c670ab4effdbd9f4b2ec68"
+      },
+      {
+        "key": "why3.Tuple0.Tuple0",
+        "canonicalSha256": "2145cf3b06b0351a6807f5e32c65f1a384c337af95d684379eaa82e8747009b3"
+      },
+      {
+        "key": "why3.Unit.Unit",
+        "canonicalSha256": "450a556783efed879c0ac8d17695e6ba5c379167adab72cd79dba1286f267cf5"
+      }
+    ],
+    "transformInfluenceClosureSha256": "65ab2f51bcd60d0dcab7bf05c2da3482cebdd6a31906295c90667381ded16252"
+  },
+  "sources": [
+    {
+      "path": "tools/why3_reference/generate_snapshot.mjs",
+      "sha256": "454ddd016623d431bb71e8d45f6c21c270d36bb261312188fc50f5f3e1b4182c"
+    },
+    {
+      "path": "tools/why3_reference/export_snapshot.ml",
+      "sha256": "8f7ae44eefc0779baaefe39e4f108ba8b69f93cae8acac5a4936d5b04861ea2f"
+    },
+    {
+      "path": "tools/why3_reference/export_semantic_inventory.ml",
+      "sha256": "5b662f3565acd2bfcf34d860cd1a154cc8d1690995b1538dfa7aa2fab1822e99"
+    },
+    {
+      "path": "tools/why3_reference/export_driver_inventory.mjs",
+      "sha256": "f0fa28ffefafea252eea48839d75b9b27c702ddd62e57f926449ac8c06d3a735"
+    },
+    {
+      "path": "tools/contracts/driver-closure-v1.json",
+      "sha256": "204f8393df7c5259d6bd727b14abfea9889992bd976223631d3de5a805a8873a"
+    },
+    {
+      "path": "tools/contracts/trusted-snapshot-schema-v1.json",
+      "sha256": "12ff786934d001a726bf319322445689d68ad2efa47dd1c59bd4756c8e7a7a7e"
+    }
+  ],
+  "counts": {
+    "theories": 73,
+    "modules": 25,
+    "symbols": 2317,
+    "typeVariables": 10,
+    "generatedTableFiles": 22
+  },
+  "symbolDigest": {
+    "algorithm": "sha256(ordered-json-v1(symbol) + LF)",
+    "catalogSha256": "f8820bca3de63a878b46d870412ad4b55326c9bc840464623c57bb557e979712"
+  },
+  "payload": {
+    "encoding": "utf8-compact-json-v1",
+    "byteLength": 10512401,
+    "sha256": "15878b10328d2bbbc71207dd59b869a9566a2137cbe3f1001b4fc262753ad31d"
+  },
+  "generatedFiles": [
+    {
+      "path": "generated_bool.mbt",
+      "byteLength": 589791,
+      "sha256": "e1aa7eb810290b872a83357b1514d852aaa8f5baa1f2abbce74a42b4a663026b"
+    },
+    {
+      "path": "generated_builtin.mbt",
+      "byteLength": 585989,
+      "sha256": "007475abb20d3f7e03d0079315a7a86a201544d3cf34eba3f039d122ea738648"
+    },
+    {
+      "path": "generated_driver_00.mbt",
+      "byteLength": 589271,
+      "sha256": "cf1ddb81e98d1ab0e0c350c107334d3563687e3a965a069ffa7ca596d417ef04"
+    },
+    {
+      "path": "generated_driver_01.mbt",
+      "byteLength": 586699,
+      "sha256": "38068cafffda3b575adc31008254850ddfd108117c5f7b2d19446fde6db2a0c1"
+    },
+    {
+      "path": "generated_driver_02.mbt",
+      "byteLength": 578731,
+      "sha256": "012da4c8e66631d833a0801d665eaa72415a796ff7bae55d244ff59b99342c0b"
+    },
+    {
+      "path": "generated_driver_03.mbt",
+      "byteLength": 585911,
+      "sha256": "1ffb4df60cd5cc71763168018d6b93b655253a2466348bec79d0b140917ce6e1"
+    },
+    {
+      "path": "generated_driver_04.mbt",
+      "byteLength": 572925,
+      "sha256": "98d5d9f1857040c4294522ea86eef76cd2250d49e71c79fc42b09171ffcdc875"
+    },
+    {
+      "path": "generated_driver_05.mbt",
+      "byteLength": 585529,
+      "sha256": "971ef6888ad8e54c6fcb0d1c318364becc9eece22a1e65738d73c512dc33e277"
+    },
+    {
+      "path": "generated_driver_06.mbt",
+      "byteLength": 584946,
+      "sha256": "f128c5eaa347e2462c4a0e21de4dc8178332c00f73609353d3e9f5a264593558"
+    },
+    {
+      "path": "generated_driver_07.mbt",
+      "byteLength": 587210,
+      "sha256": "1214e9031e7233ec54808b9a521cb7f3c1153ef6b3114164afbe554452dab6b1"
+    },
+    {
+      "path": "generated_driver_08.mbt",
+      "byteLength": 587512,
+      "sha256": "c99bd7cd4f2cf61932c7e44ebaca3dff35fa04478c4edc2e8829285167fdb5ac"
+    },
+    {
+      "path": "generated_driver_09.mbt",
+      "byteLength": 585916,
+      "sha256": "f77f4a1a25449b618dcdb046dece6919518799efe1e516582b79f2807393e53b"
+    },
+    {
+      "path": "generated_driver_10.mbt",
+      "byteLength": 586792,
+      "sha256": "d276e24c5a9a45fca40ad1ca5f1a8ecb5843eef900f5e2cdf37cab33871022b0"
+    },
+    {
+      "path": "generated_driver_11.mbt",
+      "byteLength": 588945,
+      "sha256": "aa9323498189284b95e52611172fe836dc6cd49a7810e56c8ddd1eea2f7a381a"
+    },
+    {
+      "path": "generated_driver_12.mbt",
+      "byteLength": 591335,
+      "sha256": "cd7be0905bee62494dcbb19e873d7f6719617ee24f94168c4a0d08da4f650a49"
+    },
+    {
+      "path": "generated_driver_13.mbt",
+      "byteLength": 586320,
+      "sha256": "401402bd50a5934206c4e6f19baec8c087e35bec69b750113fd3ce1bb9ed8664"
+    },
+    {
+      "path": "generated_driver_14.mbt",
+      "byteLength": 589822,
+      "sha256": "1c8783ff7129b5bb097c45691b5672ba5b8e4fac401f31b88ccefb0177882b3c"
+    },
+    {
+      "path": "generated_driver_15.mbt",
+      "byteLength": 30209,
+      "sha256": "77f6ac70d2ace4b7b5b54d35862c850244199d2599fa38d9c0b4ae3787f733fd"
+    },
+    {
+      "path": "generated_int.mbt",
+      "byteLength": 586784,
+      "sha256": "4839ac3bc8806b0cd04a358c4dcf7df97e4043038b77aab721b5cea69a6c1fdb"
+    },
+    {
+      "path": "generated_real.mbt",
+      "byteLength": 573367,
+      "sha256": "4e46df8a5ca96ea5519d4049688a678cf820e1952c0d204b6765ad46c8bc7a20"
+    },
+    {
+      "path": "generated_snapshot_index.mbt",
+      "byteLength": 955,
+      "sha256": "33a0d62cdeb58cbbca0218c4c2e593a1763cdbb1edeaa94ad2492dc9dcafbe11"
+    },
+    {
+      "path": "generated_unit.mbt",
+      "byteLength": 589827,
+      "sha256": "71b17ea05feb9f1a3427c013b6caf8a2fd52e82736c674356031be774472982d"
+    }
+  ],
+  "generatedTreeSha256": "9c3f738434530aca88d4ebfad8f52080bb103180abd44f31905222f87b1e3239"
+}

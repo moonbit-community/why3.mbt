@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "packages": [
+    {
+      "opam": "digestif",
+      "version": "1.3.0",
+      "findlib": [
+        "digestif.ocaml"
+      ]
+    },
+    {
+      "opam": "yojson",
+      "version": "2.1.0",
+      "findlib": [
+        "yojson"
+      ]
+    }
+  ]
+}
