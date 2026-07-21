@@ -128,11 +128,24 @@ test('promotion CLI dry-runs without writes, then promotes and revalidates atomi
     const artifactRoot = join(directory, 'artifact');
     mkdirSync(join(projectRoot, '.github', 'workflows'), { recursive: true });
     mkdirSync(join(projectRoot, 'tools'), { recursive: true });
+    mkdirSync(join(projectRoot, 'prover', 'z3'), { recursive: true });
     mkdirSync(artifactRoot, { recursive: true });
     cpSync(
       join(PROJECT_ROOT, 'tools', 'contracts'),
       join(projectRoot, 'tools', 'contracts'),
       { recursive: true },
+    );
+    mkdirSync(join(projectRoot, 'tools', 'why3_oracle', 'goldens'), {
+      recursive: true,
+    });
+    cpSync(
+      join(PROJECT_ROOT, 'tools', 'why3_oracle', 'goldens', 'pr-v1'),
+      join(projectRoot, 'tools', 'why3_oracle', 'goldens', 'pr-v1'),
+      { recursive: true },
+    );
+    cpSync(
+      join(PROJECT_ROOT, 'prover', 'z3', 'z3-static-profile-v1.json'),
+      join(projectRoot, 'prover', 'z3', 'z3-static-profile-v1.json'),
     );
     const lockPath = join(projectRoot, 'tools', 'contracts', 'toolchain-lock.json');
     rmSync(lockPath, { force: true });

@@ -8,13 +8,13 @@
   },
   "image": {
     "repository": "ghcr.io/moonbit-community/why3.mbt-why3",
-    "digest": "sha256:a0b5b4b922c0cc95d2d35e7cfd145c29e9bc8032a00b0ef98f6dd33c091bd18d",
-    "reference": "ghcr.io/moonbit-community/why3.mbt-why3@sha256:a0b5b4b922c0cc95d2d35e7cfd145c29e9bc8032a00b0ef98f6dd33c091bd18d"
+    "digest": "sha256:fe30c5e0b8254f989de466476809c05e388cf675553f9ca86a4171999bd74da8",
+    "reference": "ghcr.io/moonbit-community/why3.mbt-why3@sha256:fe30c5e0b8254f989de466476809c05e388cf675553f9ca86a4171999bd74da8"
   },
   "buildRecipe": {
-    "commit": "a16ae93e26c21e156a41cd63191c2cfa11724ba9",
+    "commit": "a586ad365a7df02bf67864b7e627efaf3a22faf4",
     "path": "Dockerfile",
-    "sha256": "bc6f42441664097b60ef7183856e06fde5aa1f1fea03650c4052526c24526e8b",
+    "sha256": "bbc4df8722aa4e9c3eb8e1be5d7aedcd2676c1f06fb4a35035e585d44914fbb6",
     "frontendImage": {
       "repository": "docker/dockerfile",
       "tagAtResolution": "1.7.0",
@@ -36,6 +36,36 @@
     },
     {
       "workflow": ".github/workflows/check.yml",
+      "action": "moonbit-community/setup-moonbit",
+      "commit": "04293a8a813bfd4b6c2fce22701b52ae1050d100"
+    },
+    {
+      "workflow": ".github/workflows/nightly-oracle.yml",
+      "action": "actions/checkout",
+      "commit": "d23441a48e516b6c34aea4fa41551a30e30af803"
+    },
+    {
+      "workflow": ".github/workflows/nightly-oracle.yml",
+      "action": "actions/upload-artifact",
+      "commit": "ea165f8d65b6e75b540449e92b4886f43607fa02"
+    },
+    {
+      "workflow": ".github/workflows/nightly-oracle.yml",
+      "action": "moonbit-community/setup-moonbit",
+      "commit": "04293a8a813bfd4b6c2fce22701b52ae1050d100"
+    },
+    {
+      "workflow": ".github/workflows/update-oracle.yml",
+      "action": "actions/checkout",
+      "commit": "d23441a48e516b6c34aea4fa41551a30e30af803"
+    },
+    {
+      "workflow": ".github/workflows/update-oracle.yml",
+      "action": "actions/upload-artifact",
+      "commit": "ea165f8d65b6e75b540449e92b4886f43607fa02"
+    },
+    {
+      "workflow": ".github/workflows/update-oracle.yml",
       "action": "moonbit-community/setup-moonbit",
       "commit": "04293a8a813bfd4b6c2fce22701b52ae1050d100"
     },
@@ -77,7 +107,7 @@
     "shapeVersion": 6,
     "executable": {
       "path": "/home/opam/.opam/4.14/bin/why3",
-      "sha256": "7500f94bd929395a6922913f21399470cae5f247541451b94b68c1f88aa2697b"
+      "sha256": "cc1b01e7eb1f007ea89ddb074c1f9da389a95e7bf2e9c3d44650137f9f3924b1"
     },
     "datadir": {
       "path": "/home/opam/.opam/4.14/share/why3",
@@ -117,13 +147,13 @@
     }
   },
   "contracts": {
-    "semanticProfileSha256": "e7f04aa868e2154c9fc5f49809de4b084563dd38c98113e716ce2f0f51c8b6ed",
-    "prCorpusSha256": "669e37b18c85c52ad49e15f44e0a4d7918ce0e086cc5feac353bcd9f9bda8920",
+    "semanticProfileSha256": "f788bd465967b186e1db9f910b8e04e3f4803413a705b661bafc2da5d07658ab",
+    "prCorpusSha256": "1a03dfdc4f95b0d0e4c525a85528f6e8aff2239c4d47e87125275f58f2eeae90",
     "artifacts": [
       {
         "id": "canonical-schema-v2",
         "path": "tools/contracts/canonical-schema-v2.json",
-        "sha256": "c6dc013f7c7071cb1d17db35304eaa4260f8884c5c1f921561437f7063c9b721"
+        "sha256": "bc28d45938fa34011106e060ae07074c318448946d7f6732b280ae8710194432"
       },
       {
         "id": "canonical-vectors-v1",
@@ -158,22 +188,32 @@
       {
         "id": "pr-corpus-v1",
         "path": "tools/contracts/pr-corpus-v1.json",
-        "sha256": "669e37b18c85c52ad49e15f44e0a4d7918ce0e086cc5feac353bcd9f9bda8920"
+        "sha256": "1a03dfdc4f95b0d0e4c525a85528f6e8aff2239c4d47e87125275f58f2eeae90"
+      },
+      {
+        "id": "pr-golden-manifest-v1",
+        "path": "tools/why3_oracle/goldens/pr-v1/manifest.json",
+        "sha256": "d76649d764a3352ecee33ec62ca8a9e7ca4ee0f7bd34bfa18bf3a5433baeb9a9"
+      },
+      {
+        "id": "pr-prover-result-v1",
+        "path": "tools/why3_oracle/goldens/pr-v1/prover-result.json",
+        "sha256": "666fefeb27b49655900c97ad0a32d86c463b03a64fb9aea4a25ab3b33001c41a"
       },
       {
         "id": "runner-vectors-v1",
         "path": "tools/contracts/runner-vectors-v1.json",
-        "sha256": "ab9b3898c9996d96015246dd0b96f24659334b4fc157eb7c8da3504ad7bae554"
+        "sha256": "f2a5441c778ddaead3c7ebae7bff12f79a39d78e83eca7491f840670a8f955c7"
       },
       {
         "id": "semantic-profile-v1",
         "path": "tools/contracts/semantic-profile-v1.json",
-        "sha256": "9aa3745c090384ae026b401b84674a3922487363060c3d389d42789fd3f8e54f"
+        "sha256": "81077c886eff8d3a360e2ca95089f68b44ad085ee43815dc4c00150e81dc6884"
       },
       {
         "id": "toolchain-inputs-v1",
         "path": "tools/contracts/toolchain-inputs-v1.json",
-        "sha256": "1db2ee5f0e5781bf2e4f2842975395f94372e97cbc056846e8a56e339ba96b70"
+        "sha256": "62fc081479145c5d6547992ac40eaf6dd7d638b199436fe7b268245e4aa3c731"
       },
       {
         "id": "toolchain-lock-v1-json-schema",
@@ -183,17 +223,22 @@
       {
         "id": "transform-profile-v1",
         "path": "tools/contracts/transform-profile-v1.json",
-        "sha256": "4ed1e42ea9980ca3cd5515de8eaefcb164a71270499f7e218007dd2fb8133b98"
+        "sha256": "39d4f9ecde65b7ffb72c61ae83bca5b4e86a7d2434a1c60d70fe8cb07beb46f4"
       },
       {
         "id": "translated-files-v1",
         "path": "tools/contracts/translated-files-v1.json",
-        "sha256": "627a09a2a225fe8d284a929232fecd2445c2c82a01aa604f6a3be6bfdb45d694"
+        "sha256": "1372f57ca2c3bb4a6e81442fd6bf928f8eee3195019c59f1861c056d18c9a45e"
       },
       {
         "id": "trusted-snapshot-schema-v1",
         "path": "tools/contracts/trusted-snapshot-schema-v1.json",
         "sha256": "12ff786934d001a726bf319322445689d68ad2efa47dd1c59bd4756c8e7a7a7e"
+      },
+      {
+        "id": "z3-static-profile-v1",
+        "path": "prover/z3/z3-static-profile-v1.json",
+        "sha256": "60533198652eff7d450970c5529b78c4aa7cbd4ae144a54ab6093ae75062d2d4"
       }
     ]
   },
@@ -206,5 +251,5 @@
     "defaultPlugins": "disabled",
     "standardLibrary": "explicit --no-stdlib plus manifest loadpaths"
   },
-  "lockSha256": "0e88c80ef441254973457a84d29b1d1efbe15cff28c82a2a5b960b4e33611434"
+  "lockSha256": "162a687d755a3b941a15b12454f2a22525fcdd3b2882ebdd424b89b069863988"
 }

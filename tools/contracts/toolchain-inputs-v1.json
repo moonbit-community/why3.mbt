@@ -13,7 +13,7 @@
   },
   "buildRecipe": {
     "path": "Dockerfile",
-    "sha256": "bc6f42441664097b60ef7183856e06fde5aa1f1fea03650c4052526c24526e8b",
+    "sha256": "bbc4df8722aa4e9c3eb8e1be5d7aedcd2676c1f06fb4a35035e585d44914fbb6",
     "frontendImage": {
       "repository": "docker/dockerfile",
       "tagAtResolution": "1.7.0",
@@ -29,6 +29,36 @@
     },
     {
       "workflow": ".github/workflows/check.yml",
+      "action": "moonbit-community/setup-moonbit",
+      "commit": "04293a8a813bfd4b6c2fce22701b52ae1050d100"
+    },
+    {
+      "workflow": ".github/workflows/nightly-oracle.yml",
+      "action": "actions/checkout",
+      "commit": "d23441a48e516b6c34aea4fa41551a30e30af803"
+    },
+    {
+      "workflow": ".github/workflows/nightly-oracle.yml",
+      "action": "actions/upload-artifact",
+      "commit": "ea165f8d65b6e75b540449e92b4886f43607fa02"
+    },
+    {
+      "workflow": ".github/workflows/nightly-oracle.yml",
+      "action": "moonbit-community/setup-moonbit",
+      "commit": "04293a8a813bfd4b6c2fce22701b52ae1050d100"
+    },
+    {
+      "workflow": ".github/workflows/update-oracle.yml",
+      "action": "actions/checkout",
+      "commit": "d23441a48e516b6c34aea4fa41551a30e30af803"
+    },
+    {
+      "workflow": ".github/workflows/update-oracle.yml",
+      "action": "actions/upload-artifact",
+      "commit": "ea165f8d65b6e75b540449e92b4886f43607fa02"
+    },
+    {
+      "workflow": ".github/workflows/update-oracle.yml",
       "action": "moonbit-community/setup-moonbit",
       "commit": "04293a8a813bfd4b6c2fce22701b52ae1050d100"
     },
@@ -112,5 +142,5 @@
     "defaultPlugins": "disabled",
     "standardLibrary": "explicit --no-stdlib plus manifest loadpaths"
   },
-  "toolchainInputsSha256": "eb70995c107493307f04c8cbc63b4ab398abadd8654be9d3df049e7206a69c99"
+  "toolchainInputsSha256": "fb8c5b4e71737c3f6ab5980ee7e3db07d397cceac18ec90d510ba51d2da3d583"
 }

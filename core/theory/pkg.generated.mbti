@@ -1,0 +1,170 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonbit-community/why3/core/theory"
+
+import {
+  "moonbit-community/why3/core/identity",
+  "moonbit-community/why3/core/logic",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn split_theory(@identity.CompilationContext, Theory, @identity.SourceSpan?) -> Array[Task] raise
+
+// Errors
+pub(all) suberror TheoryError {
+  TheoryError(TheoryDiagnostic)
+} derive(Eq, @debug.Debug)
+
+// Types and methods
+pub(all) enum CloneTypeInstantiation {
+  CloneType(@logic.TypeSymbol, @logic.Ty)
+  CloneTypeSymbol(@logic.TypeSymbol, @logic.TypeSymbol)
+}
+
+type CloneWitness
+pub fn CloneWitness::context_anchor(Self) -> @identity.SemanticId
+pub fn CloneWitness::trusted_new(@identity.SemanticId, TheoryKey, UInt, ArrayView[CloneTypeInstantiation], ArrayView[(@logic.LSymbol, @logic.LSymbol)], ArrayView[(@logic.PrSymbol, @logic.PrSymbol)], @identity.SourceSpan?) -> Self raise TheoryError
+pub fn CloneWitness::view(Self) -> CloneWitnessView
+
+pub(all) struct CloneWitnessView {
+  source : TheoryKey
+  source_item_identity : UInt
+  type_instantiations : ArrayView[CloneTypeInstantiation]
+  logic_instantiations : ArrayView[(@logic.LSymbol, @logic.LSymbol)]
+  proposition_instantiations : ArrayView[(@logic.PrSymbol, @logic.PrSymbol)]
+}
+
+type Meta
+pub fn Meta::new(BytesView, ArrayView[MetaArgument]) -> Self
+pub fn Meta::validate_context(Self, @identity.SemanticId, @identity.SourceSpan?) -> Unit raise TheoryError
+pub fn Meta::view(Self) -> MetaView
+
+pub(all) enum MetaArgument {
+  MetaType(@logic.Ty)
+  MetaTypeSymbol(@logic.TypeSymbol)
+  MetaLogicSymbol(@logic.LSymbol)
+  MetaPropositionSymbol(@logic.PrSymbol)
+  MetaString(Bytes)
+  MetaInteger(Int64)
+  MetaIdentifier(SemanticName)
+}
+
+pub(all) struct MetaView {
+  name : Bytes
+  arguments : ArrayView[MetaArgument]
+}
+
+type Namespace
+pub fn Namespace::add_logic(Self, BytesView, @logic.LSymbol, @identity.SourceSpan?) -> Self raise TheoryError
+pub fn Namespace::add_proposition(Self, BytesView, @logic.PrSymbol, @identity.SourceSpan?) -> Self raise TheoryError
+pub fn Namespace::add_subspace(Self, BytesView, Self, @identity.SourceSpan?) -> Self raise TheoryError
+pub fn Namespace::add_type(Self, BytesView, @logic.TypeSymbol, @identity.SourceSpan?) -> Self raise TheoryError
+pub fn Namespace::empty() -> Self
+pub fn Namespace::find_logic(Self, ArrayView[Bytes], @identity.SourceSpan?) -> @logic.LSymbol raise TheoryError
+pub fn Namespace::find_namespace(Self, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise TheoryError
+pub fn Namespace::find_proposition(Self, ArrayView[Bytes], @identity.SourceSpan?) -> @logic.PrSymbol raise TheoryError
+pub fn Namespace::find_subspace(Self, BytesView, @identity.SourceSpan?) -> Self raise TheoryError
+pub fn Namespace::find_type(Self, ArrayView[Bytes], @identity.SourceSpan?) -> @logic.TypeSymbol raise TheoryError
+pub fn Namespace::import_scope(Self, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise TheoryError
+pub fn Namespace::merge(Self, Self, @identity.SourceSpan?) -> Self raise TheoryError
+pub fn Namespace::view(Self) -> NamespaceView
+
+pub(all) struct NamespaceView {
+  types : ArrayView[(Bytes, @logic.TypeSymbol)]
+  logic : ArrayView[(Bytes, @logic.LSymbol)]
+  propositions : ArrayView[(Bytes, @logic.PrSymbol)]
+  subspaces : ArrayView[(Bytes, Namespace)]
+}
+
+type SemanticName
+pub fn SemanticName::new(BytesView, ArrayView[Bytes], @identity.SourceSpan?) -> Self
+pub fn SemanticName::view(Self) -> SemanticNameView
+
+pub(all) struct SemanticNameView {
+  name : Bytes
+  attributes : ArrayView[Bytes]
+  source_span : @identity.SourceSpan?
+}
+
+type Task
+pub fn Task::context_anchor(Self) -> @identity.SemanticId
+pub fn Task::trusted_new(@identity.SemanticId, ArrayView[TheoryItem], @identity.SourceSpan?) -> Self raise TheoryError
+pub fn Task::view(Self) -> TaskView
+
+pub(all) struct TaskView {
+  items : ArrayView[TheoryItem]
+}
+
+type Theory
+pub fn Theory::append_declarations(Self, @identity.CompilationContext, ArrayView[@logic.Decl], @identity.SourceSpan?) -> Self raise
+pub fn Theory::context_anchor(Self) -> @identity.SemanticId
+pub fn Theory::export_namespace(Self) -> Namespace
+pub fn Theory::key(Self) -> TheoryKey
+pub fn Theory::trusted_import_known(Self, ArrayView[Self], @identity.SourceSpan?) -> Self raise
+pub fn Theory::trusted_snapshot(@identity.CompilationContext, TheoryKey, SemanticName, ArrayView[TheoryItem], Namespace, ArrayView[Self], @identity.SourceSpan?) -> Self raise
+pub fn Theory::view(Self) -> TheoryView
+
+type TheoryBuilder
+pub fn TheoryBuilder::add_clone_witness(Self, CloneWitness, @identity.SourceSpan?) -> Unit raise TheoryError
+pub fn TheoryBuilder::add_decl(Self, @logic.Decl, @identity.SourceSpan?) -> Unit raise
+pub fn TheoryBuilder::add_meta(Self, Meta, @identity.SourceSpan?) -> Unit raise TheoryError
+pub fn TheoryBuilder::add_use(Self, Theory, Bool, @identity.SourceSpan?) -> Unit raise
+pub fn TheoryBuilder::close(Self) -> Theory raise TheoryError
+pub fn TheoryBuilder::close_scope(Self, Bool, @identity.SourceSpan?) -> Unit raise TheoryError
+pub fn TheoryBuilder::current_namespace(Self) -> Namespace
+pub fn TheoryBuilder::export_namespace(Self) -> Namespace
+pub fn TheoryBuilder::import_scope(Self, ArrayView[Bytes], @identity.SourceSpan?) -> Unit raise TheoryError
+pub fn TheoryBuilder::new(@identity.CompilationContext, TheoryKey, SemanticName) -> Self
+pub fn TheoryBuilder::open_scope(Self, BytesView, @identity.SourceSpan?) -> Unit raise TheoryError
+
+pub(all) struct TheoryDiagnostic {
+  kind : TheoryErrorKind
+  span : @identity.SourceSpan?
+  message : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum TheoryErrorKind {
+  DuplicateName
+  AmbiguousName
+  UnboundName
+  InvalidQualifiedName
+  ContextMismatch
+  BuilderSealed
+  NoOpenedNamespace
+  InvalidTheoryItem
+  GoalNotLast
+  MissingGoal
+  MultipleGoals
+} derive(Eq, @debug.Debug)
+
+pub(all) enum TheoryItem {
+  TheoryDecl(@logic.Decl)
+  TheoryUse(TheoryKey)
+  TheoryClone(CloneWitness)
+  TheoryMeta(Meta)
+}
+
+type TheoryKey
+pub fn TheoryKey::lexical_compare(Self, Self) -> Int
+pub fn TheoryKey::new(ArrayView[Bytes], BytesView) -> Self raise TheoryError
+pub fn TheoryKey::segments(Self) -> Array[Bytes]
+pub fn TheoryKey::view(Self) -> TheoryKeyView
+pub impl Eq for TheoryKey
+pub impl Hash for TheoryKey
+
+pub(all) struct TheoryKeyView {
+  path : ArrayView[Bytes]
+  name : Bytes
+}
+
+pub(all) struct TheoryView {
+  key : TheoryKey
+  name : SemanticName
+  items : ArrayView[TheoryItem]
+  export_namespace : Namespace
+}
+
+// Type aliases
+
+// Traits
+

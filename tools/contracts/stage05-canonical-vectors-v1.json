@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 1,
+  "canonicalSchemaVersion": 2,
+  "stage": 5,
+  "hashInputIncludesFinalLf": true,
+  "vectors": [
+    {
+      "name": "empty-theory-preserves-key-name-history-and-namespace",
+      "canonical": [
+        "Theory",
+        [
+          "TheoryKey",
+          [
+            "64656d6f"
+          ],
+          "456d707479"
+        ],
+        [
+          "Origin.User",
+          "456d707479",
+          [
+            "none"
+          ],
+          []
+        ],
+        [],
+        [
+          "Namespace",
+          [],
+          [],
+          [],
+          []
+        ]
+      ],
+      "canonicalBytesUtf8": "[\"Theory\",[\"TheoryKey\",[\"64656d6f\"],\"456d707479\"],[\"Origin.User\",\"456d707479\",[\"none\"],[]],[],[\"Namespace\",[],[],[],[]]]\n",
+      "canonicalSha256": "223630e22efdd44846f9844da188c86e9cf66cbaee68847a69ce7e7abd636ec5"
+    },
+    {
+      "name": "single-goal-task-preserves-goal-last-item",
+      "canonical": [
+        "Task",
+        [
+          [
+            "TaskItem.Decl",
+            [
+              "Decl",
+              [
+                "Origin.User",
+                "67",
+                [
+                  "none"
+                ],
+                []
+              ],
+              [],
+              [
+                "Dprop.Pgoal",
+                [
+                  "PrSymbol",
+                  [
+                    "proposition",
+                    0
+                  ],
+                  "67",
+                  [
+                    "Origin.User",
+                    "67",
+                    [
+                      "none"
+                    ],
+                    []
+                  ]
+                ],
+                [
+                  "Ttrue"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "canonicalBytesUtf8": "[\"Task\",[[\"TaskItem.Decl\",[\"Decl\",[\"Origin.User\",\"67\",[\"none\"],[]],[],[\"Dprop.Pgoal\",[\"PrSymbol\",[\"proposition\",0],\"67\",[\"Origin.User\",\"67\",[\"none\"],[]]],[\"Ttrue\"]]]]]]\n",
+      "canonicalSha256": "746299329e1bca21024d884bad9e5edcb398890e00e28bdd73b0ef4302baf9d1"
+    },
+    {
+      "name": "empty-pmodule-contains-its-pure-theory-projection",
+      "canonical": [
+        "Pmodule",
+        [
+          "PmoduleKey",
+          [
+            "64656d6f"
+          ],
+          "456d707479"
+        ],
+        [
+          "Theory",
+          [
+            "TheoryKey",
+            [
+              "64656d6f"
+            ],
+            "456d707479"
+          ],
+          [
+            "Origin.User",
+            "456d707479",
+            [
+              "none"
+            ],
+            []
+          ],
+          [],
+          [
+            "Namespace",
+            [],
+            [],
+            [],
+            []
+          ]
+        ],
+        [],
+        [
+          "ProgramNamespace",
+          [],
+          [],
+          [],
+          []
+        ]
+      ],
+      "canonicalBytesUtf8": "[\"Pmodule\",[\"PmoduleKey\",[\"64656d6f\"],\"456d707479\"],[\"Theory\",[\"TheoryKey\",[\"64656d6f\"],\"456d707479\"],[\"Origin.User\",\"456d707479\",[\"none\"],[]],[],[\"Namespace\",[],[],[],[]]],[],[\"ProgramNamespace\",[],[],[],[]]]\n",
+      "canonicalSha256": "72f1f6d7271df82df70e80c0b3b148856f284d2b7f6155445cb13f380199dab4"
+    },
+    {
+      "name": "program-type-symbol-preserves-flags-and-definition",
+      "canonical": [
+        "ProgramTypeSymbol",
+        [
+          "program",
+          0
+        ],
+        [
+          "type",
+          0
+        ],
+        [
+          "Origin.Snapshot",
+          "696e74",
+          [
+            "SnapshotSymbolKey",
+            "64656d6f2e496e74",
+            1,
+            0,
+            "program",
+            "0000000000000000000000000000000000000000000000000000000000000000"
+          ],
+          []
+        ],
+        [
+          false,
+          false,
+          false,
+          false,
+          [],
+          []
+        ],
+        [
+          "TypeDefinition.NoDef"
+        ]
+      ],
+      "canonicalBytesUtf8": "[\"ProgramTypeSymbol\",[\"program\",0],[\"type\",0],[\"Origin.Snapshot\",\"696e74\",[\"SnapshotSymbolKey\",\"64656d6f2e496e74\",1,0,\"program\",\"0000000000000000000000000000000000000000000000000000000000000000\"],[]],[false,false,false,false,[],[]],[\"TypeDefinition.NoDef\"]]\n",
+      "canonicalSha256": "8e6d4403437fe16ffea00e4c6971e131de7064aaf32d889164c006fcbfa4cefe"
+    },
+    {
+      "name": "pure-ity-preserves-program-and-logic-type-identities",
+      "canonical": [
+        "ItyApp",
+        [
+          "program",
+          0
+        ],
+        [],
+        [],
+        [
+          "TyApp",
+          [
+            "type",
+            0
+          ],
+          []
+        ]
+      ],
+      "canonicalBytesUtf8": "[\"ItyApp\",[\"program\",0],[],[],[\"TyApp\",[\"type\",0],[]]]\n",
+      "canonicalSha256": "3a8ce945ba98f9800f951b58448d51c3dfcfae9ac109c2ec7fa28eb77d592210"
+    }
+  ]
+}

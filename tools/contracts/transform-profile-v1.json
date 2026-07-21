@@ -36,7 +36,53 @@
   ],
   "finalCheckpoints": ["prepared-task", "smt-token-stream", "prover-result"],
   "tracePatch": {
-    "status": "introduced-by-pr-07",
-    "manifestFieldsFrozenNow": ["targetWhy3Commit", "patchSha256", "checkpointSequence"]
+    "status": "active",
+    "path": "tools/why3_oracle/patches/driver-trace.patch",
+    "targetWhy3Commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
+    "patchSha256": "6c41136b7912cafe45d91e0ec6ab247839c4dfbadf947f828d6aa59fb348823f",
+    "checkpointSequences": {
+      "monomorphic": [
+        "driver-update",
+        "counterexamples_dependent_intros",
+        "inline_trivial",
+        "eliminate_builtin",
+        "remove_unused_keep_constants",
+        "detect_polymorphism",
+        "eliminate_definition_conditionally",
+        "eliminate_inductive",
+        "eliminate_epsilon",
+        "eliminate_literal",
+        "simplify_formula",
+        "prepare_for_counterexmp",
+        "eliminate_projections_sums",
+        "discriminate_if_poly",
+        "eliminate_algebraic_if_poly",
+        "encoding_smt_if_poly"
+      ],
+      "polymorphic": [
+        "driver-update",
+        "counterexamples_dependent_intros",
+        "inline_trivial",
+        "eliminate_builtin",
+        "remove_unused_keep_constants",
+        "detect_polymorphism",
+        "eliminate_definition_conditionally",
+        "eliminate_inductive",
+        "eliminate_epsilon",
+        "eliminate_literal",
+        "simplify_formula",
+        "prepare_for_counterexmp",
+        "eliminate_projections_sums",
+        "discriminate_if_poly:monomorphise_goal",
+        "discriminate_if_poly",
+        "eliminate_algebraic_if_poly",
+        "encoding_smt_if_poly:monomorphise_goal",
+        "encoding_smt_if_poly:select_kept",
+        "encoding_smt_if_poly:keep_field_types",
+        "encoding_smt_if_poly:twin",
+        "encoding_smt_if_poly:guards",
+        "encoding_smt_if_poly"
+      ]
+    }
   }
 }

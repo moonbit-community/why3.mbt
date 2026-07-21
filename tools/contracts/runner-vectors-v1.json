@@ -151,10 +151,10 @@
   ],
   "cli": [
     { "id": "cli.single-goal-stdout", "goalCount": 1, "output": "stdout", "expectedExitCode": 0 },
-    { "id": "cli.multiple-goals-require-directory", "goalCount": 2, "output": "stdout", "expectedExitCode": 2 },
+    { "id": "cli.multiple-goals-require-directory", "goalCount": 2, "output": "stdout", "expectedExitCode": 1 },
     { "id": "cli.valid-exit", "outcome": "Valid", "expectedExitCode": 0 },
-    { "id": "cli.nonvalid-exit", "outcome": "Unknown", "expectedExitCode": 1 },
-    { "id": "cli.error-exit", "error": "ProcessError", "expectedExitCode": 2 },
+    { "id": "cli.nonvalid-exit", "outcome": "Unknown", "expectedExitCode": 2 },
+    { "id": "cli.error-exit", "error": "ProcessError", "expectedExitCode": 1 },
     { "id": "cli.versioned-ndjson", "schemaVersion": 1, "lineTerminationHex": "0a" }
   ],
   "context": [

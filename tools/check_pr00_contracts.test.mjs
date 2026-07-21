@@ -40,5 +40,6 @@ test('quick aggregate check reruns deterministic generators', () => {
     why3Archive: null,
     quick: true,
     requireToolchainLock: false,
+    skipToolchainLock: true,
   }));
 });

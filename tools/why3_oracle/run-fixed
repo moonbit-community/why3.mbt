@@ -259,10 +259,10 @@ function verifyInputArguments(argv, sourcePath) {
   }
   if (argv.includes('-')) fail('stdin is not a fixed Why3 fixture input');
   if (command === 'config') {
-    if (argv.length !== 2 || argv[1] !== 'detect') {
-      fail('only "config detect" is allowed in the fixed oracle profile');
+    if (argv.length !== 2 || !['detect', 'show'].includes(argv[1])) {
+      fail('only "config detect" and read-only "config show" are allowed in the fixed oracle profile');
     }
-    if (inputs.length !== 0) fail('config detect does not accept a fixture input');
+    if (inputs.length !== 0) fail('fixed configuration commands do not accept a fixture input');
   } else if (!inputs.includes(sourcePath)) {
     fail(`Why3 command ${command} must name the selected fixture source`);
   }

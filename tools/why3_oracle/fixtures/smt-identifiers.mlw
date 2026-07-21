@@ -3,13 +3,11 @@
 theory SmtIdentifiers
   use int.Int
 
-  function select (value : int) : int = value
-  function store (value : int) : int = value
-  function generated_0 (value : int) : int = value
-  function generated_1 (value : int) : int = value
+  function probe (a b c d : int) : int
+  function identity (value : 'a) : 'a
 
   goal reserved_and_collision :
-    forall generated : int.
-      select generated = store generated /\
-      generated_0 generated = generated_1 generated
+    forall select store sort witness generated_0 generated_1 : int.
+      probe select store sort witness = generated_0 /\
+      identity generated_0 = generated_1
 end

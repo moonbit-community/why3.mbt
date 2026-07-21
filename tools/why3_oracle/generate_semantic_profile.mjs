@@ -12,6 +12,7 @@ const ARTIFACTS = [
   ['driver-closure-v1', 'tools/contracts/driver-closure-v1.json'],
   ['features-v1', 'tools/contracts/features-v1.json'],
   ['transform-profile-v1', 'tools/contracts/transform-profile-v1.json'],
+  ['z3-static-profile-v1', 'prover/z3/z3-static-profile-v1.json'],
   ['trusted-snapshot-schema-v1', 'tools/contracts/trusted-snapshot-schema-v1.json'],
 ];
 

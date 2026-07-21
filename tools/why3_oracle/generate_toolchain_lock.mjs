@@ -19,6 +19,8 @@ const CONTRACT_ARTIFACTS = [
   ['moon-dependencies-v1', 'tools/contracts/moon-dependencies-v1.json'],
   ['oracle-goal-envelope-v1-json-schema', 'tools/contracts/schema/oracle-goal-envelope-v1.schema.json'],
   ['pr-corpus-v1', 'tools/contracts/pr-corpus-v1.json'],
+  ['pr-golden-manifest-v1', 'tools/why3_oracle/goldens/pr-v1/manifest.json'],
+  ['pr-prover-result-v1', 'tools/why3_oracle/goldens/pr-v1/prover-result.json'],
   ['runner-vectors-v1', 'tools/contracts/runner-vectors-v1.json'],
   ['semantic-profile-v1', 'tools/contracts/semantic-profile-v1.json'],
   ['toolchain-inputs-v1', 'tools/contracts/toolchain-inputs-v1.json'],
@@ -26,6 +28,7 @@ const CONTRACT_ARTIFACTS = [
   ['transform-profile-v1', 'tools/contracts/transform-profile-v1.json'],
   ['translated-files-v1', 'tools/contracts/translated-files-v1.json'],
   ['trusted-snapshot-schema-v1', 'tools/contracts/trusted-snapshot-schema-v1.json'],
+  ['z3-static-profile-v1', 'prover/z3/z3-static-profile-v1.json'],
 ];
 
 function fail(message) {

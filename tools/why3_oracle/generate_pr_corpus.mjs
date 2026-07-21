@@ -351,6 +351,10 @@ async function buildManifest() {
       ['mvp.routine-call', 'tools/why3_oracle/fixtures/mvp.mlw', ['RoutineCall'], ['program-call', 'requires-ensures', 'result'], 'Supported'],
       ['mvp.assert-assume', 'tools/why3_oracle/fixtures/mvp.mlw', ['AssertAssume'], ['assert', 'assume', 'requires-ensures'], 'Supported'],
       ['mvp.program-real', 'tools/why3_oracle/fixtures/mvp.mlw', ['ProgramReal'], ['program-real', 'program-call', 'requires-ensures', 'result'], 'Supported'],
+      ['mutation.false-postcondition', 'tests/vc/false-post.mlw', ['FalsePost'], ['false-postcondition', 'mutation', 'program-int'], 'MutationExpectedNonValid'],
+      ['transform.polymorphism', 'tools/why3_oracle/fixtures/transform-polymorphism.mlw', ['LogicPolymorphism'], ['free-type-variable', 'monomorphise-goal', 'polymorphic-checkpoints'], 'Supported'],
+      ['transform.polymorphic-definition', 'tools/why3_oracle/fixtures/transform-polymorphic-definition.mlw', ['LogicPolymorphicDefinition'], ['polymorphic-definition', 'discriminate', 'encoding-guards'], 'Supported'],
+      ['transform.inductive-snapshot', 'tools/why3_oracle/fixtures/transform-inductive.mlw', ['InductiveSnapshot'], ['oracle-only', 'trusted-inductive', 'eliminate-inductive', 'higher-order-encoding'], 'OracleOnlyTrusted'],
       ['smt.identifier-safety', 'tools/why3_oracle/fixtures/smt-identifiers.mlw', ['SmtIdentifiers'], ['generated-name-collision', 'goal-negation', 'reserved-smt-identifier'], 'Supported'],
       ['solver.outcomes', 'tools/why3_oracle/fixtures/solver-outcomes.mlw', ['SolverOutcomes'], ['solver-sat', 'solver-unknown', 'solver-unsat'], 'Supported'],
     ].map(([id, path, unitNames, featureTags, kind]) => successfulCase({
@@ -358,7 +362,21 @@ async function buildManifest() {
       path,
       unitNames,
       featureTags,
-      expected: { stage: 'full-pipeline', kind, lane: 'exact', gateStages: exactStages },
+      expected: id === 'transform.inductive-snapshot'
+        ? {
+            stage: 'oracle-pipeline',
+            kind,
+            lane: 'exact',
+            gateStages: [
+              'typed-unit',
+              'raw-task',
+              'driver-update',
+              'transform-checkpoints',
+              'prepared-task',
+              'smt-token-stream',
+            ],
+          }
+        : { stage: 'full-pipeline', kind, lane: 'exact', gateStages: exactStages },
     }));
 
     const unsupportedDefinitions = [
@@ -369,7 +387,7 @@ async function buildManifest() {
       ['unsupported.driver-only-theory', 'driver-only-theory.mlw', ['DriverOnlyTheory'], 'UnsupportedFeature(ExternalOrDriverOnlyImport)'],
       ['unsupported.effects', 'effects.mlw', ['TypePurification'], 'UnsupportedFeature(TypePurification)'],
       ['unsupported.exceptions', 'exceptions.mlw', ['Exceptions'], 'UnsupportedFeature(Exception)'],
-      ['unsupported.function-kinds', 'function-kinds.mlw', ['FunctionKinds'], 'UnsupportedFeature(ProgramRoutineShape)'],
+      ['unsupported.function-kinds', 'function-kinds.mlw', ['FunctionKinds'], 'UnsupportedFeature(RoutineKind)'],
       ['unsupported.ghost', 'ghost.mlw', ['GhostResult'], 'UnsupportedFeature(Ghost)'],
       ['unsupported.higher-order', 'higher-order.mlw', ['HigherOrder'], 'UnsupportedFeature(HigherOrder)'],
       ['unsupported.inductive', 'inductive.mlw', ['Inductive'], 'UnsupportedFeature(Inductive)'],
@@ -409,10 +427,10 @@ async function buildManifest() {
       units: [],
       featureTags: ['negative-capability', 'unsupported.epsilon'],
       expected: {
-        stage: 'feature-classification',
-        kind: 'UnsupportedFeature(Epsilon)',
+        stage: 'parser',
+        kind: 'ParseError(UnsupportedEpsilon)',
         lane: 'unsupported',
-        gateStages: ['parser', 'typing-reference-reject', 'feature-classification'],
+        gateStages: ['parser', 'typing-reference-reject'],
       },
       assertions: featureAssertions(features, 'unsupported.epsilon'),
       referenceWhy3: epsilonReference,
@@ -477,13 +495,12 @@ async function buildManifest() {
       'contract.transform-profile',
       'tools/contracts/transform-profile-v1.json',
       ['checkpoint-order', 'driver-transforms'],
-      [
-        transformProfile.rawCheckpoint,
-        transformProfile.driverUpdateCheckpoint,
-        ...transformProfile.orderedDriverTransforms,
-        ...transformProfile.instrumentedSubcheckpoints,
-        ...transformProfile.finalCheckpoints,
-      ],
+      {
+        raw: transformProfile.rawCheckpoint,
+        monomorphic: transformProfile.tracePatch.checkpointSequences.monomorphic,
+        polymorphic: transformProfile.tracePatch.checkpointSequences.polymorphic,
+        final: transformProfile.finalCheckpoints,
+      },
     ),
   ];
 
@@ -531,10 +548,12 @@ async function buildManifest() {
     ['use-import-scope', ['mvp.namespace']],
     ['requires-ensures-result-assert-assume-call', ['mvp.abs', 'mvp.assert-assume', 'mvp.routine-call']],
     ['raw-vc-and-transform-checkpoints', ['mvp.abs', 'contract.transform-profile']],
-    ['polymorphic-driver-checkpoints', ['mvp.logic-polymorphism', 'contract.transform-profile']],
+    ['polymorphic-driver-checkpoints', ['transform.polymorphism', 'transform.polymorphic-definition', 'contract.transform-profile']],
+    ['trusted-inductive-elimination-checkpoint', ['transform.inductive-snapshot', 'contract.transform-profile']],
     ['smt-generated-name-reserved-word-negation', ['smt.identifier-safety']],
     ['driver-catalog-and-trusted-types', ['contract.driver-profile', 'unsupported.driver-only-theory']],
     ['program-real', ['mvp.program-real']],
+    ['program-false-postcondition', ['mutation.false-postcondition']],
     ['portable-profile-vs-oracle-context', ['contract.runner-vectors']],
     ['real-solver-unsat-sat-unknown', ['solver.outcomes']],
     ['canned-result-and-runner-boundaries', ['contract.runner-vectors']],
@@ -563,6 +582,7 @@ async function buildManifest() {
   ).values()].sort((left, right) => compareUtf8(left.path, right.path));
   return {
     schemaVersion: 1,
+    profile: 'why3-1.7.2-z3-4.8.12-pr-corpus-v2',
     why3: { version: '1.7.2', commit: WHY3_COMMIT, shapeVersion: 6 },
     policy: {
       entryOrder: 'id bytewise ascending',

@@ -1,0 +1,128 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonbit-community/why3/core/identity"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+pub(all) suberror ContextMismatch {
+  ContextMismatch(String)
+} derive(Eq, @debug.Debug)
+
+// Types and methods
+type CompilationContext
+pub fn CompilationContext::contains(Self, SemanticId) -> Bool
+pub fn CompilationContext::fresh_id(Self) -> SemanticId
+pub fn CompilationContext::new() -> Self
+
+pub(all) enum GeneratedStage {
+  DriverUpdate
+  CounterexamplesDependentIntros
+  InlineTrivial
+  EliminateBuiltin
+  RemoveUnusedKeepConstants
+  DetectPolymorphism
+  EliminateDefinitionConditionally
+  EliminateInductive
+  EliminateEpsilon
+  EliminateLiteral
+  SimplifyFormula
+  PrepareForCounterexmp
+  EliminateProjectionsSums
+  DiscriminateMonomorphiseGoal
+  DiscriminateIfPoly
+  EliminateAlgebraicIfPoly
+  EncodingMonomorphiseGoal
+  SelectKept
+  KeepFieldTypes
+  Twin
+  Guards
+  EncodingSmtIfPoly
+  Wp
+} derive(Eq, @debug.Debug)
+pub fn GeneratedStage::canonical_name(Self) -> BytesView
+
+type Origin derive(Eq, @debug.Debug)
+pub fn Origin::allows_generated_name_normalization(Self) -> Bool
+pub fn Origin::attributes(Self) -> ArrayView[Bytes]
+pub fn Origin::display_name(Self) -> BytesView
+pub fn Origin::generated(GeneratedStage, BytesView, SourceSpan?, ArrayView[Bytes]) -> Self
+pub fn Origin::kind(Self) -> OriginKind
+pub fn Origin::snapshot(BytesView, SnapshotSymbolKey, ArrayView[Bytes]) -> Self
+pub fn Origin::snapshot_key(Self) -> SnapshotSymbolKey?
+pub fn Origin::snapshot_with_span(BytesView, SnapshotSymbolKey, SourceSpan?, ArrayView[Bytes]) -> Self
+pub fn Origin::source_span(Self) -> SourceSpan?
+pub fn Origin::user(BytesView, SourceSpan?, ArrayView[Bytes]) -> Self
+pub fn Origin::view(Self) -> OriginView
+
+type OriginKind derive(Eq, @debug.Debug)
+pub fn OriginKind::view(Self) -> OriginKindView
+
+pub(all) enum OriginKindView {
+  UserKind
+  SnapshotKind
+  GeneratedKind(GeneratedStage)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum OriginView {
+  UserOrigin(Bytes, SourceSpan?, ArrayView[Bytes])
+  SnapshotOrigin(Bytes, SnapshotSymbolKey, ArrayView[Bytes])
+  GeneratedOrigin(GeneratedStage, Bytes, SourceSpan?, ArrayView[Bytes])
+} derive(Eq, @debug.Debug)
+
+type SemanticAttributes derive(Eq, @debug.Debug)
+pub fn SemanticAttributes::contains(Self, BytesView) -> Bool
+pub fn SemanticAttributes::empty() -> Self
+pub fn SemanticAttributes::from_array(ArrayView[Bytes]) -> Self
+pub fn SemanticAttributes::items(Self) -> ArrayView[Bytes]
+
+type SemanticId
+pub fn SemanticId::local_id(Self) -> Int64
+pub fn SemanticId::require_same_context(Self, Self, operation? : String) -> Unit raise ContextMismatch
+pub fn SemanticId::same_context(Self, Self) -> Bool
+pub impl Eq for SemanticId
+pub impl Hash for SemanticId
+
+type SnapshotSymbolKey derive(Eq, @debug.Debug)
+pub fn SnapshotSymbolKey::new(BytesView, UInt, UInt, SnapshotSymbolKind, BytesView) -> Self
+pub fn SnapshotSymbolKey::view(Self) -> SnapshotSymbolKeyView
+pub impl Hash for SnapshotSymbolKey
+
+pub(all) struct SnapshotSymbolKeyView {
+  theory_key : Bytes
+  theory_item_ordinal : UInt
+  declaration_inner_ordinal : UInt
+  symbol_kind : SnapshotSymbolKind
+  symbol_digest : Bytes
+} derive(Eq, @debug.Debug)
+
+pub(all) enum SnapshotSymbolKind {
+  Type
+  Logic
+  Proposition
+  Program
+  Region
+} derive(Eq, @debug.Debug)
+pub fn SnapshotSymbolKind::canonical_name(Self) -> BytesView
+
+type SourceSpan derive(Eq, @debug.Debug)
+pub fn SourceSpan::new(BytesView, Int, Int, Int64, Int64, Int64, Int64) -> Self
+pub fn SourceSpan::view(Self) -> SourceSpanView
+
+pub(all) struct SourceSpanView {
+  relative_path : Bytes
+  start_byte : Int
+  end_byte : Int
+  start_line : Int64
+  start_column : Int64
+  end_line : Int64
+  end_column : Int64
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits
+

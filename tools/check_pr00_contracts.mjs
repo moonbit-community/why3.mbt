@@ -30,6 +30,8 @@ const TOOLCHAIN_ARTIFACTS = [
   ['moon-dependencies-v1', 'tools/contracts/moon-dependencies-v1.json'],
   ['oracle-goal-envelope-v1-json-schema', 'tools/contracts/schema/oracle-goal-envelope-v1.schema.json'],
   ['pr-corpus-v1', 'tools/contracts/pr-corpus-v1.json'],
+  ['pr-golden-manifest-v1', 'tools/why3_oracle/goldens/pr-v1/manifest.json'],
+  ['pr-prover-result-v1', 'tools/why3_oracle/goldens/pr-v1/prover-result.json'],
   ['runner-vectors-v1', 'tools/contracts/runner-vectors-v1.json'],
   ['semantic-profile-v1', 'tools/contracts/semantic-profile-v1.json'],
   ['toolchain-inputs-v1', 'tools/contracts/toolchain-inputs-v1.json'],
@@ -37,6 +39,7 @@ const TOOLCHAIN_ARTIFACTS = [
   ['transform-profile-v1', 'tools/contracts/transform-profile-v1.json'],
   ['translated-files-v1', 'tools/contracts/translated-files-v1.json'],
   ['trusted-snapshot-schema-v1', 'tools/contracts/trusted-snapshot-schema-v1.json'],
+  ['z3-static-profile-v1', 'prover/z3/z3-static-profile-v1.json'],
 ];
 
 export function fail(message) {
@@ -97,11 +100,13 @@ function parseArguments(argv) {
     why3Archive: null,
     quick: false,
     requireToolchainLock: false,
+    skipToolchainLock: false,
   };
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
     if (argument === '--quick') result.quick = true;
     else if (argument === '--require-toolchain-lock') result.requireToolchainLock = true;
+    else if (argument === '--skip-toolchain-lock') result.skipToolchainLock = true;
     else if (argument === '--why3-root' || argument === '--why3-archive') {
       const value = argv[index + 1];
       if (!value) fail(`${argument} requires a path`);
@@ -109,6 +114,9 @@ function parseArguments(argv) {
       else result.why3Archive = resolve(value);
       index += 1;
     } else fail(`unknown argument ${argument}`);
+  }
+  if (result.requireToolchainLock && result.skipToolchainLock) {
+    fail('--require-toolchain-lock and --skip-toolchain-lock are mutually exclusive');
   }
   return result;
 }
@@ -368,7 +376,47 @@ export function checkProfilesAndVectors() {
   assertEqual(transform.why3Commit, WHY3_COMMIT, 'transform Why3 commit');
   assertEqual(transform.driverClosureSha256, driver.driver.sha256, 'transform driver closure');
   assertEqual(transform.orderedDriverTransforms, driver.driver.transformations, 'ordered driver transforms');
-  assertEqual(transform.tracePatch.status, 'introduced-by-pr-07', 'trace patch lifecycle');
+  assertEqual(transform.tracePatch.status, 'active', 'trace patch lifecycle');
+  assertEqual(transform.tracePatch.targetWhy3Commit, WHY3_COMMIT, 'trace patch target');
+  assertEqual(
+    transform.tracePatch.patchSha256,
+    sha256(readFileSync(projectFile(transform.tracePatch.path))),
+    'trace patch hash',
+  );
+  const monomorphicCheckpoints = [
+    transform.driverUpdateCheckpoint,
+    ...transform.orderedDriverTransforms,
+  ];
+  const polymorphicCheckpoints = [transform.driverUpdateCheckpoint];
+  for (const name of transform.orderedDriverTransforms) {
+    if (name === 'discriminate_if_poly') {
+      polymorphicCheckpoints.push('discriminate_if_poly:monomorphise_goal');
+    }
+    if (name === 'encoding_smt_if_poly') {
+      polymorphicCheckpoints.push(
+        'encoding_smt_if_poly:monomorphise_goal',
+        'encoding_smt_if_poly:select_kept',
+        'encoding_smt_if_poly:keep_field_types',
+        'encoding_smt_if_poly:twin',
+        'encoding_smt_if_poly:guards',
+      );
+    }
+    polymorphicCheckpoints.push(name);
+  }
+  assertEqual(
+    transform.tracePatch.checkpointSequences,
+    { monomorphic: monomorphicCheckpoints, polymorphic: polymorphicCheckpoints },
+    'trace patch checkpoint sequences',
+  );
+  const z3Profile = readJson('prover/z3/z3-static-profile-v1.json');
+  assertEqual(
+    z3Profile.tracePatch,
+    {
+      targetWhy3Commit: WHY3_COMMIT,
+      checkpointSequences: transform.tracePatch.checkpointSequences,
+    },
+    'Z3 profile trace patch binding',
+  );
   assertEqual(new Set(transform.instrumentedSubcheckpoints).size, transform.instrumentedSubcheckpoints.length, 'subcheckpoint uniqueness');
   const runner = readJson('tools/contracts/runner-vectors-v1.json');
   const ids = [
@@ -534,7 +582,12 @@ export function checkToolchainLock(requireLock) {
 }
 
 export function checkWorkflowPolicy() {
-  for (const path of ['.github/workflows/check.yml', '.github/workflows/why3-image.yml']) {
+  for (const path of [
+    '.github/workflows/check.yml',
+    '.github/workflows/nightly-oracle.yml',
+    '.github/workflows/update-oracle.yml',
+    '.github/workflows/why3-image.yml',
+  ]) {
     const source = readFileSync(projectFile(path), 'utf8');
     assert(!/uses:\s*[^\s]+@(?:main|master|v\d+)\b/u.test(source), `${path} has a floating action ref`);
     assert(source.includes(`uses: ${SETUP_MOONBIT_ACTION}`), `${path} omits pinned setup-moonbit`);
@@ -564,8 +617,14 @@ export function checkWorkflowPolicy() {
     'tools/why3_oracle/generate_toolchain_lock.mjs',
     'tools/why3_oracle/promote_toolchain_lock.mjs',
     '--project-root "$promotion_root"',
+    '--skip-toolchain-lock',
     '--require-toolchain-lock',
     'tools/why3_oracle/run-fixed mvp.abs --',
+    'tools/why3_oracle/run_elab_differential.mjs',
+    'tools/why3_oracle/manage_pr_goldens.mjs --check',
+    'tools/why3_oracle/sync_pr_golden_lock.mjs --check',
+    'tools/why3_oracle/run_unsupported_gate.mjs',
+    'tools/why3_oracle/run_result_differential.mjs',
     'moon test --target all --serial --release',
     'node --test tools/*.test.mjs',
     'node tools/check_why3_fixtures.mjs',
@@ -574,12 +633,21 @@ export function checkWorkflowPolicy() {
     assert(imageWorkflow.includes(required), `why3-image workflow omits ${required}`);
   }
   const checkWorkflow = readFileSync(projectFile('.github/workflows/check.yml'), 'utf8');
+  assert(
+    !checkWorkflow.includes('--skip-toolchain-lock'),
+    'ordinary check workflow must validate the promoted toolchain lock',
+  );
   for (const required of [
     'tools/why3_oracle/inspect_toolchain.mjs',
     'generate_moon_dependency_inventory.mjs',
     'moon check --target all --warn-list +73',
     'moon test --target all --serial --release',
     'node tools/check_why3_fixtures.mjs',
+    'tools/why3_oracle/run_elab_differential.mjs',
+    'tools/why3_oracle/manage_pr_goldens.mjs --check',
+    'tools/why3_oracle/sync_pr_golden_lock.mjs --check',
+    'tools/why3_oracle/run_unsupported_gate.mjs',
+    'tools/why3_oracle/run_result_differential.mjs',
     'moon info',
     'moon fmt',
   ]) {
@@ -621,7 +689,9 @@ export function checkAll(arguments_) {
   checkFeaturesAndCorpus();
   checkProfilesAndVectors();
   checkWorkflowPolicy();
-  const toolchainLock = checkToolchainLock(arguments_.requireToolchainLock);
+  const toolchainLock = arguments_.skipToolchainLock
+    ? { present: false, skipped: true }
+    : checkToolchainLock(arguments_.requireToolchainLock);
   runGeneratedChecks(arguments_);
   return { toolchainLock };
 }
@@ -631,7 +701,9 @@ const isMain = process.argv[1] !== undefined &&
 if (isMain) {
   try {
     const result = checkAll(parseArguments(process.argv.slice(2)));
-    const lockStatus = result.toolchainLock.present ? 'promoted' : 'candidate pending';
+    const lockStatus = result.toolchainLock.skipped
+      ? 'candidate replacement'
+      : result.toolchainLock.present ? 'promoted' : 'candidate pending';
     process.stdout.write(`PR-00 contracts verified (toolchain lock: ${lockStatus})\n`);
   } catch (error) {
     process.stderr.write(`check_pr00_contracts: ${error.message}\n`);

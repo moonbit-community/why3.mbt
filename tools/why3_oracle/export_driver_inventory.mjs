@@ -18,15 +18,15 @@ import { fileURLToPath } from 'node:url';
 
 const SCRIPT_DIRECTORY = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = resolve(SCRIPT_DIRECTORY, '..', '..');
-const EXPECTED_WHY3_COMMIT = '1343338d3bb1941c0d4f134283bb0790816113c4';
-const EXPECTED_WHY3_TREE = 'f5e82693620413d7d8e3ebcba69addcb6a65f877';
-const WHY3_SOURCE_ARCHIVE = {
+export const EXPECTED_WHY3_COMMIT = '1343338d3bb1941c0d4f134283bb0790816113c4';
+export const EXPECTED_WHY3_TREE = 'f5e82693620413d7d8e3ebcba69addcb6a65f877';
+export const WHY3_SOURCE_ARCHIVE = {
   url: 'https://gitlab.inria.fr/why3/why3/-/archive/1343338d3bb1941c0d4f134283bb0790816113c4/why3-1343338d3bb1941c0d4f134283bb0790816113c4.tar.gz',
   sha256: 'c7bf782933a5d8ef9e78638cbf18e480eef895dca95317ba50231f20d45e92c7',
 };
 const PROFILE = 'z3_487';
 const ROOT_DRIVER = 'z3_487.drv';
-const PROGRAM_ROOTS = ['BuiltIn', 'Bool', 'Unit', 'int.Int', 'real.Real'];
+export const PROGRAM_ROOTS = ['BuiltIn', 'Bool', 'Unit', 'int.Int', 'real.Real'];
 const AUXILIARY_DRIVERS = [
   ['why3.drv', '9ac85a936a0526112fec236f1b32a0d1315422071a83f7ab52010168c0eadaed'],
   ['why3_smt.drv', '66101f2eea98ca0e772b29bcbec9f84896524e56c9bf8223044470b65ed9472a'],
@@ -36,7 +36,7 @@ function fail(message) {
   throw new Error(message);
 }
 
-function sha256(bytes) {
+export function sha256(bytes) {
   return createHash('sha256').update(bytes).digest('hex');
 }
 
@@ -44,15 +44,15 @@ function toPosix(path) {
   return path.split(sep).join('/');
 }
 
-function canonicalSha(value) {
+export function canonicalSha(value) {
   return sha256(`${JSON.stringify(value)}\n`);
 }
 
-function compareUtf8(left, right) {
+export function compareUtf8(left, right) {
   return Buffer.compare(Buffer.from(left, 'utf8'), Buffer.from(right, 'utf8'));
 }
 
-function runChecked(command, argv, options = {}) {
+export function runChecked(command, argv, options = {}) {
   const result = spawnSync(command, argv, {
     cwd: options.cwd ?? PROJECT_ROOT,
     encoding: options.encoding ?? 'utf8',
@@ -438,7 +438,7 @@ export function buildInventory(why3Root, options = {}) {
   };
 }
 
-function buildInventoryFromArchive(archive) {
+export function buildInventoryFromArchive(archive) {
   const actualSha256 = sha256(readFileSync(archive));
   if (actualSha256 !== WHY3_SOURCE_ARCHIVE.sha256) {
     fail(`Why3 source archive hash drift: expected ${WHY3_SOURCE_ARCHIVE.sha256}, got ${actualSha256}`);
@@ -453,27 +453,32 @@ function buildInventoryFromArchive(archive) {
   }
 }
 
-const {
-  why3Root,
-  why3Archive,
-  outputMode,
-  outputPath,
-} = parseArguments(process.argv.slice(2));
-try {
-  const inventory = why3Archive === null
-    ? buildInventory(why3Root)
-    : buildInventoryFromArchive(why3Archive);
-  const rendered = `${JSON.stringify(inventory, null, 2)}\n`;
-  if (outputMode === 'output') {
-    writeFileSync(outputPath, rendered);
-  } else if (outputMode === 'check') {
-    if (readFileSync(outputPath, 'utf8') !== rendered) {
-      fail(`${outputPath} does not match the generated driver inventory`);
+export function main(argv = process.argv.slice(2)) {
+  const {
+    why3Root,
+    why3Archive,
+    outputMode,
+    outputPath,
+  } = parseArguments(argv);
+  try {
+    const inventory = why3Archive === null
+      ? buildInventory(why3Root)
+      : buildInventoryFromArchive(why3Archive);
+    const rendered = `${JSON.stringify(inventory, null, 2)}\n`;
+    if (outputMode === 'output') {
+      writeFileSync(outputPath, rendered);
+    } else if (outputMode === 'check') {
+      if (readFileSync(outputPath, 'utf8') !== rendered) {
+        fail(`${outputPath} does not match the generated driver inventory`);
+      }
+    } else {
+      process.stdout.write(rendered);
     }
-  } else {
-    process.stdout.write(rendered);
+  } catch (error) {
+    process.stderr.write(`export_driver_inventory: ${error.message}\n`);
+    process.exitCode = 1;
   }
-} catch (error) {
-  process.stderr.write(`export_driver_inventory: ${error.message}\n`);
-  process.exitCode = 1;
 }
+
+if (process.argv[1] !== undefined &&
+    resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();

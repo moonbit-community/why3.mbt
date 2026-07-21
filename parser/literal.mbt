@@ -170,6 +170,17 @@ fn normalized_real_value(
 }
 
 ///|
+/// Constructs the same normalized exact representation used by parsed real
+/// literals. Semantic consumers use this for trusted snapshot constants.
+pub fn RealValue::normalized(
+  significand : BigInt,
+  pow2 : BigInt,
+  pow5 : BigInt,
+) -> RealValue {
+  normalized_real_value(significand, pow2, pow5)
+}
+
+///|
 fn make_real_constant(
   radix : Int,
   integer_digits : BytesView,

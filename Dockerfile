@@ -7,6 +7,7 @@ FROM ocaml/opam:ubuntu-24.04-ocaml-4.14@sha256:bea12da0ea6d56cbaa254dd8bbfe010ee
 ARG WHY3_VERSION=1.7.2
 ARG WHY3_COMMIT=1343338d3bb1941c0d4f134283bb0790816113c4
 ARG WHY3_SOURCE_ARCHIVE_SHA256=c7bf782933a5d8ef9e78638cbf18e480eef895dca95317ba50231f20d45e92c7
+ARG WHY3_TRACE_PATCH_SHA256=6c41136b7912cafe45d91e0ec6ab247839c4dfbadf947f828d6aa59fb348823f
 ARG Z3_VERSION=4.8.12
 ARG Z3_ARCHIVE_SHA256=648e8a7afb57445440ad711b733bd675e3888da2767c14ae5122582c924d8d52
 
@@ -16,6 +17,7 @@ LABEL org.opencontainers.image.source="https://github.com/moonbit-community/why3
       org.opencontainers.image.vendor="moonbit-community" \
       org.opencontainers.image.licenses="LGPL-2.1-only WITH OCaml-LGPL-linking-exception" \
       org.moonbit.why3.commit="${WHY3_COMMIT}" \
+      org.moonbit.why3.trace-patch.sha256="${WHY3_TRACE_PATCH_SHA256}" \
       org.moonbit.z3.version="${Z3_VERSION}"
 
 USER root
@@ -59,11 +61,20 @@ RUN set -eux; \
       -C /opt/why3-reference/source
 
 COPY tools/why3_oracle/why3-1.7.2.opam /opt/why3-reference/source/why3.opam
+COPY tools/why3_oracle/patches/driver-trace.patch /opt/why3-reference/driver-trace.patch
 
-RUN printf '%s  %s\n' \
+RUN set -eux; \
+    printf '%s  %s\n' \
       24d4eae07494af13d313fd9ebb82e15d565c45d250dc04d5d029a06cf0534081 \
       /opt/why3-reference/source/why3.opam \
-      | sha256sum --check --strict
+      | sha256sum --check --strict; \
+    printf '%s  %s\n' \
+      "$WHY3_TRACE_PATCH_SHA256" \
+      /opt/why3-reference/driver-trace.patch \
+      | sha256sum --check --strict; \
+    cd /opt/why3-reference/source; \
+    git apply --check /opt/why3-reference/driver-trace.patch; \
+    git apply /opt/why3-reference/driver-trace.patch
 
 USER opam
 
@@ -75,6 +86,8 @@ RUN opam pin add --yes --no-action \
       sexplib \
       ppx_deriving \
       ppx_sexp_conv \
+      yojson \
+      digestif \
       "why3.${WHY3_VERSION}"
 
 ENV PATH="/opt/z3/bin:/home/opam/.opam/4.14/bin:${PATH}" \
@@ -88,6 +101,7 @@ USER root
 RUN set -eux; \
     test "$(why3 --version)" = "Why3 platform, version ${WHY3_VERSION}"; \
     test "$(z3 --version)" = "Z3 version ${Z3_VERSION} - 64 bit"; \
+    ocamlfind query yojson digestif.ocaml; \
     why3_datadir="$(why3 --print-datadir)"; \
     printf '%s  %s\n' e9a25b112d47c672757d9e25da2da420ad8ef53f9a93f2eb7dfcc3437ebb4ff0 "$why3_datadir/drivers/z3_487.drv" | sha256sum --check --strict; \
     printf '%s  %s\n' 73687a2e3626e569f4a2bf5cb74dfd6c33c7019f8d816150538840cb4fca878a "$why3_datadir/drivers/smt-libv2.gen" | sha256sum --check --strict; \

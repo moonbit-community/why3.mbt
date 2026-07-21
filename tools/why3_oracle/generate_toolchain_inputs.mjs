@@ -11,6 +11,8 @@ const COMMIT_PATTERN = /^[0-9a-f]{40}$/u;
 const WHY3_OPAM_RECIPE_PATH = 'tools/why3_oracle/why3-1.7.2.opam';
 const WHY3_OPAM_RECIPE_SHA256 = '24d4eae07494af13d313fd9ebb82e15d565c45d250dc04d5d029a06cf0534081';
 const WHY3_OPAM_RECIPE_BLOB = '6811b48fa50e6160ed7f812696e0939a1c40bd0d';
+const WHY3_TRACE_PATCH_PATH = 'tools/why3_oracle/patches/driver-trace.patch';
+const WHY3_TRACE_PATCH_SHA256 = '6c41136b7912cafe45d91e0ec6ab247839c4dfbadf947f828d6aa59fb348823f';
 
 function fail(message) {
   throw new Error(message);
@@ -94,9 +96,14 @@ function dockerfileFrontend(dockerfile) {
 function buildInputs() {
   const dockerfile = readFileSync(join(PROJECT_ROOT, 'Dockerfile'));
   const dockerfileSource = dockerfile.toString('utf8');
+  const why3ImageWorkflow = readFileSync(
+    join(PROJECT_ROOT, '.github', 'workflows', 'why3-image.yml'),
+    'utf8',
+  );
   const driverPath = 'tools/contracts/driver-closure-v1.json';
   const driver = readJson(driverPath);
   const why3OpamRecipe = readFileSync(join(PROJECT_ROOT, WHY3_OPAM_RECIPE_PATH));
+  const why3TracePatch = readFileSync(join(PROJECT_ROOT, WHY3_TRACE_PATCH_PATH));
   if (sha256(why3OpamRecipe) !== WHY3_OPAM_RECIPE_SHA256 ||
       gitBlobSha(why3OpamRecipe) !== WHY3_OPAM_RECIPE_BLOB) {
     fail('vendored Why3 opam recipe differs from the pinned upstream blob');
@@ -105,12 +112,27 @@ function buildInputs() {
   if (!dockerignore.includes(`!${WHY3_OPAM_RECIPE_PATH}`)) {
     fail('Docker build context does not include the vendored Why3 opam recipe');
   }
+  if (sha256(why3TracePatch) !== WHY3_TRACE_PATCH_SHA256 ||
+      !dockerignore.includes(`!${WHY3_TRACE_PATCH_PATH}`)) {
+    fail('Docker build context does not include the pinned Why3 trace patch');
+  }
   if (!dockerfileSource.includes(
     `COPY ${WHY3_OPAM_RECIPE_PATH} /opt/why3-reference/source/why3.opam`,
   ) || !dockerfileSource.includes(WHY3_OPAM_RECIPE_SHA256) ||
       !dockerfileSource.includes('sha256sum --check --strict') ||
       !dockerfileSource.includes('--kind=path')) {
     fail('Dockerfile does not install and verify the pinned Why3 opam recipe');
+  }
+  if (!dockerfileSource.includes(
+    `COPY ${WHY3_TRACE_PATCH_PATH} /opt/why3-reference/driver-trace.patch`,
+  ) || !dockerfileSource.includes(WHY3_TRACE_PATCH_SHA256) ||
+      !dockerfileSource.includes('git apply --check /opt/why3-reference/driver-trace.patch')) {
+    fail('Dockerfile does not apply and verify the pinned Why3 trace patch');
+  }
+  if (!why3ImageWorkflow.includes(
+    `WHY3_TRACE_PATCH_SHA256=${WHY3_TRACE_PATCH_SHA256}`,
+  )) {
+    fail('why3-image workflow does not pass the pinned Why3 trace patch hash');
   }
   if (/\bMOON_(?:VERSION|ARCHIVE_SHA256)\b|\/opt\/moonbit|cli\.moonbitlang\.com/u.test(
     dockerfileSource,

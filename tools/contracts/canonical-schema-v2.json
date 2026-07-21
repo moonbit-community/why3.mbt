@@ -432,6 +432,10 @@
       "definition_kind",
       "definition_projection"
     ],
+    "CfunProjection": [
+      "cty",
+      "body"
+    ],
     "Pdecl.PDpure": [],
     "Pdecl.PDexn": [
       "exception_symbol"

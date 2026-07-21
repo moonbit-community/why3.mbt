@@ -1,0 +1,17 @@
+import {
+  "moonbit-community/why3/prover",
+  "moonbitlang/core/buffer",
+  "moonbitlang/core/debug",
+  "moonbitlang/core/encoding/utf8",
+  "moonbitlang/core/env",
+  "moonbitlang/async",
+  "moonbitlang/async/fs",
+  "moonbitlang/async/io",
+  "moonbitlang/async/process",
+}
+
+supported_targets = "+native"
+
+options(
+  "native-stub": [ "process_group.c" ],
+)

@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "profile": "why3-1.7.2-z3-4.8.12-pr-corpus-v2",
   "why3": {
     "version": "1.7.2",
     "commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
@@ -4996,9 +4997,14 @@
       ]
     },
     "curated": {
-      "total": 30,
-      "sha256": "fe4dfeab575525fb18158c53c33c1f4cbbfd62a29a230aa12374ed57c9394bfc",
+      "total": 34,
+      "sha256": "d6479e661b89257a75ce4c1d2fb4d7735329464537d2c870f58db2ec37cd2572",
       "entries": [
+        {
+          "path": "tests/vc/false-post.mlw",
+          "sha256": "a2867556e7da0cb35bb768c966208076d2bf058e583305b591fd8045762b2882",
+          "kind": "regular"
+        },
         {
           "path": "tools/why3_oracle/fixtures/mvp.mlw",
           "sha256": "04f2b2ecf47eb87d484eed5adb67ec8ef76e86f429d36b66eaef0d7225103a9f",
@@ -5006,12 +5012,27 @@
         },
         {
           "path": "tools/why3_oracle/fixtures/smt-identifiers.mlw",
-          "sha256": "9d01a8ef9311b58c33531946bbe676b9d5dc69cfd0fae78ddc0a23d0d074091d",
+          "sha256": "a1e0015a92d621ded76295bfbc1a7741065a7c6758ba2012d754a98aa41ab0a8",
           "kind": "regular"
         },
         {
           "path": "tools/why3_oracle/fixtures/solver-outcomes.mlw",
           "sha256": "db4ba4a6f16a359d3b0ec46d85a2ac3497efa10df61c74e966ed2868383fe90c",
+          "kind": "regular"
+        },
+        {
+          "path": "tools/why3_oracle/fixtures/transform-inductive.mlw",
+          "sha256": "e5efac2e9a18ee163dd51de35dc53ef1721efe92654287068e5d0eb8cf153c7f",
+          "kind": "regular"
+        },
+        {
+          "path": "tools/why3_oracle/fixtures/transform-polymorphic-definition.mlw",
+          "sha256": "100f3c639445e45f4d977bbf4a7cd7f8891f54c07721fecd711553d6f29ca3fb",
+          "kind": "regular"
+        },
+        {
+          "path": "tools/why3_oracle/fixtures/transform-polymorphism.mlw",
+          "sha256": "24558504374b0cad18f8321667b7c597b98c3e8fc44e079131709204830bd66c",
           "kind": "regular"
         },
         {
@@ -5156,21 +5177,21 @@
     "featuresV1Sha256": "e8400d57eded7dab189eb2a97e2e2db241a1ebae9b059e3a2dc2cdde7522fb53",
     "driverClosureV1Sha256": "204f8393df7c5259d6bd727b14abfea9889992bd976223631d3de5a805a8873a",
     "canonicalVectorsV1Sha256": "055c3f02e582f510d0368447ed5a4880c430c3a8a4bfd64a2c2c8816fa3e52d3",
-    "runnerVectorsV1Sha256": "ab9b3898c9996d96015246dd0b96f24659334b4fc157eb7c8da3504ad7bae554",
-    "transformProfileV1Sha256": "4ed1e42ea9980ca3cd5515de8eaefcb164a71270499f7e218007dd2fb8133b98"
+    "runnerVectorsV1Sha256": "f2a5441c778ddaead3c7ebae7bff12f79a39d78e83eca7491f840670a8f955c7",
+    "transformProfileV1Sha256": "39d4f9ecde65b7ffb72c61ae83bca5b4e86a7d2434a1c60d70fe8cb07beb46f4"
   },
   "counts": {
-    "entries": 1032,
+    "entries": 1036,
     "parserExact": 929,
     "parserReject": 58,
     "parserIntentionalDivergence": 2,
-    "semantic": 39,
+    "semantic": 43,
     "contracts": 4,
-    "goals": 38
+    "goals": 42
   },
-  "entriesSha256": "40ba09a4740a4aabdc220cc036967048aa833e70a2b8a45d2656de890efbddb7",
+  "entriesSha256": "e5c4d764d4b151a13d89b955c5be0f3c679c85613c22fa17f5921a189052a4ae",
   "fixtureGroupsSha256": "51baa80adc7bd4a2302e8471cb209c4cde29d5dca16bd668a5e8278fd0e26f99",
-  "capabilityCoverageSha256": "52072ae78fd6ad463ac607ef148304eb1761d8bd029a8646a14edee65a54971b",
+  "capabilityCoverageSha256": "e439b5869dd051e9199f111681ee7588acf3de253928d45599ede3a547d88481",
   "entries": [
     {
       "id": "contract.canonical-vectors",
@@ -5308,7 +5329,7 @@
       "kind": "contract-vector",
       "source": {
         "path": "tools/contracts/runner-vectors-v1.json",
-        "sha256": "ab9b3898c9996d96015246dd0b96f24659334b4fc157eb7c8da3504ad7bae554",
+        "sha256": "f2a5441c778ddaead3c7ebae7bff12f79a39d78e83eca7491f840670a8f955c7",
         "kind": "regular"
       },
       "loadpathProfile": "none",
@@ -5360,7 +5381,7 @@
       "kind": "contract-vector",
       "source": {
         "path": "tools/contracts/transform-profile-v1.json",
-        "sha256": "4ed1e42ea9980ca3cd5515de8eaefcb164a71270499f7e218007dd2fb8133b98",
+        "sha256": "39d4f9ecde65b7ffb72c61ae83bca5b4e86a7d2434a1c60d70fe8cb07beb46f4",
         "kind": "regular"
       },
       "loadpathProfile": "none",
@@ -5375,37 +5396,110 @@
       },
       "units": [],
       "goalInventory": [],
-      "inventory": [
-        "raw-task",
-        "driver-update",
-        "counterexamples_dependent_intros",
-        "inline_trivial",
-        "eliminate_builtin",
-        "remove_unused_keep_constants",
-        "detect_polymorphism",
-        "eliminate_definition_conditionally",
-        "eliminate_inductive",
-        "eliminate_epsilon",
-        "eliminate_literal",
-        "simplify_formula",
-        "prepare_for_counterexmp",
-        "eliminate_projections_sums",
-        "discriminate_if_poly",
-        "eliminate_algebraic_if_poly",
-        "encoding_smt_if_poly",
-        "detect_polymorphism",
-        "discriminate_if_poly",
-        "eliminate_algebraic_if_poly",
-        "monomorphise_goal",
-        "select_kept",
-        "keep_field_types",
-        "twin",
-        "guards",
-        "encoding_smt_if_poly",
-        "prepared-task",
-        "smt-token-stream",
-        "prover-result"
-      ]
+      "inventory": {
+        "raw": "raw-task",
+        "monomorphic": [
+          "driver-update",
+          "counterexamples_dependent_intros",
+          "inline_trivial",
+          "eliminate_builtin",
+          "remove_unused_keep_constants",
+          "detect_polymorphism",
+          "eliminate_definition_conditionally",
+          "eliminate_inductive",
+          "eliminate_epsilon",
+          "eliminate_literal",
+          "simplify_formula",
+          "prepare_for_counterexmp",
+          "eliminate_projections_sums",
+          "discriminate_if_poly",
+          "eliminate_algebraic_if_poly",
+          "encoding_smt_if_poly"
+        ],
+        "polymorphic": [
+          "driver-update",
+          "counterexamples_dependent_intros",
+          "inline_trivial",
+          "eliminate_builtin",
+          "remove_unused_keep_constants",
+          "detect_polymorphism",
+          "eliminate_definition_conditionally",
+          "eliminate_inductive",
+          "eliminate_epsilon",
+          "eliminate_literal",
+          "simplify_formula",
+          "prepare_for_counterexmp",
+          "eliminate_projections_sums",
+          "discriminate_if_poly:monomorphise_goal",
+          "discriminate_if_poly",
+          "eliminate_algebraic_if_poly",
+          "encoding_smt_if_poly:monomorphise_goal",
+          "encoding_smt_if_poly:select_kept",
+          "encoding_smt_if_poly:keep_field_types",
+          "encoding_smt_if_poly:twin",
+          "encoding_smt_if_poly:guards",
+          "encoding_smt_if_poly"
+        ],
+        "final": [
+          "prepared-task",
+          "smt-token-stream",
+          "prover-result"
+        ]
+      }
+    },
+    {
+      "id": "mutation.false-postcondition",
+      "kind": "whyml-semantic",
+      "source": {
+        "path": "tests/vc/false-post.mlw",
+        "sha256": "a2867556e7da0cb35bb768c966208076d2bf058e583305b591fd8045762b2882",
+        "kind": "regular"
+      },
+      "loadpathProfile": "why3-stdlib-v1",
+      "featureTags": [
+        "false-postcondition",
+        "mutation",
+        "program-int"
+      ],
+      "expected": {
+        "stage": "full-pipeline",
+        "kind": "MutationExpectedNonValid",
+        "lane": "exact",
+        "gateStages": [
+          "parser",
+          "typing",
+          "typed-unit",
+          "raw-task",
+          "driver-update",
+          "transform-checkpoints",
+          "prepared-task",
+          "smt-token-stream",
+          "prover-result"
+        ]
+      },
+      "units": [
+        {
+          "ordinal": 0,
+          "utf8": "FalsePost",
+          "bytesHex": "46616c7365506f7374",
+          "goals": [
+            {
+              "ordinal": 0,
+              "utf8": "identity'vc",
+              "bytesHex": "6964656e74697479277663"
+            }
+          ]
+        }
+      ],
+      "goalInventory": [
+        {
+          "unitOrdinal": 0,
+          "unitBytesHex": "46616c7365506f7374",
+          "goalOrdinal": 0,
+          "goalBytesHex": "6964656e74697479277663"
+        }
+      ],
+      "featureAssertions": []
     },
     {
       "id": "mvp.abs",
@@ -28984,7 +29078,7 @@
       "kind": "whyml-semantic",
       "source": {
         "path": "tools/why3_oracle/fixtures/smt-identifiers.mlw",
-        "sha256": "9d01a8ef9311b58c33531946bbe676b9d5dc69cfd0fae78ddc0a23d0d074091d",
+        "sha256": "a1e0015a92d621ded76295bfbc1a7741065a7c6758ba2012d754a98aa41ab0a8",
         "kind": "regular"
       },
       "loadpathProfile": "why3-stdlib-v1",
@@ -29105,6 +29199,166 @@
           "unitBytesHex": "536f6c7665724f7574636f6d6573",
           "goalOrdinal": 2,
           "goalBytesHex": "736f6c7665725f756e6b6e6f776e"
+        }
+      ],
+      "featureAssertions": []
+    },
+    {
+      "id": "transform.inductive-snapshot",
+      "kind": "whyml-semantic",
+      "source": {
+        "path": "tools/why3_oracle/fixtures/transform-inductive.mlw",
+        "sha256": "e5efac2e9a18ee163dd51de35dc53ef1721efe92654287068e5d0eb8cf153c7f",
+        "kind": "regular"
+      },
+      "loadpathProfile": "why3-stdlib-v1",
+      "featureTags": [
+        "eliminate-inductive",
+        "higher-order-encoding",
+        "oracle-only",
+        "trusted-inductive"
+      ],
+      "expected": {
+        "stage": "oracle-pipeline",
+        "kind": "OracleOnlyTrusted",
+        "lane": "exact",
+        "gateStages": [
+          "typed-unit",
+          "raw-task",
+          "driver-update",
+          "transform-checkpoints",
+          "prepared-task",
+          "smt-token-stream"
+        ]
+      },
+      "units": [
+        {
+          "ordinal": 0,
+          "utf8": "InductiveSnapshot",
+          "bytesHex": "496e64756374697665536e617073686f74",
+          "goals": [
+            {
+              "ordinal": 0,
+              "utf8": "well_founded_smoke",
+              "bytesHex": "77656c6c5f666f756e6465645f736d6f6b65"
+            }
+          ]
+        }
+      ],
+      "goalInventory": [
+        {
+          "unitOrdinal": 0,
+          "unitBytesHex": "496e64756374697665536e617073686f74",
+          "goalOrdinal": 0,
+          "goalBytesHex": "77656c6c5f666f756e6465645f736d6f6b65"
+        }
+      ],
+      "featureAssertions": []
+    },
+    {
+      "id": "transform.polymorphic-definition",
+      "kind": "whyml-semantic",
+      "source": {
+        "path": "tools/why3_oracle/fixtures/transform-polymorphic-definition.mlw",
+        "sha256": "100f3c639445e45f4d977bbf4a7cd7f8891f54c07721fecd711553d6f29ca3fb",
+        "kind": "regular"
+      },
+      "loadpathProfile": "why3-stdlib-v1",
+      "featureTags": [
+        "discriminate",
+        "encoding-guards",
+        "polymorphic-definition"
+      ],
+      "expected": {
+        "stage": "full-pipeline",
+        "kind": "Supported",
+        "lane": "exact",
+        "gateStages": [
+          "parser",
+          "typing",
+          "typed-unit",
+          "raw-task",
+          "driver-update",
+          "transform-checkpoints",
+          "prepared-task",
+          "smt-token-stream",
+          "prover-result"
+        ]
+      },
+      "units": [
+        {
+          "ordinal": 0,
+          "utf8": "LogicPolymorphicDefinition",
+          "bytesHex": "4c6f676963506f6c796d6f7270686963446566696e6974696f6e",
+          "goals": [
+            {
+              "ordinal": 0,
+              "utf8": "reflexive_goal",
+              "bytesHex": "7265666c65786976655f676f616c"
+            }
+          ]
+        }
+      ],
+      "goalInventory": [
+        {
+          "unitOrdinal": 0,
+          "unitBytesHex": "4c6f676963506f6c796d6f7270686963446566696e6974696f6e",
+          "goalOrdinal": 0,
+          "goalBytesHex": "7265666c65786976655f676f616c"
+        }
+      ],
+      "featureAssertions": []
+    },
+    {
+      "id": "transform.polymorphism",
+      "kind": "whyml-semantic",
+      "source": {
+        "path": "tools/why3_oracle/fixtures/transform-polymorphism.mlw",
+        "sha256": "24558504374b0cad18f8321667b7c597b98c3e8fc44e079131709204830bd66c",
+        "kind": "regular"
+      },
+      "loadpathProfile": "why3-stdlib-v1",
+      "featureTags": [
+        "free-type-variable",
+        "monomorphise-goal",
+        "polymorphic-checkpoints"
+      ],
+      "expected": {
+        "stage": "full-pipeline",
+        "kind": "Supported",
+        "lane": "exact",
+        "gateStages": [
+          "parser",
+          "typing",
+          "typed-unit",
+          "raw-task",
+          "driver-update",
+          "transform-checkpoints",
+          "prepared-task",
+          "smt-token-stream",
+          "prover-result"
+        ]
+      },
+      "units": [
+        {
+          "ordinal": 0,
+          "utf8": "LogicPolymorphism",
+          "bytesHex": "4c6f676963506f6c796d6f72706869736d",
+          "goals": [
+            {
+              "ordinal": 0,
+              "utf8": "free_type_variable",
+              "bytesHex": "667265655f747970655f7661726961626c65"
+            }
+          ]
+        }
+      ],
+      "goalInventory": [
+        {
+          "unitOrdinal": 0,
+          "unitBytesHex": "4c6f676963506f6c796d6f72706869736d",
+          "goalOrdinal": 0,
+          "goalBytesHex": "667265655f747970655f7661726961626c65"
         }
       ],
       "featureAssertions": []
@@ -29738,13 +29992,12 @@
         "unsupported.epsilon"
       ],
       "expected": {
-        "stage": "feature-classification",
-        "kind": "UnsupportedFeature(Epsilon)",
+        "stage": "parser",
+        "kind": "ParseError(UnsupportedEpsilon)",
         "lane": "unsupported",
         "gateStages": [
           "parser",
-          "typing-reference-reject",
-          "feature-classification"
+          "typing-reference-reject"
         ]
       },
       "units": [],
@@ -29823,7 +30076,7 @@
       ],
       "expected": {
         "stage": "feature-classification",
-        "kind": "UnsupportedFeature(ProgramRoutineShape)",
+        "kind": "UnsupportedFeature(RoutineKind)",
         "lane": "unsupported",
         "gateStages": [
           "parser",
@@ -32445,7 +32698,15 @@
     {
       "id": "polymorphic-driver-checkpoints",
       "members": [
-        "mvp.logic-polymorphism",
+        "transform.polymorphism",
+        "transform.polymorphic-definition",
+        "contract.transform-profile"
+      ]
+    },
+    {
+      "id": "trusted-inductive-elimination-checkpoint",
+      "members": [
+        "transform.inductive-snapshot",
         "contract.transform-profile"
       ]
     },
@@ -32466,6 +32727,12 @@
       "id": "program-real",
       "members": [
         "mvp.program-real"
+      ]
+    },
+    {
+      "id": "program-false-postcondition",
+      "members": [
+        "mutation.false-postcondition"
       ]
     },
     {

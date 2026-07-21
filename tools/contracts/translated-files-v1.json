@@ -37,6 +37,36 @@
       "lastSemanticModificationDate": "2026-07-21"
     },
     {
+      "path": "elab/dterm.mbt",
+      "upstreamSources": [
+        "src/core/dterm.ml",
+        "src/parser/typing.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "elab/program.mbt",
+      "upstreamSources": [
+        "src/mlw/dexpr.ml",
+        "src/mlw/expr.ml",
+        "src/mlw/ity.ml",
+        "src/mlw/pdecl.ml",
+        "src/mlw/pmodule.ml",
+        "src/parser/typing.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-22"
+    },
+    {
+      "path": "elab/type_theory.mbt",
+      "upstreamSources": [
+        "src/parser/typing.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-22"
+    },
+    {
       "path": "parser/api.mbt",
       "upstreamSources": [
         "src/parser/ptree.ml",
@@ -246,6 +276,279 @@
       ],
       "translationDate": "2026-07-20",
       "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "printer/smtv2/escape.mbt",
+      "upstreamSources": [
+        "src/printer/smtv2.ml",
+        "src/util/constant.ml",
+        "src/util/number.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "printer/smtv2/name_allocator.mbt",
+      "upstreamSources": [
+        "src/core/ident.ml",
+        "src/printer/smtv2.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "printer/smtv2/print_decl.mbt",
+      "upstreamSources": [
+        "src/printer/smtv2.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "printer/smtv2/print_task.mbt",
+      "upstreamSources": [
+        "src/printer/smtv2.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "printer/smtv2/print_term.mbt",
+      "upstreamSources": [
+        "src/printer/smtv2.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "printer/smtv2/print_type.mbt",
+      "upstreamSources": [
+        "src/printer/smtv2.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "printer/smtv2/reserved.mbt",
+      "upstreamSources": [
+        "src/printer/smtv2.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "printer/smtv2/syntax.mbt",
+      "upstreamSources": [
+        "src/core/printer.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "prover/z3/update.mbt",
+      "upstreamSources": [
+        "src/driver/driver.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "transform/counterexamples_dependent_intros.mbt",
+      "upstreamSources": [
+        "src/core/term.ml",
+        "src/transform/introduction.ml",
+        "src/transform/prepare_for_counterexmp.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "transform/detect_polymorphism.mbt",
+      "upstreamSources": [
+        "src/transform/detect_polymorphism.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "transform/discriminate.mbt",
+      "upstreamSources": [
+        "src/transform/discriminate.ml",
+        "src/transform/eliminate_algebraic.ml",
+        "src/transform/libencoding.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "transform/eliminate_algebraic_if_poly.mbt",
+      "upstreamSources": [
+        "src/transform/eliminate_algebraic.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "transform/eliminate_builtin.mbt",
+      "upstreamSources": [
+        "src/transform/eliminate_definition.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "transform/eliminate_definition_conditionally.mbt",
+      "upstreamSources": [
+        "src/transform/eliminate_definition.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "transform/eliminate_epsilon.mbt",
+      "upstreamSources": [
+        "src/transform/eliminate_epsilon.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "transform/eliminate_inductive.mbt",
+      "upstreamSources": [
+        "src/transform/eliminate_inductive.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "transform/eliminate_literal.mbt",
+      "upstreamSources": [
+        "src/transform/eliminate_literal.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "transform/eliminate_projections_sums.mbt",
+      "upstreamSources": [
+        "src/transform/eliminate_algebraic.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "transform/encoding_smt.mbt",
+      "upstreamSources": [
+        "src/transform/eliminate_algebraic.ml",
+        "src/transform/encoding.ml",
+        "src/transform/encoding_guards.ml",
+        "src/transform/encoding_twin.ml",
+        "src/transform/libencoding.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "transform/inline_trivial.mbt",
+      "upstreamSources": [
+        "src/transform/inlining.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "transform/prepare_for_counterexmp.mbt",
+      "upstreamSources": [
+        "src/transform/prepare_for_counterexmp.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "transform/remove_unused.mbt",
+      "upstreamSources": [
+        "src/transform/remove_unused.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "transform/simplify_formula.mbt",
+      "upstreamSources": [
+        "src/core/term.ml",
+        "src/transform/simplify_formula.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "transform/term_instantiate.mbt",
+      "upstreamSources": [
+        "src/core/term.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "transform/term_utils.mbt",
+      "upstreamSources": [
+        "src/core/term.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-22"
+    },
+    {
+      "path": "vc/expr_to_kode.mbt",
+      "upstreamSources": [
+        "src/mlw/expr.ml",
+        "src/mlw/ity.ml",
+        "src/mlw/vc.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-22"
+    },
+    {
+      "path": "vc/kode.mbt",
+      "upstreamSources": [
+        "src/mlw/vc.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-22"
+    },
+    {
+      "path": "vc/sp.mbt",
+      "upstreamSources": [
+        "src/mlw/vc.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-22"
+    },
+    {
+      "path": "vc/term_helpers.mbt",
+      "upstreamSources": [
+        "src/core/term.ml",
+        "src/mlw/expr.ml",
+        "src/mlw/vc.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-22"
+    },
+    {
+      "path": "vc/vc_decl.mbt",
+      "upstreamSources": [
+        "src/mlw/pmodule.ml",
+        "src/mlw/vc.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-22"
+    },
+    {
+      "path": "vc/wp.mbt",
+      "upstreamSources": [
+        "src/mlw/vc.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-22"
     }
   ],
   "ocamlOracleAdapters": [
@@ -266,6 +569,75 @@
         "src/core/theory.ml",
         "src/mlw/ity.ml",
         "src/mlw/pmodule.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "tools/why3_oracle/canonical_v2.ml",
+      "upstreamSources": [
+        "src/core/ident.ml",
+        "src/core/ty.ml",
+        "src/core/term.ml",
+        "src/core/decl.ml",
+        "src/core/theory.ml",
+        "src/core/task.ml",
+        "src/mlw/expr.ml",
+        "src/mlw/ity.ml",
+        "src/mlw/pdecl.ml",
+        "src/mlw/pmodule.ml",
+        "src/printer/smtv2.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-22"
+    },
+    {
+      "path": "tools/why3_oracle/export_elab_typed.ml",
+      "upstreamSources": [
+        "src/parser/typing.ml",
+        "src/core/theory.ml",
+        "src/mlw/pmodule.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-22"
+    },
+    {
+      "path": "tools/why3_oracle/export_elab_raw.ml",
+      "upstreamSources": [
+        "src/core/task.ml",
+        "src/core/theory.ml",
+        "src/mlw/pmodule.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-22"
+    },
+    {
+      "path": "tools/why3_oracle/export_z3_profile.ml",
+      "upstreamSources": [
+        "src/core/theory.ml",
+        "src/driver/driver.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "tools/why3_oracle/export_transform_trace.ml",
+      "upstreamSources": [
+        "src/core/task.ml",
+        "src/driver/driver.ml",
+        "src/mlw/pmodule.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "tools/why3_oracle/export_smt_trace.ml",
+      "upstreamSources": [
+        "src/core/ident.ml",
+        "src/core/task.ml",
+        "src/driver/driver.ml",
+        "src/mlw/pmodule.ml",
+        "src/printer/smtv2.ml"
       ],
       "translationDate": "2026-07-21",
       "lastSemanticModificationDate": "2026-07-21"

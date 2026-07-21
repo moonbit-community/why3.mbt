@@ -1,0 +1,298 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonbit-community/why3/mlw"
+
+import {
+  "moonbit-community/why3/core/identity",
+  "moonbit-community/why3/core/logic",
+  "moonbit-community/why3/core/theory",
+  "moonbitlang/core/bigint",
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+pub(all) suberror MlwError {
+  MlwError(MlwDiagnostic)
+} derive(Eq, @debug.Debug)
+
+// Types and methods
+type Cty
+pub fn Cty::context_anchor(Self) -> @identity.SemanticId
+pub fn Cty::trusted_new(@identity.SemanticId, ArrayView[PVariable], ArrayView[PVariable], ArrayView[@logic.Term], ArrayView[Postcondition], Effect, Ity, ProgramMask, @identity.SourceSpan?) -> Self raise MlwError
+pub fn Cty::view(Self) -> CtyView
+
+pub(all) struct CtyView {
+  program_variables : ArrayView[PVariable]
+  arguments : ArrayView[PVariable]
+  preconditions : ArrayView[@logic.Term]
+  postconditions : ArrayView[Postcondition]
+  effect : Effect
+  result : Ity
+  mask : ProgramMask
+}
+
+type Effect
+pub fn Effect::from_reads(ArrayView[PVariable], Bool) -> Self
+pub fn Effect::pure(Bool) -> Self
+pub fn Effect::view(Self) -> EffectView
+
+pub(all) struct EffectView {
+  reads : ArrayView[PVariable]
+  termination : ProgramTermination
+  ghost : Bool
+}
+
+type Expr
+pub fn Expr::assert_formula(@logic.Term, ArrayView[PVariable], Ity, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Expr::assume_formula(@logic.Term, ArrayView[PVariable], Ity, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Expr::attributes(Self) -> ArrayView[Bytes]
+pub fn Expr::constant(@logic.Constant, Ity, @identity.Origin, ArrayView[Bytes]) -> Self
+pub fn Expr::context_anchor(Self) -> @identity.SemanticId
+pub fn Expr::effect(Self) -> Effect
+pub fn Expr::if_then_else(Self, Self, Self, Ity, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Expr::ity(Self) -> Ity
+pub fn Expr::let_in(PVariable, Self, Self, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Expr::mask(Self) -> ProgramMask
+pub fn Expr::origin(Self) -> @identity.Origin
+pub fn Expr::pure_application(@logic.LSymbol, ArrayView[PVariable], Ity, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Expr::routine_call(RoutineSymbol, ArrayView[PVariable], Ity, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Expr::variable(PVariable, @identity.Origin, ArrayView[Bytes]) -> Self
+pub fn Expr::view(Self) -> ExprView
+
+pub(all) enum ExprView {
+  Evar(PVariable, Ity)
+  Econst(@logic.Constant, Ity)
+  EpureApp(@logic.LSymbol, ArrayView[PVariable], Ity)
+  EroutineCall(RoutineSymbol, ArrayView[PVariable], Ity)
+  Elet(PVariable, Expr, Expr, Ity)
+  Eif(Expr, Expr, Expr, Ity)
+  Eassert(@logic.Term)
+  Eassume(@logic.Term)
+}
+
+type Ity
+pub fn Ity::app(ProgramTypeSymbol, ArrayView[Self], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Ity::context_anchor(Self) -> @identity.SemanticId
+pub fn Ity::from_ty(ProgramNamespace, @logic.Ty, @identity.SourceSpan?) -> Self raise
+pub fn Ity::is_closed(Self) -> Bool
+pub fn Ity::to_ty(Self, @identity.SourceSpan?) -> @logic.Ty raise @logic.TypeError
+pub fn Ity::variable(@logic.TyVarSymbol) -> Self
+pub fn Ity::view(Self) -> ItyView
+pub impl Eq for Ity
+pub impl Hash for Ity
+
+pub(all) enum ItyView {
+  ItyVar(@logic.TyVarSymbol)
+  ItyApp(ProgramTypeSymbol, ArrayView[Ity])
+}
+
+pub(all) struct MlwDiagnostic {
+  kind : MlwErrorKind
+  span : @identity.SourceSpan?
+  message : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum MlwErrorKind {
+  MlwContextMismatch
+  SnapshotProgramOriginRequired
+  UnsupportedProgramType
+  UnsupportedEffect
+  InvalidComputationType
+  DuplicateProgramName
+  AmbiguousProgramName
+  UnboundProgramName
+  InvalidProgramDeclaration
+  ProgramModuleBuilderSealed
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ModuleItem {
+  Udecl(ProgramDeclaration)
+  Uuse(@theory.TheoryKey)
+  Uclone(ProgramCloneWitness)
+  Umeta(@theory.Meta)
+}
+
+type PVariable
+pub fn PVariable::semantic_id(Self) -> @identity.SemanticId
+pub fn PVariable::trusted_new(@identity.CompilationContext, @theory.SemanticName, Ity, Bool, @identity.SourceSpan?) -> Self raise
+pub fn PVariable::view(Self) -> PVariableView
+pub impl Eq for PVariable
+pub impl Hash for PVariable
+
+pub(all) struct PVariableView {
+  id : @identity.SemanticId
+  name : @theory.SemanticName
+  ity : Ity
+  ghost : Bool
+  pure_symbol : @logic.VSymbol
+}
+
+type Pmodule
+pub fn Pmodule::context_anchor(Self) -> @identity.SemanticId
+pub fn Pmodule::export_namespace(Self) -> ProgramNamespace
+pub fn Pmodule::key(Self) -> @theory.TheoryKey
+pub fn Pmodule::pure_theory(Self) -> @theory.Theory
+pub fn Pmodule::trusted_new(@theory.TheoryKey, @theory.Theory, ArrayView[ModuleItem], ProgramNamespace) -> Self raise
+pub fn Pmodule::view(Self) -> PmoduleView
+
+type PmoduleBuilder
+pub fn PmoduleBuilder::add_program_decl(Self, RoutineSymbol, ProgramComputation, ArrayView[@logic.Decl], @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_pure_decl(Self, @logic.Decl, @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_scoped_use(Self, BytesView, Pmodule, Bool, @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_use(Self, Pmodule, Bool, @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::close(Self) -> Pmodule raise
+pub fn PmoduleBuilder::new(@identity.CompilationContext, @theory.TheoryKey, @theory.SemanticName) -> Self
+pub fn PmoduleBuilder::program_namespace(Self) -> ProgramNamespace
+pub fn PmoduleBuilder::pure_namespace(Self) -> @theory.Namespace
+
+pub(all) struct PmoduleView {
+  key : @theory.TheoryKey
+  pure_theory : @theory.Theory
+  items : ArrayView[ModuleItem]
+  export_namespace : ProgramNamespace
+}
+
+type Postcondition
+pub fn Postcondition::trusted_new(@logic.VSymbol, @logic.Term, @identity.SourceSpan?) -> Self raise MlwError
+pub fn Postcondition::view(Self) -> PostconditionView
+
+pub(all) struct PostconditionView {
+  result : @logic.VSymbol
+  formula : @logic.Term
+}
+
+type ProgramCloneWitness
+pub fn ProgramCloneWitness::context_anchor(Self) -> @identity.SemanticId
+pub fn ProgramCloneWitness::trusted_new(@identity.SemanticId, @theory.TheoryKey, ArrayView[(@logic.TypeSymbol, Ity)], ArrayView[(@logic.TypeSymbol, ProgramTypeSymbol)], ArrayView[(@logic.LSymbol, @logic.LSymbol)], ArrayView[(@logic.PrSymbol, @logic.PrSymbol)], ArrayView[(@logic.PrSymbol, @logic.PropositionKind)], ArrayView[(@logic.VSymbol, PVariable)], ArrayView[(RoutineSymbol, RoutineSymbol)], @logic.PropositionKind, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramCloneWitness::view(Self) -> ProgramCloneWitnessView
+
+pub(all) struct ProgramCloneWitnessView {
+  source : @theory.TheoryKey
+  type_instantiations : ArrayView[(@logic.TypeSymbol, Ity)]
+  program_type_instantiations : ArrayView[(@logic.TypeSymbol, ProgramTypeSymbol)]
+  logic_instantiations : ArrayView[(@logic.LSymbol, @logic.LSymbol)]
+  proposition_instantiations : ArrayView[(@logic.PrSymbol, @logic.PrSymbol)]
+  proposition_kinds : ArrayView[(@logic.PrSymbol, @logic.PropositionKind)]
+  program_variable_instantiations : ArrayView[(@logic.VSymbol, PVariable)]
+  routine_instantiations : ArrayView[(RoutineSymbol, RoutineSymbol)]
+  default_proposition_kind : @logic.PropositionKind
+}
+
+pub(all) enum ProgramComputation {
+  Cany(Cty)
+  Cfun(Cty, Expr?)
+}
+
+pub(all) enum ProgramDeclaration {
+  PDtype(Array[ProgramTypeDeclaration], Array[@logic.Decl])
+  PDpure(Array[@logic.Decl])
+  PDlet(RoutineSymbol, ProgramComputation, Array[@logic.Decl])
+}
+
+pub(all) enum ProgramMask {
+  Visible
+  Ghost
+} derive(Eq, @debug.Debug)
+
+type ProgramNamespace
+pub fn ProgramNamespace::add_routine(Self, BytesView, RoutineSymbol, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramNamespace::add_subspace(Self, BytesView, Self, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramNamespace::add_type(Self, BytesView, ProgramTypeSymbol, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramNamespace::empty() -> Self
+pub fn ProgramNamespace::find_routine(Self, ArrayView[Bytes], @identity.SourceSpan?) -> RoutineSymbol raise MlwError
+pub fn ProgramNamespace::find_routine_option(Self, ArrayView[Bytes]) -> RoutineSymbol?
+pub fn ProgramNamespace::find_type(Self, ArrayView[Bytes], @identity.SourceSpan?) -> ProgramTypeSymbol raise MlwError
+pub fn ProgramNamespace::find_type_by_logic(Self, @logic.TypeSymbol, @identity.SourceSpan?) -> ProgramTypeSymbol raise MlwError
+pub fn ProgramNamespace::import_scope(Self, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramNamespace::merge(Self, Self, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramNamespace::view(Self) -> ProgramNamespaceView
+
+pub(all) struct ProgramNamespaceView {
+  types : ArrayView[(Bytes, ProgramTypeSymbol)]
+  routines : ArrayView[(Bytes, RoutineSymbol)]
+  subspaces : ArrayView[(Bytes, ProgramNamespace)]
+}
+
+pub(all) enum ProgramTermination {
+  Total
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ProgramTypeArgumentFlag {
+  frozen : Bool
+  exposed : Bool
+  liable : Bool
+  fixed : Bool
+  visible : Bool
+} derive(Eq, @debug.Debug)
+
+type ProgramTypeDeclaration
+pub fn ProgramTypeDeclaration::trusted_new(ProgramTypeSymbol, ArrayView[RoutineSymbol], ArrayView[RoutineSymbol], ArrayView[@logic.Term], @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramTypeDeclaration::view(Self) -> ProgramTypeDeclarationView
+
+pub(all) struct ProgramTypeDeclarationView {
+  symbol : ProgramTypeSymbol
+  fields : ArrayView[RoutineSymbol]
+  constructors : ArrayView[RoutineSymbol]
+  invariants : ArrayView[@logic.Term]
+}
+
+pub(all) enum ProgramTypeDefinition {
+  ProgramNoDef
+  ProgramAlias(Ity)
+  ProgramRange(@bigint.BigInt, @bigint.BigInt)
+  ProgramFloat(Int, Int)
+}
+
+pub(all) struct ProgramTypeFlags {
+  nonfree : Bool
+  private_ : Bool
+  mutable_ : Bool
+  fragile : Bool
+  argument_flags : Array[ProgramTypeArgumentFlag]
+  region_flags : Array[ProgramTypeArgumentFlag]
+} derive(Eq, @debug.Debug)
+
+type ProgramTypeSymbol
+pub fn ProgramTypeSymbol::semantic_id(Self) -> @identity.SemanticId
+pub fn ProgramTypeSymbol::trusted_new(@identity.CompilationContext, @logic.TypeSymbol, @identity.Origin, ProgramTypeFlags, ProgramTypeDefinition, ArrayView[PVariable], ArrayView[PVariable], @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramTypeSymbol::view(Self) -> ProgramTypeSymbolView
+pub impl Eq for ProgramTypeSymbol
+pub impl Hash for ProgramTypeSymbol
+
+pub(all) struct ProgramTypeSymbolView {
+  id : @identity.SemanticId
+  logic_type : @logic.TypeSymbol
+  origin : @identity.Origin
+  flags : ProgramTypeFlags
+  definition : ProgramTypeDefinition
+  mutable_fields : ArrayView[PVariable]
+  immutable_fields : ArrayView[PVariable]
+}
+
+pub(all) enum RoutineLogic {
+  RLnone
+  RLls(@logic.LSymbol)
+}
+
+type RoutineSymbol
+pub fn RoutineSymbol::new_user(@identity.CompilationContext, BytesView, @identity.Origin, Cty, @identity.SourceSpan?) -> Self raise MlwError
+pub fn RoutineSymbol::semantic_id(Self) -> @identity.SemanticId
+pub fn RoutineSymbol::trusted_new(@identity.CompilationContext, BytesView, @identity.Origin, Cty, RoutineLogic, PVariable?, @identity.SourceSpan?) -> Self raise MlwError
+pub fn RoutineSymbol::view(Self) -> RoutineSymbolView
+pub impl Eq for RoutineSymbol
+pub impl Hash for RoutineSymbol
+
+pub(all) struct RoutineSymbolView {
+  id : @identity.SemanticId
+  name : Bytes
+  origin : @identity.Origin
+  cty : Cty
+  logic : RoutineLogic
+  field : PVariable?
+}
+
+// Type aliases
+
+// Traits
+

@@ -1,0 +1,25 @@
+import {
+  "moonbit-community/why3/core/logic",
+  "moonbit-community/why3/core/theory",
+  "moonbit-community/why3/elab",
+  "moonbit-community/why3/oracle/canonical",
+  "moonbit-community/why3/parser",
+  "moonbit-community/why3/pipeline",
+  "moonbit-community/why3/prover",
+  "moonbit-community/why3/prover/native",
+  "moonbit-community/why3/prover/z3",
+  "moonbit-community/why3/printer/smtv2",
+  "moonbit-community/why3/transform",
+  "moonbit-community/why3/vc",
+  "moonbitlang/core/buffer",
+  "moonbitlang/core/debug",
+  "moonbitlang/core/encoding/utf8",
+  "moonbitlang/core/env",
+  "moonbitlang/async",
+  "moonbitlang/async/fs",
+  "moonbitlang/async/stdio",
+}
+
+supported_targets = "+native"
+
+pkgtype(kind: "executable")

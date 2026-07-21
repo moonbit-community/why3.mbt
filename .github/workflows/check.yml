@@ -20,9 +20,9 @@ jobs:
     name: fixed oracle
     runs-on: ubuntu-24.04
     env:
-      WHY3_ORACLE_IMAGE_DIGEST: sha256:a0b5b4b922c0cc95d2d35e7cfd145c29e9bc8032a00b0ef98f6dd33c091bd18d
+      WHY3_ORACLE_IMAGE_DIGEST: sha256:fe30c5e0b8254f989de466476809c05e388cf675553f9ca86a4171999bd74da8
     container:
-      image: ghcr.io/moonbit-community/why3.mbt-why3@sha256:a0b5b4b922c0cc95d2d35e7cfd145c29e9bc8032a00b0ef98f6dd33c091bd18d
+      image: ghcr.io/moonbit-community/why3.mbt-why3@sha256:fe30c5e0b8254f989de466476809c05e388cf675553f9ca86a4171999bd74da8
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -71,6 +71,20 @@ jobs:
         run: |
           tools/why3_oracle/run-fixed mvp.abs -- \
             prove --parse-only tools/why3_oracle/fixtures/mvp.mlw
+
+      - name: Check curated oracle layers and fail-closed boundaries
+        run: |
+          node tools/why3_oracle/run_elab_differential.mjs \
+            --why3-archive "$WHY3_REFERENCE_ARCHIVE"
+          node tools/why3_oracle/run_transform_differential.mjs \
+            --why3-archive "$WHY3_REFERENCE_ARCHIVE"
+          node tools/why3_oracle/run_smt_differential.mjs \
+            --why3-archive "$WHY3_REFERENCE_ARCHIVE"
+          node tools/why3_oracle/manage_pr_goldens.mjs --check
+          node tools/why3_oracle/sync_pr_golden_lock.mjs --check
+          node tools/why3_oracle/run_unsupported_gate.mjs
+          node tools/why3_oracle/run_result_differential.mjs
+
       - name: Check all targets
         run: moon check --target all --warn-list +73
 
@@ -78,6 +92,9 @@ jobs:
         run: |
           moon test --target all --serial --release
           moon test --target all --serial
+
+      - name: Validate native process-group fallback with sanitizers
+        run: sh tools/check_native_runner_asan.sh
 
       - name: Test Node.js tools
         run: node --test tools/*.test.mjs

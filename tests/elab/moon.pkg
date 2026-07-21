@@ -1,0 +1,10 @@
+import {
+  "moonbit-community/why3/core/identity",
+  "moonbit-community/why3/core/logic",
+  "moonbit-community/why3/core/theory",
+  "moonbit-community/why3/elab" @why3_elab,
+  "moonbit-community/why3/mlw",
+  "moonbit-community/why3/parser",
+  "moonbit-community/why3/stdlib",
+  "moonbitlang/core/encoding/utf8",
+} for "test"

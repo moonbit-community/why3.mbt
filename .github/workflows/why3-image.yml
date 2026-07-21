@@ -68,6 +68,7 @@ jobs:
             WHY3_VERSION=1.7.2
             WHY3_COMMIT=1343338d3bb1941c0d4f134283bb0790816113c4
             WHY3_SOURCE_ARCHIVE_SHA256=c7bf782933a5d8ef9e78638cbf18e480eef895dca95317ba50231f20d45e92c7
+            WHY3_TRACE_PATCH_SHA256=6c41136b7912cafe45d91e0ec6ab247839c4dfbadf947f828d6aa59fb348823f
             Z3_VERSION=4.8.12
             Z3_ARCHIVE_SHA256=648e8a7afb57445440ad711b733bd675e3888da2767c14ae5122582c924d8d52
           cache-from: type=gha,scope=why3-oracle-v1
@@ -103,7 +104,8 @@ jobs:
               cp -a /workspace-ro /tmp/workspace
               cd /tmp/workspace
               node tools/check_pr00_contracts.mjs \
-                --why3-archive "$WHY3_REFERENCE_ARCHIVE"
+                --why3-archive "$WHY3_REFERENCE_ARCHIVE" \
+                --skip-toolchain-lock
             '
           docker run --rm --platform linux/amd64 \
             --volume "$GITHUB_WORKSPACE:/workspace:ro" \
@@ -134,6 +136,7 @@ jobs:
             --candidate "$candidate" \
             --report "$report" \
             --project-root "$promotion_root" \
+            --replace-existing-lock \
             --promote > "$summary"
           jq -e \
             '.mode == "promote" and
@@ -158,9 +161,20 @@ jobs:
                 --require-toolchain-lock
               tools/why3_oracle/run-fixed mvp.abs -- \
                 prove --parse-only tools/why3_oracle/fixtures/mvp.mlw
+              node tools/why3_oracle/run_elab_differential.mjs \
+                --why3-archive "$WHY3_REFERENCE_ARCHIVE"
+              node tools/why3_oracle/run_transform_differential.mjs \
+                --why3-archive "$WHY3_REFERENCE_ARCHIVE"
+              node tools/why3_oracle/run_smt_differential.mjs \
+                --why3-archive "$WHY3_REFERENCE_ARCHIVE"
+              node tools/why3_oracle/manage_pr_goldens.mjs --check
+              node tools/why3_oracle/sync_pr_golden_lock.mjs --check
+              node tools/why3_oracle/run_unsupported_gate.mjs
+              node tools/why3_oracle/run_result_differential.mjs
               moon check --target all --warn-list +73
               moon test --target all --serial --release
               moon test --target all --serial
+              sh tools/check_native_runner_asan.sh
               node --test tools/*.test.mjs
               node tools/check_why3_fixtures.mjs
               moon info

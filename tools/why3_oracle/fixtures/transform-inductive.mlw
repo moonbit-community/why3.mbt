@@ -1,0 +1,12 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+theory InductiveSnapshot
+  use why3.WellFounded.WellFounded
+  use int.Int
+  use map.Map
+  use map.Const
+
+  goal well_founded_smoke :
+    let relation = const (const True) in
+    well_founded relation /\ get (get relation 0) 0 = True
+end
