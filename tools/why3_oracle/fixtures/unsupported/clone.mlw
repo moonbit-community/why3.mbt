@@ -1,0 +1,12 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+theory CloneBase
+  type t
+  function f (x : t) : t
+end
+
+theory CloneUse
+  type u
+  function g (x : u) : u
+  clone CloneBase with type t = u, function f = g
+end

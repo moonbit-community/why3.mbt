@@ -1,0 +1,9 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+module ControlAttribute
+  let controlled () : unit = [@vc:sp] ()
+end
+
+theory UserStopSplit
+  goal rejected_user_origin : [@stop_split] true
+end

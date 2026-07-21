@@ -1,0 +1,9 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+theory SolverOutcomes
+  use int.Int
+
+  goal unsat_valid : true
+  goal sat_unknown : false
+  goal solver_unknown : forall x : int. exists y : int. y * y > x
+end

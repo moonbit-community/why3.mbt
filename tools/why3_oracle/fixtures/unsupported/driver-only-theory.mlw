@@ -1,0 +1,6 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+theory DriverOnlyTheory
+  use bv.BV8 as B
+  goal zeros_equal : B.zeros = B.zeros
+end

@@ -8,6 +8,13 @@ on:
     paths:
       - Dockerfile
       - .dockerignore
+      - moon.mod
+      - moon.pkg
+      - tools/contracts/**
+      - '!tools/contracts/toolchain-lock.json'
+      - tools/check_pr00_contracts.mjs
+      - tools/why3_oracle/**
+      - .github/workflows/check.yml
       - .github/workflows/why3-image.yml
   workflow_dispatch:
 
@@ -24,28 +31,150 @@ jobs:
     name: build and push
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+
+      - name: Set up MoonBit stable
+        uses: moonbit-community/setup-moonbit@04293a8a813bfd4b6c2fce22701b52ae1050d100
+        with:
+          version: stable
+
+      - name: Update registry, check project, and verify exact Moon dependencies
+        run: |
+          moon update && moon check
+          node tools/why3_oracle/generate_moon_dependency_inventory.mjs \
+            --check tools/contracts/moon-dependencies-v1.json
 
       - name: Log in to GHCR
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
 
       - name: Build and push Why3 image
-        uses: docker/build-push-action@v6
+        id: build
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
         with:
           context: .
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}-why3:1.7.2
-            ghcr.io/${{ github.repository }}-why3:1.7.2-${{ github.sha }}
+            ghcr.io/${{ github.repository }}-why3:1.7.2-z3-4.8.12
+            ghcr.io/${{ github.repository }}-why3:oracle-${{ github.sha }}
           build-args: |
             WHY3_VERSION=1.7.2
-          cache-from: type=gha,scope=why3-1.7.2
-          cache-to: type=gha,mode=max,scope=why3-1.7.2
+            WHY3_COMMIT=1343338d3bb1941c0d4f134283bb0790816113c4
+            WHY3_SOURCE_ARCHIVE_SHA256=c7bf782933a5d8ef9e78638cbf18e480eef895dca95317ba50231f20d45e92c7
+            Z3_VERSION=4.8.12
+            Z3_ARCHIVE_SHA256=648e8a7afb57445440ad711b733bd675e3888da2767c14ae5122582c924d8d52
+          cache-from: type=gha,scope=why3-oracle-v1
+          cache-to: type=gha,mode=max,scope=why3-oracle-v1
+
+      - name: Report immutable image digest
+        env:
+          IMAGE_DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          test "${IMAGE_DIGEST#sha256:}" != "$IMAGE_DIGEST"
+          test "${#IMAGE_DIGEST}" -eq 71
+          {
+            echo '### Oracle image candidate'
+            echo
+            echo "Build recipe commit: \`${GITHUB_SHA}\`"
+            echo "Image digest: \`${IMAGE_DIGEST}\`"
+            echo
+            echo 'Promote this candidate only after extracting and validating its toolchain report.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Inspect image and generate lock candidate
+        env:
+          IMAGE_DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          image_ref="ghcr.io/${GITHUB_REPOSITORY}-why3@${IMAGE_DIGEST}"
+          report="$RUNNER_TEMP/toolchain-report.json"
+          candidate="$RUNNER_TEMP/toolchain-lock.json"
+          docker pull "$image_ref"
+          docker run --rm --platform linux/amd64 \
+            --volume "$GITHUB_WORKSPACE:/workspace-ro:ro" \
+            "$image_ref" \
+            bash -ceu '
+              cp -a /workspace-ro /tmp/workspace
+              cd /tmp/workspace
+              node tools/check_pr00_contracts.mjs \
+                --why3-archive "$WHY3_REFERENCE_ARCHIVE"
+            '
+          docker run --rm --platform linux/amd64 \
+            --volume "$GITHUB_WORKSPACE:/workspace:ro" \
+            --workdir /workspace \
+            "$image_ref" \
+            node tools/why3_oracle/inspect_toolchain.mjs > "$report"
+          node tools/why3_oracle/generate_toolchain_lock.mjs \
+            --report "$report" \
+            --image-digest "$IMAGE_DIGEST" \
+            --build-recipe-commit "$GITHUB_SHA" \
+            --output "$candidate"
+          jq -e '.image.digest == $digest and .buildRecipe.commit == $commit' \
+            --arg digest "$IMAGE_DIGEST" \
+            --arg commit "$GITHUB_SHA" \
+            "$candidate"
+
+      - name: Exercise promotion and fixed entrypoint
+        env:
+          IMAGE_DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          image_ref="ghcr.io/${GITHUB_REPOSITORY}-why3@${IMAGE_DIGEST}"
+          report="$RUNNER_TEMP/toolchain-report.json"
+          candidate="$RUNNER_TEMP/toolchain-lock.json"
+          summary="$RUNNER_TEMP/promotion-summary.json"
+          promotion_root="$RUNNER_TEMP/promoted-workspace"
+          cp -a "$GITHUB_WORKSPACE" "$promotion_root"
+          node tools/why3_oracle/promote_toolchain_lock.mjs \
+            --candidate "$candidate" \
+            --report "$report" \
+            --project-root "$promotion_root" \
+            --promote > "$summary"
+          jq -e \
+            '.mode == "promote" and
+             .promoted == true and
+             .validation.reportReproducesCandidate == true and
+             .validation.candidateMatchesContracts == true and
+             .validation.renderedWorkflowMatchesCandidate == true' \
+            "$summary"
+          docker run --rm --platform linux/amd64 \
+            --env WHY3_ORACLE_IMAGE_DIGEST="$IMAGE_DIGEST" \
+            --env MOON_HOME=/root/.moon \
+            --env PATH=/root/.moon/bin:/opt/z3/bin:/home/opam/.opam/4.14/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+            --volume "$HOME/.moon:/root/.moon:ro" \
+            --volume "$promotion_root:/workspace" \
+            --workdir /workspace \
+            "$image_ref" \
+            bash -ceu '
+              git config --global --add safe.directory /workspace
+              moon version --all
+              node tools/check_pr00_contracts.mjs \
+                --why3-archive "$WHY3_REFERENCE_ARCHIVE" \
+                --require-toolchain-lock
+              tools/why3_oracle/run-fixed mvp.abs -- \
+                prove --parse-only tools/why3_oracle/fixtures/mvp.mlw
+              moon check --target all --warn-list +73
+              moon test --target all --serial --release
+              moon test --target all --serial
+              node --test tools/*.test.mjs
+              node tools/check_why3_fixtures.mjs
+              moon info
+              moon fmt
+              git diff --exit-code -- "*.mbt" "*.mbti"
+            '
+
+      - name: Upload toolchain lock candidate
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: oracle-toolchain-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/toolchain-report.json
+            ${{ runner.temp }}/toolchain-lock.json
+            ${{ runner.temp }}/promotion-summary.json
+          if-no-files-found: error
+          retention-days: 30

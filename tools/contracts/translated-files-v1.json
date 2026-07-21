@@ -1,0 +1,274 @@
+{
+  "schemaVersion": 1,
+  "licenseExpression": "LGPL-2.1-only WITH OCaml-LGPL-linking-exception",
+  "why3": {
+    "version": "1.7.2",
+    "commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
+    "copyright": "Copyright 2010-2023 Inria, CNRS, Paris-Saclay University"
+  },
+  "requiredHeaderLines": [
+    "// SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception",
+    "// Derived from Why3 1.7.2 (Copyright 2010-2023 Inria, CNRS, Paris-Saclay University).",
+    "// MoonBit translation and semantic modifications recorded on 2026-07-21."
+  ],
+  "entries": [
+    {
+      "path": "cmd/pprint_whyml_sexp/project.mbt",
+      "upstreamSources": [
+        "src/parser/ptree.ml"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "cmd/pprint_whyml_sexp/sexp_layout.mbt",
+      "upstreamSources": [
+        "src/util/mysexplib-real.ml"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "cmd/pprint_whyml_sexp/sexp.mbt",
+      "upstreamSources": [
+        "src/util/mysexplib-real.ml"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/api.mbt",
+      "upstreamSources": [
+        "src/parser/ptree.ml",
+        "src/parser/typing.ml"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/ast_common.mbt",
+      "upstreamSources": [
+        "src/parser/ptree.ml"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/ast_decl.mbt",
+      "upstreamSources": [
+        "src/parser/ptree.ml"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/ast_expr.mbt",
+      "upstreamSources": [
+        "src/parser/ptree.ml"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/ast_ident_type.mbt",
+      "upstreamSources": [
+        "src/parser/ptree.ml"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/ast_term.mbt",
+      "upstreamSources": [
+        "src/parser/ptree.ml"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/desugar.mbt",
+      "upstreamSources": [
+        "src/parser/ptree_helpers.ml"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/diagnostic.mbt",
+      "upstreamSources": [
+        "src/parser/lexer.mll",
+        "src/parser/parser.mly",
+        "src/util/loc.ml"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/keywords.mbt",
+      "upstreamSources": [
+        "src/parser/lexer.mll",
+        "src/parser/parser.mly"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/lexer_cursor.mbt",
+      "upstreamSources": [
+        "src/util/lexlib.mll",
+        "src/util/loc.ml"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/lexer.mbt",
+      "upstreamSources": [
+        "src/parser/lexer.mll",
+        "src/util/lexlib.mll"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/literal.mbt",
+      "upstreamSources": [
+        "src/parser/lexer.mll",
+        "src/util/number.ml"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/location.mbt",
+      "upstreamSources": [
+        "src/util/lexlib.mll",
+        "src/util/loc.ml"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/operator_name.mbt",
+      "upstreamSources": [
+        "src/core/ident.ml",
+        "src/parser/parser_common.mly"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/parse_decl.mbt",
+      "upstreamSources": [
+        "src/parser/parser.mly",
+        "src/parser/parser_common.mly"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/parse_expr.mbt",
+      "upstreamSources": [
+        "src/parser/parser.mly",
+        "src/parser/parser_common.mly"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/parse_file.mbt",
+      "upstreamSources": [
+        "src/parser/parser.mly",
+        "src/parser/parser_common.mly"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/parse_ident.mbt",
+      "upstreamSources": [
+        "src/parser/parser.mly",
+        "src/parser/parser_common.mly"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/parse_pattern.mbt",
+      "upstreamSources": [
+        "src/parser/parser.mly",
+        "src/parser/parser_common.mly"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/parse_spec.mbt",
+      "upstreamSources": [
+        "src/parser/parser.mly",
+        "src/parser/parser_common.mly"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/parse_term.mbt",
+      "upstreamSources": [
+        "src/parser/parser.mly",
+        "src/parser/parser_common.mly"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/parse_type.mbt",
+      "upstreamSources": [
+        "src/parser/parser.mly",
+        "src/parser/parser_common.mly"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/parser_state.mbt",
+      "upstreamSources": [
+        "src/parser/parser.mly",
+        "src/parser/ptree_helpers.ml"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "parser/token.mbt",
+      "upstreamSources": [
+        "src/parser/lexer.mll",
+        "src/parser/parser.mly"
+      ],
+      "translationDate": "2026-07-20",
+      "lastSemanticModificationDate": "2026-07-21"
+    }
+  ],
+  "ocamlOracleAdapters": [
+    {
+      "path": "tools/why3_oracle/export_fixture_goals.ml",
+      "upstreamSources": [
+        "src/core/task.ml",
+        "src/mlw/pmodule.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "tools/why3_oracle/export_semantic_inventory.ml",
+      "upstreamSources": [
+        "src/core/decl.ml",
+        "src/core/term.ml",
+        "src/core/theory.ml",
+        "src/mlw/ity.ml",
+        "src/mlw/pmodule.ml"
+      ],
+      "translationDate": "2026-07-21",
+      "lastSemanticModificationDate": "2026-07-21"
+    }
+  ]
+}

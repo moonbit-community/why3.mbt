@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "why3Commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
+  "driverProfile": "z3_487",
+  "closureEvidence": {
+    "manifest": "driver-closure-v1.json",
+    "driverSha256": "c2cddacc1c95919326ef23dc97f5cd6db88b1abc902c73a72cf595a20ec624c2",
+    "semanticSnapshotSha256": "918163f06f16f3969bfc59c17ff0e2a0ec5b1e45629c879366f42b3952aeba1d",
+    "stdlibTreeSha256": "355ec847dee8c9083ed6392ad5fa121285ce36f682950accc7982e3ba343dcc6"
+  },
+  "policy": {
+    "rejectAnyUnlistedVariant": true,
+    "preserveDeclarationAndHistoryOrder": true,
+    "preserveAttributesAsBytes": true,
+    "preserveLocations": true,
+    "preserveCloneSourceAndInstantiationWitness": true,
+    "constructorsRestrictedToTrustedDecoder": true
+  },
+  "allowedVariants": {
+    "typeNode": [
+      "Tyapp",
+      "Tyvar"
+    ],
+    "typeSymbolDefinition": [
+      "NoDef",
+      "Alias",
+      "Range",
+      "Float"
+    ],
+    "declaration": [
+      "Dtype",
+      "Ddata",
+      "Dparam",
+      "Dlogic",
+      "Dind:Ind",
+      "Dprop"
+    ],
+    "propositionKind": [
+      "Paxiom",
+      "Plemma",
+      "Pgoal"
+    ],
+    "theoryItem": [
+      "Decl",
+      "Use",
+      "Clone",
+      "Meta"
+    ],
+    "constant": [
+      "Int:Unknown",
+      "Int:Decimal",
+      "Int:Hexadecimal",
+      "Real:Decimal",
+      "Real:Hexadecimal",
+      "String"
+    ],
+    "termNode": [
+      "Tvar",
+      "Tconst",
+      "Tapp",
+      "Tif",
+      "Tlet",
+      "Tcase",
+      "Teps",
+      "Tquant:Forall",
+      "Tbinop:And",
+      "Tbinop:Or",
+      "Tbinop:Implies",
+      "Tbinop:Iff",
+      "Tnot"
+    ],
+    "patternNode": [
+      "Pwild",
+      "Papp",
+      "Por"
+    ],
+    "moduleItem": [
+      "Udecl",
+      "Uuse",
+      "Uclone",
+      "Umeta",
+      "Uscope"
+    ],
+    "programDeclaration": [
+      "PDtype",
+      "PDpure",
+      "PDlet:LDsym"
+    ],
+    "programComputation": [
+      "Cany",
+      "Cfun"
+    ],
+    "programTypeNode": [
+      "Ityapp"
+    ],
+    "programEffect": [
+      "Pure"
+    ],
+    "programTermination": [
+      "Total"
+    ],
+    "programMask": [
+      "Visible",
+      "Ghost"
+    ],
+    "programTypeWitness": [
+      "Absent"
+    ],
+    "routineLogic": [
+      "RLnone",
+      "RLls"
+    ]
+  },
+  "explicitlyRejectedTrustedVariants": {
+    "declaration": [
+      "Dind:Coind"
+    ],
+    "programDeclaration": [
+      "PDlet:LDvar",
+      "PDlet:LDrec",
+      "PDexn"
+    ],
+    "programComputation": [
+      "Capp",
+      "Cpur"
+    ],
+    "programTypeNode": [
+      "Ityvar",
+      "Ityreg"
+    ],
+    "programEffect": [
+      "Impure"
+    ],
+    "programTermination": [
+      "Partial",
+      "Diverges"
+    ],
+    "programMask": [
+      "Tuple"
+    ],
+    "programTypeWitness": [
+      "Present"
+    ],
+    "routineLogic": [
+      "RLpv",
+      "RLlemma"
+    ]
+  },
+  "userBoundary": {
+    "mayConstruct": [
+      "NoDef",
+      "Alias",
+      "Dtype",
+      "Dparam",
+      "Dlogic:NonRecursive",
+      "Dprop:Paxiom",
+      "Dprop:Plemma",
+      "Dprop:Pgoal"
+    ],
+    "mustReject": [
+      "Range",
+      "Float",
+      "Ddata",
+      "Dind",
+      "Clone",
+      "Meta",
+      "Teps",
+      "Tcase"
+    ]
+  }
+}

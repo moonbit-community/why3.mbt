@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "profile": "z3_487",
+  "resultPrecedence": [
+    "parent-deadline",
+    "output-limit",
+    "recognized-answer-pattern",
+    "process-status-fallback"
+  ],
+  "resultParser": [
+    {
+      "id": "result.unsat-valid",
+      "stdoutUtf8": "unsat\n",
+      "stderrUtf8": "",
+      "exit": { "kind": "code", "value": 0 },
+      "expected": { "kind": "Valid" }
+    },
+    {
+      "id": "result.sat-unknown",
+      "stdoutUtf8": "sat\n",
+      "stderrUtf8": "",
+      "exit": { "kind": "code", "value": 0 },
+      "expected": { "kind": "Unknown", "reason": "sat" }
+    },
+    {
+      "id": "result.unknown-with-reason",
+      "stdoutUtf8": "unknown\n(:reason-unknown \"incomplete\")\n",
+      "stderrUtf8": "",
+      "exit": { "kind": "code", "value": 0 },
+      "expected": { "kind": "Unknown", "reason": "incomplete" }
+    },
+    {
+      "id": "result.timeout-stdout",
+      "stdoutUtf8": "timeout\n",
+      "stderrUtf8": "",
+      "exit": { "kind": "code", "value": 0 },
+      "expected": { "kind": "Timeout" }
+    },
+    {
+      "id": "result.timeout-stderr",
+      "stdoutUtf8": "",
+      "stderrUtf8": "interrupted by timeout\n",
+      "exit": { "kind": "code", "value": 1 },
+      "expected": { "kind": "Timeout" }
+    },
+    {
+      "id": "result.out-of-memory",
+      "stdoutUtf8": "",
+      "stderrUtf8": "(error \"out of memory\")\n",
+      "exit": { "kind": "code", "value": 1 },
+      "expected": { "kind": "OutOfMemory" }
+    },
+    {
+      "id": "result.step-limit",
+      "stdoutUtf8": "",
+      "stderrUtf8": "Maximal allocation counts 100 have been exceeded\n",
+      "exit": { "kind": "code", "value": 1 },
+      "expected": { "kind": "StepLimitExceeded" }
+    },
+    {
+      "id": "result.answer-before-nonzero-exit",
+      "stdoutUtf8": "unsat\n",
+      "stderrUtf8": "diagnostic after answer\n",
+      "exit": { "kind": "code", "value": 17 },
+      "expected": { "kind": "Valid" }
+    },
+    {
+      "id": "result.unclassified-nonzero",
+      "stdoutUtf8": "",
+      "stderrUtf8": "unclassified failure\n",
+      "exit": { "kind": "code", "value": 17 },
+      "expectedError": { "kind": "ProcessError", "exitCode": 17 }
+    },
+    {
+      "id": "result.signal",
+      "stdoutUtf8": "",
+      "stderrUtf8": "",
+      "exit": { "kind": "signal", "value": "SIGKILL" },
+      "expectedError": { "kind": "ProcessError", "signal": "SIGKILL" }
+    },
+    {
+      "id": "result.malformed-utf8",
+      "stdoutHex": "ff0a",
+      "stderrUtf8": "",
+      "exit": { "kind": "code", "value": 0 },
+      "expectedError": { "kind": "MalformedProverOutput" }
+    }
+  ],
+  "runner": [
+    {
+      "id": "runner.default-timeout",
+      "cliTimeoutSeconds": null,
+      "expectedZ3Args": ["-smt2", "-in", "-T:10", "sat.random_seed=42", "nlsat.randomize=false", "smt.random_seed=42", "-st"],
+      "expectedParentDeadlineSeconds": 41
+    },
+    {
+      "id": "runner.zero-timeout",
+      "cliTimeoutSeconds": 0,
+      "expectedZ3Args": ["-smt2", "-in", "sat.random_seed=42", "nlsat.randomize=false", "smt.random_seed=42", "-st"],
+      "expectedParentDeadlineSeconds": null
+    },
+    {
+      "id": "runner.maximum-timeout",
+      "cliTimeoutSeconds": 86400,
+      "expectedZ3Args": ["-smt2", "-in", "-T:86400", "sat.random_seed=42", "nlsat.randomize=false", "smt.random_seed=42", "-st"],
+      "expectedParentDeadlineSeconds": 345601
+    },
+    {
+      "id": "runner.timeout-above-maximum",
+      "cliTimeoutText": "86401",
+      "expectedError": { "kind": "InvalidTimeout" }
+    },
+    {
+      "id": "runner.stdout-cap",
+      "helperBehavior": "write 2097153 bytes to stdout",
+      "expectedError": { "kind": "OutputLimitExceeded", "stream": "stdout", "limitBytes": 2097152 },
+      "mustReap": true
+    },
+    {
+      "id": "runner.stderr-cap",
+      "helperBehavior": "write 2097153 bytes to stderr",
+      "expectedError": { "kind": "OutputLimitExceeded", "stream": "stderr", "limitBytes": 2097152 },
+      "mustReap": true
+    },
+    {
+      "id": "runner.answer-then-cap",
+      "helperBehavior": "write unsat then exceed stdout cap",
+      "expectedError": { "kind": "OutputLimitExceeded", "stream": "stdout", "limitBytes": 2097152 },
+      "mustReap": true
+    },
+    {
+      "id": "runner.broken-pipe",
+      "helperBehavior": "close stdin before the complete query is written",
+      "expectedError": { "kind": "BrokenPipe" },
+      "mustReap": true
+    },
+    {
+      "id": "runner.parent-deadline",
+      "helperBehavior": "ignore input and never exit",
+      "expected": { "kind": "Timeout" },
+      "mustTerminateProcessGroup": true,
+      "mustReap": true
+    },
+    {
+      "id": "runner.cancellation",
+      "helperBehavior": "spawn a descendant and never exit",
+      "expectedError": { "kind": "Cancelled" },
+      "mustTerminateProcessGroup": true,
+      "mustReap": true
+    }
+  ],
+  "cli": [
+    { "id": "cli.single-goal-stdout", "goalCount": 1, "output": "stdout", "expectedExitCode": 0 },
+    { "id": "cli.multiple-goals-require-directory", "goalCount": 2, "output": "stdout", "expectedExitCode": 2 },
+    { "id": "cli.valid-exit", "outcome": "Valid", "expectedExitCode": 0 },
+    { "id": "cli.nonvalid-exit", "outcome": "Unknown", "expectedExitCode": 1 },
+    { "id": "cli.error-exit", "error": "ProcessError", "expectedExitCode": 2 },
+    { "id": "cli.versioned-ndjson", "schemaVersion": 1, "lineTerminationHex": "0a" }
+  ],
+  "context": [
+    {
+      "id": "context.absolute-root-independence",
+      "roots": ["/tmp/oracle-root-a", "/tmp/oracle-root-b"],
+      "portableRecordsMustMatch": true,
+      "oracleContextHashesMustMatch": true,
+      "resolvedContextMayDiffer": ["absolute_paths", "argv"]
+    }
+  ]
+}

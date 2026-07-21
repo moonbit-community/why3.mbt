@@ -1,0 +1,5 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+theory OccursCheck
+  goal occurs : (fun x -> x x) = (fun x -> x x)
+end

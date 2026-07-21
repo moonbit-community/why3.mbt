@@ -1,0 +1,9 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+theory Inductive
+  use int.Int
+  inductive even int =
+  | even_zero : even 0
+  | even_step : forall value : int. even value -> even (value + 2)
+  goal zero_even : even 0
+end

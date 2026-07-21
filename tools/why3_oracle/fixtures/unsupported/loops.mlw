@@ -1,0 +1,24 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+module Loops
+  use int.Int
+  use ref.Ref
+
+  let directions () : unit =
+    for _up = 0 to 0 do
+      invariant { true }
+    done;
+    for _down = 0 downto 0 do
+      invariant { true }
+    done
+
+  let count () : int
+    ensures { result = 1 }
+  = let value = ref 0 in
+    while !value < 1 do
+      invariant { 0 <= !value <= 1 }
+      variant { 1 - !value }
+      value := !value + 1
+    done;
+    !value
+end

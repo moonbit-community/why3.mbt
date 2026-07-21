@@ -1,0 +1,6 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+theory Lambda
+  function identity : int -> int = fun value -> value
+  goal identity_zero : identity 0 = 0
+end

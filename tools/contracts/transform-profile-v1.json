@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "why3Version": "1.7.2",
+  "why3Commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
+  "driverProfile": "z3_487",
+  "driverClosureSha256": "c2cddacc1c95919326ef23dc97f5cd6db88b1abc902c73a72cf595a20ec624c2",
+  "rawCheckpoint": "raw-task",
+  "driverUpdateCheckpoint": "driver-update",
+  "orderedDriverTransforms": [
+    "counterexamples_dependent_intros",
+    "inline_trivial",
+    "eliminate_builtin",
+    "remove_unused_keep_constants",
+    "detect_polymorphism",
+    "eliminate_definition_conditionally",
+    "eliminate_inductive",
+    "eliminate_epsilon",
+    "eliminate_literal",
+    "simplify_formula",
+    "prepare_for_counterexmp",
+    "eliminate_projections_sums",
+    "discriminate_if_poly",
+    "eliminate_algebraic_if_poly",
+    "encoding_smt_if_poly"
+  ],
+  "instrumentedSubcheckpoints": [
+    "detect_polymorphism",
+    "discriminate_if_poly",
+    "eliminate_algebraic_if_poly",
+    "monomorphise_goal",
+    "select_kept",
+    "keep_field_types",
+    "twin",
+    "guards",
+    "encoding_smt_if_poly"
+  ],
+  "finalCheckpoints": ["prepared-task", "smt-token-stream", "prover-result"],
+  "tracePatch": {
+    "status": "introduced-by-pr-07",
+    "manifestFieldsFrozenNow": ["targetWhy3Commit", "patchSha256", "checkpointSequence"]
+  }
+}
