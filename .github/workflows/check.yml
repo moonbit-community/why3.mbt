@@ -17,10 +17,12 @@ concurrency:
 
 jobs:
   oracle-build:
-    name: fixed oracle candidate
+    name: fixed oracle
     runs-on: ubuntu-24.04
+    env:
+      WHY3_ORACLE_IMAGE_DIGEST: sha256:a0b5b4b922c0cc95d2d35e7cfd145c29e9bc8032a00b0ef98f6dd33c091bd18d
     container:
-      image: ghcr.io/${{ github.repository }}-why3:1.7.2-z3-4.8.12
+      image: ghcr.io/moonbit-community/why3.mbt-why3@sha256:a0b5b4b922c0cc95d2d35e7cfd145c29e9bc8032a00b0ef98f6dd33c091bd18d
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -48,7 +50,7 @@ jobs:
           node tools/why3_oracle/generate_moon_dependency_inventory.mjs \
             --check tools/contracts/moon-dependencies-v1.json
 
-      - name: Verify candidate image contents
+      - name: Verify fixed image contents
         run: |
           node tools/why3_oracle/inspect_toolchain.mjs \
             > "$RUNNER_TEMP/toolchain-report.json"
@@ -62,8 +64,13 @@ jobs:
       - name: Check PR-00 contracts and inventories
         run: |
           node tools/check_pr00_contracts.mjs \
-            --why3-archive "$WHY3_REFERENCE_ARCHIVE"
+            --why3-archive "$WHY3_REFERENCE_ARCHIVE" \
+            --require-toolchain-lock
 
+      - name: Smoke fixed Why3 entrypoint
+        run: |
+          tools/why3_oracle/run-fixed mvp.abs -- \
+            prove --parse-only tools/why3_oracle/fixtures/mvp.mlw
       - name: Check all targets
         run: moon check --target all --warn-list +73
 
