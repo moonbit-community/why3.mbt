@@ -1,0 +1,15 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+theory SmtIdentifiers
+  use int.Int
+
+  function select (value : int) : int = value
+  function store (value : int) : int = value
+  function generated_0 (value : int) : int = value
+  function generated_1 (value : int) : int = value
+
+  goal reserved_and_collision :
+    forall generated : int.
+      select generated = store generated /\
+      generated_0 generated = generated_1 generated
+end

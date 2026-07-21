@@ -1,0 +1,264 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/moonbit-community/why3.mbt/tools/contracts/schema/toolchain-lock-v1.schema.json",
+  "title": "why3.mbt fixed oracle toolchain lock v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "profile",
+    "platform",
+    "image",
+    "buildRecipe",
+    "githubActions",
+    "why3",
+    "z3",
+    "contracts",
+    "environment",
+    "lockSha256"
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "sha256"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "pattern": "^tools/contracts/" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "archive": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url", "sha256"],
+      "properties": {
+        "url": { "type": "string", "format": "uri" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "executable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^/" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "pinnedImage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "tagAtResolution", "digest"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "tagAtResolution": { "type": "string", "minLength": 1 },
+        "digest": { "$ref": "#/$defs/digest" }
+      }
+    }
+  },
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "profile": { "const": "why3-1.7.2-z3-4.8.12-mvp-v1" },
+    "platform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["os", "architecture", "oci"],
+      "properties": {
+        "os": { "const": "linux" },
+        "architecture": { "const": "amd64" },
+        "oci": { "const": "linux/amd64" }
+      }
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "digest", "reference"],
+      "properties": {
+        "repository": { "const": "ghcr.io/moonbit-community/why3.mbt-why3" },
+        "digest": { "$ref": "#/$defs/digest" },
+        "reference": {
+          "type": "string",
+          "pattern": "^ghcr\\.io/moonbit-community/why3\\.mbt-why3@sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "buildRecipe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit",
+        "path",
+        "sha256",
+        "frontendImage",
+        "baseImage",
+        "sourceArchiveKeptInImage"
+      ],
+      "properties": {
+        "commit": { "$ref": "#/$defs/commit" },
+        "path": { "const": "Dockerfile" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "frontendImage": {
+          "allOf": [
+            { "$ref": "#/$defs/pinnedImage" },
+            {
+              "properties": {
+                "repository": { "const": "docker/dockerfile" },
+                "tagAtResolution": { "const": "1.7.0" }
+              }
+            }
+          ]
+        },
+        "baseImage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["repository", "tagAtResolution", "platform", "digest"],
+          "properties": {
+            "repository": { "const": "ocaml/opam" },
+            "tagAtResolution": { "const": "ubuntu-24.04-ocaml-4.14" },
+            "platform": { "const": "linux/amd64" },
+            "digest": { "$ref": "#/$defs/digest" }
+          }
+        },
+        "sourceArchiveKeptInImage": {
+          "const": "/opt/why3-reference/why3-source.tar.gz"
+        }
+      }
+    },
+    "githubActions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["workflow", "action", "commit"],
+        "properties": {
+          "workflow": { "type": "string", "pattern": "^\\.github/workflows/" },
+          "action": { "type": "string", "minLength": 1 },
+          "commit": { "$ref": "#/$defs/commit" }
+        }
+      }
+    },
+    "why3": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "versionOutput",
+        "commit",
+        "shapeVersion",
+        "executable",
+        "datadir",
+        "driverClosureSha256",
+        "proverDetectionSha256",
+        "sourceArchiveSha256",
+        "semanticSnapshotSha256",
+        "referenceArchive",
+        "opamRecipe"
+      ],
+      "properties": {
+        "version": { "const": "1.7.2" },
+        "versionOutput": { "const": "Why3 platform, version 1.7.2" },
+        "commit": { "const": "1343338d3bb1941c0d4f134283bb0790816113c4" },
+        "shapeVersion": { "const": 6 },
+        "executable": { "$ref": "#/$defs/executable" },
+        "datadir": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "treeSha256", "stdlibTreeSha256"],
+          "properties": {
+            "path": { "const": "/home/opam/.opam/4.14/share/why3" },
+            "treeSha256": { "$ref": "#/$defs/sha256" },
+            "stdlibTreeSha256": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        "driverClosureSha256": { "$ref": "#/$defs/sha256" },
+        "proverDetectionSha256": { "$ref": "#/$defs/sha256" },
+        "sourceArchiveSha256": { "$ref": "#/$defs/sha256" },
+        "semanticSnapshotSha256": { "$ref": "#/$defs/sha256" },
+        "referenceArchive": { "$ref": "#/$defs/archive" },
+        "opamRecipe": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256", "upstream"],
+          "properties": {
+            "path": { "const": "tools/why3_oracle/why3-1.7.2.opam" },
+            "sha256": { "$ref": "#/$defs/sha256" },
+            "upstream": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["repository", "commit", "path", "gitBlob"],
+              "properties": {
+                "repository": { "const": "ocaml/opam-repository" },
+                "commit": { "$ref": "#/$defs/commit" },
+                "path": { "const": "packages/why3/why3.1.7.2/opam" },
+                "gitBlob": { "$ref": "#/$defs/commit" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "z3": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "versionOutput", "executable", "commit", "archive"],
+      "properties": {
+        "version": { "const": "4.8.12" },
+        "versionOutput": { "const": "Z3 version 4.8.12 - 64 bit" },
+        "executable": { "$ref": "#/$defs/executable" },
+        "commit": { "const": "3a402ca2c14c3891d24658318406f80ce59b719f" },
+        "archive": { "$ref": "#/$defs/archive" }
+      }
+    },
+    "contracts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["semanticProfileSha256", "prCorpusSha256", "artifacts"],
+      "properties": {
+        "semanticProfileSha256": { "$ref": "#/$defs/sha256" },
+        "prCorpusSha256": { "$ref": "#/$defs/sha256" },
+        "artifacts": {
+          "type": "array",
+          "minItems": 12,
+          "items": { "$ref": "#/$defs/artifact" }
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "LC_ALL",
+        "LANG",
+        "TZ",
+        "HOME",
+        "TMPDIR",
+        "defaultPlugins",
+        "standardLibrary"
+      ],
+      "properties": {
+        "LC_ALL": { "const": "C" },
+        "LANG": { "const": "C" },
+        "TZ": { "const": "UTC" },
+        "HOME": { "const": "isolated Whyconf directory" },
+        "TMPDIR": { "const": "isolated Whyconf directory" },
+        "defaultPlugins": { "const": "disabled" },
+        "standardLibrary": { "const": "explicit --no-stdlib plus manifest loadpaths" }
+      }
+    },
+    "lockSha256": { "$ref": "#/$defs/sha256" }
+  }
+}

@@ -1,0 +1,2739 @@
+{
+  "schemaVersion": 1,
+  "why3Version": "1.7.2",
+  "why3Commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
+  "policy": {
+    "ordinaryTermAttributes": "preserve exact Bytes and source attachment",
+    "knownControlDefault": "reject",
+    "userDmeta": "reject at feature-classification as UnsupportedFeature(UserMeta)",
+    "allowedLanes": [
+      "exact",
+      "reject",
+      "intentional-divergence",
+      "unsupported"
+    ]
+  },
+  "controlAttributes": {
+    "knownControlPatterns": [
+      {
+        "kind": "prefix",
+        "bytesUtf8": "vc:"
+      },
+      {
+        "kind": "prefix",
+        "bytesUtf8": "encoding:"
+      },
+      {
+        "kind": "prefix",
+        "bytesUtf8": "algebraic:"
+      },
+      {
+        "kind": "prefix",
+        "bytesUtf8": "remove_unused:"
+      },
+      {
+        "kind": "exact",
+        "bytesUtf8": "select_alginst_default"
+      },
+      {
+        "kind": "exact",
+        "bytesUtf8": "eliminate_algebraic"
+      },
+      {
+        "kind": "exact",
+        "bytesUtf8": "get_counterexmp"
+      }
+    ],
+    "allowlist": [
+      {
+        "bytesUtf8": "stop_split",
+        "origins": [
+          "Snapshot",
+          "Generated(wp)"
+        ]
+      }
+    ],
+    "explicitUserRejects": [
+      "vc:sp",
+      "vc:wp"
+    ]
+  },
+  "parserLanes": [
+    {
+      "fixtureId": "parser.ptree-exact",
+      "lane": "exact"
+    },
+    {
+      "fixtureId": "parser.why3-rejects",
+      "lane": "reject"
+    },
+    {
+      "fixtureId": "parser.module-interface-extension",
+      "lane": "intentional-divergence"
+    }
+  ],
+  "variants": [
+    {
+      "enum": "AssertionKind",
+      "variant": "Assert",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Program assert or assume."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "program-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.assert-assume",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "AssertionKind",
+      "variant": "Assume",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Program assert or assume."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "program-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.assert-assume",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "AssertionKind",
+      "variant": "Check",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every check assertion."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(CheckAssertion)",
+      "fixtureId": "unsupported.check",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "Attribute",
+      "variant": "Position",
+      "disposition": "supported",
+      "allowedShapes": [
+        "All parser-produced shapes; semantic restrictions are carried by the enclosing node."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "parser",
+      "errorKind": null,
+      "fixtureId": "parser.ptree-exact",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "Attribute",
+      "variant": "Text",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Ordinary attributes are preserved as exact Bytes.",
+        "Generated/snapshot attributes allowed by the control-attribute policy."
+      ],
+      "rejectedShapes": [
+        "User attributes matching a known control pattern but absent from the allowlist."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ControlAttribute)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.control-attribute",
+      "lane": "exact",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "BinaryLogicOp",
+      "variant": "DTand",
+      "disposition": "supported",
+      "allowedShapes": [
+        "First-order formula operands with Why3 ordering/coercion semantics."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "term-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "BinaryLogicOp",
+      "variant": "DTandAsym",
+      "disposition": "supported",
+      "allowedShapes": [
+        "First-order formula operands with Why3 ordering/coercion semantics."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "term-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "BinaryLogicOp",
+      "variant": "DTby",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Proof-control by/so connectives."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProofControlConnective)",
+      "fixtureId": "unsupported.logic-term",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "BinaryLogicOp",
+      "variant": "DTiff",
+      "disposition": "supported",
+      "allowedShapes": [
+        "First-order formula operands with Why3 ordering/coercion semantics."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "term-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "BinaryLogicOp",
+      "variant": "DTimplies",
+      "disposition": "supported",
+      "allowedShapes": [
+        "First-order formula operands with Why3 ordering/coercion semantics."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "term-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "BinaryLogicOp",
+      "variant": "DTor",
+      "disposition": "supported",
+      "allowedShapes": [
+        "First-order formula operands with Why3 ordering/coercion semantics."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "term-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "BinaryLogicOp",
+      "variant": "DTorAsym",
+      "disposition": "supported",
+      "allowedShapes": [
+        "First-order formula operands with Why3 ordering/coercion semantics."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "term-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "BinaryLogicOp",
+      "variant": "DTso",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Proof-control by/so connectives."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProofControlConnective)",
+      "fixtureId": "unsupported.logic-term",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "CloneSubstitution",
+      "variant": "CSaxiom",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All substitutions are rejected because user clone is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Clone)",
+      "fixtureId": "unsupported.clone",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "CloneSubstitution",
+      "variant": "CSfsym",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All substitutions are rejected because user clone is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Clone)",
+      "fixtureId": "unsupported.clone",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "CloneSubstitution",
+      "variant": "CSgoal",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All substitutions are rejected because user clone is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Clone)",
+      "fixtureId": "unsupported.clone",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "CloneSubstitution",
+      "variant": "CSlemma",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All substitutions are rejected because user clone is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Clone)",
+      "fixtureId": "unsupported.clone",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "CloneSubstitution",
+      "variant": "CSprop",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All substitutions are rejected because user clone is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Clone)",
+      "fixtureId": "unsupported.clone",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "CloneSubstitution",
+      "variant": "CSpsym",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All substitutions are rejected because user clone is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Clone)",
+      "fixtureId": "unsupported.clone",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "CloneSubstitution",
+      "variant": "CStsym",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All substitutions are rejected because user clone is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Clone)",
+      "fixtureId": "unsupported.clone",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "CloneSubstitution",
+      "variant": "CSvsym",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All substitutions are rejected because user clone is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Clone)",
+      "fixtureId": "unsupported.clone",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "CloneSubstitution",
+      "variant": "CSxsym",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All substitutions are rejected because user clone is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Clone)",
+      "fixtureId": "unsupported.clone",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "Constant",
+      "variant": "ConstInt",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Exact Int or Real constant in a supported expected type."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "literal-elaboration",
+      "errorKind": null,
+      "fixtureId": "parser.literal-kinds",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/literal.mbt"
+    },
+    {
+      "enum": "Constant",
+      "variant": "ConstReal",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Exact Int or Real constant in a supported expected type."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "literal-elaboration",
+      "errorKind": null,
+      "fixtureId": "parser.literal-kinds",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/literal.mbt"
+    },
+    {
+      "enum": "Constant",
+      "variant": "ConstStr",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user string constant; trusted snapshot strings use the decoder schema."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(StringLiteral)",
+      "fixtureId": "unsupported.strings",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/literal.mbt"
+    },
+    {
+      "enum": "Decl",
+      "variant": "Dcloneexport",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user clone declaration."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Clone)",
+      "fixtureId": "unsupported.clone",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "Decl",
+      "variant": "Dcloneimport",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user clone declaration."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Clone)",
+      "fixtureId": "unsupported.clone",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "Decl",
+      "variant": "Dexn",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every exception declaration."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Exception)",
+      "fixtureId": "unsupported.exceptions",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "Decl",
+      "variant": "Dimport",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Scopes and same-file/builtin use or use import."
+      ],
+      "rejectedShapes": [
+        "External loadpath or driver-only theory import."
+      ],
+      "classificationStage": "name-resolution",
+      "errorKind": "UnsupportedFeature(ExternalOrDriverOnlyImport)",
+      "fixtureId": "mvp.namespace",
+      "rejectionFixtureId": "unsupported.driver-only-theory",
+      "lane": "exact",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "Decl",
+      "variant": "Dind",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user inductive/coinductive declaration."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Inductive)",
+      "fixtureId": "unsupported.inductive",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "Decl",
+      "variant": "Dlet",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Non-recursive top-level RLnone let routine or abstract val with a pure MVP contract."
+      ],
+      "rejectedShapes": [
+        "let function, val function, lemma routine, ghost/effectful routine, or unsupported body/spec."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(ProgramRoutineShape)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.function-kinds",
+      "lane": "exact",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "Decl",
+      "variant": "Dlogic",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Non-recursive polymorphic constant, function, and predicate declarations."
+      ],
+      "rejectedShapes": [
+        "Recursive or higher-order logic definitions."
+      ],
+      "classificationStage": "declaration-elaboration",
+      "errorKind": "UnsupportedFeature(RecursiveOrHigherOrderLogic)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.recursion",
+      "lane": "exact",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "Decl",
+      "variant": "Dmeta",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user meta declaration."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(UserMeta)",
+      "fixtureId": "unsupported.meta",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "Decl",
+      "variant": "Dprop",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Polymorphic axiom, lemma, and goal formulas."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "declaration-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "Decl",
+      "variant": "Drec",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every recursive program declaration."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Recursion)",
+      "fixtureId": "unsupported.recursion",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "Decl",
+      "variant": "Dscope",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Scopes and same-file/builtin use or use import."
+      ],
+      "rejectedShapes": [
+        "External loadpath or driver-only theory import."
+      ],
+      "classificationStage": "name-resolution",
+      "errorKind": "UnsupportedFeature(ExternalOrDriverOnlyImport)",
+      "fixtureId": "mvp.namespace",
+      "rejectionFixtureId": "unsupported.driver-only-theory",
+      "lane": "exact",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "Decl",
+      "variant": "Dtype",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Parameterized abstract and alias types described by the TypeDef policy."
+      ],
+      "rejectedShapes": [
+        "Datatype, record, range, float, mutable, invariant, or witness declarations."
+      ],
+      "classificationStage": "declaration-elaboration",
+      "errorKind": "UnsupportedFeature(TypeDeclarationShape)",
+      "fixtureId": "mvp.logic-polymorphism",
+      "rejectionFixtureId": "unsupported.datatypes",
+      "lane": "exact",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "Decl",
+      "variant": "Duseexport",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Scopes and same-file/builtin use or use import."
+      ],
+      "rejectedShapes": [
+        "External loadpath or driver-only theory import."
+      ],
+      "classificationStage": "name-resolution",
+      "errorKind": "UnsupportedFeature(ExternalOrDriverOnlyImport)",
+      "fixtureId": "mvp.namespace",
+      "rejectionFixtureId": "unsupported.driver-only-theory",
+      "lane": "exact",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "Decl",
+      "variant": "Duseimport",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Scopes and same-file/builtin use or use import."
+      ],
+      "rejectedShapes": [
+        "External loadpath or driver-only theory import."
+      ],
+      "classificationStage": "name-resolution",
+      "errorKind": "UnsupportedFeature(ExternalOrDriverOnlyImport)",
+      "fixtureId": "mvp.namespace",
+      "rejectionFixtureId": "unsupported.driver-only-theory",
+      "lane": "exact",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eabsurd",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every occurrence; feature kind is refined from the concrete ExprDesc before typing."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProgramExpression)",
+      "fixtureId": "unsupported.program-expression",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eand",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Monomorphic Bool/Int/Real/Unit expressions, pure logic/routine operators, and supported sequencing/casts/attributes."
+      ],
+      "rejectedShapes": [
+        "Any nested unsupported symbol, type, constant, effect, or control attribute."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedExpression)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.program-expression",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eany",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Top-level ordinary RLnone abstract val with pure pre/post contract."
+      ],
+      "rejectedShapes": [
+        "First-class any expression, val function/predicate/lemma, ghost/effectful contract, or polymorphic user routine."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(AbstractRoutineShape)",
+      "fixtureId": "mvp.routine-call",
+      "rejectionFixtureId": "unsupported.function-kinds",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eapply",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every occurrence; feature kind is refined from the concrete ExprDesc before typing."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProgramExpression)",
+      "fixtureId": "unsupported.program-expression",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Easref",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every occurrence; feature kind is refined from the concrete ExprDesc before typing."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProgramExpression)",
+      "fixtureId": "unsupported.program-expression",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eassert",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Assert and Assume formulas."
+      ],
+      "rejectedShapes": [
+        "Check assertion kind."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(CheckAssertion)",
+      "fixtureId": "mvp.assert-assume",
+      "rejectionFixtureId": "unsupported.check",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eassign",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every occurrence; feature kind is refined from the concrete ExprDesc before typing."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProgramExpression)",
+      "fixtureId": "unsupported.program-expression",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eattr",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Monomorphic Bool/Int/Real/Unit expressions, pure logic/routine operators, and supported sequencing/casts/attributes."
+      ],
+      "rejectedShapes": [
+        "Any nested unsupported symbol, type, constant, effect, or control attribute."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedExpression)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.program-expression",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Ecast",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Monomorphic Bool/Int/Real/Unit expressions, pure logic/routine operators, and supported sequencing/casts/attributes."
+      ],
+      "rejectedShapes": [
+        "Any nested unsupported symbol, type, constant, effect, or control attribute."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedExpression)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.program-expression",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Econst",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Monomorphic Bool/Int/Real/Unit expressions, pure logic/routine operators, and supported sequencing/casts/attributes."
+      ],
+      "rejectedShapes": [
+        "Any nested unsupported symbol, type, constant, effect, or control attribute."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedExpression)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.program-expression",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eexn",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every occurrence; feature kind is refined from the concrete ExprDesc before typing."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProgramExpression)",
+      "fixtureId": "unsupported.program-expression",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Efalse",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Monomorphic Bool/Int/Real/Unit expressions, pure logic/routine operators, and supported sequencing/casts/attributes."
+      ],
+      "rejectedShapes": [
+        "Any nested unsupported symbol, type, constant, effect, or control attribute."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedExpression)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.program-expression",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Efor",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every occurrence; feature kind is refined from the concrete ExprDesc before typing."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProgramExpression)",
+      "fixtureId": "unsupported.program-expression",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Efun",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every occurrence; feature kind is refined from the concrete ExprDesc before typing."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProgramExpression)",
+      "fixtureId": "unsupported.program-expression",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eghost",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every occurrence; feature kind is refined from the concrete ExprDesc before typing."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProgramExpression)",
+      "fixtureId": "unsupported.program-expression",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eidapp",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Monomorphic Bool/Int/Real/Unit expressions, pure logic/routine operators, and supported sequencing/casts/attributes."
+      ],
+      "rejectedShapes": [
+        "Any nested unsupported symbol, type, constant, effect, or control attribute."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedExpression)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.program-expression",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eident",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Monomorphic Bool/Int/Real/Unit expressions, pure logic/routine operators, and supported sequencing/casts/attributes."
+      ],
+      "rejectedShapes": [
+        "Any nested unsupported symbol, type, constant, effect, or control attribute."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedExpression)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.program-expression",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eidpur",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Monomorphic Bool/Int/Real/Unit expressions, pure logic/routine operators, and supported sequencing/casts/attributes."
+      ],
+      "rejectedShapes": [
+        "Any nested unsupported symbol, type, constant, effect, or control attribute."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedExpression)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.program-expression",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eif",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Monomorphic Bool/Int/Real/Unit expressions, pure logic/routine operators, and supported sequencing/casts/attributes."
+      ],
+      "rejectedShapes": [
+        "Any nested unsupported symbol, type, constant, effect, or control attribute."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedExpression)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.program-expression",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Einfix",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Monomorphic Bool/Int/Real/Unit expressions, pure logic/routine operators, and supported sequencing/casts/attributes."
+      ],
+      "rejectedShapes": [
+        "Any nested unsupported symbol, type, constant, effect, or control attribute."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedExpression)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.program-expression",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Einnfix",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Monomorphic Bool/Int/Real/Unit expressions, pure logic/routine operators, and supported sequencing/casts/attributes."
+      ],
+      "rejectedShapes": [
+        "Any nested unsupported symbol, type, constant, effect, or control attribute."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedExpression)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.program-expression",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Elabel",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every occurrence; feature kind is refined from the concrete ExprDesc before typing."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProgramExpression)",
+      "fixtureId": "unsupported.program-expression",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Elet",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Simple non-recursive RLnone local value binding."
+      ],
+      "rejectedShapes": [
+        "Local function/predicate/lemma, ghost binding, or unsupported pattern/effect."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(LocalRoutine)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.function-kinds",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Ematch",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every occurrence; feature kind is refined from the concrete ExprDesc before typing."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProgramExpression)",
+      "fixtureId": "unsupported.program-expression",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Enot",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Monomorphic Bool/Int/Real/Unit expressions, pure logic/routine operators, and supported sequencing/casts/attributes."
+      ],
+      "rejectedShapes": [
+        "Any nested unsupported symbol, type, constant, effect, or control attribute."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedExpression)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.program-expression",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eoptexn",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every occurrence; feature kind is refined from the concrete ExprDesc before typing."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProgramExpression)",
+      "fixtureId": "unsupported.program-expression",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eor",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Monomorphic Bool/Int/Real/Unit expressions, pure logic/routine operators, and supported sequencing/casts/attributes."
+      ],
+      "rejectedShapes": [
+        "Any nested unsupported symbol, type, constant, effect, or control attribute."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedExpression)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.program-expression",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Epure",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Monomorphic Bool/Int/Real/Unit expressions, pure logic/routine operators, and supported sequencing/casts/attributes."
+      ],
+      "rejectedShapes": [
+        "Any nested unsupported symbol, type, constant, effect, or control attribute."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedExpression)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.program-expression",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eraise",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every occurrence; feature kind is refined from the concrete ExprDesc before typing."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProgramExpression)",
+      "fixtureId": "unsupported.program-expression",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Erec",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every occurrence; feature kind is refined from the concrete ExprDesc before typing."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProgramExpression)",
+      "fixtureId": "unsupported.program-expression",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Erecord",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every occurrence; feature kind is refined from the concrete ExprDesc before typing."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProgramExpression)",
+      "fixtureId": "unsupported.program-expression",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eref",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every occurrence; feature kind is refined from the concrete ExprDesc before typing."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProgramExpression)",
+      "fixtureId": "unsupported.program-expression",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Escope",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Monomorphic Bool/Int/Real/Unit expressions, pure logic/routine operators, and supported sequencing/casts/attributes."
+      ],
+      "rejectedShapes": [
+        "Any nested unsupported symbol, type, constant, effect, or control attribute."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedExpression)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.program-expression",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Esequence",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Monomorphic Bool/Int/Real/Unit expressions, pure logic/routine operators, and supported sequencing/casts/attributes."
+      ],
+      "rejectedShapes": [
+        "Any nested unsupported symbol, type, constant, effect, or control attribute."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedExpression)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.program-expression",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Etrue",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Monomorphic Bool/Int/Real/Unit expressions, pure logic/routine operators, and supported sequencing/casts/attributes."
+      ],
+      "rejectedShapes": [
+        "Any nested unsupported symbol, type, constant, effect, or control attribute."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedExpression)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.program-expression",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Etuple",
+      "disposition": "partial",
+      "allowedShapes": [
+        "The empty tuple Unit expression."
+      ],
+      "rejectedShapes": [
+        "Every non-empty tuple expression."
+      ],
+      "classificationStage": "program-elaboration",
+      "errorKind": "UnsupportedFeature(TupleExpression)",
+      "fixtureId": "mvp.unit",
+      "rejectionFixtureId": "unsupported.tuple",
+      "lane": "exact",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Eupdate",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every occurrence; feature kind is refined from the concrete ExprDesc before typing."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProgramExpression)",
+      "fixtureId": "unsupported.program-expression",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ExprDesc",
+      "variant": "Ewhile",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every occurrence; feature kind is refined from the concrete ExprDesc before typing."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(ProgramExpression)",
+      "fixtureId": "unsupported.program-expression",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "enum": "ForDirection",
+      "variant": "DownTo",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every for-loop direction because all loops are rejected."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Loop)",
+      "fixtureId": "unsupported.loops",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "ForDirection",
+      "variant": "To",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every for-loop direction because all loops are rejected."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Loop)",
+      "fixtureId": "unsupported.loops",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "InductiveSign",
+      "variant": "Coind",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user inductive/coinductive sign."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Inductive)",
+      "fixtureId": "unsupported.inductive",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "InductiveSign",
+      "variant": "Ind",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user inductive/coinductive sign."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Inductive)",
+      "fixtureId": "unsupported.inductive",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "IntLiteralKind",
+      "variant": "ILitBin",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Exact arbitrary-precision integer representation; no host floating conversion."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "literal-elaboration",
+      "errorKind": null,
+      "fixtureId": "parser.literal-kinds",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/literal.mbt"
+    },
+    {
+      "enum": "IntLiteralKind",
+      "variant": "ILitDec",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Exact arbitrary-precision integer representation; no host floating conversion."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "literal-elaboration",
+      "errorKind": null,
+      "fixtureId": "parser.literal-kinds",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/literal.mbt"
+    },
+    {
+      "enum": "IntLiteralKind",
+      "variant": "ILitHex",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Exact arbitrary-precision integer representation; no host floating conversion."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "literal-elaboration",
+      "errorKind": null,
+      "fixtureId": "parser.literal-kinds",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/literal.mbt"
+    },
+    {
+      "enum": "IntLiteralKind",
+      "variant": "ILitOct",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Exact arbitrary-precision integer representation; no host floating conversion."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "literal-elaboration",
+      "errorKind": null,
+      "fixtureId": "parser.literal-kinds",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/literal.mbt"
+    },
+    {
+      "enum": "IntLiteralKind",
+      "variant": "ILitUnk",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Exact arbitrary-precision integer representation; no host floating conversion."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "literal-elaboration",
+      "errorKind": null,
+      "fixtureId": "parser.literal-kinds",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/literal.mbt"
+    },
+    {
+      "enum": "Mask",
+      "variant": "MaskGhost",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every tuple/ghost result mask."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Ghost)",
+      "fixtureId": "unsupported.ghost",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "Mask",
+      "variant": "MaskTuple",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every tuple/ghost result mask."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Ghost)",
+      "fixtureId": "unsupported.ghost",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "Mask",
+      "variant": "MaskVisible",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Visible non-ghost result."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "program-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "MetaArg",
+      "variant": "Max",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All arguments are rejected because user Dmeta is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(UserMeta)",
+      "fixtureId": "unsupported.meta",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "MetaArg",
+      "variant": "Mfs",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All arguments are rejected because user Dmeta is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(UserMeta)",
+      "fixtureId": "unsupported.meta",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "MetaArg",
+      "variant": "Mgl",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All arguments are rejected because user Dmeta is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(UserMeta)",
+      "fixtureId": "unsupported.meta",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "MetaArg",
+      "variant": "Mint",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All arguments are rejected because user Dmeta is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(UserMeta)",
+      "fixtureId": "unsupported.meta",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "MetaArg",
+      "variant": "Mlm",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All arguments are rejected because user Dmeta is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(UserMeta)",
+      "fixtureId": "unsupported.meta",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "MetaArg",
+      "variant": "Mps",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All arguments are rejected because user Dmeta is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(UserMeta)",
+      "fixtureId": "unsupported.meta",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "MetaArg",
+      "variant": "Mstr",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All arguments are rejected because user Dmeta is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(UserMeta)",
+      "fixtureId": "unsupported.meta",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "MetaArg",
+      "variant": "Mty",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All arguments are rejected because user Dmeta is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(UserMeta)",
+      "fixtureId": "unsupported.meta",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "MetaArg",
+      "variant": "Mval",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "All arguments are rejected because user Dmeta is rejected as a whole."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(UserMeta)",
+      "fixtureId": "unsupported.meta",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "MlwFile",
+      "variant": "Decls",
+      "disposition": "supported",
+      "allowedShapes": [
+        "A single file containing ordered theory/module units or top-level declarations."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "file-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.multiple-units",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "MlwFile",
+      "variant": "Modules",
+      "disposition": "supported",
+      "allowedShapes": [
+        "A single file containing ordered theory/module units or top-level declarations."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "file-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.multiple-units",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "ModuleKind",
+      "variant": "Module",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Ordered theory or module unit in the single input file."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "file-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.multiple-units",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "ModuleKind",
+      "variant": "Theory",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Ordered theory or module unit in the single input file."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "file-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.multiple-units",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "PatternDesc",
+      "variant": "Papp",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every constructor, record, tuple, alias, or-pattern, cast, scoped, or ghost pattern."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(DestructuringPattern)",
+      "fixtureId": "unsupported.patterns",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "PatternDesc",
+      "variant": "Pas",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every constructor, record, tuple, alias, or-pattern, cast, scoped, or ghost pattern."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(DestructuringPattern)",
+      "fixtureId": "unsupported.patterns",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "PatternDesc",
+      "variant": "Pcast",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every constructor, record, tuple, alias, or-pattern, cast, scoped, or ghost pattern."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(DestructuringPattern)",
+      "fixtureId": "unsupported.patterns",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "PatternDesc",
+      "variant": "Pghost",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every constructor, record, tuple, alias, or-pattern, cast, scoped, or ghost pattern."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(DestructuringPattern)",
+      "fixtureId": "unsupported.patterns",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "PatternDesc",
+      "variant": "Por",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every constructor, record, tuple, alias, or-pattern, cast, scoped, or ghost pattern."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(DestructuringPattern)",
+      "fixtureId": "unsupported.patterns",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "PatternDesc",
+      "variant": "Pparen",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Simple wildcard or variable binders/result patterns, with transparent parentheses."
+      ],
+      "rejectedShapes": [
+        "Any nested occurrence that forms a destructuring pattern."
+      ],
+      "classificationStage": "pattern-elaboration",
+      "errorKind": "UnsupportedFeature(DestructuringPattern)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.patterns",
+      "lane": "exact",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "PatternDesc",
+      "variant": "Prec",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every constructor, record, tuple, alias, or-pattern, cast, scoped, or ghost pattern."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(DestructuringPattern)",
+      "fixtureId": "unsupported.patterns",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "PatternDesc",
+      "variant": "Pscope",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every constructor, record, tuple, alias, or-pattern, cast, scoped, or ghost pattern."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(DestructuringPattern)",
+      "fixtureId": "unsupported.patterns",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "PatternDesc",
+      "variant": "Ptuple",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every constructor, record, tuple, alias, or-pattern, cast, scoped, or ghost pattern."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(DestructuringPattern)",
+      "fixtureId": "unsupported.patterns",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "PatternDesc",
+      "variant": "Pvar",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Simple wildcard or variable binders/result patterns, with transparent parentheses."
+      ],
+      "rejectedShapes": [
+        "Any nested occurrence that forms a destructuring pattern."
+      ],
+      "classificationStage": "pattern-elaboration",
+      "errorKind": "UnsupportedFeature(DestructuringPattern)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.patterns",
+      "lane": "exact",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "PatternDesc",
+      "variant": "Pwild",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Simple wildcard or variable binders/result patterns, with transparent parentheses."
+      ],
+      "rejectedShapes": [
+        "Any nested occurrence that forms a destructuring pattern."
+      ],
+      "classificationStage": "pattern-elaboration",
+      "errorKind": "UnsupportedFeature(DestructuringPattern)",
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": "unsupported.patterns",
+      "lane": "exact",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "PropositionKind",
+      "variant": "Paxiom",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Well-typed pure formula."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "declaration-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "PropositionKind",
+      "variant": "Pgoal",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Well-typed pure formula."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "declaration-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "PropositionKind",
+      "variant": "Plemma",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Well-typed pure formula."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "declaration-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "Pty",
+      "variant": "PTarrow",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every higher-order function type."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(HigherOrder)",
+      "fixtureId": "unsupported.higher-order",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "Pty",
+      "variant": "PTparen",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Qualified scope lookup and transparent parentheses around an otherwise supported type."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "type-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "Pty",
+      "variant": "PTpure",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Explicit program-type purification."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(TypePurification)",
+      "fixtureId": "unsupported.effects",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "Pty",
+      "variant": "PTref",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every reference type."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Reference)",
+      "fixtureId": "unsupported.references",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "Pty",
+      "variant": "PTscope",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Qualified scope lookup and transparent parentheses around an otherwise supported type."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "type-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "Pty",
+      "variant": "PTtuple",
+      "disposition": "partial",
+      "allowedShapes": [
+        "The empty tuple used as Unit."
+      ],
+      "rejectedShapes": [
+        "Non-empty user tuple types."
+      ],
+      "classificationStage": "type-elaboration",
+      "errorKind": "UnsupportedFeature(TupleType)",
+      "fixtureId": "mvp.unit",
+      "rejectionFixtureId": "unsupported.tuple",
+      "lane": "exact",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "Pty",
+      "variant": "PTtyapp",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Bool, Int, Real, Unit, or user abstract/alias types in pure logic.",
+        "Monomorphic Bool, Int, Real, or Unit in user programs."
+      ],
+      "rejectedShapes": [
+        "User-visible driver-only range, float, bitvector, map, or string types."
+      ],
+      "classificationStage": "name-resolution",
+      "errorKind": "UnsupportedFeature(DriverOnlyTheory)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.driver-only-theory",
+      "lane": "exact",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "Pty",
+      "variant": "PTtyvar",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Pure-logic type variables generalized at declaration boundaries."
+      ],
+      "rejectedShapes": [
+        "Any residual type variable in a user program routine."
+      ],
+      "classificationStage": "program-finalize",
+      "errorKind": "TypeError(PolymorphicProgramRoutine)",
+      "fixtureId": "mvp.logic-polymorphism",
+      "rejectionFixtureId": "unsupported.polymorphic-program",
+      "lane": "exact",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "QualId",
+      "variant": "Qdot",
+      "disposition": "supported",
+      "allowedShapes": [
+        "All parser-produced shapes; semantic restrictions are carried by the enclosing node."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "parser",
+      "errorKind": null,
+      "fixtureId": "parser.ptree-exact",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "QualId",
+      "variant": "Qident",
+      "disposition": "supported",
+      "allowedShapes": [
+        "All parser-produced shapes; semantic restrictions are carried by the enclosing node."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "parser",
+      "errorKind": null,
+      "fixtureId": "parser.ptree-exact",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "enum": "Quantifier",
+      "variant": "DTexists",
+      "disposition": "supported",
+      "allowedShapes": [
+        "First-order quantified formula with validated binders/triggers."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "term-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.logic-quantifiers",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "Quantifier",
+      "variant": "DTforall",
+      "disposition": "supported",
+      "allowedShapes": [
+        "First-order quantified formula with validated binders/triggers."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "term-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.logic-quantifiers",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "Quantifier",
+      "variant": "DTlambda",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every lambda."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Lambda)",
+      "fixtureId": "unsupported.lambda",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "RealLiteralKind",
+      "variant": "RLitDec",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Exact significand/pow2/pow5 representation; no Double conversion."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "literal-elaboration",
+      "errorKind": null,
+      "fixtureId": "parser.literal-kinds",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/literal.mbt"
+    },
+    {
+      "enum": "RealLiteralKind",
+      "variant": "RLitHex",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Exact significand/pow2/pow5 representation; no Double conversion."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "literal-elaboration",
+      "errorKind": null,
+      "fixtureId": "parser.literal-kinds",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/literal.mbt"
+    },
+    {
+      "enum": "RealLiteralKind",
+      "variant": "RLitUnk",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Exact significand/pow2/pow5 representation; no Double conversion."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "literal-elaboration",
+      "errorKind": null,
+      "fixtureId": "parser.literal-kinds",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/literal.mbt"
+    },
+    {
+      "enum": "RoutineKind",
+      "variant": "RKfunc",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user local/function/predicate/lemma routine kind."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(RoutineKind)",
+      "fixtureId": "unsupported.function-kinds",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "RoutineKind",
+      "variant": "RKlemma",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user local/function/predicate/lemma routine kind."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(RoutineKind)",
+      "fixtureId": "unsupported.function-kinds",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "RoutineKind",
+      "variant": "RKlocal",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user local/function/predicate/lemma routine kind."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(RoutineKind)",
+      "fixtureId": "unsupported.function-kinds",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "RoutineKind",
+      "variant": "RKnone",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Ordinary user let/val routine."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "program-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.abs",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "RoutineKind",
+      "variant": "RKpred",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user local/function/predicate/lemma routine kind."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(RoutineKind)",
+      "fixtureId": "unsupported.function-kinds",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tapply",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every higher-order term application."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(HigherOrderApplication)",
+      "fixtureId": "unsupported.higher-order",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tasref",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every auto-reference term."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Reference)",
+      "fixtureId": "unsupported.references",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tat",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every old/at label term."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(OldAt)",
+      "fixtureId": "unsupported.old-at",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tattr",
+      "disposition": "partial",
+      "allowedShapes": [
+        "First-order Bool/Int/Real/Unit values and formulas using supported symbols.",
+        "Ordinary byte-preserved attributes and explicit casts between supported expected kinds."
+      ],
+      "rejectedShapes": [
+        "A nested unsupported type, symbol, constant, or control attribute."
+      ],
+      "classificationStage": "term-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedTerm)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.logic-term",
+      "lane": "exact",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tbinnop",
+      "disposition": "partial",
+      "allowedShapes": [
+        "First-order Bool/Int/Real/Unit values and formulas using supported symbols.",
+        "Ordinary byte-preserved attributes and explicit casts between supported expected kinds."
+      ],
+      "rejectedShapes": [
+        "A nested unsupported type, symbol, constant, or control attribute."
+      ],
+      "classificationStage": "term-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedTerm)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.logic-term",
+      "lane": "exact",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tbinop",
+      "disposition": "partial",
+      "allowedShapes": [
+        "First-order Bool/Int/Real/Unit values and formulas using supported symbols.",
+        "Ordinary byte-preserved attributes and explicit casts between supported expected kinds."
+      ],
+      "rejectedShapes": [
+        "A nested unsupported type, symbol, constant, or control attribute."
+      ],
+      "classificationStage": "term-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedTerm)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.logic-term",
+      "lane": "exact",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tcase",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user case, record, or record-update term."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(AlgebraicData)",
+      "fixtureId": "unsupported.datatypes",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tcast",
+      "disposition": "partial",
+      "allowedShapes": [
+        "First-order Bool/Int/Real/Unit values and formulas using supported symbols.",
+        "Ordinary byte-preserved attributes and explicit casts between supported expected kinds."
+      ],
+      "rejectedShapes": [
+        "A nested unsupported type, symbol, constant, or control attribute."
+      ],
+      "classificationStage": "term-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedTerm)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.logic-term",
+      "lane": "exact",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tconst",
+      "disposition": "partial",
+      "allowedShapes": [
+        "First-order Bool/Int/Real/Unit values and formulas using supported symbols.",
+        "Ordinary byte-preserved attributes and explicit casts between supported expected kinds."
+      ],
+      "rejectedShapes": [
+        "A nested unsupported type, symbol, constant, or control attribute."
+      ],
+      "classificationStage": "term-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedTerm)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.logic-term",
+      "lane": "exact",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Teps",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user epsilon term."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Epsilon)",
+      "fixtureId": "unsupported.epsilon",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tfalse",
+      "disposition": "partial",
+      "allowedShapes": [
+        "First-order Bool/Int/Real/Unit values and formulas using supported symbols.",
+        "Ordinary byte-preserved attributes and explicit casts between supported expected kinds."
+      ],
+      "rejectedShapes": [
+        "A nested unsupported type, symbol, constant, or control attribute."
+      ],
+      "classificationStage": "term-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedTerm)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.logic-term",
+      "lane": "exact",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tidapp",
+      "disposition": "partial",
+      "allowedShapes": [
+        "First-order Bool/Int/Real/Unit values and formulas using supported symbols.",
+        "Ordinary byte-preserved attributes and explicit casts between supported expected kinds."
+      ],
+      "rejectedShapes": [
+        "A nested unsupported type, symbol, constant, or control attribute."
+      ],
+      "classificationStage": "term-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedTerm)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.logic-term",
+      "lane": "exact",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tident",
+      "disposition": "partial",
+      "allowedShapes": [
+        "First-order Bool/Int/Real/Unit values and formulas using supported symbols.",
+        "Ordinary byte-preserved attributes and explicit casts between supported expected kinds."
+      ],
+      "rejectedShapes": [
+        "A nested unsupported type, symbol, constant, or control attribute."
+      ],
+      "classificationStage": "term-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedTerm)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.logic-term",
+      "lane": "exact",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tif",
+      "disposition": "partial",
+      "allowedShapes": [
+        "First-order Bool/Int/Real/Unit values and formulas using supported symbols.",
+        "Ordinary byte-preserved attributes and explicit casts between supported expected kinds."
+      ],
+      "rejectedShapes": [
+        "A nested unsupported type, symbol, constant, or control attribute."
+      ],
+      "classificationStage": "term-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedTerm)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.logic-term",
+      "lane": "exact",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tinfix",
+      "disposition": "partial",
+      "allowedShapes": [
+        "First-order Bool/Int/Real/Unit values and formulas using supported symbols.",
+        "Ordinary byte-preserved attributes and explicit casts between supported expected kinds."
+      ],
+      "rejectedShapes": [
+        "A nested unsupported type, symbol, constant, or control attribute."
+      ],
+      "classificationStage": "term-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedTerm)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.logic-term",
+      "lane": "exact",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tinnfix",
+      "disposition": "partial",
+      "allowedShapes": [
+        "First-order Bool/Int/Real/Unit values and formulas using supported symbols.",
+        "Ordinary byte-preserved attributes and explicit casts between supported expected kinds."
+      ],
+      "rejectedShapes": [
+        "A nested unsupported type, symbol, constant, or control attribute."
+      ],
+      "classificationStage": "term-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedTerm)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.logic-term",
+      "lane": "exact",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tlet",
+      "disposition": "partial",
+      "allowedShapes": [
+        "First-order Bool/Int/Real/Unit values and formulas using supported symbols.",
+        "Ordinary byte-preserved attributes and explicit casts between supported expected kinds."
+      ],
+      "rejectedShapes": [
+        "A nested unsupported type, symbol, constant, or control attribute."
+      ],
+      "classificationStage": "term-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedTerm)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.logic-term",
+      "lane": "exact",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tnot",
+      "disposition": "partial",
+      "allowedShapes": [
+        "First-order Bool/Int/Real/Unit values and formulas using supported symbols.",
+        "Ordinary byte-preserved attributes and explicit casts between supported expected kinds."
+      ],
+      "rejectedShapes": [
+        "A nested unsupported type, symbol, constant, or control attribute."
+      ],
+      "classificationStage": "term-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedTerm)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.logic-term",
+      "lane": "exact",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tquant",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Forall and exists with first-order binders and validated triggers."
+      ],
+      "rejectedShapes": [
+        "Lambda quantifier or unsupported binder/type/trigger shapes."
+      ],
+      "classificationStage": "term-elaboration",
+      "errorKind": "UnsupportedFeature(Lambda)",
+      "fixtureId": "mvp.logic-quantifiers",
+      "rejectionFixtureId": "unsupported.lambda",
+      "lane": "exact",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Trecord",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user case, record, or record-update term."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(AlgebraicData)",
+      "fixtureId": "unsupported.datatypes",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tscope",
+      "disposition": "partial",
+      "allowedShapes": [
+        "First-order Bool/Int/Real/Unit values and formulas using supported symbols.",
+        "Ordinary byte-preserved attributes and explicit casts between supported expected kinds."
+      ],
+      "rejectedShapes": [
+        "A nested unsupported type, symbol, constant, or control attribute."
+      ],
+      "classificationStage": "term-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedTerm)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.logic-term",
+      "lane": "exact",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Ttrue",
+      "disposition": "partial",
+      "allowedShapes": [
+        "First-order Bool/Int/Real/Unit values and formulas using supported symbols.",
+        "Ordinary byte-preserved attributes and explicit casts between supported expected kinds."
+      ],
+      "rejectedShapes": [
+        "A nested unsupported type, symbol, constant, or control attribute."
+      ],
+      "classificationStage": "term-elaboration",
+      "errorKind": "UnsupportedFeature(NestedUnsupportedTerm)",
+      "fixtureId": "mvp.logic-core",
+      "rejectionFixtureId": "unsupported.logic-term",
+      "lane": "exact",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Ttuple",
+      "disposition": "partial",
+      "allowedShapes": [
+        "The empty tuple used as Unit."
+      ],
+      "rejectedShapes": [
+        "Every non-empty tuple term."
+      ],
+      "classificationStage": "term-elaboration",
+      "errorKind": "UnsupportedFeature(TupleTerm)",
+      "fixtureId": "mvp.unit",
+      "rejectionFixtureId": "unsupported.tuple",
+      "lane": "exact",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TermDesc",
+      "variant": "Tupdate",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user case, record, or record-update term."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(AlgebraicData)",
+      "fixtureId": "unsupported.datatypes",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "enum": "TypeDef",
+      "variant": "TDalgebraic",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user algebraic datatype."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(Datatype)",
+      "fixtureId": "unsupported.datatypes",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "TypeDef",
+      "variant": "TDalias",
+      "disposition": "supported",
+      "allowedShapes": [
+        "Parameterized or monomorphic non-recursive aliases."
+      ],
+      "rejectedShapes": [],
+      "classificationStage": "declaration-elaboration",
+      "errorKind": null,
+      "fixtureId": "mvp.logic-polymorphism",
+      "rejectionFixtureId": null,
+      "lane": "exact",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "TypeDef",
+      "variant": "TDfloat",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user range or floating-point type."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(DriverOnlyType)",
+      "fixtureId": "unsupported.driver-only-theory",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "TypeDef",
+      "variant": "TDrange",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every user range or floating-point type."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(DriverOnlyType)",
+      "fixtureId": "unsupported.driver-only-theory",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "TypeDef",
+      "variant": "TDrecord",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Empty immutable record with Abstract visibility, no invariant, and no witness, representing an abstract type."
+      ],
+      "rejectedShapes": [
+        "Every concrete record, mutable type, invariant, or witness."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(RecordOrInvariant)",
+      "fixtureId": "mvp.logic-polymorphism",
+      "rejectionFixtureId": "unsupported.datatypes",
+      "lane": "exact",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "enum": "Visibility",
+      "variant": "Abstract",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Public alias/abstract type and Abstract empty-record type."
+      ],
+      "rejectedShapes": [
+        "Visibility used with an unsupported type shape."
+      ],
+      "classificationStage": "declaration-elaboration",
+      "errorKind": "UnsupportedFeature(TypeVisibilityShape)",
+      "fixtureId": "mvp.logic-polymorphism",
+      "rejectionFixtureId": "unsupported.datatypes",
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "Visibility",
+      "variant": "Private",
+      "disposition": "unsupported",
+      "allowedShapes": [],
+      "rejectedShapes": [
+        "Every private user type."
+      ],
+      "classificationStage": "feature-classification",
+      "errorKind": "UnsupportedFeature(PrivateType)",
+      "fixtureId": "unsupported.datatypes",
+      "rejectionFixtureId": null,
+      "lane": "unsupported",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "enum": "Visibility",
+      "variant": "Public",
+      "disposition": "partial",
+      "allowedShapes": [
+        "Public alias/abstract type and Abstract empty-record type."
+      ],
+      "rejectedShapes": [
+        "Visibility used with an unsupported type shape."
+      ],
+      "classificationStage": "declaration-elaboration",
+      "errorKind": "UnsupportedFeature(TypeVisibilityShape)",
+      "fixtureId": "mvp.logic-polymorphism",
+      "rejectionFixtureId": "unsupported.datatypes",
+      "lane": "exact",
+      "source": "parser/ast_common.mbt"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+theory Datatypes
+  type color = Red | Blue
+  function flip (value : color) : color =
+    match value with
+    | Red -> Blue
+    | Blue -> Red
+    end
+  goal flip_twice : forall value : color. flip (flip value) = value
+end

@@ -1,2 +1,8 @@
 *
 !Dockerfile
+!.dockerignore
+!tools/
+tools/*
+!tools/why3_oracle/
+tools/why3_oracle/*
+!tools/why3_oracle/why3-1.7.2.opam

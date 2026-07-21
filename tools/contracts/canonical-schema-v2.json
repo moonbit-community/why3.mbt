@@ -1,0 +1,519 @@
+{
+  "schemaVersion": 2,
+  "recordVersion": 2,
+  "encoding": {
+    "json": "UTF-8, no insignificant whitespace, object fields in schema order, one LF terminator",
+    "bytes": "lowercase hexadecimal without prefix",
+    "integers": "base-10 string with optional leading minus and no redundant leading zeroes",
+    "real": [
+      "significand-decimal",
+      "pow2-decimal",
+      "pow5-decimal"
+    ],
+    "option": {
+      "none": [
+        "none"
+      ],
+      "some": [
+        "some",
+        "<value>"
+      ]
+    },
+    "orderedSequence": "JSON array in semantic source/history order",
+    "semanticMap": "JSON array of [key,value] entries sorted by canonical byte key, then recursively by encoded value",
+    "attributes": "JSON array of lowercase-hex Bytes values sorted lexicographically",
+    "path": "fixture-root-relative POSIX path encoded as lowercase-hex bytes"
+  },
+  "identity": {
+    "globalSymbols": "assign [symbol-kind, zero-based-index] at first preorder encounter across declarations, references, metas, and clone witnesses",
+    "boundVariables": "de Bruijn index",
+    "contextTokenSerialized": false,
+    "runtimeTagsSerialized": false,
+    "physicalAddressesSerialized": false,
+    "sourceNamesPreserved": true,
+    "originKindSerialized": true,
+    "generatedStageSerialized": true
+  },
+  "recordFieldOrder": {
+    "CanonicalRecord": [
+      "schema",
+      "semantic_profile_sha256",
+      "fixture",
+      "source_sha256",
+      "scope",
+      "unit_kind",
+      "unit_name_hex",
+      "goal_name_hex",
+      "goal_ordinal",
+      "stage",
+      "canonical_sha256",
+      "canonical"
+    ],
+    "OracleGoalEnvelope": [
+      "oracle_context_sha256",
+      "record",
+      "reference_diagnostics"
+    ]
+  },
+  "nodeEncoding": "Each semantic node is a JSON array whose first element is the exact tag below and whose remaining elements follow the listed field order.",
+  "nodeFieldOrder": {
+    "Origin.User": [
+      "display_name_hex",
+      "source_span",
+      "attributes"
+    ],
+    "Origin.Snapshot": [
+      "display_name_hex",
+      "snapshot_key",
+      "attributes"
+    ],
+    "Origin.Generated": [
+      "stage",
+      "display_name_hex",
+      "source_span",
+      "attributes"
+    ],
+    "SourceSpan": [
+      "relative_path_hex",
+      "start_byte",
+      "end_byte",
+      "start_line",
+      "start_column",
+      "end_line",
+      "end_column"
+    ],
+    "SnapshotSymbolKey": [
+      "theory_key_hex",
+      "theory_item_ordinal",
+      "declaration_inner_ordinal",
+      "symbol_kind",
+      "symbol_digest"
+    ],
+    "TyVar": [
+      "tyvar_symbol"
+    ],
+    "TyApp": [
+      "type_symbol",
+      "arguments"
+    ],
+    "TypeSymbol": [
+      "symbol_id",
+      "name_hex",
+      "origin",
+      "type_parameters",
+      "definition"
+    ],
+    "TypeDefinition.NoDef": [],
+    "TypeDefinition.Alias": [
+      "type"
+    ],
+    "TypeDefinition.Range": [
+      "lower_decimal",
+      "upper_decimal"
+    ],
+    "TypeDefinition.Float": [
+      "exponent_digits",
+      "significand_digits"
+    ],
+    "VSymbol": [
+      "symbol_id",
+      "name_hex",
+      "origin",
+      "type"
+    ],
+    "LSymbol": [
+      "symbol_id",
+      "name_hex",
+      "origin",
+      "type_parameters",
+      "argument_types",
+      "result_type_option"
+    ],
+    "PrSymbol": [
+      "symbol_id",
+      "name_hex",
+      "origin"
+    ],
+    "ConstantInt": [
+      "literal_kind",
+      "value_decimal"
+    ],
+    "ConstantReal": [
+      "literal_kind",
+      "significand_decimal",
+      "pow2_decimal",
+      "pow5_decimal"
+    ],
+    "ConstantString": [
+      "bytes_hex"
+    ],
+    "Tvar": [
+      "bound_or_global_variable"
+    ],
+    "Tconst": [
+      "constant",
+      "result_type"
+    ],
+    "Tapp": [
+      "logic_symbol",
+      "type_instantiation",
+      "arguments",
+      "result_type_option"
+    ],
+    "Tif": [
+      "condition",
+      "then_branch",
+      "else_branch",
+      "result_type_option"
+    ],
+    "Tlet": [
+      "value",
+      "binder_type",
+      "body",
+      "result_type_option"
+    ],
+    "Tcase": [
+      "scrutinee",
+      "branches",
+      "result_type_option"
+    ],
+    "Teps": [
+      "binder_type",
+      "body",
+      "result_type"
+    ],
+    "Tquant.Forall": [
+      "binder_types",
+      "triggers",
+      "body"
+    ],
+    "Tquant.Exists": [
+      "binder_types",
+      "triggers",
+      "body"
+    ],
+    "Tbinop.And": [
+      "left",
+      "right"
+    ],
+    "Tbinop.Or": [
+      "left",
+      "right"
+    ],
+    "Tbinop.Implies": [
+      "left",
+      "right"
+    ],
+    "Tbinop.Iff": [
+      "left",
+      "right"
+    ],
+    "Tnot": [
+      "term"
+    ],
+    "Ttrue": [],
+    "Tfalse": [],
+    "TermDecorated": [
+      "term",
+      "origin",
+      "attributes"
+    ],
+    "Pwild": [
+      "type"
+    ],
+    "Pvar": [
+      "bound_variable_type"
+    ],
+    "Papp": [
+      "logic_symbol",
+      "arguments",
+      "type"
+    ],
+    "Por": [
+      "left",
+      "right",
+      "type"
+    ],
+    "Pas": [
+      "pattern",
+      "bound_variable_type"
+    ],
+    "Dtype": [
+      "type_symbols"
+    ],
+    "Ddata": [
+      "data_declarations"
+    ],
+    "Dparam": [
+      "logic_symbol"
+    ],
+    "Dlogic": [
+      "logic_definitions"
+    ],
+    "Dind.Ind": [
+      "inductive_declarations"
+    ],
+    "Dprop.Paxiom": [
+      "proposition_symbol",
+      "formula"
+    ],
+    "Dprop.Plemma": [
+      "proposition_symbol",
+      "formula"
+    ],
+    "Dprop.Pgoal": [
+      "proposition_symbol",
+      "formula"
+    ],
+    "Decl": [
+      "origin",
+      "dependencies",
+      "node"
+    ],
+    "TheoryKey": [
+      "path_segments_hex",
+      "name_hex"
+    ],
+    "Theory": [
+      "key",
+      "name_origin",
+      "items",
+      "export_namespace"
+    ],
+    "TheoryItem.Decl": [
+      "declaration"
+    ],
+    "TheoryItem.Use": [
+      "source_theory_key"
+    ],
+    "TheoryItem.Clone": [
+      "clone_witness"
+    ],
+    "TheoryItem.Meta": [
+      "meta"
+    ],
+    "CloneWitness": [
+      "source_theory_key",
+      "source_item_identity",
+      "type_instantiations",
+      "logic_instantiations",
+      "prop_instantiations"
+    ],
+    "Meta": [
+      "name_hex",
+      "arguments"
+    ],
+    "Namespace": [
+      "type_entries",
+      "logic_entries",
+      "prop_entries",
+      "subspaces"
+    ],
+    "Task": [
+      "items"
+    ],
+    "TaskItem.Decl": [
+      "declaration"
+    ],
+    "TaskItem.Use": [
+      "source_theory_key"
+    ],
+    "TaskItem.Clone": [
+      "clone_witness"
+    ],
+    "TaskItem.Meta": [
+      "meta"
+    ],
+    "ItyVar": [
+      "type_variable"
+    ],
+    "ItyApp": [
+      "program_type_symbol",
+      "arguments",
+      "regions",
+      "pure"
+    ],
+    "ItyReg": [
+      "region_symbol",
+      "arguments",
+      "regions"
+    ],
+    "ProgramTypeSymbol": [
+      "symbol_id",
+      "logic_type_symbol",
+      "origin",
+      "flags",
+      "definition"
+    ],
+    "Effect": [
+      "reads",
+      "writes",
+      "taints",
+      "covers",
+      "resets",
+      "raises",
+      "spoils",
+      "termination",
+      "ghost"
+    ],
+    "Cty": [
+      "arguments",
+      "preconditions",
+      "postconditions",
+      "exceptional_postconditions",
+      "oldies",
+      "effect",
+      "result",
+      "mask",
+      "freeze"
+    ],
+    "RoutineSymbol": [
+      "symbol_id",
+      "name_hex",
+      "origin",
+      "cty",
+      "rs_logic",
+      "field_option"
+    ],
+    "Evar": [
+      "program_variable",
+      "ity"
+    ],
+    "Econst": [
+      "constant",
+      "ity"
+    ],
+    "EpureApp": [
+      "logic_symbol",
+      "arguments",
+      "ity"
+    ],
+    "EroutineCall": [
+      "routine_symbol",
+      "arguments",
+      "ity"
+    ],
+    "Elet": [
+      "binder",
+      "value",
+      "body",
+      "ity"
+    ],
+    "Eif": [
+      "condition",
+      "then_branch",
+      "else_branch",
+      "ity"
+    ],
+    "Eassert": [
+      "formula"
+    ],
+    "Eassume": [
+      "formula"
+    ],
+    "ExprDecorated": [
+      "expr",
+      "origin",
+      "attributes",
+      "effect",
+      "mask"
+    ],
+    "Pdecl": [
+      "origin",
+      "pure_declarations",
+      "metas",
+      "node"
+    ],
+    "Pdecl.PDtype": [
+      "program_type_definitions"
+    ],
+    "Pdecl.PDlet": [
+      "routine_symbol",
+      "definition_kind",
+      "definition_projection"
+    ],
+    "Pdecl.PDpure": [],
+    "Pdecl.PDexn": [
+      "exception_symbol"
+    ],
+    "PmoduleKey": [
+      "path_segments_hex",
+      "name_hex"
+    ],
+    "Pmodule": [
+      "key",
+      "pure_theory",
+      "items",
+      "export_namespace"
+    ],
+    "PmoduleItem.PureDecl": [
+      "declaration"
+    ],
+    "PmoduleItem.ProgramDecl": [
+      "program_declaration"
+    ],
+    "PmoduleItem.Use": [
+      "source_pmodule_key"
+    ],
+    "PmoduleItem.Clone": [
+      "clone_witness"
+    ],
+    "PmoduleItem.Meta": [
+      "meta"
+    ],
+    "ProgramNamespace": [
+      "type_entries",
+      "program_entries",
+      "exception_entries",
+      "subspaces"
+    ],
+    "GoalInfo": [
+      "unit_kind",
+      "unit_name_hex",
+      "goal_symbol",
+      "goal_name_hex",
+      "goal_ordinal",
+      "origin",
+      "ordered_expl_attributes"
+    ],
+    "SmtIdentifier": [
+      "token_bytes_hex",
+      "origin_kind",
+      "generated_stage_option"
+    ],
+    "SmtQuery": [
+      "bytes_hex",
+      "identifier_provenance"
+    ],
+    "CommandSpec": [
+      "profile_id",
+      "transport",
+      "executable_request",
+      "solver_seconds",
+      "parent_deadline_policy",
+      "stdout_limit",
+      "stderr_limit"
+    ],
+    "PreparedCall": [
+      "raw_task",
+      "transform_checkpoints",
+      "prepared_task",
+      "query",
+      "command",
+      "goal_info"
+    ],
+    "TypedUnitTheory": [
+      "theory"
+    ],
+    "TypedUnitModule": [
+      "pmodule"
+    ]
+  },
+  "completenessRules": [
+    "Every opaque semantic enum variant must have an entry in nodeFieldOrder.",
+    "Adding or reordering a field requires a new canonical schema version.",
+    "Canonicalizers must fail closed on an unlisted variant.",
+    "Theory, Task, declaration, argument, trigger, quantifier pattern, assertion, and command order is never sorted.",
+    "Only semantic maps and namespaces are sorted, using the encoding rule above."
+  ]
+}

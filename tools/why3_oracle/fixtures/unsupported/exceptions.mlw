@@ -1,0 +1,6 @@
+(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)
+
+module Exceptions
+  exception Stop
+  let stop () : unit raises { Stop } = raise Stop
+end
