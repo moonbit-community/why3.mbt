@@ -178,7 +178,7 @@
       {
         "id": "moon-dependencies-v1",
         "path": "tools/contracts/moon-dependencies-v1.json",
-        "sha256": "c52a1a0ad3f862b96530d012e6eab6e48abc9b788dee8287fe9c1cc7c6bc8383"
+        "sha256": "04acacf2148330745a0ebf35483058e62c171f9ef0d51f5beaa3d62bc4095bee"
       },
       {
         "id": "oracle-goal-envelope-v1-json-schema",
@@ -251,5 +251,5 @@
     "defaultPlugins": "disabled",
     "standardLibrary": "explicit --no-stdlib plus manifest loadpaths"
   },
-  "lockSha256": "162a687d755a3b941a15b12454f2a22525fcdd3b2882ebdd424b89b069863988"
+  "lockSha256": "0f024bb28b0948180bec98c4a057dc5ac151901656dd4041e2d6db1645c2d045"
 }

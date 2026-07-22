@@ -19,61 +19,21 @@ fn fresh_environment(
 }
 
 ///|
+fn load_fixture(path : String) -> (Bytes, Bytes) raise {
+  (@fs.read_file_to_bytes(path), @utf8.encode(path))
+}
+
+///|
 test "MVP pure theories elaborate against the frozen environment" {
-  let source =
-    #|theory LogicCore
-    #|  use int.Int
-    #|  type u
-    #|  constant c : u
-    #|  predicate holds (x : u)
-    #|  function identity (x : int) : int = x
-    #|  predicate nonnegative (x : int) = x >= 0
-    #|  axiom c_holds : holds c
-    #|  lemma implication_identity : forall x : int. nonnegative x -> nonnegative x
-    #|  goal ordinary_attribute : [@ordinary_attribute] true
-    #|  goal bool_int_real : let x = identity 1 in if x = 1 then 0 < 1 else false
-    #|end
-    #|theory LogicReal
-    #|  use real.Real
-    #|  goal real_order : (0.5 : real) < 1.0
-    #|end
-    #|theory LogicPolymorphism
-    #|  type box 'a
-    #|  type wrapped 'a = box 'a
-    #|  function identity (x : 'a) : 'a = x
-    #|  goal identity_int : identity 0 = 0
-    #|  goal identity_bool : identity true = true
-    #|end
-    #|theory LogicQuantifiers
-    #|  use int.Int
-    #|  predicate marked (x : int)
-    #|  axiom marked_zero : marked 0
-    #|  goal quantified_trigger : (forall x : int [marked x]. marked x -> exists y : int. y = x)
-    #|end
-    #|theory UnitMvp
-    #|  constant u : unit
-    #|  goal unit_roundtrip : u = ()
-    #|end
-    #|theory NamespaceMvp
-    #|  use int.Int
-    #|  scope Inner
-    #|    function successor (x : int) : int = x + 1
-    #|  end
-    #|  goal qualified_lookup : Inner.successor 0 = 1
-    #|end
-    #|theory MultiFirst
-    #|  goal first_goal : true
-    #|end
-    #|theory MultiSecond
-    #|  goal second_goal : true
-    #|end
+  let (source, filename) = load_fixture("tools/why3_oracle/fixtures/mvp.mlw")
   let context = @identity.CompilationContext::new()
   let frozen = fresh_environment(context)
   let environment = frozen.semantic_environment()
-  let units = parsed_units(@utf8.encode(source)[:], b"mvp-pure.mlw")
-  assert_eq(units.length(), 8)
+  let units = parsed_units(source[:], filename[:])
+  assert_eq(units.length(), 12)
   let theories : Array[@theory.Theory] = []
-  for index, unit in units {
+  for index in 0..<8 {
+    let unit = units[index]
     let theory = @why3_elab.elaborate_pure_unit(context, environment, unit) catch {
       _ => fail("pure MVP unit failed at index " + index.to_string())
     }
@@ -135,9 +95,12 @@ fn expect_type_error(
 
 ///|
 test "pure typing preserves arity mismatch and occurs-check classes" {
+  let (arity_source, arity_filename) = load_fixture(
+    "tools/why3_oracle/fixtures/typing-arity.mlw",
+  )
   expect_type_error(
-    b"(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)\n\ntheory ArityMismatch\n  function pair (x y : int) : int\n  goal arity : pair 0 = 0\nend\n",
-    b"tools/why3_oracle/fixtures/typing-arity.mlw",
+    arity_source[:],
+    arity_filename[:],
     @why3_elab.TypeFailure(ArityMismatch),
     5L,
     15L,
@@ -145,9 +108,12 @@ test "pure typing preserves arity mismatch and occurs-check classes" {
     Some(b"int -> int"),
     Some(b"int"),
   )
+  let (mismatch_source, mismatch_filename) = load_fixture(
+    "tools/why3_oracle/fixtures/typing-mismatch.mlw",
+  )
   expect_type_error(
-    b"(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)\n\ntheory TypeMismatch\n  goal mismatch : 0 = true\nend\n",
-    b"tools/why3_oracle/fixtures/typing-mismatch.mlw",
+    mismatch_source[:],
+    mismatch_filename[:],
     @why3_elab.TypeFailure(TypeMismatch),
     4L,
     18L,
@@ -155,9 +121,12 @@ test "pure typing preserves arity mismatch and occurs-check classes" {
     Some(b"int"),
     Some(b"bool"),
   )
+  let (occurs_source, occurs_filename) = load_fixture(
+    "tools/why3_oracle/fixtures/typing-occurs.mlw",
+  )
   expect_type_error(
-    b"(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)\n\ntheory OccursCheck\n  goal occurs : (fun x -> x x) = (fun x -> x x)\nend\n",
-    b"tools/why3_oracle/fixtures/typing-occurs.mlw",
+    occurs_source[:],
+    occurs_filename[:],
     @why3_elab.TypeFailure(OccursCheck),
     4L,
     28L,
@@ -211,9 +180,12 @@ fn expect_unsupported_before_task(
 
 ///|
 test "unsupported pure features are classified before Task construction" {
+  let (lambda_source, lambda_filename) = load_fixture(
+    "tools/why3_oracle/fixtures/unsupported/lambda.mlw",
+  )
   expect_unsupported_before_task(
-    b"(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)\n\ntheory Lambda\n  function identity : int -> int = fun value -> value\n  goal identity_zero : identity 0 = 0\nend\n",
-    b"tools/why3_oracle/fixtures/unsupported/lambda.mlw",
+    lambda_source[:],
+    lambda_filename[:],
     0,
     Lambda,
     4L,
@@ -221,9 +193,12 @@ test "unsupported pure features are classified before Task construction" {
     4L,
     53L,
   )
+  let (higher_order_source, higher_order_filename) = load_fixture(
+    "tools/why3_oracle/fixtures/unsupported/higher-order.mlw",
+  )
   expect_unsupported_before_task(
-    b"(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)\n\ntheory HigherOrder\n  constant transformer : (int -> int) -> int\n  constant identity : int -> int\n  goal application : transformer identity = transformer identity\n  goal higher_application : (if true then identity else identity) 0 = 0\nend\n",
-    b"tools/why3_oracle/fixtures/unsupported/higher-order.mlw",
+    higher_order_source[:],
+    higher_order_filename[:],
     0,
     HigherOrder,
     4L,
@@ -231,9 +206,12 @@ test "unsupported pure features are classified before Task construction" {
     4L,
     44L,
   )
+  let (datatypes_source, datatypes_filename) = load_fixture(
+    "tools/why3_oracle/fixtures/unsupported/datatypes.mlw",
+  )
   expect_unsupported_before_task(
-    b"(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)\n\ntheory Datatypes\n  type color = Red | Blue\n  function flip (value : color) : color =\n    match value with\n    | Red -> Blue\n    | Blue -> Red\n    end\n  goal flip_twice : forall value : color. flip (flip value) = value\nend\n",
-    b"tools/why3_oracle/fixtures/unsupported/datatypes.mlw",
+    datatypes_source[:],
+    datatypes_filename[:],
     0,
     TypeDeclarationShape,
     4L,
@@ -241,9 +219,12 @@ test "unsupported pure features are classified before Task construction" {
     4L,
     25L,
   )
+  let (control_source, control_filename) = load_fixture(
+    "tools/why3_oracle/fixtures/unsupported/control-attribute.mlw",
+  )
   expect_unsupported_before_task(
-    b"(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)\n\nmodule ControlAttribute\n  let controlled () : unit = [@vc:sp] ()\nend\n\ntheory UserStopSplit\n  goal rejected_user_origin : [@stop_split] true\nend\n",
-    b"tools/why3_oracle/fixtures/unsupported/control-attribute.mlw",
+    control_source[:],
+    control_filename[:],
     1,
     ControlAttribute,
     8L,
@@ -251,9 +232,12 @@ test "unsupported pure features are classified before Task construction" {
     8L,
     48L,
   )
+  let (meta_source, meta_filename) = load_fixture(
+    "tools/why3_oracle/fixtures/unsupported/meta.mlw",
+  )
   expect_unsupported_before_task(
-    b"(* SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception *)\n\ntheory UserMeta\n  type source\n  type target\n  function convert (x : source) : target\n  meta coercion function convert\nend\n",
-    b"tools/why3_oracle/fixtures/unsupported/meta.mlw",
+    meta_source[:],
+    meta_filename[:],
     0,
     UserMeta,
     7L,

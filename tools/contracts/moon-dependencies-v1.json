@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "module": {
     "path": "moon.mod",
-    "sha256": "5d090527f9c40fcf89a101ce087ba4be73db4014b0ffafb24163fc1b9982f6c0"
+    "sha256": "b589ae72e0e049eea4567a840a355f5e1bf7ddef069dcdd4702443e29dc8edc1"
   },
   "policy": {
     "dependencySetComesFromExactMoonModImports": true,
@@ -2378,7 +2378,866 @@
         ],
         "sha256": "5110a03175965d1d1f1d16028ada4c2527148cf858546bc5197cb9e76f8a6137"
       }
+    },
+    {
+      "name": "moonbitlang/x",
+      "version": "0.4.46",
+      "tree": {
+        "entries": [
+          {
+            "path": "CHANGELOG.md",
+            "kind": "file",
+            "sha256": "ddf19d279dfc3b87290e8b8efc2b26809f670585e74810196bfc3bd42978e978"
+          },
+          {
+            "path": "README.md",
+            "kind": "file",
+            "sha256": "35414c45b9bcb8436d7a0162af175887f2d2d29bab557d07e8dccb107ba7b890"
+          },
+          {
+            "path": "_typos.toml",
+            "kind": "file",
+            "sha256": "a072f97f34d25d6c2f12a87f1a2fd5c801e64a1b963f57a978b49dfa19a8829c"
+          },
+          {
+            "path": "codec/base64/base64.mbt",
+            "kind": "file",
+            "sha256": "1fea0f89325f0b55de053f858455dd901d10f16439f1dc06a41fef99f3e29a0e"
+          },
+          {
+            "path": "codec/base64/base64_wbtest.mbt",
+            "kind": "file",
+            "sha256": "58469c8cee7cb514cddbcbbb75afb5759d28ed8174ff07365ad1954d88068801"
+          },
+          {
+            "path": "codec/base64/moon.pkg",
+            "kind": "file",
+            "sha256": "9d91d38491c7a60ff47f1d3226f5f43afa9167a92ba481300836b1bfb2b3fc9a"
+          },
+          {
+            "path": "codec/base64/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "2a818eb48cca39706a2a75647c4c2eaaa61324ca045313b14580e42413a0f8b4"
+          },
+          {
+            "path": "crypto/README.mbt.md",
+            "kind": "file",
+            "sha256": "968cd344444343de0ba9cb6f7c75cfc1829e1589df88a97b9c2df6f20f47af7b"
+          },
+          {
+            "path": "crypto/byte_source.mbt",
+            "kind": "file",
+            "sha256": "15940fc1541a73c11273e6a89d56c4e45f88fd8993d19cef4b3ec259176f6dac"
+          },
+          {
+            "path": "crypto/chacha.mbt",
+            "kind": "file",
+            "sha256": "2ef90a179d51289b656226431a9d1030b519eb22089dbaff883873e85fc945a3"
+          },
+          {
+            "path": "crypto/chacha_test.mbt",
+            "kind": "file",
+            "sha256": "9d4bdfb70e523f2450c7e66b41663588829fb5ebc37d4eff6b5b04008b2115f4"
+          },
+          {
+            "path": "crypto/hmac.mbt",
+            "kind": "file",
+            "sha256": "87b5358842d85ba65932f9e7b12551dfe62b417db39d17a358883ef1b3269724"
+          },
+          {
+            "path": "crypto/hmac_test.mbt",
+            "kind": "file",
+            "sha256": "9bb2c0bc0acbd141c79409992496ce88de2e747153ea182f22d813eb1ce0152f"
+          },
+          {
+            "path": "crypto/md5.mbt",
+            "kind": "file",
+            "sha256": "73c06ff9c8659e7cb2ab64dccef9ddad58744d8691e4b18547776bacd384d50b"
+          },
+          {
+            "path": "crypto/md5_test.mbt",
+            "kind": "file",
+            "sha256": "ad74c0f2c4925e9f3ead471067f5223fe854bdb3539b92a68a814db5854a310b"
+          },
+          {
+            "path": "crypto/moon.pkg",
+            "kind": "file",
+            "sha256": "2a8032aa61d126031e096bb343bae97d9c44171a66fa430e1840555c0490ce43"
+          },
+          {
+            "path": "crypto/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "b1b6fb475dd1c934d78ae8768737aa04e6df0e80962086b7db532ce776bccf13"
+          },
+          {
+            "path": "crypto/sha1.mbt",
+            "kind": "file",
+            "sha256": "ec8c3b98bde92f8678eee7b5909a68317357cec2af13cc396301e1dff3a0b237"
+          },
+          {
+            "path": "crypto/sha1_test.mbt",
+            "kind": "file",
+            "sha256": "cc0dde1e5a4f074bd3f77e413676a9c7dd514205b47728dbd0df9fc82fbc1380"
+          },
+          {
+            "path": "crypto/sha224.mbt",
+            "kind": "file",
+            "sha256": "d344ce8df2d2fa8ae2e443cc70cd69b62693c77b7ca270bb52b09ad47dba966e"
+          },
+          {
+            "path": "crypto/sha224_test.mbt",
+            "kind": "file",
+            "sha256": "71aad9196314f9a8cb1eb079de0eb62e270fe6fb368b2b60826d891f121afaa2"
+          },
+          {
+            "path": "crypto/sha256.mbt",
+            "kind": "file",
+            "sha256": "9bb87b5fa9b0709107cad97b8872469fe1239fc274cba540dd0c71286996cb5c"
+          },
+          {
+            "path": "crypto/sha256_test.mbt",
+            "kind": "file",
+            "sha256": "7aae3c30634e537516c856bcbba0c99eac4931fd0e7c437ef9935343bde4d36f"
+          },
+          {
+            "path": "crypto/sm3.mbt",
+            "kind": "file",
+            "sha256": "6fa4ba4474c06405d6e78b6d7c771c5445890759a55fe4cdfec27de21458f7e0"
+          },
+          {
+            "path": "crypto/sm3_test.mbt",
+            "kind": "file",
+            "sha256": "827937d33881f06dbfcc4d4746deba1064be57d9d857156c5cc7b398dde33188"
+          },
+          {
+            "path": "crypto/traits.mbt",
+            "kind": "file",
+            "sha256": "f644696f16c674d73a61db16d5da2d179e4d3e21b3fd94df1744a598d94857be"
+          },
+          {
+            "path": "crypto/utils.mbt",
+            "kind": "file",
+            "sha256": "42768b59d482b68d87ddc69eb4d25551a586f53c03cc23636d844913d9df9d6d"
+          },
+          {
+            "path": "decimal/decimal.mbt",
+            "kind": "file",
+            "sha256": "88a39934f6b850fdf2ae76fdc154a34fba8ede26b4b1e9b3af49b1f6a05cc718"
+          },
+          {
+            "path": "decimal/decimal_test.mbt",
+            "kind": "file",
+            "sha256": "23cf6972badfa45473ade5df58bc5330791ee6a11f916a0017e891d4ecd4e548"
+          },
+          {
+            "path": "decimal/moon.pkg",
+            "kind": "file",
+            "sha256": "24f563db55ecbed47eb1ea11e1d0e7dd6b08070032b606b9344096b089103f2c"
+          },
+          {
+            "path": "decimal/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "6bc42350c4f3c9068bfb646b1baf1d2670b13b9c79317d56503c2eecb6c3c37c"
+          },
+          {
+            "path": "encoding/README.mbt.md",
+            "kind": "file",
+            "sha256": "e7b69705ae67b2014a99eb5200cf9e8e4c76e07a50a95c17102dcbc732f63c77"
+          },
+          {
+            "path": "encoding/decoding.mbt",
+            "kind": "file",
+            "sha256": "a6640bbc56c16d19e1a01e7c376e044f13a38aec57c2b9d94171645c1dcdffca"
+          },
+          {
+            "path": "encoding/decoding_test.mbt",
+            "kind": "file",
+            "sha256": "48f699456551618e9354889650b8cf1802ea5bb5798b9dbabf27390826a47bd0"
+          },
+          {
+            "path": "encoding/encoding.mbt",
+            "kind": "file",
+            "sha256": "9298ff1f47f2cb13aba496259be64a456854058ea842a5dfe296fc3f2ebceb6c"
+          },
+          {
+            "path": "encoding/encoding_test.mbt",
+            "kind": "file",
+            "sha256": "20402d2710bdb0d97861997a8b63022e82b732f557d0fe599c18ff7b8921e9e8"
+          },
+          {
+            "path": "encoding/internal/benchmark/README.md",
+            "kind": "file",
+            "sha256": "600ca526a22141a623e6af70910ea31afdce21b46d9eaef582069b3135197a9a"
+          },
+          {
+            "path": "encoding/internal/benchmark/bench.sh",
+            "kind": "file",
+            "sha256": "9f75d7e317c819a9a5e0a3e9fdc44ffb717f4a1ff65c415ca38c64d4627d3e62"
+          },
+          {
+            "path": "encoding/internal/benchmark/bench_diff.sh",
+            "kind": "file",
+            "sha256": "53a29c79c8eefbb4471d1cc05c43cd30996166e052ccf9ee393dad619f628753"
+          },
+          {
+            "path": "encoding/internal/benchmark/decoding_batch/main.mbt",
+            "kind": "file",
+            "sha256": "b0611cafb159aa4b27f9a2f7b43be06a23ff1ec975791ee6dcab65d2aa986422"
+          },
+          {
+            "path": "encoding/internal/benchmark/decoding_batch/moon.pkg",
+            "kind": "file",
+            "sha256": "7d4bdf20bd79a2b2d683efdc40d146a3631a2c277dad844a1469b0c9137e0c3e"
+          },
+          {
+            "path": "encoding/internal/benchmark/decoding_batch/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "ebe9c7e7274200b3364cb8149e0ac878dfc3b07479b4456630624ad314abfd4c"
+          },
+          {
+            "path": "encoding/internal/benchmark/decoding_streaming/main.mbt",
+            "kind": "file",
+            "sha256": "2280e10a92f284800bfde1eb05e5405e09765084830111449c5f3889c4da9b66"
+          },
+          {
+            "path": "encoding/internal/benchmark/decoding_streaming/moon.pkg",
+            "kind": "file",
+            "sha256": "7d4bdf20bd79a2b2d683efdc40d146a3631a2c277dad844a1469b0c9137e0c3e"
+          },
+          {
+            "path": "encoding/internal/benchmark/decoding_streaming/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "9ba2a18508c51fac183206d921f351063054c9557889b056f2b811e7a47ce696"
+          },
+          {
+            "path": "encoding/internal/benchmark/lib.mbt",
+            "kind": "file",
+            "sha256": "87fa4452d726c4689c9be8f21a3d9f78abf4725ae2050462c85b28d48bea51f6"
+          },
+          {
+            "path": "encoding/internal/benchmark/moon.pkg",
+            "kind": "file",
+            "sha256": "be93a1cb07977a85af36cfe805f91c39815106ee0943d62e293164286f616dfb"
+          },
+          {
+            "path": "encoding/internal/benchmark/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "06c6d8fe86276b57bec0a82a582349c3017c91c42f6b3c92b1716d4723b0690b"
+          },
+          {
+            "path": "encoding/moon.pkg",
+            "kind": "file",
+            "sha256": "66bf52d8e172c48641f4afb0a8a32310f6cb674fa3fea2ea8ec8d3d963cf333b"
+          },
+          {
+            "path": "encoding/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "8cc10794b34a4636019a1716cf3ab2a165bff6d4eb13389d089755d943c575b9"
+          },
+          {
+            "path": "encoding/types.mbt",
+            "kind": "file",
+            "sha256": "ea4f2cea7471852d2020dc18d5c90edd4883133116929bab4bf89c81bd61a7c2"
+          },
+          {
+            "path": "fs/blackbox_test.mbt",
+            "kind": "file",
+            "sha256": "0f3527a49541f02f139c8fbac21b76c62c5a77aa2d08d3cbe3326d2d112ce652"
+          },
+          {
+            "path": "fs/fs.mbt",
+            "kind": "file",
+            "sha256": "dc877499ad74145a6b0dbd2b8232bbf51ad6b51252afc0afc2001a6a2b9e195b"
+          },
+          {
+            "path": "fs/fs_js.mbt",
+            "kind": "file",
+            "sha256": "5e62a33e6cea8940977ebaa322ce63dce3e602f1dce03b39caae19887168696d"
+          },
+          {
+            "path": "fs/fs_native.c",
+            "kind": "file",
+            "sha256": "ed1640f8d09a5318d4a92136050ad6fb504f476c2729ded60fb57091e14b414a"
+          },
+          {
+            "path": "fs/fs_native.mbt",
+            "kind": "file",
+            "sha256": "808a482ca3b8eaef329db097e361434ffbf4acf90fb7f045a0b984d18ecfdf0e"
+          },
+          {
+            "path": "fs/fs_wasm.mbt",
+            "kind": "file",
+            "sha256": "89d04694855b9f66ef40afb5d306ad34169140f47d2d1769467d824a6a203492"
+          },
+          {
+            "path": "fs/moon.pkg",
+            "kind": "file",
+            "sha256": "ac7d0990e17a33d2fdda2748b630b761e30e36c7dc33999cb9fc6127b8ca28ff"
+          },
+          {
+            "path": "fs/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "e0ded1f5d7b1736af49e8e7803d4182c5642af686248d4fe2ddfc489f6dbeae0"
+          },
+          {
+            "path": "fs/test_1.txt",
+            "kind": "file",
+            "sha256": "90c4aec17f5212e09db2590f1e2424ada154328b9f3657958933a327e07dd56f"
+          },
+          {
+            "path": "fs/test_2.txt",
+            "kind": "file",
+            "sha256": "ce152af08208e4b17459e79d5db71186b7e02e7f62610609c01a134824bec0b3"
+          },
+          {
+            "path": "internal/ffi/byte_array_wasm.mbt",
+            "kind": "file",
+            "sha256": "b54c6ab85b5e1c88918ec3d71e1e920db18d3f9b000311f1dfe77799604aea27"
+          },
+          {
+            "path": "internal/ffi/dir_wasm.mbt",
+            "kind": "file",
+            "sha256": "4e694392007fea3ffb17a1e1485f223172d08440e569b7fa2504668d87beaca4"
+          },
+          {
+            "path": "internal/ffi/moon.pkg",
+            "kind": "file",
+            "sha256": "7a7d942e3b2280fc29ef5a255b54f33863e2c4b2749f3908134b1fe97d19ef3a"
+          },
+          {
+            "path": "internal/ffi/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "e8255bb952e3a8e26ad5819ed9e10d98c15bb1421e40cc0e6d062c1d956bff7f"
+          },
+          {
+            "path": "internal/ffi/string_convert.mbt",
+            "kind": "file",
+            "sha256": "418ebc1196c621c7e9242915c97e999d7ea6f1d8ec68187fd39ac4e82edd90a9"
+          },
+          {
+            "path": "internal/ffi/string_wasm.mbt",
+            "kind": "file",
+            "sha256": "334e6f52625f991a3d2e20289adc361e036c1647c800afcda5f81056288620ec"
+          },
+          {
+            "path": "json5/README.mbt.md",
+            "kind": "file",
+            "sha256": "21014d1b7abaa52bad6d2062b343efb8bb6df13e84c9897daaff211b344aa48f"
+          },
+          {
+            "path": "json5/internal_types.mbt",
+            "kind": "file",
+            "sha256": "431156d081e6927b7880903dce148762e6ee0549f5e4ee77ffe022ec746c0762"
+          },
+          {
+            "path": "json5/lex_main.mbt",
+            "kind": "file",
+            "sha256": "f6c43e2da1000847178d851388971cacc82594b4f9b02c140eeb6c1f823c1685"
+          },
+          {
+            "path": "json5/lex_misc.mbt",
+            "kind": "file",
+            "sha256": "093c5ed4dcecf60821d3b859fe74efa0845a370fe1dc7dc610bdd8736e258682"
+          },
+          {
+            "path": "json5/lex_number.mbt",
+            "kind": "file",
+            "sha256": "c3cbacebb890408a987f163d272065a0e4485514aa9294e6f839dac36d65f09b"
+          },
+          {
+            "path": "json5/lex_prop.mbt",
+            "kind": "file",
+            "sha256": "93f119c4eb7f3d6ae547634f66f68ed58d2b58050658375d3c349850a5d97353"
+          },
+          {
+            "path": "json5/lex_string.mbt",
+            "kind": "file",
+            "sha256": "0c3c7775e2434bfe739b77837c0f7df960411673c14716c7b2599c712757eef3"
+          },
+          {
+            "path": "json5/moon.pkg",
+            "kind": "file",
+            "sha256": "94b4fee701f46cad4a0ad772a50269c68c6dc2047a8656e29d1bc6d3fd09ac9b"
+          },
+          {
+            "path": "json5/parse.mbt",
+            "kind": "file",
+            "sha256": "36c1fad4480fc88687067810d2780b93dfbceffda995a7aca5f2dc75aa798c2f"
+          },
+          {
+            "path": "json5/parse_error_test.mbt",
+            "kind": "file",
+            "sha256": "28e12c3712b3335e99ff8290bcbdb3b80d8ba8c8341a55c66e72f9e1f67b7383"
+          },
+          {
+            "path": "json5/parse_test.mbt",
+            "kind": "file",
+            "sha256": "1aa17e9c0642aa4b3d1799bbf5f817855e7e4d1a3cf97008418de3d2f6d1bc30"
+          },
+          {
+            "path": "json5/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "15bb921d0acb2d17ad9db9c8dfbe6b6d60a64ffda8a8cdd402ed8eb589d8dd4c"
+          },
+          {
+            "path": "json5/types.mbt",
+            "kind": "file",
+            "sha256": "e18e2b97d5317df598d062b265428cc44a012619d756e7c0bdacc54dadc6c829"
+          },
+          {
+            "path": "json5/unicode_gen.mbt",
+            "kind": "file",
+            "sha256": "726b98a6d5b78a88f949d3644d81d302db2c8cb111aa09dd2b94485402896c6c"
+          },
+          {
+            "path": "json5/util.mbt",
+            "kind": "file",
+            "sha256": "8a824bfddd80b8cc5ba76e6a4b2d02453c58ddb420880854f659837ae6cb6cb5"
+          },
+          {
+            "path": "licenserc.toml",
+            "kind": "file",
+            "sha256": "35b85eeb8c4b565c04ec540dfd166b257efe22d6e37132c77c28258a2af831f4"
+          },
+          {
+            "path": "moon.mod",
+            "kind": "file",
+            "sha256": "d8227f636bacd76060b814eba958e6d991ecc042baa10263f434b696e1445dab"
+          },
+          {
+            "path": "num/moon.pkg",
+            "kind": "file",
+            "sha256": "607f4ea3b5530b645a8286bc6d42575be31cf537f672e1847c84672e65d0daa9"
+          },
+          {
+            "path": "num/num.mbt",
+            "kind": "file",
+            "sha256": "e47eda9a3cb68b61b9c463a8ef5a63720ba3c09fc124ef62f17bb39564f0a93b"
+          },
+          {
+            "path": "num/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "23ce6ced45dda8460ce5ec0750538a8ec26682aee11119d1679d2288ba2402f9"
+          },
+          {
+            "path": "path/internal/ffi/is_windows.mbt",
+            "kind": "file",
+            "sha256": "30e58e719a6bac3d26016816f8c417b2da69a46752783b399779813350b75633"
+          },
+          {
+            "path": "path/internal/ffi/is_windows_test.mbt",
+            "kind": "file",
+            "sha256": "d1e1d8ed013806d30768b353b1e3d980e0522a73f4b12a393a9376992ce3dee7"
+          },
+          {
+            "path": "path/internal/ffi/moon.pkg",
+            "kind": "file",
+            "sha256": "f74ce667d5cb82b3337f44d4716ba1db7e0965fe2150dcfd7266606c503f1027"
+          },
+          {
+            "path": "path/internal/ffi/native_stub.c",
+            "kind": "file",
+            "sha256": "50afa25b7a3055d19af9bb4d26bf8a1c2f289a4bf4aaf719f8a478272d2d80e5"
+          },
+          {
+            "path": "path/internal/ffi/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "41b707e1b0072e94cd7da2a8dd6a76fbce7c1b48ef678528bf4542e9e9376c2f"
+          },
+          {
+            "path": "path/moon.pkg",
+            "kind": "file",
+            "sha256": "aaa90fbcf3519bae1e2ecb1aa77fc68a11a61d12efc32dca0af438e2620e2698"
+          },
+          {
+            "path": "path/path.mbt",
+            "kind": "file",
+            "sha256": "e214575551e3c4ee6f92cfcded7a50c96cde7d4f1dc3155d250c980049f8b489"
+          },
+          {
+            "path": "path/path_test.mbt",
+            "kind": "file",
+            "sha256": "1b96082246889193c56c11979bcb64be86de473b306f072271ce6c4ef845287c"
+          },
+          {
+            "path": "path/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "30638cbba4592ff37b6c216e692d4dea96a198f3bea531b560f96d6d4e551d76"
+          },
+          {
+            "path": "path/posix/README.mbt.md",
+            "kind": "file",
+            "sha256": "8d72d5f4b51ed027e49c030869712f908b34646f2eb6d180cdd853394a7615ff"
+          },
+          {
+            "path": "path/posix/README.md",
+            "kind": "file",
+            "sha256": "8d72d5f4b51ed027e49c030869712f908b34646f2eb6d180cdd853394a7615ff"
+          },
+          {
+            "path": "path/posix/moon.pkg",
+            "kind": "file",
+            "sha256": "b9d8781019fee43d572b7f84c250190b80822b29cb289fa32c79f37c4e0f1d40"
+          },
+          {
+            "path": "path/posix/path.mbt",
+            "kind": "file",
+            "sha256": "78c14c3b2215dc81921b0e0ebc37f53e47b5f5b38a5584598fc07208f72ac9c8"
+          },
+          {
+            "path": "path/posix/path_test.mbt",
+            "kind": "file",
+            "sha256": "6e184a8f7ace8a73f4f773551eb9f9e60e41dfd74f2b9397fd24c36c23b9c5e8"
+          },
+          {
+            "path": "path/posix/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "42770a9b63ecb995283349e2a2b1150a164962a71dcef8ea699ae4efa6743a61"
+          },
+          {
+            "path": "path/posix/unix_path.mbt",
+            "kind": "file",
+            "sha256": "db6badd880009f5f446e7dc9b94e8cbf12829cce40578e1a8264a155f692a4a6"
+          },
+          {
+            "path": "path/posix/unix_path_wbtest.mbt",
+            "kind": "file",
+            "sha256": "c6531663650cfcbabec34034763e95dac6655aee62848b2da49f13459e25cb77"
+          },
+          {
+            "path": "path/win32/README.mbt.md",
+            "kind": "file",
+            "sha256": "b780ecfebe4c4677882cbe1714082f02ce4d345d8229a5e2e00943df48d17d12"
+          },
+          {
+            "path": "path/win32/README.md",
+            "kind": "file",
+            "sha256": "b780ecfebe4c4677882cbe1714082f02ce4d345d8229a5e2e00943df48d17d12"
+          },
+          {
+            "path": "path/win32/moon.pkg",
+            "kind": "file",
+            "sha256": "1dd6006ca8ca6eac351d1be718732f0f0eca3e95ab92a52977d743037e2b6065"
+          },
+          {
+            "path": "path/win32/path.mbt",
+            "kind": "file",
+            "sha256": "183cbe45118058fb3ff5bc305081bc292cf1e7bb7316609bfdeff7935a3a4751"
+          },
+          {
+            "path": "path/win32/path_test.mbt",
+            "kind": "file",
+            "sha256": "3514475c6852927adf5e51df214710f3860fc7d6fbb56c5a884cecfda3a6ecac"
+          },
+          {
+            "path": "path/win32/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "0278302f9c7b31b7fb5e43c8df44b9d52a8966dcd298c37ded124a27d1785b8c"
+          },
+          {
+            "path": "path/win32/win_path.mbt",
+            "kind": "file",
+            "sha256": "92a4c4150dbf39c4cc78749c2aeb5e57044625d37974989faf18299575f2b15c"
+          },
+          {
+            "path": "path/win32/win_path_wbtest.mbt",
+            "kind": "file",
+            "sha256": "fa2d21ede1d6fbfdc16e0c22581787a12b5e7b5ae7738709a1d7f6deddf7b95b"
+          },
+          {
+            "path": "rational/README.mbt.md",
+            "kind": "file",
+            "sha256": "e0528dacd4649962c68c23f06b827425ccef20aa5c30c0121b37f295c174c9fe"
+          },
+          {
+            "path": "rational/moon.pkg",
+            "kind": "file",
+            "sha256": "d87cf3f273ce01f3a55e931cbe990a6dbb1d24ae0b2f34d34d820d2ce292926e"
+          },
+          {
+            "path": "rational/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "f37d3733074245a8c9efdacae3d6537d2ea7214ba1f13027f41955c17bd1d408"
+          },
+          {
+            "path": "rational/rational.mbt",
+            "kind": "file",
+            "sha256": "b392277ae83de049d22731d212377110a7d62bed1181853a7a6f80f35bf01b11"
+          },
+          {
+            "path": "rational/rational_test.mbt",
+            "kind": "file",
+            "sha256": "0c439116043257b950cf9402c04dee1f58446ee08ff517e714019b55db6f3439"
+          },
+          {
+            "path": "rational/types.mbt",
+            "kind": "file",
+            "sha256": "9605947c4e403cd37a33feb52fa0923ea7da539aa7380d4f48dac2cded801603"
+          },
+          {
+            "path": "stack/README.mbt.md",
+            "kind": "file",
+            "sha256": "7360c3bc004bd21004242cb5abe97cb26a5f3f49d4d6a1495527303acbee93a4"
+          },
+          {
+            "path": "stack/deprecated.mbt",
+            "kind": "file",
+            "sha256": "9e47adb2c84cdefeae4cdded0be939c8ff782fbfcc830ff0ce17bd33d1dfd6ab"
+          },
+          {
+            "path": "stack/moon.pkg",
+            "kind": "file",
+            "sha256": "d81590976c743ebd2ce87a17993a6a86013a7f886ebf949b4ad42212e04cd884"
+          },
+          {
+            "path": "stack/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "964c5e002f38f2a35e9f3bc463dfd8fcad8cf857648717faa815100314219005"
+          },
+          {
+            "path": "stack/stack.mbt",
+            "kind": "file",
+            "sha256": "02f81eef5cc0ffdc47be2bd6ad6cc535b6daa9dcc2d1af4f41a5314bc05a00ed"
+          },
+          {
+            "path": "stack/stack_test.mbt",
+            "kind": "file",
+            "sha256": "79403beee75e99660dfddc61a4f69c5492b8618d832368f3f8e701158feaec0e"
+          },
+          {
+            "path": "stack/types.mbt",
+            "kind": "file",
+            "sha256": "e0d06df743652c4ea94d6dfd79b22e19182d28caebd66fdb7b92c93e01bd4edf"
+          },
+          {
+            "path": "sys/internal/ffi/moon.pkg",
+            "kind": "file",
+            "sha256": "8bb296bc60f9fd4f48e7245fd56baef734b9d3855c23daa8c7c7f62bc1092b7d"
+          },
+          {
+            "path": "sys/internal/ffi/native_stub.c",
+            "kind": "file",
+            "sha256": "827d31af3b96b8e6459e55b17553262c5a99c16fee49fd619cd148d2ca75c40c"
+          },
+          {
+            "path": "sys/internal/ffi/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "f119c63c6ab66fe980a296f9a117e58353770528aca833a3e720c914b89a6f3e"
+          },
+          {
+            "path": "sys/internal/ffi/sys_js.mbt",
+            "kind": "file",
+            "sha256": "e642996562efe93e6d54b9ad7681fcf467d5d47bbca54a55b706a596343bab5d"
+          },
+          {
+            "path": "sys/internal/ffi/sys_native.mbt",
+            "kind": "file",
+            "sha256": "9115f1359f86605b4edba892663047d5b06be5f24caa156a4feae38e2503c5e6"
+          },
+          {
+            "path": "sys/internal/ffi/sys_wasm.mbt",
+            "kind": "file",
+            "sha256": "8fb6c5bc3d953aabb7ba0d7c522f7ea852e68d0c77c33e792c8263736ce96e51"
+          },
+          {
+            "path": "sys/moon.pkg",
+            "kind": "file",
+            "sha256": "c274f8d0a69ec278ce3588ef01d99be01fbd7e7a27e3b03c2e7310579a420197"
+          },
+          {
+            "path": "sys/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "336bf24758840b20492200f0f37974ccbea95aafea379ae08e0e50d9881a322d"
+          },
+          {
+            "path": "sys/sys.mbt",
+            "kind": "file",
+            "sha256": "ab8c987402ffa1100c08583d91663f0daa2f44aa39c3b3d9690ac3ed2ad5fa49"
+          },
+          {
+            "path": "sys/sys_test.mbt",
+            "kind": "file",
+            "sha256": "e9c83c0bff9b3705b7f6546fb2f603f4b822bbcb4def17d2df71c14bc746a99c"
+          },
+          {
+            "path": "time/README.mbt.md",
+            "kind": "file",
+            "sha256": "81c3c3bb092949f49029d927ecd851621f7d7340dd3e100eb4c4173d0394f81f"
+          },
+          {
+            "path": "time/debug_test.mbt",
+            "kind": "file",
+            "sha256": "b79d7ba3cde8f6aa826c969a4b258fb7ae670128c13ad4df2698f057939b230f"
+          },
+          {
+            "path": "time/duration.mbt",
+            "kind": "file",
+            "sha256": "a6e4cd39dc5f206ab6ef6b9e19f00b3459fcd018549269b82ca7e22b4a75263d"
+          },
+          {
+            "path": "time/duration_test.mbt",
+            "kind": "file",
+            "sha256": "3dec33ba52c33ce7e1de848c92d7c4a4e4994a96d0f56501f3c64df9e14f603d"
+          },
+          {
+            "path": "time/duration_wbtest.mbt",
+            "kind": "file",
+            "sha256": "1b8640e0c1b12cc8e9bfe0a7bf09602ef3a475000e859dbda6b944c8b7e77c66"
+          },
+          {
+            "path": "time/errors.mbt",
+            "kind": "file",
+            "sha256": "f1d1ae5547a4ddccf981ea34ef65e1eeae3f962f0c75d17cbd6528f453e6342c"
+          },
+          {
+            "path": "time/moon.pkg",
+            "kind": "file",
+            "sha256": "7352f014deaa0077384e0f979508ed6db8a7882f10732864fdc7ba83fc82006f"
+          },
+          {
+            "path": "time/period.mbt",
+            "kind": "file",
+            "sha256": "44e36d151c58dad073036549414f2f38214a67a2dfd89ffbe8b274a40fbc0050"
+          },
+          {
+            "path": "time/period_test.mbt",
+            "kind": "file",
+            "sha256": "598a699dec69e766a340afd31e67246718fbea5547cb67f3f818fa45180c6610"
+          },
+          {
+            "path": "time/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "ac7f8f5ed07b0b002ba013ed2142210c478941255b565ec579d3927287e44142"
+          },
+          {
+            "path": "time/plain_date.mbt",
+            "kind": "file",
+            "sha256": "eeed34332bcf1707b72970632787a55db13929bfc159d12de5c8284acce4a4e2"
+          },
+          {
+            "path": "time/plain_date_test.mbt",
+            "kind": "file",
+            "sha256": "688d4b1c239b028ddbdf059bb80368fe57b7bd1c810a31999bec2ba76c8f5d5e"
+          },
+          {
+            "path": "time/plain_date_time.mbt",
+            "kind": "file",
+            "sha256": "00eaee650e33c6838e0a12ea669282f52e4f865337212ccb822e4ddd3c428095"
+          },
+          {
+            "path": "time/plain_date_time_test.mbt",
+            "kind": "file",
+            "sha256": "abddee7332bfb96e7dc3e8ea9f4ba9e0265904b8533936eae9127aa16b6a8745"
+          },
+          {
+            "path": "time/plain_date_time_wbtest.mbt",
+            "kind": "file",
+            "sha256": "99125f1a292fe5385f7fd98e2b2188697295e648fef0f6728119247bd356186d"
+          },
+          {
+            "path": "time/plain_date_wbtest.mbt",
+            "kind": "file",
+            "sha256": "b31d4a47d3d2921caef966f7d88938969086273cb25538afd31c4208fe92a55e"
+          },
+          {
+            "path": "time/plain_time.mbt",
+            "kind": "file",
+            "sha256": "a975d9bb69a09879c739e5d87615f799de4648d408c7270ce9ed0c677c111bea"
+          },
+          {
+            "path": "time/plain_time_test.mbt",
+            "kind": "file",
+            "sha256": "6668d0795e700386a0fd8916233dc465d9495f9f22896d35498f86c26c1d0793"
+          },
+          {
+            "path": "time/plain_time_wbtest.mbt",
+            "kind": "file",
+            "sha256": "866979c4740dcaa4f4d73ab0cc486ab23e4eb574a65baf2ba28ed1ad8543d9aa"
+          },
+          {
+            "path": "time/util.mbt",
+            "kind": "file",
+            "sha256": "3495931d662ae43bfe17b6e39499f5d97ae442fba0333df382ad715803e930a8"
+          },
+          {
+            "path": "time/weekday.mbt",
+            "kind": "file",
+            "sha256": "99e77ac9df3c144ccf1603cf36ca2baef76fad2f3fe200d748fe0ae7eed2c1a8"
+          },
+          {
+            "path": "time/zone.mbt",
+            "kind": "file",
+            "sha256": "6490b79418e1145202ff5ff4fa9397d764fb003bfb866edb8786fae0522ef658"
+          },
+          {
+            "path": "time/zone_offset.mbt",
+            "kind": "file",
+            "sha256": "8e6a399a651551091b288c5f18fe15e2f71d57c5baa545da4a82d8a8e2caf52f"
+          },
+          {
+            "path": "time/zone_offset_test.mbt",
+            "kind": "file",
+            "sha256": "87250c537999c17ebea7c43cb6c443d82d20757006c3f8f94cd2d61aa56e1734"
+          },
+          {
+            "path": "time/zone_test.mbt",
+            "kind": "file",
+            "sha256": "1dfe3e865b96001c1c6068018c8219364627ccfbf581435543eadd611fb1b232"
+          },
+          {
+            "path": "time/zone_wbtest.mbt",
+            "kind": "file",
+            "sha256": "169503d84510f9b57e423bea5f7db52a5e8dd7ef0f0f5fdc3932bc55547382ac"
+          },
+          {
+            "path": "time/zoned_date_time.mbt",
+            "kind": "file",
+            "sha256": "18a00b48f285ce4cc7ae7e22d57ebb46da60c97b4c6621cbd6c8e97c5d386e20"
+          },
+          {
+            "path": "time/zoned_date_time_test.mbt",
+            "kind": "file",
+            "sha256": "cd669835eb6371e983e592c985180012b27c98b5679d06b72c03762740af9eec"
+          },
+          {
+            "path": "uuid/README.mbt.md",
+            "kind": "file",
+            "sha256": "ac711ae2efec3cc0776173bdf51e13cb7162ff53d9b35c7b99ca788ed13e441b"
+          },
+          {
+            "path": "uuid/moon.pkg",
+            "kind": "file",
+            "sha256": "468b5d2a8b3f2e4b90b70fe9d3ee0dfe7229abc7290bbce1cd23edad1da04ec3"
+          },
+          {
+            "path": "uuid/ops.mbt",
+            "kind": "file",
+            "sha256": "d86a4d77f93562e3122e6a7b67e86d9eb9192c8c594d7015006edc367b01e666"
+          },
+          {
+            "path": "uuid/pkg.generated.mbti",
+            "kind": "file",
+            "sha256": "3780127017913c87630d82cc87cb667856a37c7244bc174f910657b02f02ec75"
+          },
+          {
+            "path": "uuid/uuid.mbt",
+            "kind": "file",
+            "sha256": "65c1f98a0647860a40eb9a11fb40aab5cc4dd0e460943ad6f5274c5cb7d33964"
+          },
+          {
+            "path": "uuid/uuid_test.mbt",
+            "kind": "file",
+            "sha256": "65a00b85b2122f9e9fd666f3cc9586bb03b7d83317c1983dad78a7a6220b06bb"
+          },
+          {
+            "path": "uuid/variant.mbt",
+            "kind": "file",
+            "sha256": "8d1db0f1e192ab68f3195a37f7bb8a72b90bf03de06a31d273aee1fab25f1dc3"
+          }
+        ],
+        "sha256": "608c7bc7b6ffdb5d396dd0a9c4e8b862dedb398df856abafba1a50e232b0df34"
+      }
     }
   ],
-  "closureSha256": "208e5696db68c1164219b87791d91cd97ab3f73397a4a65926023ee751b49dd8"
+  "closureSha256": "47f8927dc24adb5f9dbec6e366b5e7a73d2b67f439811789915e50cccd5c1001"
 }
