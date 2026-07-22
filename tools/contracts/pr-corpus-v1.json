@@ -5177,21 +5177,20 @@
     "featuresV1Sha256": "e8400d57eded7dab189eb2a97e2e2db241a1ebae9b059e3a2dc2cdde7522fb53",
     "driverClosureV1Sha256": "204f8393df7c5259d6bd727b14abfea9889992bd976223631d3de5a805a8873a",
     "canonicalVectorsV1Sha256": "055c3f02e582f510d0368447ed5a4880c430c3a8a4bfd64a2c2c8816fa3e52d3",
-    "runnerVectorsV1Sha256": "f2a5441c778ddaead3c7ebae7bff12f79a39d78e83eca7491f840670a8f955c7",
     "transformProfileV1Sha256": "39d4f9ecde65b7ffb72c61ae83bca5b4e86a7d2434a1c60d70fe8cb07beb46f4"
   },
   "counts": {
-    "entries": 1036,
+    "entries": 1035,
     "parserExact": 929,
     "parserReject": 58,
     "parserIntentionalDivergence": 2,
     "semantic": 43,
-    "contracts": 4,
+    "contracts": 3,
     "goals": 42
   },
-  "entriesSha256": "e5c4d764d4b151a13d89b955c5be0f3c679c85613c22fa17f5921a189052a4ae",
+  "entriesSha256": "e9df1b214e1bf793451d5f7a6eaffa8aeeaa6fe0e0cb4e5c3d5d7e6492aa46ec",
   "fixtureGroupsSha256": "51baa80adc7bd4a2302e8471cb209c4cde29d5dca16bd668a5e8278fd0e26f99",
-  "capabilityCoverageSha256": "e439b5869dd051e9199f111681ee7588acf3de253928d45599ede3a547d88481",
+  "capabilityCoverageSha256": "000cdc5b1909dc62ccc9dc70ac45342a7c03f29ff95643d770c3926b10f016ab",
   "entries": [
     {
       "id": "contract.canonical-vectors",
@@ -5323,58 +5322,6 @@
           "encoding_smt_if_poly"
         ]
       }
-    },
-    {
-      "id": "contract.runner-vectors",
-      "kind": "contract-vector",
-      "source": {
-        "path": "tools/contracts/runner-vectors-v1.json",
-        "sha256": "f2a5441c778ddaead3c7ebae7bff12f79a39d78e83eca7491f840670a8f955c7",
-        "kind": "regular"
-      },
-      "loadpathProfile": "none",
-      "featureTags": [
-        "cli",
-        "process-runner",
-        "result-parser"
-      ],
-      "expected": {
-        "stage": "contract-validation",
-        "kind": "Exact",
-        "lane": "exact"
-      },
-      "units": [],
-      "goalInventory": [],
-      "inventory": [
-        "result.unsat-valid",
-        "result.sat-unknown",
-        "result.unknown-with-reason",
-        "result.timeout-stdout",
-        "result.timeout-stderr",
-        "result.out-of-memory",
-        "result.step-limit",
-        "result.answer-before-nonzero-exit",
-        "result.unclassified-nonzero",
-        "result.signal",
-        "result.malformed-utf8",
-        "runner.default-timeout",
-        "runner.zero-timeout",
-        "runner.maximum-timeout",
-        "runner.timeout-above-maximum",
-        "runner.stdout-cap",
-        "runner.stderr-cap",
-        "runner.answer-then-cap",
-        "runner.broken-pipe",
-        "runner.parent-deadline",
-        "runner.cancellation",
-        "cli.single-goal-stdout",
-        "cli.multiple-goals-require-directory",
-        "cli.valid-exit",
-        "cli.nonvalid-exit",
-        "cli.error-exit",
-        "cli.versioned-ndjson",
-        "context.absolute-root-independence"
-      ]
     },
     {
       "id": "contract.transform-profile",
@@ -32736,21 +32683,9 @@
       ]
     },
     {
-      "id": "portable-profile-vs-oracle-context",
-      "members": [
-        "contract.runner-vectors"
-      ]
-    },
-    {
       "id": "real-solver-unsat-sat-unknown",
       "members": [
         "solver.outcomes"
-      ]
-    },
-    {
-      "id": "canned-result-and-runner-boundaries",
-      "members": [
-        "contract.runner-vectors"
       ]
     },
     {

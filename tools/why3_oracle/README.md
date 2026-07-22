@@ -3,6 +3,11 @@
 This directory contains the test-only Why3 1.7.2 differential-oracle
 scaffolding. It is not part of the `why3.mbt` product API.
 
+Routine repository tasks use the single `tools/run.mjs` entry point. The
+scripts in this directory are implementation modules for its focused
+subcommands; keeping the orchestration in one place prevents CI and local
+instructions from drifting apart.
+
 The fixed Why3 commit archive does not contain an opam package file.
 `why3-1.7.2.opam` is therefore vendored byte-for-byte from the official
 `ocaml/opam-repository` file at commit
@@ -13,14 +18,14 @@ identity are part of `toolchain-inputs-v1.json` and are checked before build.
 The checked contracts are regenerated or verified with:
 
 ```sh
-node tools/check_pr00_contracts.mjs --why3-root ../why3
+node tools/run.mjs contracts --why3-root ../why3
 ```
 
-In CI, after `setup-moonbit` and `moon update && moon check`, use the fixed
-image's retained official source archive instead:
+In CI, run `node tools/run.mjs bootstrap` after `setup-moonbit`, then use the
+fixed image's retained official source archive:
 
 ```sh
-node tools/check_pr00_contracts.mjs \
+node tools/run.mjs contracts \
   --why3-archive /opt/why3-reference/why3-source.tar.gz \
   --require-toolchain-lock
 ```
@@ -51,7 +56,7 @@ the report and lock files, then preview the exact repository changes without
 writing anything:
 
 ```sh
-node tools/why3_oracle/promote_toolchain_lock.mjs \
+node tools/run.mjs toolchain promote-lock \
   --candidate artifact/toolchain-lock.json \
   --report artifact/toolchain-report.json
 ```
@@ -66,9 +71,8 @@ flag can be dry-run before it is combined with `--promote`. The candidate
 includes the installed Why3 shape version and Why3/Z3 executable hashes.
 MoonBit is deliberately outside this image and lock: CI installs the current
 stable toolchain through the full-commit-pinned `setup-moonbit` action, logs its
-version, restores the exact `moon.mod` dependencies, and checks those dependency
-trees against `moon-dependencies-v1.json`. Ordinary CI never updates contracts
-or golden data.
+version, and restores the versions declared in `moon.mod`. Ordinary CI never
+updates contracts or golden data.
 
 The semantic standard-library snapshot is generated directly from the pinned
 Why3 source APIs. The exporter follows the complete recursive `z3_487` driver
@@ -103,13 +107,13 @@ under two different absolute fixture roots. The Why3 CLI checks disable its
 installed default stdlib and use only `../why3/stdlib`.
 
 ```sh
-node tools/why3_oracle/run_elab_differential.mjs
+node tools/run.mjs layers elab
 ```
 
 Inside the fixed image, use the retained source archive:
 
 ```sh
-node tools/why3_oracle/run_elab_differential.mjs \
+node tools/run.mjs layers elab \
   --why3-archive "$WHY3_REFERENCE_ARCHIVE"
 ```
 
@@ -124,14 +128,14 @@ and 24 exact prepared tasks. It also checks that traced
 `Driver.prepare_task` returns the same final Task as the untraced call.
 
 ```sh
-node tools/why3_oracle/run_transform_differential.mjs \
+node tools/run.mjs layers transform \
   --why3-root ../why3
 ```
 
 Inside the fixed image, use its retained source archive instead:
 
 ```sh
-node tools/why3_oracle/run_transform_differential.mjs \
+node tools/run.mjs layers transform \
   --why3-archive "$WHY3_REFERENCE_ARCHIVE"
 ```
 
@@ -147,14 +151,14 @@ parse every raw MoonBit query without solving it. All 24 curated goal token
 streams are compared in full.
 
 ```sh
-node tools/why3_oracle/run_smt_differential.mjs \
+node tools/run.mjs layers smt \
   --why3-root ../why3
 ```
 
 Inside the fixed image, use the retained source archive:
 
 ```sh
-node tools/why3_oracle/run_smt_differential.mjs \
+node tools/run.mjs layers smt \
   --why3-archive "$WHY3_REFERENCE_ARCHIVE"
 ```
 
@@ -169,7 +173,7 @@ the corpus, including both program closure fixtures and the false-postcondition
 `must-not-be-Valid` assertion, against the checked-in full result record.
 
 ```sh
-node tools/why3_oracle/run_result_differential.mjs
+node tools/run.mjs goldens check
 ```
 
 The structural PR golden contains the complete canonical JSON or normalized
@@ -180,38 +184,24 @@ generation under two absolute roots, and reports a structured hash diff;
 promotion requires a separate explicit command:
 
 ```sh
-node tools/why3_oracle/manage_pr_goldens.mjs --check
-node tools/why3_oracle/manage_pr_goldens.mjs --candidate /tmp/why3-candidate
-node tools/why3_oracle/manage_pr_goldens.mjs --promote /tmp/why3-candidate
-```
-
-The result golden follows the same candidate/promote separation inside the
-fixed image:
-
-```sh
-node tools/why3_oracle/run_result_differential.mjs \
-  --candidate /tmp/prover-result.json
-node tools/why3_oracle/run_result_differential.mjs \
-  --promote /tmp/prover-result.json
-node tools/why3_oracle/sync_pr_golden_lock.mjs \
-  --candidate \
-  --manifest /tmp/why3-candidate/manifest.json \
+node tools/run.mjs goldens check
+node tools/run.mjs goldens candidate \
+  --records /tmp/why3-candidate \
   --result /tmp/prover-result.json \
-  --output /tmp/toolchain-lock.json
-node tools/why3_oracle/sync_pr_golden_lock.mjs \
-  --promote \
-  --manifest /tmp/why3-candidate/manifest.json \
+  --lock /tmp/toolchain-lock.json
+node tools/run.mjs goldens promote \
+  --records /tmp/why3-candidate \
   --result /tmp/prover-result.json
 ```
 
-The last explicit step keeps the promoted toolchain contract atomic with both
-golden files; ordinary checks run `sync_pr_golden_lock.mjs --check` and never
-rewrite the lock.
+The combined golden task applies the same candidate/promote separation to the
+result golden and keeps the toolchain contract synchronized with both golden
+sets. Ordinary `goldens check` runs never rewrite the lock.
 
 Finally, the unsupported gate enumerates every `unsupported.*` corpus entry,
 checks its exact stable diagnostic where parsing reached elaboration, and
 asserts that neither `emit-smt` nor `prove` creates output or resolves a prover:
 
 ```sh
-node tools/why3_oracle/run_unsupported_gate.mjs
+node tools/run.mjs layers unsupported
 ```

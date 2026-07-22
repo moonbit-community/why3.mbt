@@ -148,7 +148,7 @@
   },
   "contracts": {
     "semanticProfileSha256": "f788bd465967b186e1db9f910b8e04e3f4803413a705b661bafc2da5d07658ab",
-    "prCorpusSha256": "1a03dfdc4f95b0d0e4c525a85528f6e8aff2239c4d47e87125275f58f2eeae90",
+    "prCorpusSha256": "b81978b20718702eecb25b0e553c4fbe5385fa04933917d75b512a080499b537",
     "artifacts": [
       {
         "id": "canonical-schema-v2",
@@ -176,11 +176,6 @@
         "sha256": "e8400d57eded7dab189eb2a97e2e2db241a1ebae9b059e3a2dc2cdde7522fb53"
       },
       {
-        "id": "moon-dependencies-v1",
-        "path": "tools/contracts/moon-dependencies-v1.json",
-        "sha256": "04acacf2148330745a0ebf35483058e62c171f9ef0d51f5beaa3d62bc4095bee"
-      },
-      {
         "id": "oracle-goal-envelope-v1-json-schema",
         "path": "tools/contracts/schema/oracle-goal-envelope-v1.schema.json",
         "sha256": "27a2b6007d1ba9550eda3d2454b6a6b7f21568d98e36431d36ce3d10fabdc5a1"
@@ -188,7 +183,7 @@
       {
         "id": "pr-corpus-v1",
         "path": "tools/contracts/pr-corpus-v1.json",
-        "sha256": "1a03dfdc4f95b0d0e4c525a85528f6e8aff2239c4d47e87125275f58f2eeae90"
+        "sha256": "b81978b20718702eecb25b0e553c4fbe5385fa04933917d75b512a080499b537"
       },
       {
         "id": "pr-golden-manifest-v1",
@@ -201,11 +196,6 @@
         "sha256": "666fefeb27b49655900c97ad0a32d86c463b03a64fb9aea4a25ab3b33001c41a"
       },
       {
-        "id": "runner-vectors-v1",
-        "path": "tools/contracts/runner-vectors-v1.json",
-        "sha256": "f2a5441c778ddaead3c7ebae7bff12f79a39d78e83eca7491f840670a8f955c7"
-      },
-      {
         "id": "semantic-profile-v1",
         "path": "tools/contracts/semantic-profile-v1.json",
         "sha256": "81077c886eff8d3a360e2ca95089f68b44ad085ee43815dc4c00150e81dc6884"
@@ -214,11 +204,6 @@
         "id": "toolchain-inputs-v1",
         "path": "tools/contracts/toolchain-inputs-v1.json",
         "sha256": "62fc081479145c5d6547992ac40eaf6dd7d638b199436fe7b268245e4aa3c731"
-      },
-      {
-        "id": "toolchain-lock-v1-json-schema",
-        "path": "tools/contracts/schema/toolchain-lock-v1.schema.json",
-        "sha256": "03b162d6d1467a6785b710fe0ccdc3898a494ed17237428df1ea5075a4441000"
       },
       {
         "id": "transform-profile-v1",
@@ -251,5 +236,5 @@
     "defaultPlugins": "disabled",
     "standardLibrary": "explicit --no-stdlib plus manifest loadpaths"
   },
-  "lockSha256": "0f024bb28b0948180bec98c4a057dc5ac151901656dd4041e2d6db1645c2d045"
+  "lockSha256": "7964be15ffb6908c8510390db858e09582d315b47891a03325931658669b1aa2"
 }

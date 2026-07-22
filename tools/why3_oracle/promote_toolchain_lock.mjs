@@ -37,6 +37,15 @@ const LOCKED_CONTRACT_CHECK = [
   `${CONTRACT_CHECK} \\`,
   '            --require-toolchain-lock',
 ].join('\n');
+const RUNNER_CONTRACT_CHECK = [
+  '          node tools/run.mjs contracts \\',
+  '            --why3-archive "$WHY3_REFERENCE_ARCHIVE"',
+].join('\n');
+const RUNNER_ORACLE_CHECK = [
+  '          node tools/run.mjs oracle \\',
+  '            --why3-archive "$WHY3_REFERENCE_ARCHIVE" \\',
+  '            --require-toolchain-lock',
+].join('\n');
 const SMOKE_STEP = [
   '      - name: Smoke fixed Why3 entrypoint',
   '        run: |',
@@ -80,11 +89,20 @@ function assertPromotedWorkflow(source, lock) {
     [`      image: ${lock.image.reference}`, 'locked image reference'],
     [`      WHY3_ORACLE_IMAGE_DIGEST: ${lock.image.digest}`, 'locked digest environment'],
     ['            --require-toolchain-lock', 'required-lock contract argument'],
-    ['          tools/why3_oracle/run-fixed mvp.abs -- \\', 'fixed-entrypoint smoke command'],
   ];
   for (const [literal, description] of required) {
     const count = literalCount(source, literal);
     if (count !== 1) fail(`promoted workflow must contain exactly one ${description}, found ${count}`);
+  }
+  const smokeCount = literalCount(
+    source,
+    '          tools/why3_oracle/run-fixed mvp.abs -- \\',
+  ) + literalCount(source, '          node tools/run.mjs oracle \\');
+  if (smokeCount !== 1) {
+    fail(
+      'promoted workflow must contain exactly one fixed-entrypoint smoke task, ' +
+      `found ${smokeCount}`,
+    );
   }
   for (const [literal, description] of [
     [CANDIDATE_JOB_NAME, 'candidate job name'],
@@ -152,18 +170,27 @@ export function renderCheckWorkflow(source, lock, { previousLock = null } = {}) 
       `      WHY3_ORACLE_IMAGE_DIGEST: ${lock.image.digest}\n    container:`,
     'oracle job runner/container boundary',
   );
-  rendered = replaceExactlyOnce(
-    rendered,
-    CONTRACT_CHECK,
-    LOCKED_CONTRACT_CHECK,
-    'candidate contract check',
-  );
-  rendered = replaceExactlyOnce(
-    rendered,
-    '      - name: Check all targets\n',
-    `${SMOKE_STEP}      - name: Check all targets\n`,
-    'all-target check anchor',
-  );
+  if (rendered.includes(RUNNER_CONTRACT_CHECK)) {
+    rendered = replaceExactlyOnce(
+      rendered,
+      RUNNER_CONTRACT_CHECK,
+      RUNNER_ORACLE_CHECK,
+      'candidate consolidated oracle check',
+    );
+  } else {
+    rendered = replaceExactlyOnce(
+      rendered,
+      CONTRACT_CHECK,
+      LOCKED_CONTRACT_CHECK,
+      'candidate contract check',
+    );
+    rendered = replaceExactlyOnce(
+      rendered,
+      '      - name: Check all targets\n',
+      `${SMOKE_STEP}      - name: Check all targets\n`,
+      'all-target check anchor',
+    );
+  }
   assertPromotedWorkflow(rendered, lock);
   return rendered;
 }

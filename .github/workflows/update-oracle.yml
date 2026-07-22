@@ -47,44 +47,26 @@ jobs:
           moon version --all
           why3 --version
           z3 --version
-          moon update && moon check
-          node tools/why3_oracle/generate_moon_dependency_inventory.mjs \
-            --check tools/contracts/moon-dependencies-v1.json
-          node tools/check_pr00_contracts.mjs \
+          node tools/run.mjs bootstrap
+          node tools/run.mjs contracts \
             --why3-archive "$WHY3_REFERENCE_ARCHIVE" \
             --require-toolchain-lock
-          node tools/why3_oracle/run_elab_differential.mjs \
+          node tools/run.mjs layers \
             --why3-archive "$WHY3_REFERENCE_ARCHIVE"
-          node tools/why3_oracle/run_transform_differential.mjs \
-            --why3-archive "$WHY3_REFERENCE_ARCHIVE"
-          node tools/why3_oracle/run_smt_differential.mjs \
-            --why3-archive "$WHY3_REFERENCE_ARCHIVE"
-          node tools/why3_oracle/run_unsupported_gate.mjs
 
       - name: Generate candidates in separate paths
         run: |
-          node tools/why3_oracle/manage_pr_goldens.mjs \
-            --candidate "$RUNNER_TEMP/oracle-candidate"
-          node tools/why3_oracle/run_result_differential.mjs \
-            --candidate "$RUNNER_TEMP/prover-result.json"
-          node tools/why3_oracle/sync_pr_golden_lock.mjs \
-            --candidate \
-            --manifest "$RUNNER_TEMP/oracle-candidate/manifest.json" \
+          node tools/run.mjs goldens candidate \
+            --records "$RUNNER_TEMP/oracle-candidate" \
             --result "$RUNNER_TEMP/prover-result.json" \
-            --output "$RUNNER_TEMP/toolchain-lock.json"
+            --lock "$RUNNER_TEMP/toolchain-lock.json"
 
       - name: Explicitly promote after fresh regeneration
         if: inputs.mode == 'promote'
         run: |
-          node tools/why3_oracle/manage_pr_goldens.mjs \
-            --promote "$RUNNER_TEMP/oracle-candidate"
-          node tools/why3_oracle/run_result_differential.mjs \
-            --promote "$RUNNER_TEMP/prover-result.json"
-          node tools/why3_oracle/sync_pr_golden_lock.mjs \
-            --promote \
-            --manifest "$RUNNER_TEMP/oracle-candidate/manifest.json" \
+          node tools/run.mjs goldens promote \
+            --records "$RUNNER_TEMP/oracle-candidate" \
             --result "$RUNNER_TEMP/prover-result.json"
-          node tools/check_pr00_contracts.mjs --quick
 
       - name: Render review patch
         run: |

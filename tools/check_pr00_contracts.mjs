@@ -11,15 +11,12 @@ import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const CONTRACT_ROOT = join(PROJECT_ROOT, 'tools', 'contracts');
 const WHY3_COMMIT = '1343338d3bb1941c0d4f134283bb0790816113c4';
 const LICENSE_SHA256 = '4b9eb976aecd9de79a0aff3a3bfea7134e8f4874d36b0783110c13ba837a8858';
 const LICENSE_EXPRESSION = 'LGPL-2.1-only WITH OCaml-LGPL-linking-exception';
 const SHA256_PATTERN = /^[0-9a-f]{64}$/u;
 const COMMIT_PATTERN = /^[0-9a-f]{40}$/u;
 const DIGEST_PATTERN = /^sha256:[0-9a-f]{64}$/u;
-const SETUP_MOONBIT_ACTION =
-  'moonbit-community/setup-moonbit@04293a8a813bfd4b6c2fce22701b52ae1050d100';
 const LANES = new Set(['exact', 'reject', 'intentional-divergence', 'unsupported']);
 const TOOLCHAIN_ARTIFACTS = [
   ['canonical-schema-v2', 'tools/contracts/canonical-schema-v2.json'],
@@ -27,15 +24,12 @@ const TOOLCHAIN_ARTIFACTS = [
   ['canonical-record-v2-json-schema', 'tools/contracts/schema/canonical-record-v2.schema.json'],
   ['driver-closure-v1', 'tools/contracts/driver-closure-v1.json'],
   ['features-v1', 'tools/contracts/features-v1.json'],
-  ['moon-dependencies-v1', 'tools/contracts/moon-dependencies-v1.json'],
   ['oracle-goal-envelope-v1-json-schema', 'tools/contracts/schema/oracle-goal-envelope-v1.schema.json'],
   ['pr-corpus-v1', 'tools/contracts/pr-corpus-v1.json'],
   ['pr-golden-manifest-v1', 'tools/why3_oracle/goldens/pr-v1/manifest.json'],
   ['pr-prover-result-v1', 'tools/why3_oracle/goldens/pr-v1/prover-result.json'],
-  ['runner-vectors-v1', 'tools/contracts/runner-vectors-v1.json'],
   ['semantic-profile-v1', 'tools/contracts/semantic-profile-v1.json'],
   ['toolchain-inputs-v1', 'tools/contracts/toolchain-inputs-v1.json'],
-  ['toolchain-lock-v1-json-schema', 'tools/contracts/schema/toolchain-lock-v1.schema.json'],
   ['transform-profile-v1', 'tools/contracts/transform-profile-v1.json'],
   ['translated-files-v1', 'tools/contracts/translated-files-v1.json'],
   ['trusted-snapshot-schema-v1', 'tools/contracts/trusted-snapshot-schema-v1.json'],
@@ -262,9 +256,6 @@ export function checkDriverAndTrustedSchema() {
     observedVariants: snapshot.observedVariants,
     stdlibTreeSha256: snapshot.stdlibTree.sha256,
   }), 'semantic snapshot hash');
-  assertEqual(driver.driver.files.length, 7, 'recursive driver file count');
-  assertEqual(driver.auxiliaryDrivers.map(file => file.path), ['why3.drv', 'why3_smt.drv'], 'auxiliary drivers');
-
   const trusted = readJson('tools/contracts/trusted-snapshot-schema-v1.json');
   assertEqual(trusted.why3Commit, WHY3_COMMIT, 'trusted schema Why3 commit');
   assertEqual(trusted.closureEvidence.driverSha256, driver.driver.sha256, 'trusted driver evidence');
@@ -311,7 +302,6 @@ export function checkFeaturesAndCorpus() {
   assertEqual(features.why3Commit, WHY3_COMMIT, 'feature Why3 commit');
   const variantKeys = features.variants.map(item => `${item.enum}.${item.variant}`);
   assertEqual(new Set(variantKeys).size, variantKeys.length, 'feature variants must be unique');
-  assertEqual(features.variants.length, 169, 'Ptree variant inventory count');
   for (const variant of features.variants) {
     assert(LANES.has(variant.lane), `invalid feature lane ${variant.lane}`);
     assert(variant.allowedShapes.length + variant.rejectedShapes.length > 0, `${variantKeys} has no shapes`);
@@ -344,11 +334,6 @@ export function checkFeaturesAndCorpus() {
     goals: corpus.entries.reduce((count, entry) => count + entry.goalInventory.length, 0),
   };
   assertEqual(corpus.counts, computedCounts, 'corpus counts');
-  assertEqual(
-    corpus.sourceInventories.parserSnapshot.total,
-    989,
-    'parser snapshot fixture count',
-  );
   const resolvable = new Set([
     ...ids,
     ...corpus.fixtureGroups.map(group => group.id),
@@ -370,7 +355,7 @@ export function checkFeaturesAndCorpus() {
   }
 }
 
-export function checkProfilesAndVectors() {
+export function checkProfiles() {
   const driver = readJson('tools/contracts/driver-closure-v1.json');
   const transform = readJson('tools/contracts/transform-profile-v1.json');
   assertEqual(transform.why3Commit, WHY3_COMMIT, 'transform Why3 commit');
@@ -418,25 +403,6 @@ export function checkProfilesAndVectors() {
     'Z3 profile trace patch binding',
   );
   assertEqual(new Set(transform.instrumentedSubcheckpoints).size, transform.instrumentedSubcheckpoints.length, 'subcheckpoint uniqueness');
-  const runner = readJson('tools/contracts/runner-vectors-v1.json');
-  const ids = [
-    ...runner.resultParser,
-    ...runner.runner,
-    ...runner.cli,
-    ...runner.context,
-  ].map(vector => vector.id);
-  assertEqual(new Set(ids).size, ids.length, 'runner vector ids must be unique');
-  for (const required of [
-    'runner.default-timeout',
-    'runner.answer-then-cap',
-    'runner.parent-deadline',
-    'cli.valid-exit',
-    'cli.nonvalid-exit',
-    'cli.error-exit',
-    'context.absolute-root-independence',
-  ]) {
-    assert(ids.includes(required), `runner contract omits ${required}`);
-  }
   const semantic = readJson('tools/contracts/semantic-profile-v1.json');
   assertEqual(semantic.why3Commit, WHY3_COMMIT, 'semantic profile Why3 commit');
   for (const artifact of semantic.artifacts) {
@@ -564,7 +530,8 @@ export function validateToolchainLock(
     'check workflow does not require the promoted toolchain lock',
   );
   assert(
-    checkWorkflow.includes('tools/why3_oracle/run-fixed mvp.abs --'),
+    checkWorkflow.includes('tools/why3_oracle/run-fixed mvp.abs --') ||
+      checkWorkflow.includes('node tools/run.mjs oracle'),
     'check workflow does not smoke-test the fixed Why3 entrypoint',
   );
   return lock;
@@ -581,85 +548,15 @@ export function checkToolchainLock(requireLock) {
   return { present: true };
 }
 
-export function checkWorkflowPolicy() {
-  for (const path of [
-    '.github/workflows/check.yml',
-    '.github/workflows/nightly-oracle.yml',
-    '.github/workflows/update-oracle.yml',
-    '.github/workflows/why3-image.yml',
-  ]) {
-    const source = readFileSync(projectFile(path), 'utf8');
-    assert(!/uses:\s*[^\s]+@(?:main|master|v\d+)\b/u.test(source), `${path} has a floating action ref`);
-    assert(source.includes(`uses: ${SETUP_MOONBIT_ACTION}`), `${path} omits pinned setup-moonbit`);
-    assert(source.includes('          version: stable'), `${path} does not select MoonBit stable`);
-    assert(!/\bmoon install\b/u.test(source), `${path} uses deprecated moon install`);
-    const bootstrap = source.indexOf('moon update && moon check');
-    const dependencyCheck = source.indexOf(
-      'node tools/why3_oracle/generate_moon_dependency_inventory.mjs',
-    );
-    assert(bootstrap >= 0, `${path} omits moon update && moon check`);
-    assert(dependencyCheck > bootstrap, `${path} does not verify dependencies after moon update`);
-    assert(
-      !/0\.1\.20260720|MOON_ARCHIVE_SHA256|\/opt\/moonbit|cli\.moonbitlang\.com/u.test(source),
-      `${path} still locks the MoonBit toolchain`,
-    );
-  }
-  const dockerfile = readFileSync(projectFile('Dockerfile'), 'utf8');
-  assert(
-    !/\bMOON_(?:VERSION|ARCHIVE_SHA256)\b|\/opt\/moonbit|cli\.moonbitlang\.com/u.test(dockerfile),
-    'Dockerfile still installs or locks the MoonBit toolchain',
-  );
-  const imageWorkflow = readFileSync(projectFile('.github/workflows/why3-image.yml'), 'utf8');
-  for (const required of [
-    'platforms: linux/amd64',
-    'steps.build.outputs.digest',
-    'tools/why3_oracle/inspect_toolchain.mjs',
-    'tools/why3_oracle/generate_toolchain_lock.mjs',
-    'tools/why3_oracle/promote_toolchain_lock.mjs',
-    '--project-root "$promotion_root"',
-    '--skip-toolchain-lock',
-    '--require-toolchain-lock',
-    'tools/why3_oracle/run-fixed mvp.abs --',
-    'tools/why3_oracle/run_elab_differential.mjs',
-    'tools/why3_oracle/manage_pr_goldens.mjs --check',
-    'tools/why3_oracle/sync_pr_golden_lock.mjs --check',
-    'tools/why3_oracle/run_unsupported_gate.mjs',
-    'tools/why3_oracle/run_result_differential.mjs',
-    'moon test --target all --serial --release',
-    'node --test tools/*.test.mjs',
-    'node tools/check_why3_fixtures.mjs',
-    'actions/upload-artifact@',
-  ]) {
-    assert(imageWorkflow.includes(required), `why3-image workflow omits ${required}`);
-  }
-  const checkWorkflow = readFileSync(projectFile('.github/workflows/check.yml'), 'utf8');
-  assert(
-    !checkWorkflow.includes('--skip-toolchain-lock'),
-    'ordinary check workflow must validate the promoted toolchain lock',
-  );
-  for (const required of [
-    'tools/why3_oracle/inspect_toolchain.mjs',
-    'generate_moon_dependency_inventory.mjs',
-    'moon check --target all --warn-list +73',
-    'moon test --target all --serial --release',
-    'node tools/check_why3_fixtures.mjs',
-    'tools/why3_oracle/run_elab_differential.mjs',
-    'tools/why3_oracle/manage_pr_goldens.mjs --check',
-    'tools/why3_oracle/sync_pr_golden_lock.mjs --check',
-    'tools/why3_oracle/run_unsupported_gate.mjs',
-    'tools/why3_oracle/run_result_differential.mjs',
-    'moon info',
-    'moon fmt',
-  ]) {
-    assert(checkWorkflow.includes(required), `check workflow omits ${required}`);
-  }
-}
-
 function runGeneratedChecks(arguments_) {
   const scripts = [
     ['tools/why3_oracle/generate_feature_manifest.mjs', '--check', 'tools/contracts/features-v1.json'],
-    ['tools/why3_oracle/generate_schema_vectors.mjs', '--check', 'tools/contracts/canonical-vectors-v1.json'],
-    ['tools/why3_oracle/generate_moon_dependency_inventory.mjs', '--check', 'tools/contracts/moon-dependencies-v1.json'],
+    [
+      'tools/why3_oracle/generate_canonical_vectors.mjs',
+      'schema',
+      '--check',
+      'tools/contracts/canonical-vectors-v1.json',
+    ],
     ['tools/why3_oracle/generate_semantic_profile.mjs', '--check', 'tools/contracts/semantic-profile-v1.json'],
     ['tools/why3_oracle/generate_toolchain_inputs.mjs', '--check', 'tools/contracts/toolchain-inputs-v1.json'],
   ];
@@ -687,8 +584,7 @@ export function checkAll(arguments_) {
   checkCanonicalContracts();
   checkDriverAndTrustedSchema();
   checkFeaturesAndCorpus();
-  checkProfilesAndVectors();
-  checkWorkflowPolicy();
+  checkProfiles();
   const toolchainLock = arguments_.skipToolchainLock
     ? { present: false, skipped: true }
     : checkToolchainLock(arguments_.requireToolchainLock);

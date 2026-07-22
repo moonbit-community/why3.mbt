@@ -12,6 +12,7 @@ on:
       - moon.pkg
       - tools/contracts/**
       - '!tools/contracts/toolchain-lock.json'
+      - tools/run.mjs
       - tools/check_pr00_contracts.mjs
       - tools/why3_oracle/**
       - .github/workflows/check.yml
@@ -38,11 +39,8 @@ jobs:
         with:
           version: stable
 
-      - name: Update registry, check project, and verify exact Moon dependencies
-        run: |
-          moon update && moon check
-          node tools/why3_oracle/generate_moon_dependency_inventory.mjs \
-            --check tools/contracts/moon-dependencies-v1.json
+      - name: Update registry and check project
+        run: node tools/run.mjs bootstrap
 
       - name: Log in to GHCR
         uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9
@@ -103,7 +101,7 @@ jobs:
             bash -ceu '
               cp -a /workspace-ro /tmp/workspace
               cd /tmp/workspace
-              node tools/check_pr00_contracts.mjs \
+              node tools/run.mjs contracts \
                 --why3-archive "$WHY3_REFERENCE_ARCHIVE" \
                 --skip-toolchain-lock
             '
@@ -111,8 +109,8 @@ jobs:
             --volume "$GITHUB_WORKSPACE:/workspace:ro" \
             --workdir /workspace \
             "$image_ref" \
-            node tools/why3_oracle/inspect_toolchain.mjs > "$report"
-          node tools/why3_oracle/generate_toolchain_lock.mjs \
+            node tools/run.mjs toolchain inspect > "$report"
+          node tools/run.mjs toolchain generate-lock \
             --report "$report" \
             --image-digest "$IMAGE_DIGEST" \
             --build-recipe-commit "$GITHUB_SHA" \
@@ -132,7 +130,7 @@ jobs:
           summary="$RUNNER_TEMP/promotion-summary.json"
           promotion_root="$RUNNER_TEMP/promoted-workspace"
           cp -a "$GITHUB_WORKSPACE" "$promotion_root"
-          node tools/why3_oracle/promote_toolchain_lock.mjs \
+          node tools/run.mjs toolchain promote-lock \
             --candidate "$candidate" \
             --report "$report" \
             --project-root "$promotion_root" \
@@ -156,30 +154,10 @@ jobs:
             bash -ceu '
               git config --global --add safe.directory /workspace
               moon version --all
-              node tools/check_pr00_contracts.mjs \
+              node tools/run.mjs oracle \
                 --why3-archive "$WHY3_REFERENCE_ARCHIVE" \
                 --require-toolchain-lock
-              tools/why3_oracle/run-fixed mvp.abs -- \
-                prove --parse-only tools/why3_oracle/fixtures/mvp.mlw
-              node tools/why3_oracle/run_elab_differential.mjs \
-                --why3-archive "$WHY3_REFERENCE_ARCHIVE"
-              node tools/why3_oracle/run_transform_differential.mjs \
-                --why3-archive "$WHY3_REFERENCE_ARCHIVE"
-              node tools/why3_oracle/run_smt_differential.mjs \
-                --why3-archive "$WHY3_REFERENCE_ARCHIVE"
-              node tools/why3_oracle/manage_pr_goldens.mjs --check
-              node tools/why3_oracle/sync_pr_golden_lock.mjs --check
-              node tools/why3_oracle/run_unsupported_gate.mjs
-              node tools/why3_oracle/run_result_differential.mjs
-              moon check --target all --warn-list +73
-              moon test --target all --serial --release
-              moon test --target all --serial
-              sh tools/check_native_runner_asan.sh
-              node --test tools/*.test.mjs
-              node tools/check_why3_fixtures.mjs
-              moon info
-              moon fmt
-              git diff --exit-code -- "*.mbt" "*.mbti"
+              node tools/run.mjs project --moon-diff-only
             '
 
       - name: Upload toolchain lock candidate

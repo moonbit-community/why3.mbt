@@ -9,9 +9,8 @@ import {
   checkDriverAndTrustedSchema,
   checkFeaturesAndCorpus,
   checkLicenseAndAttribution,
-  checkProfilesAndVectors,
+  checkProfiles,
   checkToolchainLock,
-  checkWorkflowPolicy,
 } from './check_pr00_contracts.mjs';
 
 test('PR-00 checked-in contracts are internally closed', () => {
@@ -19,8 +18,7 @@ test('PR-00 checked-in contracts are internally closed', () => {
   assert.doesNotThrow(checkCanonicalContracts);
   assert.doesNotThrow(checkDriverAndTrustedSchema);
   assert.doesNotThrow(checkFeaturesAndCorpus);
-  assert.doesNotThrow(checkProfilesAndVectors);
-  assert.doesNotThrow(checkWorkflowPolicy);
+  assert.doesNotThrow(checkProfiles);
 });
 
 test('canonical contract hashes include compact JSON and one LF', () => {

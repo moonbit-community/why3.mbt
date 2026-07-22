@@ -459,8 +459,6 @@ async function buildManifest() {
 
   const canonicalVectors = JSON.parse(readFileSync(
     join(PROJECT_ROOT, 'tools/contracts/canonical-vectors-v1.json'), 'utf8'));
-  const runnerVectors = JSON.parse(readFileSync(
-    join(PROJECT_ROOT, 'tools/contracts/runner-vectors-v1.json'), 'utf8'));
   const transformProfile = JSON.parse(readFileSync(
     join(PROJECT_ROOT, 'tools/contracts/transform-profile-v1.json'), 'utf8'));
   const contracts = [
@@ -479,17 +477,6 @@ async function buildManifest() {
         theoryRoots: driver.driver.theoryRoots,
         transforms: driver.driver.transformations,
       },
-    ),
-    contractEntry(
-      'contract.runner-vectors',
-      'tools/contracts/runner-vectors-v1.json',
-      ['cli', 'process-runner', 'result-parser'],
-      [
-        ...runnerVectors.resultParser,
-        ...runnerVectors.runner,
-        ...runnerVectors.cli,
-        ...runnerVectors.context,
-      ].map(vector => vector.id),
     ),
     contractEntry(
       'contract.transform-profile',
@@ -554,9 +541,7 @@ async function buildManifest() {
     ['driver-catalog-and-trusted-types', ['contract.driver-profile', 'unsupported.driver-only-theory']],
     ['program-real', ['mvp.program-real']],
     ['program-false-postcondition', ['mutation.false-postcondition']],
-    ['portable-profile-vs-oracle-context', ['contract.runner-vectors']],
     ['real-solver-unsat-sat-unknown', ['solver.outcomes']],
-    ['canned-result-and-runner-boundaries', ['contract.runner-vectors']],
     [
       'all-unsupported-feature-groups',
       [...entryIds].filter(id => id.startsWith('unsupported.')).sort(compareUtf8),
@@ -617,7 +602,6 @@ async function buildManifest() {
       featuresV1Sha256: sha256(readFileSync(featuresPath)),
       driverClosureV1Sha256: sha256(readFileSync(driverPath)),
       canonicalVectorsV1Sha256: sha256(readFileSync(join(PROJECT_ROOT, 'tools/contracts/canonical-vectors-v1.json'))),
-      runnerVectorsV1Sha256: sha256(readFileSync(join(PROJECT_ROOT, 'tools/contracts/runner-vectors-v1.json'))),
       transformProfileV1Sha256: sha256(readFileSync(join(PROJECT_ROOT, 'tools/contracts/transform-profile-v1.json'))),
     },
     counts: {

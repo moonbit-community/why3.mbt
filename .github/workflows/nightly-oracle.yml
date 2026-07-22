@@ -40,44 +40,25 @@ jobs:
           moon version --all
           why3 --version
           z3 --version
-          moon update && moon check
-          node tools/why3_oracle/generate_moon_dependency_inventory.mjs \
-            --check tools/contracts/moon-dependencies-v1.json
-          node tools/check_pr00_contracts.mjs \
+          node tools/run.mjs bootstrap
+          node tools/run.mjs contracts \
             --why3-archive "$WHY3_REFERENCE_ARCHIVE" \
             --require-toolchain-lock
 
       - name: Run complete layered differentials
         run: |
-          node tools/check_why3_fixtures.mjs
-          node tools/why3_oracle/run_elab_differential.mjs \
+          node tools/run.mjs fixtures
+          node tools/run.mjs layers \
             --why3-archive "$WHY3_REFERENCE_ARCHIVE"
-          node tools/why3_oracle/run_transform_differential.mjs \
-            --why3-archive "$WHY3_REFERENCE_ARCHIVE"
-          node tools/why3_oracle/run_smt_differential.mjs \
-            --why3-archive "$WHY3_REFERENCE_ARCHIVE"
-          node tools/why3_oracle/run_unsupported_gate.mjs
-          node tools/why3_oracle/sync_pr_golden_lock.mjs --check
 
       - name: Generate full nightly artifacts and compare PR goldens
         run: |
           records="$RUNNER_TEMP/nightly-pr-records"
           result="$RUNNER_TEMP/nightly-prover-result.json"
-          node tools/why3_oracle/manage_pr_goldens.mjs \
-            --candidate "$records"
-          for file in \
-            manifest.json \
-            typed-semantic.ndjson \
-            raw-task.ndjson \
-            transform-checkpoints.ndjson \
-            prepared-task.ndjson \
-            smt-token-stream.ndjson
-          do
-            cmp "tools/why3_oracle/goldens/pr-v1/$file" "$records/$file"
-          done
-          node tools/why3_oracle/run_result_differential.mjs \
-            --candidate "$result"
-          cmp tools/why3_oracle/goldens/pr-v1/prover-result.json "$result"
+          node tools/run.mjs goldens candidate \
+            --records "$records" \
+            --result "$result" \
+            --compare
 
       - name: Upload full nightly oracle records
         if: always()

@@ -24,7 +24,7 @@ import {
   reportFixture,
 } from './toolchain_lock_test_helpers.mjs';
 
-const PROMOTER = join(PROJECT_ROOT, 'tools', 'why3_oracle', 'promote_toolchain_lock.mjs');
+const PROMOTER = join(PROJECT_ROOT, 'tools', 'run.mjs');
 const CANDIDATE_DIGEST = `sha256:${'a'.repeat(64)}`;
 const CANDIDATE_REFERENCE =
   `ghcr.io/moonbit-community/why3.mbt-why3@${CANDIDATE_DIGEST}`;
@@ -73,9 +73,34 @@ jobs:
 `;
 }
 
+function consolidatedCandidateWorkflowFixture() {
+  return `name: check
+
+jobs:
+  oracle-build:
+    name: fixed oracle candidate
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/\${{ github.repository }}-why3:1.7.2-z3-4.8.12
+    steps:
+      - name: Verify candidate image contents
+        run: node tools/run.mjs toolchain inspect
+
+      - name: Check the candidate oracle
+        run: |
+          node tools/run.mjs contracts \\
+            --why3-archive "$WHY3_REFERENCE_ARCHIVE"
+
+      - name: Check the project
+        run: node tools/run.mjs project
+`;
+}
+
 function runPromoter(candidatePath, reportPath, projectRoot, ...extra) {
   return spawnSync(process.execPath, [
     PROMOTER,
+    'toolchain',
+    'promote-lock',
     '--candidate',
     candidatePath,
     '--report',
@@ -108,6 +133,14 @@ test('promotion renderer fails closed on an unexpected workflow shape', () => {
   );
 });
 
+test('promotion renderer upgrades the consolidated candidate task', () => {
+  const rendered = renderCheckWorkflow(consolidatedCandidateWorkflowFixture(), lockImage());
+  assert.match(rendered, /node tools\/run\.mjs oracle/u);
+  assert.match(rendered, /--require-toolchain-lock/u);
+  assert.doesNotMatch(rendered, /node tools\/run\.mjs contracts/u);
+  assert.doesNotMatch(rendered, /tools\/why3_oracle\/run-fixed/u);
+});
+
 test('promotion renderer requires the previous lock when replacing a digest', () => {
   const previousLock = lockImageWithDigest('b');
   const nextLock = lockImageWithDigest('c');
@@ -119,6 +152,24 @@ test('promotion renderer requires the previous lock when replacing a digest', ()
   const nextWorkflow = renderCheckWorkflow(previousWorkflow, nextLock, { previousLock });
   assert.match(nextWorkflow, new RegExp(nextLock.image.digest, 'u'));
   assert.doesNotMatch(nextWorkflow, new RegExp(previousLock.image.digest, 'u'));
+});
+
+test('promotion renderer preserves the consolidated CI task entrypoint', () => {
+  const currentLock = JSON.parse(readFileSync(
+    join(PROJECT_ROOT, 'tools', 'contracts', 'toolchain-lock.json'),
+    'utf8',
+  ));
+  const currentWorkflow = readFileSync(
+    join(PROJECT_ROOT, '.github', 'workflows', 'check.yml'),
+    'utf8',
+  );
+  const nextLock = lockImageWithDigest('c');
+  const rendered = renderCheckWorkflow(currentWorkflow, nextLock, {
+    previousLock: currentLock,
+  });
+  assert.match(rendered, /node tools\/run\.mjs oracle/u);
+  assert.match(rendered, new RegExp(nextLock.image.digest, 'u'));
+  assert.doesNotMatch(rendered, new RegExp(currentLock.image.digest, 'u'));
 });
 
 test('promotion CLI dry-runs without writes, then promotes and revalidates atomically', () => {

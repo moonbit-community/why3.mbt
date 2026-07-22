@@ -7,7 +7,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-export const GENERATOR = join(PROJECT_ROOT, 'tools', 'why3_oracle', 'generate_toolchain_lock.mjs');
+export const GENERATOR = join(PROJECT_ROOT, 'tools', 'run.mjs');
 export const INPUTS_PATH = join(PROJECT_ROOT, 'tools', 'contracts', 'toolchain-inputs-v1.json');
 
 export function sha256(bytes) {
@@ -65,6 +65,8 @@ export function generateCandidate(
   writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`);
   const result = spawnSync(process.execPath, [
     GENERATOR,
+    'toolchain',
+    'generate-lock',
     '--report',
     reportPath,
     '--image-digest',
