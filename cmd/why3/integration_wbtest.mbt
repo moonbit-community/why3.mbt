@@ -2,7 +2,7 @@
 
 ///|
 async test "CLI emits deterministic files" {
-  let fixture = "tools/why3_oracle/fixtures/solver-outcomes.mlw"
+  let fixture = "tools/why3_reference/fixtures/solver-outcomes.mlw"
   let directory = "_build/why3_cli_integration_output"
   if @fs.exists(directory) {
     @fs.rmdir(directory, recursive=true)
@@ -28,7 +28,7 @@ async test "CLI emits deterministic files" {
 
 ///|
 async test "CLI uses three-valued exits and closes program verification conditions" {
-  let fixture = "tools/why3_oracle/fixtures/solver-outcomes.mlw"
+  let fixture = "tools/why3_reference/fixtures/solver-outcomes.mlw"
   assert_eq(
     run_cli(["why3mbt", "prove", fixture, "--goal-index", "0", "--json"]),
     0,
@@ -37,7 +37,7 @@ async test "CLI uses three-valued exits and closes program verification conditio
     run_cli(["why3mbt", "prove", fixture, "--goal-index", "1", "--json"]),
     2,
   )
-  let mvp = "tools/why3_oracle/fixtures/mvp.mlw"
+  let mvp = "tools/why3_reference/fixtures/mvp.mlw"
   assert_eq(run_cli(["why3mbt", "prove", mvp, "-T", "Abs", "--json"]), 0)
   assert_eq(
     run_cli(["why3mbt", "prove", mvp, "-T", "RoutineCall", "--json"]),

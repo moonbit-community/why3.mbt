@@ -49,8 +49,8 @@
       "canonical_sha256",
       "canonical"
     ],
-    "OracleGoalEnvelope": [
-      "oracle_context_sha256",
+    "ReferenceGoalEnvelope": [
+      "reference_context_sha256",
       "record",
       "reference_diagnostics"
     ]

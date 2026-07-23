@@ -10,7 +10,8 @@ import {
   checkFeaturesAndCorpus,
   checkLicenseAndAttribution,
   checkProfiles,
-  checkToolchainLock,
+  checkReferenceEnvironmentLock,
+  checkReferenceRollout,
 } from './check_pr00_contracts.mjs';
 
 test('PR-00 checked-in contracts are internally closed', () => {
@@ -19,6 +20,8 @@ test('PR-00 checked-in contracts are internally closed', () => {
   assert.doesNotThrow(checkDriverAndTrustedSchema);
   assert.doesNotThrow(checkFeaturesAndCorpus);
   assert.doesNotThrow(checkProfiles);
+  assert.doesNotThrow(checkReferenceEnvironmentLock);
+  assert.doesNotThrow(checkReferenceRollout);
 });
 
 test('canonical contract hashes include compact JSON and one LF', () => {
@@ -28,8 +31,11 @@ test('canonical contract hashes include compact JSON and one LF', () => {
   );
 });
 
-test('toolchain lock validation distinguishes candidate and promoted states', () => {
-  assert.equal(typeof checkToolchainLock(false).present, 'boolean');
+test('reference environment lock contains only upstream environment identity', () => {
+  const lock = checkReferenceEnvironmentLock();
+  assert.deepEqual(Object.keys(lock), [
+    'schemaVersion', 'platform', 'image', 'ocaml', 'why3', 'z3', 'manifest',
+  ]);
 });
 
 test('quick aggregate check reruns deterministic generators', () => {
@@ -37,7 +43,5 @@ test('quick aggregate check reruns deterministic generators', () => {
     why3Root: '../why3',
     why3Archive: null,
     quick: true,
-    requireToolchainLock: false,
-    skipToolchainLock: true,
   }));
 });

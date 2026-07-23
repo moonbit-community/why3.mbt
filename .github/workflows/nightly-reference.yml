@@ -1,0 +1,85 @@
+name: nightly-reference
+
+on:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  environment:
+    name: resolve reference environment
+    runs-on: ubuntu-24.04
+    outputs:
+      image: ${{ steps.lock.outputs.image }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - id: lock
+        name: Read the unique environment lock
+        run: |
+          image="$(node -e '
+            const { readEnvironmentLock } = require("./tools/why3_reference/reference_environment.cjs");
+            const lock = readEnvironmentLock();
+            process.stdout.write(`${lock.image.repository}@${lock.image.digest}`);
+          ')"
+          echo "image=$image" >> "$GITHUB_OUTPUT"
+
+  reference:
+    name: full layered reference
+    needs: environment
+    runs-on: ubuntu-24.04
+    container:
+      image: ${{ needs.environment.outputs.image }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      WHY3_REFERENCE_CACHE_DIR: ${{ github.workspace }}/.cache/why3-reference
+      WHY3_REFERENCE_CONTEXT_DIR: ${{ github.workspace }}/_build/reference-context
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+
+      - name: Trust checkout workspace
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Restore patched Why3 runtime
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        with:
+          path: ${{ env.WHY3_REFERENCE_CACHE_DIR }}
+          key: reference-runtime-${{ runner.os }}-${{ hashFiles('tools/contracts/reference-environment-lock-v1.json', 'tools/why3_reference/reference_runtime.mjs', 'tools/why3_reference/patches/driver-trace.patch') }}
+
+      - name: Set up MoonBit stable
+        uses: moonbit-community/setup-moonbit@04293a8a813bfd4b6c2fce22701b52ae1050d100
+        with:
+          version: stable
+
+      - name: Run complete reference
+        run: |
+          node tools/run.mjs bootstrap
+          node tools/run.mjs reference \
+            --why3-archive "$WHY3_REFERENCE_ARCHIVE"
+
+      - name: Regenerate and compare PR baselines
+        run: |
+          node tools/run.mjs baselines candidate \
+            --records "$RUNNER_TEMP/nightly-pr-records" \
+            --result "$RUNNER_TEMP/nightly-prover-result.json" \
+            --compare
+
+      - name: Upload full nightly records and provenance
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: nightly-reference-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/nightly-pr-records
+            ${{ runner.temp }}/nightly-prover-result.json
+            ${{ env.WHY3_REFERENCE_CONTEXT_DIR }}
+          if-no-files-found: warn

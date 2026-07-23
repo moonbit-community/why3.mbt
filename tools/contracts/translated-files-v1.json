@@ -551,9 +551,9 @@
       "lastSemanticModificationDate": "2026-07-22"
     }
   ],
-  "ocamlOracleAdapters": [
+  "ocamlReferenceAdapters": [
     {
-      "path": "tools/why3_oracle/export_fixture_goals.ml",
+      "path": "tools/why3_reference/export_fixture_goals.ml",
       "upstreamSources": [
         "src/core/task.ml",
         "src/mlw/pmodule.ml"
@@ -562,7 +562,7 @@
       "lastSemanticModificationDate": "2026-07-21"
     },
     {
-      "path": "tools/why3_oracle/export_semantic_inventory.ml",
+      "path": "tools/why3_reference/export_semantic_inventory.ml",
       "upstreamSources": [
         "src/core/decl.ml",
         "src/core/term.ml",
@@ -574,7 +574,7 @@
       "lastSemanticModificationDate": "2026-07-21"
     },
     {
-      "path": "tools/why3_oracle/canonical_v2.ml",
+      "path": "tools/why3_reference/canonical_v2.ml",
       "upstreamSources": [
         "src/core/ident.ml",
         "src/core/ty.ml",
@@ -592,7 +592,7 @@
       "lastSemanticModificationDate": "2026-07-22"
     },
     {
-      "path": "tools/why3_oracle/export_elab_typed.ml",
+      "path": "tools/why3_reference/export_elab_typed.ml",
       "upstreamSources": [
         "src/parser/typing.ml",
         "src/core/theory.ml",
@@ -602,7 +602,7 @@
       "lastSemanticModificationDate": "2026-07-22"
     },
     {
-      "path": "tools/why3_oracle/export_elab_raw.ml",
+      "path": "tools/why3_reference/export_elab_raw.ml",
       "upstreamSources": [
         "src/core/task.ml",
         "src/core/theory.ml",
@@ -612,7 +612,7 @@
       "lastSemanticModificationDate": "2026-07-22"
     },
     {
-      "path": "tools/why3_oracle/export_z3_profile.ml",
+      "path": "tools/why3_reference/export_z3_profile.ml",
       "upstreamSources": [
         "src/core/theory.ml",
         "src/driver/driver.ml"
@@ -621,7 +621,7 @@
       "lastSemanticModificationDate": "2026-07-21"
     },
     {
-      "path": "tools/why3_oracle/export_transform_trace.ml",
+      "path": "tools/why3_reference/export_transform_trace.ml",
       "upstreamSources": [
         "src/core/task.ml",
         "src/driver/driver.ml",
@@ -631,7 +631,7 @@
       "lastSemanticModificationDate": "2026-07-21"
     },
     {
-      "path": "tools/why3_oracle/export_smt_trace.ml",
+      "path": "tools/why3_reference/export_smt_trace.ml",
       "upstreamSources": [
         "src/core/ident.ml",
         "src/core/task.ml",

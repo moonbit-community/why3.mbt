@@ -37,9 +37,9 @@
   "finalCheckpoints": ["prepared-task", "smt-token-stream", "prover-result"],
   "tracePatch": {
     "status": "active",
-    "path": "tools/why3_oracle/patches/driver-trace.patch",
+    "path": "tools/why3_reference/patches/driver-trace.patch",
     "targetWhy3Commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
-    "patchSha256": "6c41136b7912cafe45d91e0ec6ab247839c4dfbadf947f828d6aa59fb348823f",
+    "patchSha256": "6042c3a336ed31a6b33835e6b170ef0257c8d699ddf8ac293df90b157ad003d5",
     "checkpointSequences": {
       "monomorphic": [
         "driver-update",

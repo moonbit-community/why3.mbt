@@ -4998,7 +4998,7 @@
     },
     "curated": {
       "total": 34,
-      "sha256": "d6479e661b89257a75ce4c1d2fb4d7735329464537d2c870f58db2ec37cd2572",
+      "sha256": "841d22e1bc752cca0d1d19ef35a080bb4b0b1e59ed31e8933ea163a4ba5f4db5",
       "entries": [
         {
           "path": "tests/vc/false-post.mlw",
@@ -5006,167 +5006,167 @@
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/mvp.mlw",
+          "path": "tools/why3_reference/fixtures/mvp.mlw",
           "sha256": "04f2b2ecf47eb87d484eed5adb67ec8ef76e86f429d36b66eaef0d7225103a9f",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/smt-identifiers.mlw",
+          "path": "tools/why3_reference/fixtures/smt-identifiers.mlw",
           "sha256": "a1e0015a92d621ded76295bfbc1a7741065a7c6758ba2012d754a98aa41ab0a8",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/solver-outcomes.mlw",
+          "path": "tools/why3_reference/fixtures/solver-outcomes.mlw",
           "sha256": "db4ba4a6f16a359d3b0ec46d85a2ac3497efa10df61c74e966ed2868383fe90c",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/transform-inductive.mlw",
+          "path": "tools/why3_reference/fixtures/transform-inductive.mlw",
           "sha256": "e5efac2e9a18ee163dd51de35dc53ef1721efe92654287068e5d0eb8cf153c7f",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/transform-polymorphic-definition.mlw",
+          "path": "tools/why3_reference/fixtures/transform-polymorphic-definition.mlw",
           "sha256": "100f3c639445e45f4d977bbf4a7cd7f8891f54c07721fecd711553d6f29ca3fb",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/transform-polymorphism.mlw",
+          "path": "tools/why3_reference/fixtures/transform-polymorphism.mlw",
           "sha256": "24558504374b0cad18f8321667b7c597b98c3e8fc44e079131709204830bd66c",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/typing-arity.mlw",
+          "path": "tools/why3_reference/fixtures/typing-arity.mlw",
           "sha256": "88b721d1036f2b6f88b54a4068f9df13912093009d022dda1ed51d9d7ca31581",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/typing-mismatch.mlw",
+          "path": "tools/why3_reference/fixtures/typing-mismatch.mlw",
           "sha256": "d59eb2d1119e6f643a2f6a0d37f97daa93624c6ae9a2d79de687ce9172740fe1",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/typing-occurs.mlw",
+          "path": "tools/why3_reference/fixtures/typing-occurs.mlw",
           "sha256": "5992025c33ab1a3897e60316acaeae1fb2c152c3e4b2eeab71f54a8ad3ebcb1f",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/check.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/check.mlw",
           "sha256": "6f8ed90356f7a95ec27249bdcdd81d7a15d3fc49ae2b7c2fbd619dc8f537f169",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/clone.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/clone.mlw",
           "sha256": "fe77a05790e2e7952cf859d5f7cdcab593320eed01e36972d27050b9f7aba2c7",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/control-attribute.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/control-attribute.mlw",
           "sha256": "89c962302f0e9e0ed50c979a27d9c9ef88d5857885f5b3aaa5aa14a13c26abe4",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/datatypes.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/datatypes.mlw",
           "sha256": "ebc3ba7cc979cc3cd45e42d5c2d227da6d5482fa95abfe02d649611699459894",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/driver-only-theory.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/driver-only-theory.mlw",
           "sha256": "fe30c09fd0cbab42df2ad14499a2133c2b8c99e60356a3fa0167794f0d767fca",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/effects.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/effects.mlw",
           "sha256": "31a07d80869d7d193282e49bc258fd202c5117c8749774a5ff78b47447581bf1",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/epsilon.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/epsilon.mlw",
           "sha256": "ffef39887061c56800d1dc092d718a06f1b0bfb2c4607880364ec22d16049e22",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/exceptions.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/exceptions.mlw",
           "sha256": "51d2809c22877c388a9618180125ff4bab8bdab874b1dc974cc939f51cdcdbbf",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/function-kinds.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/function-kinds.mlw",
           "sha256": "4fa3716ebf7d17b59b794374e7e7c763dbf0894d5cda6388445425a3632d0526",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/ghost.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/ghost.mlw",
           "sha256": "abeb4d026a5f2498be42c4c1f0f67d1de85f4329bbc5fd1badd0fca52f3fb45e",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/higher-order.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/higher-order.mlw",
           "sha256": "40620d136aa8e7044f2e7ace77a76ff242665171495ff3a07361ab52d5a1076e",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/inductive.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/inductive.mlw",
           "sha256": "3155a2a9c2714b3fc249298b6ed7d7ab187719298575332baf39afebc206c7bb",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/lambda.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/lambda.mlw",
           "sha256": "f3af72507f245e3aee413fd674e711b33f41592524f689e85867f59aa9d93e7a",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/logic-term.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/logic-term.mlw",
           "sha256": "68b7fa88be210b8a55f3044af6395f7a16d66eb5e55404a11eb51948c15ae06b",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/loops.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/loops.mlw",
           "sha256": "e179919785c8c92eea2991f5b0db2cdb707a3116f0a41ebab35bfb2c66d3dc4d",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/meta.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/meta.mlw",
           "sha256": "89c15511856b3ec6de65330ee11fa1968c488cde051e7552aaec72580dbc3d07",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/old-at.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/old-at.mlw",
           "sha256": "cbbd8825f2985d401b69d52ff50d569f29db89b2aad69d74bc906116f1dd3178",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/patterns.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/patterns.mlw",
           "sha256": "529153d4c5b092b4bec4875f0c4976fd029d4cf673378c78e4cbf8ef72df3eb4",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/polymorphic-program.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/polymorphic-program.mlw",
           "sha256": "50967c6ce6c1cda40a5f071cbc98044e802d795f3a30a3e7e901cce750ba05ab",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/program-expression.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/program-expression.mlw",
           "sha256": "207e22b9749c95edca945fdb61a056cc35803948dc62fa4d1683fc4a53227c99",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/recursion.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/recursion.mlw",
           "sha256": "521d1c96665ce1687324e10e15102614bad3213853a3b54e85e212e7bd0fc480",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/references.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/references.mlw",
           "sha256": "298749738250ba5c626cde0e96961785e07ba16c1b565441ff58a8d02f45ec14",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/strings.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/strings.mlw",
           "sha256": "4036469b6c9e60fa09ee8249cb245760890d486c1acaf84d4a61baf8eac0ef34",
           "kind": "regular"
         },
         {
-          "path": "tools/why3_oracle/fixtures/unsupported/tuple.mlw",
+          "path": "tools/why3_reference/fixtures/unsupported/tuple.mlw",
           "sha256": "6925d86b8c649a320609411822f0d3a39833d0f553471c8312061816de32256f",
           "kind": "regular"
         }
@@ -5177,7 +5177,7 @@
     "featuresV1Sha256": "e8400d57eded7dab189eb2a97e2e2db241a1ebae9b059e3a2dc2cdde7522fb53",
     "driverClosureV1Sha256": "204f8393df7c5259d6bd727b14abfea9889992bd976223631d3de5a805a8873a",
     "canonicalVectorsV1Sha256": "055c3f02e582f510d0368447ed5a4880c430c3a8a4bfd64a2c2c8816fa3e52d3",
-    "transformProfileV1Sha256": "39d4f9ecde65b7ffb72c61ae83bca5b4e86a7d2434a1c60d70fe8cb07beb46f4"
+    "transformProfileV1Sha256": "62577b120308fd1281fbbb0767e44a53bdc00f4b8405e5d81af295738787bbf8"
   },
   "counts": {
     "entries": 1035,
@@ -5188,7 +5188,7 @@
     "contracts": 3,
     "goals": 42
   },
-  "entriesSha256": "e9df1b214e1bf793451d5f7a6eaffa8aeeaa6fe0e0cb4e5c3d5d7e6492aa46ec",
+  "entriesSha256": "87e353da38eaa1654655440ef8dba5d8328d7b28e2150f3946070a13e64d212b",
   "fixtureGroupsSha256": "51baa80adc7bd4a2302e8471cb209c4cde29d5dca16bd668a5e8278fd0e26f99",
   "capabilityCoverageSha256": "000cdc5b1909dc62ccc9dc70ac45342a7c03f29ff95643d770c3926b10f016ab",
   "entries": [
@@ -5328,7 +5328,7 @@
       "kind": "contract-vector",
       "source": {
         "path": "tools/contracts/transform-profile-v1.json",
-        "sha256": "39d4f9ecde65b7ffb72c61ae83bca5b4e86a7d2434a1c60d70fe8cb07beb46f4",
+        "sha256": "62577b120308fd1281fbbb0767e44a53bdc00f4b8405e5d81af295738787bbf8",
         "kind": "regular"
       },
       "loadpathProfile": "none",
@@ -5452,7 +5452,7 @@
       "id": "mvp.abs",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/mvp.mlw",
+        "path": "tools/why3_reference/fixtures/mvp.mlw",
         "sha256": "04f2b2ecf47eb87d484eed5adb67ec8ef76e86f429d36b66eaef0d7225103a9f",
         "kind": "regular"
       },
@@ -5701,7 +5701,7 @@
       "id": "mvp.assert-assume",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/mvp.mlw",
+        "path": "tools/why3_reference/fixtures/mvp.mlw",
         "sha256": "04f2b2ecf47eb87d484eed5adb67ec8ef76e86f429d36b66eaef0d7225103a9f",
         "kind": "regular"
       },
@@ -5780,7 +5780,7 @@
       "id": "mvp.logic-core",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/mvp.mlw",
+        "path": "tools/why3_reference/fixtures/mvp.mlw",
         "sha256": "04f2b2ecf47eb87d484eed5adb67ec8ef76e86f429d36b66eaef0d7225103a9f",
         "kind": "regular"
       },
@@ -6117,7 +6117,7 @@
       "id": "mvp.logic-polymorphism",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/mvp.mlw",
+        "path": "tools/why3_reference/fixtures/mvp.mlw",
         "sha256": "04f2b2ecf47eb87d484eed5adb67ec8ef76e86f429d36b66eaef0d7225103a9f",
         "kind": "regular"
       },
@@ -6232,7 +6232,7 @@
       "id": "mvp.logic-quantifiers",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/mvp.mlw",
+        "path": "tools/why3_reference/fixtures/mvp.mlw",
         "sha256": "04f2b2ecf47eb87d484eed5adb67ec8ef76e86f429d36b66eaef0d7225103a9f",
         "kind": "regular"
       },
@@ -6311,7 +6311,7 @@
       "id": "mvp.multiple-units",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/mvp.mlw",
+        "path": "tools/why3_reference/fixtures/mvp.mlw",
         "sha256": "04f2b2ecf47eb87d484eed5adb67ec8ef76e86f429d36b66eaef0d7225103a9f",
         "kind": "regular"
       },
@@ -6415,7 +6415,7 @@
       "id": "mvp.namespace",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/mvp.mlw",
+        "path": "tools/why3_reference/fixtures/mvp.mlw",
         "sha256": "04f2b2ecf47eb87d484eed5adb67ec8ef76e86f429d36b66eaef0d7225103a9f",
         "kind": "regular"
       },
@@ -6502,7 +6502,7 @@
       "id": "mvp.program-real",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/mvp.mlw",
+        "path": "tools/why3_reference/fixtures/mvp.mlw",
         "sha256": "04f2b2ecf47eb87d484eed5adb67ec8ef76e86f429d36b66eaef0d7225103a9f",
         "kind": "regular"
       },
@@ -6557,7 +6557,7 @@
       "id": "mvp.routine-call",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/mvp.mlw",
+        "path": "tools/why3_reference/fixtures/mvp.mlw",
         "sha256": "04f2b2ecf47eb87d484eed5adb67ec8ef76e86f429d36b66eaef0d7225103a9f",
         "kind": "regular"
       },
@@ -6631,7 +6631,7 @@
       "id": "mvp.unit",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/mvp.mlw",
+        "path": "tools/why3_reference/fixtures/mvp.mlw",
         "sha256": "04f2b2ecf47eb87d484eed5adb67ec8ef76e86f429d36b66eaef0d7225103a9f",
         "kind": "regular"
       },
@@ -29024,7 +29024,7 @@
       "id": "smt.identifier-safety",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/smt-identifiers.mlw",
+        "path": "tools/why3_reference/fixtures/smt-identifiers.mlw",
         "sha256": "a1e0015a92d621ded76295bfbc1a7741065a7c6758ba2012d754a98aa41ab0a8",
         "kind": "regular"
       },
@@ -29078,7 +29078,7 @@
       "id": "solver.outcomes",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/solver-outcomes.mlw",
+        "path": "tools/why3_reference/fixtures/solver-outcomes.mlw",
         "sha256": "db4ba4a6f16a359d3b0ec46d85a2ac3497efa10df61c74e966ed2868383fe90c",
         "kind": "regular"
       },
@@ -29154,7 +29154,7 @@
       "id": "transform.inductive-snapshot",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/transform-inductive.mlw",
+        "path": "tools/why3_reference/fixtures/transform-inductive.mlw",
         "sha256": "e5efac2e9a18ee163dd51de35dc53ef1721efe92654287068e5d0eb8cf153c7f",
         "kind": "regular"
       },
@@ -29162,12 +29162,12 @@
       "featureTags": [
         "eliminate-inductive",
         "higher-order-encoding",
-        "oracle-only",
+        "reference-only",
         "trusted-inductive"
       ],
       "expected": {
-        "stage": "oracle-pipeline",
-        "kind": "OracleOnlyTrusted",
+        "stage": "reference-pipeline",
+        "kind": "ReferenceOnlyTrusted",
         "lane": "exact",
         "gateStages": [
           "typed-unit",
@@ -29206,7 +29206,7 @@
       "id": "transform.polymorphic-definition",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/transform-polymorphic-definition.mlw",
+        "path": "tools/why3_reference/fixtures/transform-polymorphic-definition.mlw",
         "sha256": "100f3c639445e45f4d977bbf4a7cd7f8891f54c07721fecd711553d6f29ca3fb",
         "kind": "regular"
       },
@@ -29260,7 +29260,7 @@
       "id": "transform.polymorphism",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/transform-polymorphism.mlw",
+        "path": "tools/why3_reference/fixtures/transform-polymorphism.mlw",
         "sha256": "24558504374b0cad18f8321667b7c597b98c3e8fc44e079131709204830bd66c",
         "kind": "regular"
       },
@@ -29314,7 +29314,7 @@
       "id": "typing.arity-mismatch",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/typing-arity.mlw",
+        "path": "tools/why3_reference/fixtures/typing-arity.mlw",
         "sha256": "88b721d1036f2b6f88b54a4068f9df13912093009d022dda1ed51d9d7ca31581",
         "kind": "regular"
       },
@@ -29337,15 +29337,15 @@
       "featureAssertions": [],
       "referenceWhy3": {
         "exitCode": 1,
-        "stderrUtf8": "File \"tools/why3_oracle/fixtures/typing-arity.mlw\", line 5, characters 15-21:\nThis term has type int -> int, but is expected to have type int\n",
-        "stderrSha256": "63b497b9ae742137c6e17366c03397f9bfbb9b52ff736bd3bb94bc722472effd"
+        "stderrUtf8": "File \"tools/why3_reference/fixtures/typing-arity.mlw\", line 5, characters 15-21:\nThis term has type int -> int, but is expected to have type int\n",
+        "stderrSha256": "49485eeae5c7877000617d8337ff483285b858c6587b3f27c7c80a03870f3522"
       }
     },
     {
       "id": "typing.occurs-check",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/typing-occurs.mlw",
+        "path": "tools/why3_reference/fixtures/typing-occurs.mlw",
         "sha256": "5992025c33ab1a3897e60316acaeae1fb2c152c3e4b2eeab71f54a8ad3ebcb1f",
         "kind": "regular"
       },
@@ -29368,15 +29368,15 @@
       "featureAssertions": [],
       "referenceWhy3": {
         "exitCode": 1,
-        "stderrUtf8": "File \"tools/why3_oracle/fixtures/typing-occurs.mlw\", line 4, characters 28-29:\nThis term has type 'xi -> 'xi1, but is expected to have type 'xi\n",
-        "stderrSha256": "79e0dcd7a46f7bb5b2bf73e8b722f63822be196889540f7d2e037ebdd2b4b29f"
+        "stderrUtf8": "File \"tools/why3_reference/fixtures/typing-occurs.mlw\", line 4, characters 28-29:\nThis term has type 'xi -> 'xi1, but is expected to have type 'xi\n",
+        "stderrSha256": "2a77da52a932abfc7f823bb5f98088fd071c92aefa3d51ecc824e655da4aa64e"
       }
     },
     {
       "id": "typing.type-mismatch",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/typing-mismatch.mlw",
+        "path": "tools/why3_reference/fixtures/typing-mismatch.mlw",
         "sha256": "d59eb2d1119e6f643a2f6a0d37f97daa93624c6ae9a2d79de687ce9172740fe1",
         "kind": "regular"
       },
@@ -29399,15 +29399,15 @@
       "featureAssertions": [],
       "referenceWhy3": {
         "exitCode": 1,
-        "stderrUtf8": "File \"tools/why3_oracle/fixtures/typing-mismatch.mlw\", line 4, characters 18-19:\nThis term has type int, but is expected to have type bool\n",
-        "stderrSha256": "a3ac1721b610a2442f9c9ffda59f30136698c3401d2f11a211de6789ee8e3e89"
+        "stderrUtf8": "File \"tools/why3_reference/fixtures/typing-mismatch.mlw\", line 4, characters 18-19:\nThis term has type int, but is expected to have type bool\n",
+        "stderrSha256": "2a6a0d6e6b4b360e27ed30dfc8156f260421f5df56b401439d991b673ec14bd1"
       }
     },
     {
       "id": "unsupported.check",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/check.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/check.mlw",
         "sha256": "6f8ed90356f7a95ec27249bdcdd81d7a15d3fc49ae2b7c2fbd619dc8f537f169",
         "kind": "regular"
       },
@@ -29471,7 +29471,7 @@
       "id": "unsupported.clone",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/clone.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/clone.mlw",
         "sha256": "fe77a05790e2e7952cf859d5f7cdcab593320eed01e36972d27050b9f7aba2c7",
         "kind": "regular"
       },
@@ -29600,7 +29600,7 @@
       "id": "unsupported.control-attribute",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/control-attribute.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/control-attribute.mlw",
         "sha256": "89c962302f0e9e0ed50c979a27d9c9ef88d5857885f5b3aaa5aa14a13c26abe4",
         "kind": "regular"
       },
@@ -29662,7 +29662,7 @@
       "id": "unsupported.datatypes",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/datatypes.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/datatypes.mlw",
         "sha256": "ebc3ba7cc979cc3cd45e42d5c2d227da6d5482fa95abfe02d649611699459894",
         "kind": "regular"
       },
@@ -29782,7 +29782,7 @@
       "id": "unsupported.driver-only-theory",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/driver-only-theory.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/driver-only-theory.mlw",
         "sha256": "fe30c09fd0cbab42df2ad14499a2133c2b8c99e60356a3fa0167794f0d767fca",
         "kind": "regular"
       },
@@ -29886,7 +29886,7 @@
       "id": "unsupported.effects",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/effects.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/effects.mlw",
         "sha256": "31a07d80869d7d193282e49bc258fd202c5117c8749774a5ff78b47447581bf1",
         "kind": "regular"
       },
@@ -29929,7 +29929,7 @@
       "id": "unsupported.epsilon",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/epsilon.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/epsilon.mlw",
         "sha256": "ffef39887061c56800d1dc092d718a06f1b0bfb2c4607880364ec22d16049e22",
         "kind": "regular"
       },
@@ -29969,7 +29969,7 @@
       "id": "unsupported.exceptions",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/exceptions.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/exceptions.mlw",
         "sha256": "51d2809c22877c388a9618180125ff4bab8bdab874b1dc974cc939f51cdcdbbf",
         "kind": "regular"
       },
@@ -30012,7 +30012,7 @@
       "id": "unsupported.function-kinds",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/function-kinds.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/function-kinds.mlw",
         "sha256": "4fa3716ebf7d17b59b794374e7e7c763dbf0894d5cda6388445425a3632d0526",
         "kind": "regular"
       },
@@ -30103,7 +30103,7 @@
       "id": "unsupported.ghost",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/ghost.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/ghost.mlw",
         "sha256": "abeb4d026a5f2498be42c4c1f0f67d1de85f4329bbc5fd1badd0fca52f3fb45e",
         "kind": "regular"
       },
@@ -30154,7 +30154,7 @@
       "id": "unsupported.higher-order",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/higher-order.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/higher-order.mlw",
         "sha256": "40620d136aa8e7044f2e7ace77a76ff242665171495ff3a07361ab52d5a1076e",
         "kind": "regular"
       },
@@ -30229,7 +30229,7 @@
       "id": "unsupported.inductive",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/inductive.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/inductive.mlw",
         "sha256": "3155a2a9c2714b3fc249298b6ed7d7ab187719298575332baf39afebc206c7bb",
         "kind": "regular"
       },
@@ -30301,7 +30301,7 @@
       "id": "unsupported.lambda",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/lambda.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/lambda.mlw",
         "sha256": "f3af72507f245e3aee413fd674e711b33f41592524f689e85867f59aa9d93e7a",
         "kind": "regular"
       },
@@ -30365,7 +30365,7 @@
       "id": "unsupported.logic-term",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/logic-term.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/logic-term.mlw",
         "sha256": "68b7fa88be210b8a55f3044af6395f7a16d66eb5e55404a11eb51948c15ae06b",
         "kind": "regular"
       },
@@ -30549,7 +30549,7 @@
       "id": "unsupported.loops",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/loops.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/loops.mlw",
         "sha256": "e179919785c8c92eea2991f5b0db2cdb707a3116f0a41ebab35bfb2c66d3dc4d",
         "kind": "regular"
       },
@@ -30624,7 +30624,7 @@
       "id": "unsupported.meta",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/meta.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/meta.mlw",
         "sha256": "89c15511856b3ec6de65330ee11fa1968c488cde051e7552aaec72580dbc3d07",
         "kind": "regular"
       },
@@ -30739,7 +30739,7 @@
       "id": "unsupported.old-at",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/old-at.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/old-at.mlw",
         "sha256": "cbbd8825f2985d401b69d52ff50d569f29db89b2aad69d74bc906116f1dd3178",
         "kind": "regular"
       },
@@ -30795,7 +30795,7 @@
       "id": "unsupported.patterns",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/patterns.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/patterns.mlw",
         "sha256": "529153d4c5b092b4bec4875f0c4976fd029d4cf673378c78e4cbf8ef72df3eb4",
         "kind": "regular"
       },
@@ -30931,7 +30931,7 @@
       "id": "unsupported.polymorphic-program",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/polymorphic-program.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/polymorphic-program.mlw",
         "sha256": "50967c6ce6c1cda40a5f071cbc98044e802d795f3a30a3e7e901cce750ba05ab",
         "kind": "regular"
       },
@@ -30987,7 +30987,7 @@
       "id": "unsupported.program-expression",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/program-expression.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/program-expression.mlw",
         "sha256": "207e22b9749c95edca945fdb61a056cc35803948dc62fa4d1683fc4a53227c99",
         "kind": "regular"
       },
@@ -31307,7 +31307,7 @@
       "id": "unsupported.recursion",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/recursion.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/recursion.mlw",
         "sha256": "521d1c96665ce1687324e10e15102614bad3213853a3b54e85e212e7bd0fc480",
         "kind": "regular"
       },
@@ -31371,7 +31371,7 @@
       "id": "unsupported.references",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/references.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/references.mlw",
         "sha256": "298749738250ba5c626cde0e96961785e07ba16c1b565441ff58a8d02f45ec14",
         "kind": "regular"
       },
@@ -31422,7 +31422,7 @@
       "id": "unsupported.strings",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/strings.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/strings.mlw",
         "sha256": "4036469b6c9e60fa09ee8249cb245760890d486c1acaf84d4a61baf8eac0ef34",
         "kind": "regular"
       },
@@ -31478,7 +31478,7 @@
       "id": "unsupported.tuple",
       "kind": "whyml-semantic",
       "source": {
-        "path": "tools/why3_oracle/fixtures/unsupported/tuple.mlw",
+        "path": "tools/why3_reference/fixtures/unsupported/tuple.mlw",
         "sha256": "6925d86b8c649a320609411822f0d3a39833d0f553471c8312061816de32256f",
         "kind": "regular"
       },

@@ -25,7 +25,7 @@ fn load_fixture(path : String) -> (Bytes, Bytes) raise {
 
 ///|
 test "MVP pure theories elaborate against the frozen environment" {
-  let (source, filename) = load_fixture("tools/why3_oracle/fixtures/mvp.mlw")
+  let (source, filename) = load_fixture("tools/why3_reference/fixtures/mvp.mlw")
   let context = @identity.CompilationContext::new()
   let frozen = fresh_environment(context)
   let environment = frozen.semantic_environment()
@@ -96,7 +96,7 @@ fn expect_type_error(
 ///|
 test "pure typing preserves arity mismatch and occurs-check classes" {
   let (arity_source, arity_filename) = load_fixture(
-    "tools/why3_oracle/fixtures/typing-arity.mlw",
+    "tools/why3_reference/fixtures/typing-arity.mlw",
   )
   expect_type_error(
     arity_source[:],
@@ -109,7 +109,7 @@ test "pure typing preserves arity mismatch and occurs-check classes" {
     Some(b"int"),
   )
   let (mismatch_source, mismatch_filename) = load_fixture(
-    "tools/why3_oracle/fixtures/typing-mismatch.mlw",
+    "tools/why3_reference/fixtures/typing-mismatch.mlw",
   )
   expect_type_error(
     mismatch_source[:],
@@ -122,7 +122,7 @@ test "pure typing preserves arity mismatch and occurs-check classes" {
     Some(b"bool"),
   )
   let (occurs_source, occurs_filename) = load_fixture(
-    "tools/why3_oracle/fixtures/typing-occurs.mlw",
+    "tools/why3_reference/fixtures/typing-occurs.mlw",
   )
   expect_type_error(
     occurs_source[:],
@@ -181,7 +181,7 @@ fn expect_unsupported_before_task(
 ///|
 test "unsupported pure features are classified before Task construction" {
   let (lambda_source, lambda_filename) = load_fixture(
-    "tools/why3_oracle/fixtures/unsupported/lambda.mlw",
+    "tools/why3_reference/fixtures/unsupported/lambda.mlw",
   )
   expect_unsupported_before_task(
     lambda_source[:],
@@ -194,7 +194,7 @@ test "unsupported pure features are classified before Task construction" {
     53L,
   )
   let (higher_order_source, higher_order_filename) = load_fixture(
-    "tools/why3_oracle/fixtures/unsupported/higher-order.mlw",
+    "tools/why3_reference/fixtures/unsupported/higher-order.mlw",
   )
   expect_unsupported_before_task(
     higher_order_source[:],
@@ -207,7 +207,7 @@ test "unsupported pure features are classified before Task construction" {
     44L,
   )
   let (datatypes_source, datatypes_filename) = load_fixture(
-    "tools/why3_oracle/fixtures/unsupported/datatypes.mlw",
+    "tools/why3_reference/fixtures/unsupported/datatypes.mlw",
   )
   expect_unsupported_before_task(
     datatypes_source[:],
@@ -220,7 +220,7 @@ test "unsupported pure features are classified before Task construction" {
     25L,
   )
   let (control_source, control_filename) = load_fixture(
-    "tools/why3_oracle/fixtures/unsupported/control-attribute.mlw",
+    "tools/why3_reference/fixtures/unsupported/control-attribute.mlw",
   )
   expect_unsupported_before_task(
     control_source[:],
@@ -233,7 +233,7 @@ test "unsupported pure features are classified before Task construction" {
     48L,
   )
   let (meta_source, meta_filename) = load_fixture(
-    "tools/why3_oracle/fixtures/unsupported/meta.mlw",
+    "tools/why3_reference/fixtures/unsupported/meta.mlw",
   )
   expect_unsupported_before_task(
     meta_source[:],

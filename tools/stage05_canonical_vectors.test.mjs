@@ -7,7 +7,7 @@ import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import {
   renderStage05CanonicalVectors,
-} from './why3_oracle/generate_canonical_vectors.mjs';
+} from './why3_reference/generate_canonical_vectors.mjs';
 
 const vectorPath = resolve(
   dirname(fileURLToPath(import.meta.url)),

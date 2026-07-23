@@ -14,7 +14,7 @@
     {
       "id": "canonical-schema-v2",
       "path": "tools/contracts/canonical-schema-v2.json",
-      "sha256": "bc28d45938fa34011106e060ae07074c318448946d7f6732b280ae8710194432"
+      "sha256": "e52a89f758eb439831b1943155b9a1ceb6ab33bc3dd15c0024e77c8928e2c4d3"
     },
     {
       "id": "canonical-record-v2-json-schema",
@@ -34,12 +34,12 @@
     {
       "id": "transform-profile-v1",
       "path": "tools/contracts/transform-profile-v1.json",
-      "sha256": "39d4f9ecde65b7ffb72c61ae83bca5b4e86a7d2434a1c60d70fe8cb07beb46f4"
+      "sha256": "62577b120308fd1281fbbb0767e44a53bdc00f4b8405e5d81af295738787bbf8"
     },
     {
       "id": "z3-static-profile-v1",
       "path": "prover/z3/z3-static-profile-v1.json",
-      "sha256": "60533198652eff7d450970c5529b78c4aa7cbd4ae144a54ab6093ae75062d2d4"
+      "sha256": "a76385776e07aa83e2969533e468590e2832670a73cf2cbc966e897111008d43"
     },
     {
       "id": "trusted-snapshot-schema-v1",
@@ -47,5 +47,5 @@
       "sha256": "12ff786934d001a726bf319322445689d68ad2efa47dd1c59bd4756c8e7a7a7e"
     }
   ],
-  "semanticProfileSha256": "f788bd465967b186e1db9f910b8e04e3f4803413a705b661bafc2da5d07658ab"
+  "semanticProfileSha256": "bc2e01a30b60d325e17cde6875271c90f46e2264bb4bb856a66bd16cee02ccf9"
 }

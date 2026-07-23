@@ -1,12 +1,12 @@
 // Native Stage-06 differential helper. Canonicalization stays in the
-// all-target oracle/canonical package; this executable only performs I/O.
+// all-target canonical package; this executable only performs I/O.
 import {
   "moonbit-community/why3/core/identity",
   "moonbit-community/why3/core/logic",
   "moonbit-community/why3/core/theory",
   "moonbit-community/why3/elab",
   "moonbit-community/why3/environment",
-  "moonbit-community/why3/oracle/canonical",
+  "moonbit-community/why3/canonical",
   "moonbit-community/why3/parser",
   "moonbit-community/why3/pipeline",
   "moonbit-community/why3/printer/smtv2",

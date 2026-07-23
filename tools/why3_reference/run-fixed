@@ -1,0 +1,401 @@
+#!/usr/bin/env node
+// SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
+
+const { createHash } = require('node:crypto');
+const { spawnSync } = require('node:child_process');
+const {
+  existsSync,
+  lstatSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  readlinkSync,
+  writeFileSync,
+} = require('node:fs');
+const { tmpdir } = require('node:os');
+const { basename, dirname, join, relative, resolve, sep } = require('node:path');
+const referenceEnvironment = require('./reference_environment.cjs');
+
+const SCRIPT_DIRECTORY = __dirname;
+const PROJECT_ROOT = resolve(SCRIPT_DIRECTORY, '..', '..');
+const LOCK_PATH = referenceEnvironment.ENVIRONMENT_LOCK_PATH;
+const CORPUS_PATH = join(PROJECT_ROOT, 'tools', 'contracts', 'pr-corpus-v1.json');
+const DRIVER_PATH = join(PROJECT_ROOT, 'tools', 'contracts', 'driver-closure-v1.json');
+
+function fail(message) {
+  throw new Error(message);
+}
+
+function sha256(bytes) {
+  return createHash('sha256').update(bytes).digest('hex');
+}
+
+function canonicalSha(value) {
+  return sha256(`${JSON.stringify(value)}\n`);
+}
+
+function compareUtf8(left, right) {
+  return Buffer.compare(Buffer.from(left, 'utf8'), Buffer.from(right, 'utf8'));
+}
+
+function toPosix(path) {
+  return path.split(sep).join('/');
+}
+
+function treeInventory(root) {
+  const entries = [];
+  function visit(directory) {
+    for (const child of readdirSync(directory, { withFileTypes: true })
+      .sort((left, right) => compareUtf8(left.name, right.name))) {
+      const absolutePath = join(directory, child.name);
+      const path = toPosix(relative(root, absolutePath));
+      if (child.isDirectory()) visit(absolutePath);
+      else if (child.isFile()) {
+        entries.push({ path, kind: 'file', sha256: sha256(readFileSync(absolutePath)) });
+      } else if (child.isSymbolicLink()) {
+        const target = readlinkSync(absolutePath);
+        entries.push({ path, kind: 'symlink', target, sha256: sha256(target) });
+      } else fail(`unsupported tree entry ${absolutePath} (mode ${lstatSync(absolutePath).mode})`);
+    }
+  }
+  visit(root);
+  return { entries, sha256: canonicalSha(entries) };
+}
+
+function readJson(path) {
+  return JSON.parse(readFileSync(path, 'utf8'));
+}
+
+function parseArguments(argv) {
+  if (argv.length === 0 || argv[0] === '--help') {
+    process.stdout.write(
+      'usage: tools/why3_reference/run-fixed <fixture-id> ' +
+      '[--config PATH] [--resolved-context PATH] -- <why3 arguments...>\n',
+    );
+    process.exit(0);
+  }
+  const fixtureId = argv[0];
+  let config = null;
+  let resolvedContext = null;
+  let separator = -1;
+  for (let index = 1; index < argv.length; index += 1) {
+    const argument = argv[index];
+    if (argument === '--') {
+      separator = index;
+      break;
+    }
+    if (argument !== '--config' && argument !== '--resolved-context') {
+      fail(`unknown wrapper option ${argument}`);
+    }
+    const value = argv[index + 1];
+    if (!value) fail(`${argument} requires a path`);
+    if (argument === '--config') config = resolve(value);
+    else resolvedContext = resolve(value);
+    index += 1;
+  }
+  if (separator < 0 || separator === argv.length - 1) fail('missing -- and Why3 arguments');
+  return { fixtureId, config, resolvedContext, why3Arguments: argv.slice(separator + 1) };
+}
+
+function assertFileHash(path, expected) {
+  const actual = sha256(readFileSync(path));
+  if (actual !== expected) fail(`${path} hash drift: expected ${expected}, got ${actual}`);
+  return actual;
+}
+
+function verifyFixtureSource(entry) {
+  const path = join(PROJECT_ROOT, entry.source.path);
+  const metadata = lstatSync(path);
+  const kind = metadata.isSymbolicLink() ? 'symlink' : 'regular';
+  if (kind !== entry.source.kind) fail(`${entry.id} source kind drift`);
+  if (kind === 'symlink' && readlinkSync(path) !== entry.source.symlinkTarget) {
+    fail(`${entry.id} symlink target drift`);
+  }
+  assertFileHash(path, entry.source.sha256);
+  return path;
+}
+
+function loadpaths(corpus, entry) {
+  const profile = corpus.loadpathProfiles.find(item => item.id === entry.loadpathProfile);
+  if (!profile) fail(`${entry.id} names unknown loadpath profile ${entry.loadpathProfile}`);
+  return profile.entries.map(item => {
+    const absolutePath = join(PROJECT_ROOT, item.path);
+    const actual = treeInventory(absolutePath).sha256;
+    if (actual !== item.treeSha256) fail(`${item.path} tree drift: ${actual}`);
+    return { ...item, absolutePath };
+  });
+}
+
+function fixedEnvironment(lock, config) {
+  const pathDirectories = [
+    dirname(lock.z3.runtime.executable),
+    dirname(lock.why3.runtime.executable),
+    '/usr/local/sbin',
+    '/usr/local/bin',
+    '/usr/sbin',
+    '/usr/bin',
+    '/sbin',
+    '/bin',
+  ];
+  const isolatedDirectory = dirname(config);
+  const env = {
+    HOME: isolatedDirectory,
+    LANG: 'C',
+    LC_ALL: 'C',
+    PATH: [...new Set(pathDirectories)].join(':'),
+    TMPDIR: isolatedDirectory,
+    TZ: 'UTC',
+    WHY3CONFIG: config,
+  };
+  return env;
+}
+
+function verifyRuntime(lock, driver) {
+  const verified = referenceEnvironment.verifyReferenceEnvironment(lock);
+  const datadir = lock.why3.runtime.datadir;
+  for (const file of [...driver.driver.files, ...driver.auxiliaryDrivers]) {
+    assertFileHash(join(datadir, 'drivers', file.path), file.sha256);
+  }
+  assertFileHash(
+    join(datadir, basename(driver.proverDetection.path)),
+    driver.proverDetection.sha256,
+  );
+  const stdlibTreeSha256 = treeInventory(join(datadir, 'stdlib')).sha256;
+  if (stdlibTreeSha256 !== driver.semanticSnapshot.stdlibTree.sha256) {
+    fail(`Why3 stdlib tree drift: ${stdlibTreeSha256}`);
+  }
+  return { ...verified, datadir, stdlibTreeSha256 };
+}
+
+function rewriteDrivers(argv, lock, driver) {
+  const forbidden = new Set([
+    '-L',
+    '--library',
+    '-C',
+    '--config',
+    '--extra-config',
+    '--no-stdlib',
+    '--no-load-default-plugins',
+    '--debug',
+    '--debug-all',
+    '--warn-off',
+    '-F',
+    '--format',
+    '-M',
+    '--meta',
+    '--extra-expl-prefix',
+    '--check-ce',
+    '--rac-prover',
+    '--rac-timelimit',
+    '--rac-steplimit',
+    '--color',
+  ]);
+  const allowedDrivers = new Set([
+    ...driver.driver.files.map(file => file.path),
+    ...driver.auxiliaryDrivers.map(file => file.path),
+  ]);
+  const result = [];
+  const resolvedDrivers = [];
+  function resolveDriver(requested) {
+    const name = basename(requested).endsWith('.drv')
+      ? basename(requested)
+      : `${basename(requested)}.drv`;
+    if (!allowedDrivers.has(name)) fail(`driver ${requested} is outside the fixed profile`);
+    const absolutePath = join(lock.why3.runtime.datadir, 'drivers', name);
+    resolvedDrivers.push(absolutePath);
+    return absolutePath;
+  }
+  function assertProverSelector(selector) {
+    if (!/^Z3,4\.8\.12(?:,[A-Za-z0-9_-]+)?$/u.test(selector)) {
+      fail(`prover selector ${selector} is not the fixed Z3 4.8.12 profile`);
+    }
+  }
+  for (let index = 0; index < argv.length; index += 1) {
+    const argument = argv[index];
+    const optionName = argument.includes('=') ? argument.slice(0, argument.indexOf('=')) : argument;
+    if (forbidden.has(optionName) || /^-[LCFM].+/u.test(argument)) {
+      fail(`Why3 argument ${optionName} is controlled by run-fixed`);
+    }
+    if (argument === '-D' || argument === '--driver') {
+      const requested = argv[index + 1];
+      if (!requested) fail(`${argument} requires a driver`);
+      result.push(argument, resolveDriver(requested));
+      index += 1;
+    } else if (argument.startsWith('--driver=')) {
+      result.push(`--driver=${resolveDriver(argument.slice('--driver='.length))}`);
+    } else if (/^-D.+/u.test(argument)) {
+      fail('attached -D driver arguments are not accepted; use -D <driver>');
+    } else if (argument === '-P' || argument === '--prover') {
+      const selector = argv[index + 1];
+      if (!selector) fail(`${argument} requires a prover selector`);
+      assertProverSelector(selector);
+      result.push(argument, selector);
+      index += 1;
+    } else if (argument.startsWith('--prover=')) {
+      const selector = argument.slice('--prover='.length);
+      assertProverSelector(selector);
+      result.push(argument);
+    } else if (/^-P.+/u.test(argument)) {
+      fail('attached -P prover arguments are not accepted; use -P <prover>');
+    } else result.push(argument);
+  }
+  return { arguments: result, resolvedDrivers };
+}
+
+function verifyInputArguments(argv, sourcePath) {
+  const command = argv[0];
+  if (!['config', 'pp', 'prove', 'session'].includes(command)) {
+    fail(`Why3 command ${command ?? '<missing>'} is outside the fixed reference profile`);
+  }
+  const inputs = argv
+    .filter(argument => !argument.startsWith('-') && /\.(?:mlw|why)$/u.test(argument))
+    .map(argument => resolve(PROJECT_ROOT, argument));
+  for (const input of inputs) {
+    if (input !== sourcePath) fail(`Why3 input ${input} does not match the selected fixture`);
+  }
+  if (argv.includes('-')) fail('stdin is not a fixed Why3 fixture input');
+  if (command === 'config') {
+    if (argv.length !== 2 || !['detect', 'show'].includes(argv[1])) {
+      fail('only "config detect" and read-only "config show" are allowed in the fixed reference profile');
+    }
+    if (inputs.length !== 0) fail('fixed configuration commands do not accept a fixture input');
+  } else if (!inputs.includes(sourcePath)) {
+    fail(`Why3 command ${command} must name the selected fixture source`);
+  }
+}
+
+function main() {
+  const arguments_ = parseArguments(process.argv.slice(2));
+  const lockBytes = readFileSync(LOCK_PATH);
+  const lock = referenceEnvironment.validateEnvironmentLock(JSON.parse(lockBytes));
+  const environmentLockSha256 = sha256(lockBytes);
+  const corpus = readJson(CORPUS_PATH);
+  const driver = readJson(DRIVER_PATH);
+  const entry = corpus.entries.find(item => item.id === arguments_.fixtureId);
+  if (!entry) fail(`unknown fixture id ${arguments_.fixtureId}`);
+  if (entry.kind === 'contract-vector') fail(`${entry.id} is not a WhyML fixture`);
+  const sourcePath = verifyFixtureSource(entry);
+  const fixedLoadpaths = loadpaths(corpus, entry);
+  const runtime = verifyRuntime(lock, driver);
+  process.stderr.write(
+    `run-fixed: environment ${lock.image.repository}@${lock.image.digest} ` +
+    `manifest ${runtime.manifestSha256}\n`,
+  );
+
+  let config = arguments_.config;
+  if (config === null) {
+    const directory = mkdtempSync(join(tmpdir(), 'why3-fixed-reference-'));
+    config = join(directory, 'why3.conf');
+  }
+  const configMarkerPath = `${config}.why3-mbt-fixed.json`;
+  if (existsSync(config)) {
+    if (!existsSync(configMarkerPath)) {
+      fail(`existing Whyconf ${config} was not created by run-fixed`);
+    }
+    const marker = readJson(configMarkerPath);
+    if (marker.schemaVersion !== 1 || marker.config !== config ||
+        marker.environmentLockSha256 !== environmentLockSha256 ||
+        marker.manifestSha256 !== runtime.manifestSha256 ||
+        marker.whyconfSha256 !== sha256(readFileSync(config))) {
+      fail(`existing Whyconf ${config} has stale or foreign provenance`);
+    }
+  } else {
+    writeFileSync(config, '');
+  }
+  const resolvedContextPath = arguments_.resolvedContext ??
+    join(dirname(config), 'resolved_context.json');
+  if (resolvedContextPath === config) fail('resolved context path cannot equal config path');
+  if (resolvedContextPath === configMarkerPath) {
+    fail('resolved context path cannot equal the Whyconf provenance marker');
+  }
+
+  const rewritten = rewriteDrivers(arguments_.why3Arguments, lock, driver);
+  verifyInputArguments(rewritten.arguments, sourcePath);
+  const fixedPrefix = [
+    '--no-load-default-plugins',
+    '--no-stdlib',
+    ...fixedLoadpaths.flatMap(item => ['-L', item.absolutePath]),
+    '-C',
+    config,
+  ];
+  const argv = [...fixedPrefix, ...rewritten.arguments];
+  const env = fixedEnvironment(lock, config);
+  const stableContext = {
+    schemaVersion: 1,
+    referenceEnvironment: {
+      environmentLockSha256,
+      image: lock.image,
+      platform: lock.platform,
+      ocaml: lock.ocaml,
+      why3: lock.why3,
+      z3: lock.z3,
+      manifest: {
+        ...lock.manifest,
+        content: runtime.manifest,
+      },
+    },
+    loadpaths: fixedLoadpaths.map(item => ({ path: item.path, treeSha256: item.treeSha256 })),
+    driverClosureSha256: driver.driver.sha256,
+    proverDetectionSha256: driver.proverDetection.sha256,
+    whyconfRecipe: 'fresh empty config; optional fixed config detect output hashed separately',
+  };
+  const resolved = {
+    schemaVersion: 1,
+    fixtureId: entry.id,
+    referenceContextSha256: canonicalSha(stableContext),
+    stableContext,
+    resolved: {
+      why3Executable: lock.why3.runtime.executable,
+      source: sourcePath,
+      datadir: runtime.datadir,
+      stdlibTreeSha256: runtime.stdlibTreeSha256,
+      loadpaths: fixedLoadpaths.map(item => item.absolutePath),
+      drivers: rewritten.resolvedDrivers,
+      config,
+      configMarker: configMarkerPath,
+      argv: [lock.why3.runtime.executable, ...argv],
+      environment: {
+        inheritedKeys: [],
+        overrides: env,
+        removed: ['all ambient variables'],
+      },
+    },
+    result: null,
+    whyconfSha256: null,
+  };
+  function writeConfigMarker() {
+    writeFileSync(configMarkerPath, `${JSON.stringify({
+      schemaVersion: 1,
+      config,
+      environmentLockSha256,
+      manifestSha256: runtime.manifestSha256,
+      referenceContextSha256: resolved.referenceContextSha256,
+      whyconfSha256: sha256(readFileSync(config)),
+    }, null, 2)}\n`);
+  }
+  writeConfigMarker();
+  writeFileSync(resolvedContextPath, `${JSON.stringify(resolved, null, 2)}\n`);
+  const child = spawnSync(lock.why3.runtime.executable, argv, {
+    cwd: PROJECT_ROOT,
+    env,
+    stdio: 'inherit',
+    shell: false,
+  });
+  resolved.result = {
+    exitCode: child.status,
+    signal: child.signal,
+    spawnError: child.error?.message ?? null,
+  };
+  resolved.whyconfSha256 = existsSync(config) ? sha256(readFileSync(config)) : null;
+  writeConfigMarker();
+  writeFileSync(resolvedContextPath, `${JSON.stringify(resolved, null, 2)}\n`);
+  if (child.error) fail(`failed to execute Why3: ${child.error.message}`);
+  process.exitCode = child.status ?? 1;
+}
+
+try {
+  main();
+} catch (error) {
+  process.stderr.write(`run-fixed: ${error.message}\n`);
+  process.exitCode = 1;
+}

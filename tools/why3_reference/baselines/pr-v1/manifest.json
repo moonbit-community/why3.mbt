@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "profile": "why3-1.7.2-pr-baseline-v1",
+  "prCorpusSha256": "98e8cce166639cbc4cef56a1c46423e905b2016b27bd6c9cc469ef55172de0d0",
+  "semanticProfileSha256": "bc2e01a30b60d325e17cde6875271c90f46e2264bb4bb856a66bd16cee02ccf9",
+  "transformProfileSha256": "62577b120308fd1281fbbb0767e44a53bdc00f4b8405e5d81af295738787bbf8",
+  "portabilityRoots": 2,
+  "fixtures": [
+    {
+      "path": "tools/why3_reference/fixtures/mvp.mlw",
+      "sourceSha256": "04f2b2ecf47eb87d484eed5adb67ec8ef76e86f429d36b66eaef0d7225103a9f",
+      "typedUnits": 12,
+      "goals": 16,
+      "checkpointProfile": "monomorphic"
+    },
+    {
+      "path": "tests/vc/false-post.mlw",
+      "sourceSha256": "a2867556e7da0cb35bb768c966208076d2bf058e583305b591fd8045762b2882",
+      "typedUnits": 1,
+      "goals": 1,
+      "checkpointProfile": "monomorphic"
+    },
+    {
+      "path": "tools/why3_reference/fixtures/transform-polymorphism.mlw",
+      "sourceSha256": "24558504374b0cad18f8321667b7c597b98c3e8fc44e079131709204830bd66c",
+      "typedUnits": 1,
+      "goals": 1,
+      "checkpointProfile": "polymorphic"
+    },
+    {
+      "path": "tools/why3_reference/fixtures/transform-polymorphic-definition.mlw",
+      "sourceSha256": "100f3c639445e45f4d977bbf4a7cd7f8891f54c07721fecd711553d6f29ca3fb",
+      "typedUnits": 1,
+      "goals": 1,
+      "checkpointProfile": "polymorphic"
+    },
+    {
+      "path": "tools/why3_reference/fixtures/transform-inductive.mlw",
+      "sourceSha256": "e5efac2e9a18ee163dd51de35dc53ef1721efe92654287068e5d0eb8cf153c7f",
+      "typedUnits": 1,
+      "goals": 1,
+      "checkpointProfile": "polymorphic"
+    },
+    {
+      "path": "tools/why3_reference/fixtures/smt-identifiers.mlw",
+      "sourceSha256": "a1e0015a92d621ded76295bfbc1a7741065a7c6758ba2012d754a98aa41ab0a8",
+      "typedUnits": 1,
+      "goals": 1,
+      "checkpointProfile": "polymorphic"
+    },
+    {
+      "path": "tools/why3_reference/fixtures/solver-outcomes.mlw",
+      "sourceSha256": "db4ba4a6f16a359d3b0ec46d85a2ac3497efa10df61c74e966ed2868383fe90c",
+      "typedUnits": 1,
+      "goals": 3,
+      "checkpointProfile": "monomorphic"
+    }
+  ],
+  "artifacts": [
+    {
+      "stage": "typed-semantic",
+      "path": "typed-semantic.ndjson",
+      "records": 18,
+      "sha256": "bdd4a18f0820e94f3cabf5d09f47fd458ee777a93bd34ca9cf45ced5c4ed3013"
+    },
+    {
+      "stage": "raw-task",
+      "path": "raw-task.ndjson",
+      "records": 24,
+      "sha256": "f9d02bb4218469a67f0071bedf24d1873f53388695a225c60264b508d90b2802"
+    },
+    {
+      "stage": "transform-checkpoints",
+      "path": "transform-checkpoints.ndjson",
+      "records": 408,
+      "sha256": "739edde8091a890e6164f584c31f75de5004b1748da96dce7222bc440508cb78"
+    },
+    {
+      "stage": "prepared-task",
+      "path": "prepared-task.ndjson",
+      "records": 24,
+      "sha256": "f969537900c9bb065d53b3af462658066db221b182cd911d22255c433cacff41"
+    },
+    {
+      "stage": "smt-token-stream",
+      "path": "smt-token-stream.ndjson",
+      "records": 24,
+      "sha256": "2a9c026d256c140a5959bfce558998d77e10db9d6017c6e563728e609a1132fd"
+    }
+  ],
+  "baselineSetSha256": "0a4ec5ba97eb4785f1a434c339489c6b54d760753463db817bba4af8828f4e63"
+}

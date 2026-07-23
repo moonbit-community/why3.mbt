@@ -326,9 +326,9 @@ async fn main {
   }
   let environment = frozen.semantic_environment()
   // The frozen WellFounded theory is deliberately driver-only in production.
-  // This repository-owned oracle fixture exposes only that exact key so the
+  // This repository-owned reference fixture exposes only that exact key so the
   // required trusted Dind elimination path can be compared with upstream.
-  if fixture == "tools/why3_oracle/fixtures/transform-inductive.mlw" {
+  if fixture == "tools/why3_reference/fixtures/transform-inductive.mlw" {
     try {
       let keys = [
         @theory.TheoryKey::new([b"why3", b"WellFounded"], b"WellFounded"),
@@ -340,7 +340,7 @@ async fn main {
       }
     } catch {
       _ => {
-        fail_command("cannot expose the trusted inductive oracle fixture")
+        fail_command("cannot expose the trusted inductive reference fixture")
         return
       }
     }

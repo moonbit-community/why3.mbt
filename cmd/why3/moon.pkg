@@ -2,7 +2,7 @@ import {
   "moonbit-community/why3/core/logic",
   "moonbit-community/why3/core/theory",
   "moonbit-community/why3/elab",
-  "moonbit-community/why3/oracle/canonical",
+  "moonbit-community/why3/canonical",
   "moonbit-community/why3/parser",
   "moonbit-community/why3/pipeline",
   "moonbit-community/why3/prover",

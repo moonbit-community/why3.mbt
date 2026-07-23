@@ -1,0 +1,108 @@
+name: update-baselines
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Generate a candidate or explicitly verify and promote it in the checkout
+        required: true
+        default: candidate
+        type: choice
+        options:
+          - candidate
+          - promote
+
+permissions:
+  contents: read
+  packages: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  environment:
+    name: resolve reference environment
+    runs-on: ubuntu-24.04
+    outputs:
+      image: ${{ steps.lock.outputs.image }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - id: lock
+        name: Read the unique environment lock
+        run: |
+          image="$(node -e '
+            const { readEnvironmentLock } = require("./tools/why3_reference/reference_environment.cjs");
+            const lock = readEnvironmentLock();
+            process.stdout.write(`${lock.image.repository}@${lock.image.digest}`);
+          ')"
+          echo "image=$image" >> "$GITHUB_OUTPUT"
+
+  update:
+    name: ${{ inputs.mode }} baselines
+    needs: environment
+    runs-on: ubuntu-24.04
+    container:
+      image: ${{ needs.environment.outputs.image }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      WHY3_REFERENCE_CACHE_DIR: ${{ github.workspace }}/.cache/why3-reference
+      WHY3_REFERENCE_CONTEXT_DIR: ${{ github.workspace }}/_build/reference-context
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+
+      - name: Trust checkout workspace
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Restore patched Why3 runtime
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        with:
+          path: ${{ env.WHY3_REFERENCE_CACHE_DIR }}
+          key: reference-runtime-${{ runner.os }}-${{ hashFiles('tools/contracts/reference-environment-lock-v1.json', 'tools/why3_reference/reference_runtime.mjs', 'tools/why3_reference/patches/driver-trace.patch') }}
+
+      - name: Set up MoonBit stable
+        uses: moonbit-community/setup-moonbit@04293a8a813bfd4b6c2fce22701b52ae1050d100
+        with:
+          version: stable
+
+      - name: Verify project contracts and layered behavior
+        run: |
+          node tools/run.mjs bootstrap
+          node tools/run.mjs contracts \
+            --why3-archive "$WHY3_REFERENCE_ARCHIVE"
+          node tools/run.mjs layers \
+            --why3-archive "$WHY3_REFERENCE_ARCHIVE"
+
+      - name: Generate candidates in separate paths
+        run: |
+          node tools/run.mjs baselines candidate \
+            --records "$RUNNER_TEMP/baseline-candidate" \
+            --result "$RUNNER_TEMP/prover-result.json"
+
+      - name: Explicitly promote after fresh regeneration
+        if: inputs.mode == 'promote'
+        run: |
+          node tools/run.mjs baselines promote \
+            --records "$RUNNER_TEMP/baseline-candidate" \
+            --result "$RUNNER_TEMP/prover-result.json"
+
+      - name: Render review patch
+        run: |
+          git diff --binary -- \
+            tools/why3_reference/baselines/pr-v1 \
+            > "$RUNNER_TEMP/baseline.patch"
+          git status --short > "$RUNNER_TEMP/baseline.status"
+
+      - name: Upload candidate, provenance, and review material
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: baselines-${{ inputs.mode }}-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/baseline-candidate
+            ${{ runner.temp }}/prover-result.json
+            ${{ runner.temp }}/baseline.patch
+            ${{ runner.temp }}/baseline.status
+            ${{ env.WHY3_REFERENCE_CONTEXT_DIR }}
+          if-no-files-found: warn

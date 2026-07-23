@@ -16,42 +16,86 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  oracle-build:
-    name: fixed oracle
+  environment:
+    name: resolve reference environment
     runs-on: ubuntu-24.04
-    env:
-      WHY3_ORACLE_IMAGE_DIGEST: sha256:fe30c5e0b8254f989de466476809c05e388cf675553f9ca86a4171999bd74da8
-    container:
-      image: ghcr.io/moonbit-community/why3.mbt-why3@sha256:fe30c5e0b8254f989de466476809c05e388cf675553f9ca86a4171999bd74da8
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+    outputs:
+      image: ${{ steps.lock.outputs.image }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
 
-      - name: Trust checkout workspace
-        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Read the unique environment lock
+        id: lock
+        run: |
+          image="$(node -e '
+            const { readEnvironmentLock } = require("./tools/why3_reference/reference_environment.cjs");
+            const lock = readEnvironmentLock();
+            process.stdout.write(`${lock.image.repository}@${lock.image.digest}`);
+          ')"
+          echo "image=$image" >> "$GITHUB_OUTPUT"
+
+  project:
+    name: project
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
 
       - name: Set up MoonBit stable
         uses: moonbit-community/setup-moonbit@04293a8a813bfd4b6c2fce22701b52ae1050d100
         with:
           version: stable
 
-      - name: Show tool versions
+      - name: Install the non-contractual project prover
         run: |
-          moon version --all
-          moonrun --version
-          why3 --version
-          z3 --version
+          sudo apt-get update
+          sudo apt-get install --yes z3
 
-      - name: Bootstrap MoonBit dependencies
-        run: node tools/run.mjs bootstrap
-
-      - name: Check the fixed oracle
+      - name: Bootstrap and check the project
         run: |
-          node tools/run.mjs oracle \
-            --why3-archive "$WHY3_REFERENCE_ARCHIVE" \
-            --require-toolchain-lock
+          node tools/run.mjs bootstrap
+          node tools/run.mjs project
 
-      - name: Check the project
-        run: node tools/run.mjs project
+  reference:
+    name: fixed reference
+    needs:
+      - environment
+      - project
+    runs-on: ubuntu-24.04
+    container:
+      image: ${{ needs.environment.outputs.image }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      WHY3_REFERENCE_CACHE_DIR: ${{ github.workspace }}/.cache/why3-reference
+      WHY3_REFERENCE_CONTEXT_DIR: ${{ github.workspace }}/_build/reference-context
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+
+      - name: Trust checkout workspace
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Restore patched Why3 runtime
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        with:
+          path: ${{ env.WHY3_REFERENCE_CACHE_DIR }}
+          key: reference-runtime-${{ runner.os }}-${{ hashFiles('tools/contracts/reference-environment-lock-v1.json', 'tools/why3_reference/reference_runtime.mjs', 'tools/why3_reference/patches/driver-trace.patch') }}
+
+      - name: Set up MoonBit stable
+        uses: moonbit-community/setup-moonbit@04293a8a813bfd4b6c2fce22701b52ae1050d100
+        with:
+          version: stable
+
+      - name: Check the fixed reference
+        run: |
+          node tools/run.mjs bootstrap
+          node tools/run.mjs reference \
+            --why3-archive "$WHY3_REFERENCE_ARCHIVE"
+
+      - name: Upload resolved environment provenance
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reference-context-${{ github.sha }}
+          path: ${{ env.WHY3_REFERENCE_CONTEXT_DIR }}
+          if-no-files-found: warn

@@ -4,7 +4,7 @@ import {
   "moonbit-community/why3/core/theory",
   "moonbit-community/why3/environment",
   "moonbit-community/why3/mlw",
-  "moonbit-community/why3/oracle/canonical",
+  "moonbit-community/why3/canonical",
   "moonbit-community/why3/parser",
   "moonbitlang/core/bigint",
   "moonbitlang/core/buffer",
