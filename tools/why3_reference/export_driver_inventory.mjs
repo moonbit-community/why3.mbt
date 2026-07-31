@@ -16,11 +16,6 @@ import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import {
-  prepareReferenceRuntime,
-  referenceRuntimeEnvironment,
-} from './reference_runtime.mjs';
-
 const SCRIPT_DIRECTORY = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = resolve(SCRIPT_DIRECTORY, '..', '..');
 export const EXPECTED_WHY3_COMMIT = '1343338d3bb1941c0d4f134283bb0790816113c4';
@@ -31,7 +26,6 @@ export const WHY3_SOURCE_ARCHIVE = {
 };
 const PROFILE = 'z3_487';
 const ROOT_DRIVER = 'z3_487.drv';
-export const PROGRAM_ROOTS = ['BuiltIn', 'Bool', 'Unit', 'int.Int', 'real.Real'];
 const AUXILIARY_DRIVERS = [
   ['why3.drv', '9ac85a936a0526112fec236f1b32a0d1315422071a83f7ab52010168c0eadaed'],
   ['why3_smt.drv', '66101f2eea98ca0e772b29bcbec9f84896524e56c9bf8223044470b65ed9472a'],
@@ -250,119 +244,6 @@ function treeInventory(root) {
   return { entries, sha256: canonicalSha(entries) };
 }
 
-function parseSemanticRecords(output) {
-  const records = [];
-  for (const line of output.trim().split('\n')) {
-    if (line === '') continue;
-    const fields = line.split('\t');
-    const kind = fields[0];
-    if (kind === 'theory') {
-      records.push({ kind, key: fields[1] });
-    } else if (kind === 'theory-item') {
-      const record = {
-        kind,
-        theory: fields[1],
-        ordinal: Number(fields[2]),
-        node: fields[3],
-      };
-      if (record.node === 'Use' || record.node === 'Clone') {
-        record.target = fields[4];
-      } else if (record.node === 'Meta') {
-        record.meta = fields[4];
-        record.argCount = Number(fields[5]);
-      }
-      records.push(record);
-    } else if (kind === 'module') {
-      records.push({ kind, key: fields[1], pureTheory: fields[2] });
-    } else if (kind === 'module-item') {
-      const record = {
-        kind,
-        module: fields[1],
-        ordinalPath: fields[2].split('.').map(Number),
-        node: fields[3],
-      };
-      if (record.node === 'Uuse' || record.node === 'Uclone') {
-        record.target = fields[4];
-      } else if (record.node === 'Umeta') {
-        record.meta = fields[4];
-        record.argCount = Number(fields[5]);
-      } else if (record.node === 'Uscope') {
-        record.name = fields[4];
-        record.itemCount = Number(fields[5]);
-      }
-      records.push(record);
-    } else if (kind === 'variant') {
-      records.push({ kind, category: fields[1], variant: fields[2] });
-    } else {
-      fail(`unknown semantic inventory record: ${line}`);
-    }
-  }
-  records.sort((left, right) => compareUtf8(JSON.stringify(left), JSON.stringify(right)));
-  return records;
-}
-
-function exportSemanticInventory(why3Root, theoryRoots, runtime) {
-  const buildDirectory = mkdtempSync(join(tmpdir(), 'why3-semantic-inventory-'));
-  const executable = join(buildDirectory, 'export-semantic-inventory');
-  const source = join(buildDirectory, 'export_semantic_inventory.ml');
-  try {
-    writeFileSync(source, readFileSync(
-      join(SCRIPT_DIRECTORY, 'export_semantic_inventory.ml'),
-    ));
-    runChecked('ocamlfind', [
-      'ocamlopt',
-      '-linkpkg',
-      '-package',
-      'why3',
-      '-o',
-      executable,
-      source,
-    ], {
-      cwd: buildDirectory,
-      env: referenceRuntimeEnvironment(runtime),
-    });
-    const semanticArgs = ['--stdlib', join(why3Root, 'stdlib')];
-    for (const theory of theoryRoots) semanticArgs.push('--theory', theory);
-    for (const pmodule of PROGRAM_ROOTS) semanticArgs.push('--module', pmodule);
-    return parseSemanticRecords(runChecked(executable, semanticArgs, {
-      cwd: PROJECT_ROOT,
-      encoding: 'utf8',
-      env: { ...process.env, LC_ALL: 'C' },
-      maxBuffer: 64 * 1024 * 1024,
-    }));
-  } finally {
-    rmSync(buildDirectory, { recursive: true, force: true });
-  }
-}
-
-function observedVariants(records) {
-  const values = kind => [...new Set(records
-    .filter(record => record.kind === kind)
-    .map(record => record.node))].sort(compareUtf8);
-  const declarations = [...new Set(records
-    .filter(record => record.kind === 'theory-item' &&
-      record.node.startsWith('D'))
-    .map(record => record.node.split(':')[0]))].sort(compareUtf8);
-  const typeDefinitions = [...new Set(records
-    .filter(record => record.kind === 'theory-item' &&
-      record.node.startsWith('Dtype:'))
-    .map(record => record.node.slice('Dtype:'.length)))].sort(compareUtf8);
-  const semanticNodes = {};
-  for (const record of records.filter(record => record.kind === 'variant')) {
-    semanticNodes[record.category] ??= [];
-    semanticNodes[record.category].push(record.variant);
-  }
-  for (const variants of Object.values(semanticNodes)) variants.sort(compareUtf8);
-  return {
-    theoryItems: values('theory-item'),
-    declarations,
-    typeDefinitions,
-    moduleItems: values('module-item'),
-    programDeclarations: semanticNodes['program-declaration'] ?? [],
-    semanticNodes,
-  };
-}
-
 function auxiliaryDriverInventory(driversDirectory) {
   return AUXILIARY_DRIVERS.map(([path, expectedSha256]) => {
     const actualSha256 = sha256(readFileSync(join(driversDirectory, path)));
@@ -396,31 +277,15 @@ export function buildInventory(why3Root, options = {}) {
   if (tree !== EXPECTED_WHY3_TREE) {
     fail(`expected Why3 tree ${EXPECTED_WHY3_TREE}, got ${tree}`);
   }
-  const runtime = options.runtime ?? prepareReferenceRuntime({ why3Root: realRoot });
   const driversDirectory = join(realRoot, 'drivers');
   const driver = collectDriverClosure(driversDirectory);
-  const semanticRecords = exportSemanticInventory(
-    realRoot,
-    driver.theoryRoots,
-    runtime,
-  );
-  const semanticSnapshot = {
-    userVisibleProgramRoots: PROGRAM_ROOTS,
-    theories: semanticRecords.filter(record => record.kind === 'theory')
-      .map(record => record.key).sort(compareUtf8),
-    modules: semanticRecords.filter(record => record.kind === 'module')
-      .map(record => record.key).sort(compareUtf8),
-    records: semanticRecords,
-    observedVariants: observedVariants(semanticRecords),
+  const sourceCatalog = {
+    theoryRoots: driver.theoryRoots,
     stdlibTree: treeInventory(join(realRoot, 'stdlib')),
   };
-  semanticSnapshot.sha256 = canonicalSha({
-    userVisibleProgramRoots: semanticSnapshot.userVisibleProgramRoots,
-    theories: semanticSnapshot.theories,
-    modules: semanticSnapshot.modules,
-    records: semanticSnapshot.records,
-    observedVariants: semanticSnapshot.observedVariants,
-    stdlibTreeSha256: semanticSnapshot.stdlibTree.sha256,
+  sourceCatalog.sha256 = canonicalSha({
+    theoryRoots: sourceCatalog.theoryRoots,
+    stdlibTreeSha256: sourceCatalog.stdlibTree.sha256,
   });
   const driverSection = {
     profile: PROFILE,
@@ -443,7 +308,7 @@ export function buildInventory(why3Root, options = {}) {
     },
     driver: driverSection,
     auxiliaryDrivers: auxiliaryDriverInventory(driversDirectory),
-    semanticSnapshot,
+    sourceCatalog,
     proverDetection: {
       path: 'share/provers-detection-data.conf',
       sha256: sha256(readFileSync(detectionPath)),
@@ -458,10 +323,9 @@ export function buildInventoryFromArchive(archive) {
   }
   const temporary = mkdtempSync(join(tmpdir(), 'why3-source-'));
   try {
-    const runtime = prepareReferenceRuntime({ why3Archive: archive });
     runChecked('tar', ['-xzf', archive, '-C', temporary], { cwd: temporary });
     const root = join(temporary, `why3-${EXPECTED_WHY3_COMMIT}`);
-    return buildInventory(root, { archiveVerified: true, runtime });
+    return buildInventory(root, { archiveVerified: true });
   } finally {
     rmSync(temporary, { recursive: true, force: true });
   }

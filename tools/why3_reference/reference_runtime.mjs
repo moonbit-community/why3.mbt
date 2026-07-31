@@ -22,6 +22,11 @@ import referenceEnvironment from './reference_environment.cjs';
 const SCRIPT_DIRECTORY = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = resolve(SCRIPT_DIRECTORY, '..', '..');
 const PATCH_PATH = join(SCRIPT_DIRECTORY, 'patches', 'driver-trace.patch');
+const FULL_MLW_PATCH_PATH = join(
+  SCRIPT_DIRECTORY,
+  'patches',
+  'full-mlw-export.patch',
+);
 const DEPENDENCIES_PATH = join(
   SCRIPT_DIRECTORY,
   'runtime-dependencies-v1.json',
@@ -243,6 +248,7 @@ export function buildRuntimeDescriptor({
   lock,
   ocamlVersion,
   patchBytes = readFileSync(PATCH_PATH),
+  fullMlwPatchBytes = readFileSync(FULL_MLW_PATCH_PATH),
   builderBytes = readFileSync(fileURLToPath(import.meta.url)),
 } = {}) {
   if (!lock) fail('runtime descriptor requires an environment lock');
@@ -259,6 +265,7 @@ export function buildRuntimeDescriptor({
       archiveSha256: lock.why3.archive.sha256,
     },
     tracePatchSha256: sha256(patchBytes),
+    fullMlwExportPatchSha256: sha256(fullMlwPatchBytes),
     builderSha256: sha256(builderBytes),
     configureArguments: CONFIGURE_ARGUMENTS,
     buildTargets: BUILD_TARGETS,
@@ -352,10 +359,14 @@ function populateSource(source, destination, temporary) {
 function buildRuntime(temporary, destination, source, descriptor, cacheKey) {
   const sourceRoot = join(temporary, 'source');
   populateSource(source, sourceRoot, temporary);
-  runChecked('patch', ['--dry-run', '--batch', '-p1', '-i', PATCH_PATH], {
-    cwd: sourceRoot,
-  });
-  runChecked('patch', ['--batch', '-p1', '-i', PATCH_PATH], { cwd: sourceRoot });
+  for (const patchPath of [PATCH_PATH, FULL_MLW_PATCH_PATH]) {
+    runChecked('patch', ['--dry-run', '--batch', '-p1', '-i', patchPath], {
+      cwd: sourceRoot,
+    });
+    runChecked('patch', ['--batch', '-p1', '-i', patchPath], {
+      cwd: sourceRoot,
+    });
+  }
   const patchedDriverInterface = readFileSync(
     join(sourceRoot, 'src', 'driver', 'driver.mli'),
     'utf8',
@@ -363,6 +374,13 @@ function buildRuntime(temporary, destination, source, descriptor, cacheKey) {
   if (!patchedDriverInterface.includes('val prepare_task_trace') ||
       !patchedDriverInterface.includes('val reference_profile_view')) {
     fail('trace patch application did not update the Why3 driver interface');
+  }
+  const patchedLexerInterface = readFileSync(
+    join(sourceRoot, 'src', 'parser', 'lexer.mli'),
+    'utf8',
+  );
+  if (!patchedLexerInterface.includes('val parse_full_mlw_file')) {
+    fail('reference patch application did not expose the lossless WhyML parser');
   }
   runChecked('./autogen.sh', [], { cwd: sourceRoot });
   runChecked('./configure', [

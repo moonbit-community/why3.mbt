@@ -19,6 +19,96 @@ fn valid_fixture_path(path : StringView) -> Bool {
 }
 
 ///|
+fn source_file_parts(name : BytesView) -> (Bytes, Bytes)? {
+  if name.length() > 4 && name.has_suffix(b".mlw") {
+    Some((name[0:name.length() - 4].to_owned(), b"mlw"))
+  } else if name.length() > 4 && name.has_suffix(b".why") {
+    Some((name[0:name.length() - 4].to_owned(), b"why"))
+  } else {
+    None
+  }
+}
+
+///|
+fn relative_directory_segments(
+  root : BytesView,
+  directory : BytesView,
+) -> Array[Bytes] {
+  if !directory.has_prefix(root) {
+    abort("filesystem traversal escaped its loadpath root")
+  }
+  let mut start = root.length()
+  while start < directory.length() &&
+        (directory[start] == b'/' || directory[start] == b'\\') {
+    start = start + 1
+  }
+  let segments : Array[Bytes] = []
+  let mut segment_start = start
+  for index = start; index < directory.length(); index = index + 1 {
+    if directory[index] == b'/' || directory[index] == b'\\' {
+      if index > segment_start {
+        segments.push(directory[segment_start:index].to_owned())
+      }
+      segment_start = index + 1
+    }
+  }
+  if segment_start < directory.length() {
+    segments.push(directory[segment_start:].to_owned())
+  }
+  segments
+}
+
+///|
+fn canonical_path_directory(path : StringView) -> String {
+  let mut separator = -1
+  for index, character in path {
+    if character == '/' || character == '\\' {
+      separator = index
+    }
+  }
+  if separator < 0 {
+    ""
+  } else if separator == 0 {
+    path[:1].to_owned()
+  } else {
+    path[:separator].to_owned()
+  }
+}
+
+///|
+async fn loadpath_source_provider(
+  requested_root : String,
+  canonical_root : Bytes?,
+) -> @source_env.SourceProvider {
+  let root = @fs.realpath(requested_root)
+  let physical_root = @utf8.encode(root)
+  let provider_root = match canonical_root {
+    Some(root) => root
+    None => physical_root
+  }
+  let sources : Array[@source_env.MemorySource] = []
+  @fs.walk(root, max_concurrency=1, (directory, entries) => {
+    let directory_bytes = @utf8.encode(directory)
+    let prefix = relative_directory_segments(physical_root, directory_bytes)
+    for entry in entries {
+      let entry_bytes = @utf8.encode(entry)
+      if source_file_parts(entry_bytes) is Some((stem, extension)) {
+        let path_segments = prefix.copy()
+        path_segments.push(stem)
+        let library_path = @source_env.LibraryPath::new(path_segments)
+        let separator = if directory.has_suffix("/") { "" } else { "/" }
+        let filename = directory + separator + entry
+        let contents = @fs.read_file(filename).binary()
+        sources.push(
+          @source_env.MemorySource::new(library_path, extension, contents),
+        )
+      }
+    }
+  })
+  @source_env.SourceProvider::memory(provider_root, sources)
+}
+
+///|
 async fn write_record(record : BytesView) -> Unit {
   let text = @utf8.decode(record) catch {
     _ => abort("portable canonical record is not valid UTF-8")
@@ -89,7 +179,6 @@ fn bytes_hex_string(bytes : BytesView) -> String {
 ///|
 fn diagnostic_stage_name(stage : @elab.ElabStage) -> String {
   match stage {
-    FeatureClassification => "feature-classification"
     DeclarationElaboration => "declaration-elaboration"
     PureTyping => "typing"
     ProgramTyping => "program-typing"
@@ -98,47 +187,14 @@ fn diagnostic_stage_name(stage : @elab.ElabStage) -> String {
 }
 
 ///|
-fn unsupported_feature_name(feature : @elab.UnsupportedFeature) -> String {
-  match feature {
-    AbstractRoutineShape => "AbstractRoutineShape"
-    AlgebraicData => "AlgebraicData"
-    CheckAssertion => "CheckAssertion"
-    Clone => "Clone"
-    ControlAttribute => "ControlAttribute"
-    Datatype => "Datatype"
-    DestructuringPattern => "DestructuringPattern"
-    DriverOnlyTheory => "DriverOnlyTheory"
-    DriverOnlyType => "DriverOnlyType"
-    Epsilon => "Epsilon"
-    Exception => "Exception"
-    ExternalOrDriverOnlyImport => "ExternalOrDriverOnlyImport"
-    Ghost => "Ghost"
-    HigherOrder => "HigherOrder"
-    HigherOrderApplication => "HigherOrderApplication"
-    Inductive => "Inductive"
-    Lambda => "Lambda"
-    LocalRoutine => "LocalRoutine"
-    Loop => "Loop"
-    NestedUnsupportedExpression => "NestedUnsupportedExpression"
-    NestedUnsupportedTerm => "NestedUnsupportedTerm"
-    OldAt => "OldAt"
-    PrivateType => "PrivateType"
-    ProgramExpression => "ProgramExpression"
-    ProgramRoutineShape => "ProgramRoutineShape"
-    ProofControlConnective => "ProofControlConnective"
-    RecordOrInvariant => "RecordOrInvariant"
-    Recursion => "Recursion"
-    RecursiveOrHigherOrderLogic => "RecursiveOrHigherOrderLogic"
-    Reference => "Reference"
-    RoutineKind => "RoutineKind"
-    StringLiteral => "StringLiteral"
-    TupleExpression => "TupleExpression"
-    TupleTerm => "TupleTerm"
-    TupleType => "TupleType"
-    TypeDeclarationShape => "TypeDeclarationShape"
-    TypePurification => "TypePurification"
-    TypeVisibilityShape => "TypeVisibilityShape"
-    UserMeta => "UserMeta"
+fn input_error_name(kind : @elab.ElabInputErrorKind) -> String {
+  match kind {
+    InvalidBinder => "InvalidBinder"
+    InvalidDeclaration => "InvalidDeclaration"
+    InvalidPattern => "InvalidPattern"
+    InvalidSpecification => "InvalidSpecification"
+    InvalidTypeDeclaration => "InvalidTypeDeclaration"
+    InvalidUnit => "InvalidUnit"
   }
 }
 
@@ -150,12 +206,12 @@ fn diagnostic_kind_name(kind : @elab.ElabErrorKind) -> String {
     TypeFailure(OccursCheck) => "TypeError(OccursCheck)"
     TypeFailure(PolymorphicProgramRoutine) =>
       "TypeError(PolymorphicProgramRoutine)"
-    Unsupported(feature) =>
-      "UnsupportedFeature(" + unsupported_feature_name(feature) + ")"
+    InvalidInput(input) => "InputError(" + input_error_name(input) + ")"
     TypeFailure(_) => "TypeError(Other)"
     TheoryFailure(_) => "TheoryError(Other)"
     EnvironmentFailure(ResolveError) => "EnvironmentError(ResolveError)"
     EnvironmentFailure(_) => "EnvironmentError(Other)"
+    SourceFailure(_) => "SourceError(Other)"
     ProgramFailure(_) => "ProgramError(Other)"
   }
 }
@@ -234,7 +290,7 @@ fn transform_stage_rank(stage : String) -> Int {
     "encoding_smt_if_poly:guards" => 20
     "encoding_smt_if_poly" => 21
     "prepared-task" => 21
-    "smt-token-stream" => 22
+    "smt-tokens" => 22
     "smt-query" => 22
     _ => -1
   }
@@ -277,14 +333,15 @@ fn transform_stage_bytes(stage : String) -> BytesView {
 ///|
 async fn main {
   let arguments = @env.args()
-  if arguments.length() != 4 || arguments[1] != "--stage" {
+  if arguments.length() < 4 || arguments[1] != "--stage" {
     fail_command(
-      "usage: elab_canonical --stage typed-semantic|raw-task|transform-checkpoints|driver-update|counterexamples_dependent_intros|inline_trivial|eliminate_builtin|remove_unused_keep_constants|detect_polymorphism|eliminate_definition_conditionally|eliminate_inductive|eliminate_epsilon|eliminate_literal|simplify_formula|prepare_for_counterexmp|eliminate_projections_sums|discriminate_if_poly:monomorphise_goal|discriminate_if_poly|eliminate_algebraic_if_poly|encoding_smt_if_poly:monomorphise_goal|encoding_smt_if_poly:select_kept|encoding_smt_if_poly:keep_field_types|encoding_smt_if_poly:twin|encoding_smt_if_poly:guards|encoding_smt_if_poly|prepared-task|smt-token-stream|smt-query|diagnostic FIXTURE",
+      "usage: elab_canonical --stage STAGE FIXTURE | --stage STAGE --fixture LABEL --file PATH [-L PATH] [--no-stdlib]",
     )
     return
   }
   let stage = arguments[2]
-  let all_checkpoints = stage == "transform-checkpoints"
+  let all_semantics = stage == "upstream-semantics"
+  let all_checkpoints = stage == "transform-checkpoints" || all_semantics
   let stage_rank = if all_checkpoints {
     21
   } else {
@@ -293,20 +350,77 @@ async fn main {
   if stage_rank < 0 &&
     stage != "typed-semantic" &&
     stage != "raw-task" &&
-    stage != "diagnostic" {
+    stage != "canonical-v3" &&
+    stage != "diagnostic" &&
+    !all_semantics {
     fail_command(
-      "stage must be typed-semantic, raw-task, a registered transform checkpoint, or diagnostic",
+      "stage must be canonical-v3, typed-semantic, raw-task, a registered transform checkpoint, or diagnostic",
     )
     return
   }
-  let fixture = arguments[3]
-  if !valid_fixture_path(fixture[:]) {
-    fail_command("fixture must be a repository-relative POSIX path")
+  let mut fixture : String? = None
+  let mut file : String? = None
+  let loadpaths : Array[String] = []
+  let mut use_stdlib = true
+  let mut index = 3
+  while index < arguments.length() {
+    match arguments[index] {
+      "--fixture" => {
+        if index + 1 >= arguments.length() {
+          fail_command("--fixture requires a value")
+          return
+        }
+        fixture = Some(arguments[index + 1])
+        index = index + 2
+      }
+      "--file" => {
+        if index + 1 >= arguments.length() {
+          fail_command("--file requires a value")
+          return
+        }
+        file = Some(arguments[index + 1])
+        index = index + 2
+      }
+      "-L" | "--loadpath" => {
+        if index + 1 >= arguments.length() {
+          fail_command(arguments[index] + " requires a value")
+          return
+        }
+        loadpaths.push(arguments[index + 1])
+        index = index + 2
+      }
+      "--no-stdlib" => {
+        use_stdlib = false
+        index = index + 1
+      }
+      positional => {
+        if fixture is Some(_) || file is Some(_) {
+          fail_command("unexpected positional argument " + positional)
+          return
+        }
+        fixture = Some(positional)
+        file = Some(positional)
+        index = index + 1
+      }
+    }
+  }
+  guard fixture is Some(fixture) && file is Some(file) else {
+    fail_command("both --fixture and --file are required")
     return
   }
-  let source = @fs.read_file(fixture).binary() catch {
+  if !valid_fixture_path(fixture[:]) {
+    fail_command("fixture label must be a repository-relative POSIX path")
+    return
+  }
+  let display_file = @fs.realpath(file) catch {
     _ => {
-      fail_command("cannot read fixture")
+      fail_command("cannot resolve source file")
+      return
+    }
+  }
+  let source = @fs.read_file(file).binary() catch {
+    _ => {
+      fail_command("cannot read source file")
       return
     }
   }
@@ -318,36 +432,50 @@ async fn main {
     }
   }
   let context = @identity.CompilationContext::new()
-  let frozen = @stdlib.minimal_env(context) catch {
-    _ => {
-      fail_command("cannot load the frozen semantic environment")
-      return
-    }
-  }
-  let environment = frozen.semantic_environment()
-  // The frozen WellFounded theory is deliberately driver-only in production.
-  // This repository-owned reference fixture exposes only that exact key so the
-  // required trusted Dind elimination path can be compared with upstream.
-  if fixture == "tools/why3_reference/fixtures/transform-inductive.mlw" {
-    try {
-      let keys = [
-        @theory.TheoryKey::new([b"why3", b"WellFounded"], b"WellFounded"),
-        @theory.TheoryKey::new([b"map"], b"Map"),
-        @theory.TheoryKey::new([b"map"], b"Const"),
-      ]
-      for key in keys {
-        environment.add_theory_alias(key, key, None)
-      }
-    } catch {
+  context.register_source_display_path(
+    fixture_bytes,
+    @utf8.encode(display_file),
+  )
+  let providers : Array[@source_env.SourceProvider] = []
+  let fixture_directory = canonical_path_directory(fixture)
+  let display_directory = canonical_path_directory(display_file)
+  for loadpath in loadpaths {
+    let resolved_loadpath = @fs.realpath(loadpath) catch {
       _ => {
-        fail_command("cannot expose the trusted inductive reference fixture")
+        fail_command("cannot load source path " + loadpath)
         return
       }
     }
+    let canonical_root = if resolved_loadpath == display_directory {
+      Some(@utf8.encode(fixture_directory))
+    } else {
+      None
+    }
+    let provider = loadpath_source_provider(loadpath, canonical_root) catch {
+      _ => {
+        fail_command("cannot load source path " + loadpath)
+        return
+      }
+    }
+    providers.push(provider)
   }
-  guard parsed is Modules(_) else {
-    fail_command("fixture must contain named units")
-    return
+  if use_stdlib {
+    let provider = @stdlib.embedded_source_provider() catch {
+      _ => {
+        fail_command("cannot load the embedded standard-library sources")
+        return
+      }
+    }
+    providers.push(provider)
+  }
+  let environment = @environment.Environment::with_source_in_context(
+    context,
+    @source_env.SourceProvider::combine(providers),
+  ) catch {
+    _ => {
+      fail_command("cannot construct the source environment")
+      return
+    }
   }
   let elaborated = @elab.elaborate_file(context, environment, parsed) catch {
     ElabError(diagnostic) => {
@@ -364,9 +492,9 @@ async fn main {
     return
   }
   let profile = if stage_rank >= 0 {
-    Some(@pipeline.bind_z3_profile(frozen, context)) catch {
+    Some(@pipeline.bind_z3_profile(environment, context)) catch {
       _ => {
-        fail_command("cannot bind the static Z3 profile")
+        fail_command("cannot bind the Z3 driver profile")
         return
       }
     }
@@ -374,7 +502,28 @@ async fn main {
     None
   }
   for unit in elaborated.units() {
-    if stage == "typed-semantic" {
+    if all_semantics {
+      match unit {
+        ElaboratedTheory(theory) =>
+          write_record(
+            @canonical.encode_typed_theory_record(fixture_bytes, source, theory),
+          )
+        ElaboratedModule(pmodule) =>
+          write_record(
+            @canonical.encode_typed_module_record(
+              fixture_bytes, source, pmodule,
+            ),
+          )
+      }
+    }
+    if stage == "canonical-v3" {
+      match unit {
+        ElaboratedTheory(theory) =>
+          write_record(@canonical.encode_theory(theory).bytes())
+        ElaboratedModule(pmodule) =>
+          write_record(@canonical.encode_pmodule(pmodule).bytes())
+      }
+    } else if stage == "typed-semantic" {
       match unit {
         ElaboratedTheory(theory) =>
           write_record(
@@ -391,10 +540,38 @@ async fn main {
       let theory = match unit {
         ElaboratedTheory(theory) => theory
         ElaboratedModule(pmodule) =>
-          @vc.generate_module(context, pmodule).pure_theory()
+          @pipeline.generate_vc_module(context, environment, pmodule).pure_theory() catch {
+            @logic.TypeError(diagnostic) => {
+              fail_command(
+                "VC generation for " +
+                bytes_hex_string(pmodule.pure_theory().view().name.view().name) +
+                " failed: " +
+                diagnostic.message,
+              )
+              return
+            }
+            _ => {
+              fail_command("VC generation failed")
+              return
+            }
+          }
       }
       let unit_name = theory.view().name.view().name
-      for ordinal, task in @theory.split_theory(context, theory, None) {
+      let tasks = @theory.split_theory(context, theory, None) catch {
+        @logic.TypeError(diagnostic) => {
+          fail_command("task splitting failed: " + diagnostic.message)
+          return
+        }
+        @theory.TheoryError(diagnostic) => {
+          fail_command("task splitting failed: " + diagnostic.message)
+          return
+        }
+        _ => {
+          fail_command("task splitting failed")
+          return
+        }
+      }
+      for ordinal, task in tasks {
         if stage == "raw-task" {
           write_record(
             @canonical.encode_raw_task_record(
@@ -402,6 +579,15 @@ async fn main {
             ),
           )
         } else {
+          let smt_provenance = @smtv2.SmtProvenance::new(context)
+          smt_provenance.observe_task(task, None)
+          if all_semantics {
+            write_record(
+              @canonical.encode_raw_task_record(
+                fixture_bytes, source, unit_name, ordinal, task,
+              ),
+            )
+          }
           guard profile is Some(profile) else {
             abort("driver-update stage has no bound profile")
           }
@@ -417,6 +603,7 @@ async fn main {
               return
             }
           }
+          smt_provenance.observe_task(updated, Some(@identity.DriverUpdate))
           if all_checkpoints {
             write_checkpoint_record(
               fixture_bytes,
@@ -437,6 +624,12 @@ async fn main {
             }
           } else {
             updated
+          }
+          if stage_rank >= 1 {
+            smt_provenance.observe_task(
+              after_counterexamples,
+              Some(@identity.CounterexamplesDependentIntros),
+            )
           }
           if all_checkpoints {
             write_checkpoint_record(
@@ -459,6 +652,12 @@ async fn main {
           } else {
             after_counterexamples
           }
+          if stage_rank >= 2 {
+            smt_provenance.observe_task(
+              after_inline,
+              Some(@identity.InlineTrivial),
+            )
+          }
           if all_checkpoints {
             write_checkpoint_record(
               fixture_bytes,
@@ -479,6 +678,12 @@ async fn main {
             }
           } else {
             after_inline
+          }
+          if stage_rank >= 3 {
+            smt_provenance.observe_task(
+              after_eliminate_builtin,
+              Some(@identity.EliminateBuiltin),
+            )
           }
           if all_checkpoints {
             write_checkpoint_record(
@@ -503,6 +708,12 @@ async fn main {
           } else {
             after_eliminate_builtin
           }
+          if stage_rank >= 4 {
+            smt_provenance.observe_task(
+              after_remove_unused,
+              Some(@identity.RemoveUnusedKeepConstants),
+            )
+          }
           if all_checkpoints {
             write_checkpoint_record(
               fixture_bytes,
@@ -523,6 +734,12 @@ async fn main {
             }
           } else {
             after_remove_unused
+          }
+          if stage_rank >= 5 {
+            smt_provenance.observe_task(
+              after_detect,
+              Some(@identity.DetectPolymorphism),
+            )
           }
           if all_checkpoints {
             write_checkpoint_record(
@@ -553,6 +770,12 @@ async fn main {
           } else {
             after_detect
           }
+          if stage_rank >= 6 {
+            smt_provenance.observe_task(
+              after_eliminate_definition,
+              Some(@identity.EliminateDefinitionConditionally),
+            )
+          }
           if all_checkpoints {
             write_checkpoint_record(
               fixture_bytes,
@@ -573,6 +796,12 @@ async fn main {
             }
           } else {
             after_eliminate_definition
+          }
+          if stage_rank >= 7 {
+            smt_provenance.observe_task(
+              after_eliminate_inductive,
+              Some(@identity.EliminateInductive),
+            )
           }
           if all_checkpoints {
             write_checkpoint_record(
@@ -595,6 +824,12 @@ async fn main {
           } else {
             after_eliminate_inductive
           }
+          if stage_rank >= 8 {
+            smt_provenance.observe_task(
+              after_eliminate_epsilon,
+              Some(@identity.EliminateEpsilon),
+            )
+          }
           if all_checkpoints {
             write_checkpoint_record(
               fixture_bytes,
@@ -615,6 +850,12 @@ async fn main {
             }
           } else {
             after_eliminate_epsilon
+          }
+          if stage_rank >= 9 {
+            smt_provenance.observe_task(
+              after_eliminate_literal,
+              Some(@identity.EliminateLiteral),
+            )
           }
           if all_checkpoints {
             write_checkpoint_record(
@@ -637,6 +878,12 @@ async fn main {
           } else {
             after_eliminate_literal
           }
+          if stage_rank >= 10 {
+            smt_provenance.observe_task(
+              after_simplify,
+              Some(@identity.SimplifyFormula),
+            )
+          }
           if all_checkpoints {
             write_checkpoint_record(
               fixture_bytes,
@@ -657,6 +904,12 @@ async fn main {
             }
           } else {
             after_simplify
+          }
+          if stage_rank >= 11 {
+            smt_provenance.observe_task(
+              after_prepare_counterexample,
+              Some(@identity.PrepareForCounterexmp),
+            )
           }
           if all_checkpoints {
             write_checkpoint_record(
@@ -681,6 +934,12 @@ async fn main {
           } else {
             after_prepare_counterexample
           }
+          if stage_rank >= 12 {
+            smt_provenance.observe_task(
+              after_eliminate_projections,
+              Some(@identity.EliminateProjectionsSums),
+            )
+          }
           if all_checkpoints {
             write_checkpoint_record(
               fixture_bytes,
@@ -704,6 +963,12 @@ async fn main {
           } else {
             after_eliminate_projections
           }
+          if stage_rank >= 13 {
+            smt_provenance.observe_task(
+              after_discriminate_goal,
+              Some(@identity.DiscriminateMonomorphiseGoal),
+            )
+          }
           if polymorphic {
             write_checkpoint_record(
               fixture_bytes,
@@ -717,13 +982,21 @@ async fn main {
           }
           let after_discriminate = if stage_rank >= 14 {
             @pipeline.discriminate_if_poly(context, after_discriminate_goal) catch {
-              _ => {
-                fail_command("discriminate_if_poly failed")
+              @transform.TransformError(diagnostic) => {
+                fail_command(
+                  "discriminate_if_poly failed: " + diagnostic.message,
+                )
                 return
               }
             }
           } else {
             after_discriminate_goal
+          }
+          if stage_rank >= 14 {
+            smt_provenance.observe_task(
+              after_discriminate,
+              Some(@identity.DiscriminateIfPoly),
+            )
           }
           if all_checkpoints {
             write_checkpoint_record(
@@ -750,6 +1023,12 @@ async fn main {
           } else {
             after_discriminate
           }
+          if stage_rank >= 15 {
+            smt_provenance.observe_task(
+              after_eliminate_algebraic,
+              Some(@identity.EliminateAlgebraicIfPoly),
+            )
+          }
           if all_checkpoints {
             write_checkpoint_record(
               fixture_bytes,
@@ -773,6 +1052,12 @@ async fn main {
           } else {
             after_eliminate_algebraic
           }
+          if stage_rank >= 16 {
+            smt_provenance.observe_task(
+              after_encoding_goal,
+              Some(@identity.EncodingMonomorphiseGoal),
+            )
+          }
           if polymorphic {
             write_checkpoint_record(
               fixture_bytes,
@@ -793,6 +1078,12 @@ async fn main {
             }
           } else {
             after_encoding_goal
+          }
+          if stage_rank >= 17 {
+            smt_provenance.observe_task(
+              after_select_kept,
+              Some(@identity.SelectKept),
+            )
           }
           if polymorphic {
             write_checkpoint_record(
@@ -815,6 +1106,12 @@ async fn main {
           } else {
             after_select_kept
           }
+          if stage_rank >= 18 {
+            smt_provenance.observe_task(
+              after_keep_field_types,
+              Some(@identity.KeepFieldTypes),
+            )
+          }
           if polymorphic {
             write_checkpoint_record(
               fixture_bytes,
@@ -835,6 +1132,9 @@ async fn main {
             }
           } else {
             after_keep_field_types
+          }
+          if stage_rank >= 19 {
+            smt_provenance.observe_task(after_twin, Some(@identity.Twin))
           }
           if polymorphic {
             write_checkpoint_record(
@@ -859,6 +1159,9 @@ async fn main {
           } else {
             after_twin
           }
+          if stage_rank >= 20 {
+            smt_provenance.observe_task(after_guards, Some(@identity.Guards))
+          }
           if polymorphic {
             write_checkpoint_record(
               fixture_bytes,
@@ -880,6 +1183,12 @@ async fn main {
           } else {
             after_guards
           }
+          if stage_rank >= 21 {
+            smt_provenance.observe_task(
+              checkpoint,
+              Some(@identity.EncodingSmtIfPoly),
+            )
+          }
           if all_checkpoints {
             write_checkpoint_record(
               fixture_bytes,
@@ -890,7 +1199,46 @@ async fn main {
               b"encoding_smt_if_poly",
               checkpoint,
             )
-          } else if stage == "smt-token-stream" || stage == "smt-query" {
+            if all_semantics {
+              write_checkpoint_record(
+                fixture_bytes,
+                source,
+                unit_name,
+                proposition.view().name,
+                ordinal,
+                b"prepared-task",
+                checkpoint,
+              )
+              let query = @pipeline.print_prepared_z3_task(profile, checkpoint) catch {
+                @smtv2.PrinterError(diagnostic) => {
+                  fail_command("SMT printing failed: " + diagnostic.message)
+                  return
+                }
+                _ => {
+                  fail_command("SMT profile binding failed")
+                  return
+                }
+              }
+              let stream = @smtv2.normalize_smt_query_with_provenance(
+                query, smt_provenance,
+              ) catch {
+                @smtv2.PrinterError(diagnostic) => {
+                  fail_command(
+                    "SMT normalization failed: " + diagnostic.message,
+                  )
+                  return
+                }
+              }
+              write_smt_record(
+                fixture_bytes,
+                source,
+                unit_name,
+                proposition.view().name,
+                ordinal,
+                stream,
+              )
+            }
+          } else if stage == "smt-tokens" || stage == "smt-query" {
             let query = @pipeline.print_prepared_z3_task(profile, checkpoint) catch {
               @smtv2.PrinterError(diagnostic) => {
                 fail_command("SMT printing failed: " + diagnostic.message)
@@ -909,7 +1257,9 @@ async fn main {
                 query,
               )
             } else {
-              let stream = @smtv2.normalize_smt_query(query) catch {
+              let stream = @smtv2.normalize_smt_query_with_provenance(
+                query, smt_provenance,
+              ) catch {
                 @smtv2.PrinterError(diagnostic) => {
                   fail_command(
                     "SMT normalization failed: " + diagnostic.message,

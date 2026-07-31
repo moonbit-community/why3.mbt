@@ -183,27 +183,12 @@ function expectedWhy3Rejection(sourcePath, expectedPattern) {
   };
 }
 
-function featureAssertions(features, fixtureId) {
-  return features.variants
-    .filter(variant =>
-      variant.fixtureId === fixtureId || variant.rejectionFixtureId === fixtureId)
-    .map(variant => ({
-      enum: variant.enum,
-      variant: variant.variant,
-      role: variant.fixtureId === fixtureId ? 'primary' : 'rejection',
-      disposition: variant.disposition,
-      classificationStage: variant.classificationStage,
-      errorKind: variant.errorKind,
-    }));
-}
-
 function semanticEntry({
   id,
   source,
   units,
   featureTags,
   expected,
-  assertions,
   referenceWhy3,
 }) {
   return {
@@ -221,7 +206,6 @@ function semanticEntry({
         goalOrdinal: goal.ordinal,
         goalBytesHex: goal.bytesHex,
       }))),
-    featureAssertions: assertions,
     ...(referenceWhy3 ? { referenceWhy3 } : {}),
   };
 }
@@ -289,11 +273,15 @@ async function buildManifest(options) {
     parserManifest,
     parserInventory.fixtures.map(fixture => fixture.relativePath),
   );
-  const featuresPath = join(PROJECT_ROOT, 'tools', 'contracts', 'features-v1.json');
-  const features = JSON.parse(readFileSync(featuresPath, 'utf8'));
   const driverPath = join(PROJECT_ROOT, 'tools', 'contracts', 'driver-closure-v1.json');
   const driver = JSON.parse(readFileSync(driverPath, 'utf8'));
-  if (driver.semanticSnapshot.stdlibTree.sha256 !== STDLIB_TREE_SHA256) {
+  const targetFeaturesPath = join(
+    PROJECT_ROOT,
+    'tools',
+    'contracts',
+    'features-v2.json',
+  );
+  if (driver.sourceCatalog.stdlibTree.sha256 !== STDLIB_TREE_SHA256) {
     fail('stdlib tree hash drifted from the fixed profile');
   }
 
@@ -302,7 +290,7 @@ async function buildManifest(options) {
   const parserGroups = {
     'parser.ptree-exact': [],
     'parser.why3-rejects': [],
-    'parser.module-interface-extension': [],
+    'parser.module-interface-exact': [],
   };
   for (const fixture of parserInventory.fixtures) {
     const manifestEntry = parserManifest.entries[fixture.relativePath];
@@ -313,14 +301,13 @@ async function buildManifest(options) {
       lane = 'reject';
       group = 'parser.why3-rejects';
       expectedKind = manifestEntry.moonbitKind;
-    } else if (manifestEntry?.lane === 'extension') {
-      lane = 'intentional-divergence';
-      group = 'parser.module-interface-extension';
-      expectedKind = 'AcceptExtension';
+    } else if (manifestEntry?.lane === 'exact-main') {
+      group = 'parser.module-interface-exact';
+      expectedKind = 'FullPtreeExact';
     }
     const id = `parser:${fixture.relativePath}`;
     const source = sourceRecord(fixture.absolutePath, {
-      snapshotRelativePath: fixture.relativePath,
+      corpusRelativePath: fixture.relativePath,
     });
     parserSources.push(source);
     parserGroups[group].push(id);
@@ -355,7 +342,6 @@ async function buildManifest(options) {
         units: selectUnits(inventory, unitNames),
         featureTags,
         expected,
-        assertions: featureAssertions(features, id),
       });
     }
 
@@ -367,7 +353,7 @@ async function buildManifest(options) {
       'driver-update',
       'transform-checkpoints',
       'prepared-task',
-      'smt-token-stream',
+      'smt-tokens',
       'prover-result',
     ];
     const supported = [
@@ -384,7 +370,7 @@ async function buildManifest(options) {
       ['mutation.false-postcondition', 'tests/vc/false-post.mlw', ['FalsePost'], ['false-postcondition', 'mutation', 'program-int'], 'MutationExpectedNonValid'],
       ['transform.polymorphism', 'tools/why3_reference/fixtures/transform-polymorphism.mlw', ['LogicPolymorphism'], ['free-type-variable', 'monomorphise-goal', 'polymorphic-checkpoints'], 'Supported'],
       ['transform.polymorphic-definition', 'tools/why3_reference/fixtures/transform-polymorphic-definition.mlw', ['LogicPolymorphicDefinition'], ['polymorphic-definition', 'discriminate', 'encoding-guards'], 'Supported'],
-      ['transform.inductive-snapshot', 'tools/why3_reference/fixtures/transform-inductive.mlw', ['InductiveSnapshot'], ['reference-only', 'trusted-inductive', 'eliminate-inductive', 'higher-order-encoding'], 'ReferenceOnlyTrusted'],
+      ['transform.inductive', 'tools/why3_reference/fixtures/transform-inductive.mlw', ['InductiveSnapshot'], ['inductive', 'eliminate-inductive', 'higher-order-encoding'], 'Supported'],
       ['smt.identifier-safety', 'tools/why3_reference/fixtures/smt-identifiers.mlw', ['SmtIdentifiers'], ['generated-name-collision', 'goal-negation', 'reserved-smt-identifier'], 'Supported'],
       ['solver.outcomes', 'tools/why3_reference/fixtures/solver-outcomes.mlw', ['SolverOutcomes'], ['solver-sat', 'solver-unknown', 'solver-unsat'], 'Supported'],
     ].map(([id, path, unitNames, featureTags, kind]) => successfulCase({
@@ -392,77 +378,67 @@ async function buildManifest(options) {
       path,
       unitNames,
       featureTags,
-      expected: id === 'transform.inductive-snapshot'
-        ? {
-            stage: 'reference-pipeline',
-            kind,
-            lane: 'exact',
-            gateStages: [
-              'typed-unit',
-              'raw-task',
-              'driver-update',
-              'transform-checkpoints',
-              'prepared-task',
-              'smt-token-stream',
-            ],
-          }
-        : { stage: 'full-pipeline', kind, lane: 'exact', gateStages: exactStages },
-    }));
-
-    const unsupportedDefinitions = [
-      ['unsupported.check', 'check.mlw', ['CheckAssertion'], 'UnsupportedFeature(CheckAssertion)'],
-      ['unsupported.clone', 'clone.mlw', ['CloneBase', 'CloneUse'], 'UnsupportedFeature(Clone)'],
-      ['unsupported.control-attribute', 'control-attribute.mlw', ['ControlAttribute', 'UserStopSplit'], 'UnsupportedFeature(ControlAttribute)'],
-      ['unsupported.datatypes', 'datatypes.mlw', ['Datatypes'], 'UnsupportedFeature(TypeDeclarationShape)'],
-      ['unsupported.driver-only-theory', 'driver-only-theory.mlw', ['DriverOnlyTheory'], 'UnsupportedFeature(ExternalOrDriverOnlyImport)'],
-      ['unsupported.effects', 'effects.mlw', ['TypePurification'], 'UnsupportedFeature(TypePurification)'],
-      ['unsupported.exceptions', 'exceptions.mlw', ['Exceptions'], 'UnsupportedFeature(Exception)'],
-      ['unsupported.function-kinds', 'function-kinds.mlw', ['FunctionKinds'], 'UnsupportedFeature(RoutineKind)'],
-      ['unsupported.ghost', 'ghost.mlw', ['GhostResult'], 'UnsupportedFeature(Ghost)'],
-      ['unsupported.higher-order', 'higher-order.mlw', ['HigherOrder'], 'UnsupportedFeature(HigherOrder)'],
-      ['unsupported.inductive', 'inductive.mlw', ['Inductive'], 'UnsupportedFeature(Inductive)'],
-      ['unsupported.lambda', 'lambda.mlw', ['Lambda'], 'UnsupportedFeature(Lambda)'],
-      ['unsupported.logic-term', 'logic-term.mlw', ['ProofControl'], 'UnsupportedFeature(ProofControlConnective)'],
-      ['unsupported.loops', 'loops.mlw', ['Loops'], 'UnsupportedFeature(Loop)'],
-      ['unsupported.meta', 'meta.mlw', ['UserMeta'], 'UnsupportedFeature(UserMeta)'],
-      ['unsupported.old-at', 'old-at.mlw', ['OldAt'], 'UnsupportedFeature(OldAt)'],
-      ['unsupported.patterns', 'patterns.mlw', ['Patterns'], 'UnsupportedFeature(DestructuringPattern)'],
-      ['unsupported.polymorphic-program', 'polymorphic-program.mlw', ['PolymorphicProgram'], 'TypeError(PolymorphicProgramRoutine)'],
-      ['unsupported.program-expression', 'program-expression.mlw', ['ProgramExpression'], 'UnsupportedFeature(ProgramExpression)'],
-      ['unsupported.recursion', 'recursion.mlw', ['Recursion'], 'UnsupportedFeature(Recursion)'],
-      ['unsupported.references', 'references.mlw', ['References'], 'UnsupportedFeature(Reference)'],
-      ['unsupported.strings', 'strings.mlw', ['Strings'], 'UnsupportedFeature(StringLiteral)'],
-      ['unsupported.tuple', 'tuple.mlw', ['Tuple', 'TupleProgram'], 'UnsupportedFeature(TupleType)'],
-    ].map(([id, file, unitNames, kind]) => successfulCase({
-      id,
-      path: `tools/why3_reference/fixtures/unsupported/${file}`,
-      unitNames,
-      featureTags: [id, 'negative-capability'],
       expected: {
-        stage: id === 'unsupported.polymorphic-program' ? 'program-typing' : 'feature-classification',
+        stage: 'full-pipeline',
         kind,
-        lane: 'unsupported',
-        gateStages: ['parser', 'typing-reference', 'feature-classification'],
+        lane: 'exact',
+        gateStages: exactStages,
       },
     }));
 
-    const epsilonPath = join(FIXTURE_ROOT, 'unsupported', 'epsilon.mlw');
+    const capabilityDefinitions = [
+      ['capability.check', 'check.mlw', ['CheckAssertion']],
+      ['capability.clone', 'clone.mlw', ['CloneBase', 'CloneUse']],
+      ['capability.control-attribute', 'control-attribute.mlw', ['ControlAttribute', 'UserStopSplit']],
+      ['capability.datatypes', 'datatypes.mlw', ['Datatypes']],
+      ['capability.driver-only-theory', 'driver-only-theory.mlw', ['DriverOnlyTheory']],
+      ['capability.effects', 'effects.mlw', ['TypePurification']],
+      ['capability.exceptions', 'exceptions.mlw', ['Exceptions']],
+      ['capability.function-kinds', 'function-kinds.mlw', ['FunctionKinds']],
+      ['capability.ghost', 'ghost.mlw', ['GhostResult']],
+      ['capability.higher-order', 'higher-order.mlw', ['HigherOrder']],
+      ['capability.inductive', 'inductive.mlw', ['Inductive']],
+      ['capability.lambda', 'lambda.mlw', ['Lambda']],
+      ['capability.logic-term', 'logic-term.mlw', ['ProofControl']],
+      ['capability.loops', 'loops.mlw', ['Loops']],
+      ['capability.meta', 'meta.mlw', ['UserMeta']],
+      ['capability.old-at', 'old-at.mlw', ['OldAt']],
+      ['capability.patterns', 'patterns.mlw', ['Patterns']],
+      ['capability.polymorphic-program', 'polymorphic-program.mlw', ['PolymorphicProgram']],
+      ['capability.program-expression', 'program-expression.mlw', ['ProgramExpression']],
+      ['capability.recursion', 'recursion.mlw', ['Recursion']],
+      ['capability.references', 'references.mlw', ['References']],
+      ['capability.strings', 'strings.mlw', ['Strings']],
+      ['capability.tuple', 'tuple.mlw', ['Tuple', 'TupleProgram']],
+    ].map(([id, file, unitNames]) => successfulCase({
+      id,
+      path: `tools/why3_reference/fixtures/exact/${file}`,
+      unitNames,
+      featureTags: [id, 'exact-capability'],
+      expected: {
+        stage: 'typed-unit',
+        kind: 'Accepted',
+        lane: 'exact',
+        gateStages: ['parser', 'typing', 'typed-unit'],
+      },
+    }));
+
+    const epsilonPath = join(FIXTURE_ROOT, 'reject', 'epsilon.mlw');
     const epsilonReference = expectedWhy3Rejection(
       epsilonPath,
       /^Epsilon terms are currently not supported in WhyML\n$/u,
     );
     const epsilon = semanticEntry({
-      id: 'unsupported.epsilon',
+      id: 'reject.epsilon',
       source: sourceRecord(epsilonPath),
       units: [],
-      featureTags: ['negative-capability', 'unsupported.epsilon'],
+      featureTags: ['negative-language', 'reject.epsilon'],
       expected: {
         stage: 'parser',
         kind: 'ParseError(UnsupportedEpsilon)',
-        lane: 'unsupported',
+        lane: 'reject',
         gateStages: ['parser', 'typing-reference-reject'],
       },
-      assertions: featureAssertions(features, 'unsupported.epsilon'),
       referenceWhy3: epsilonReference,
     });
 
@@ -478,11 +454,10 @@ async function buildManifest(options) {
         units: [],
         featureTags: ['negative-typing', id],
         expected: { stage: 'typing', kind, lane: 'reject', gateStages: ['parser', 'typing'] },
-        assertions: [],
         referenceWhy3: expectedWhy3Rejection(absolutePath, pattern),
       });
     });
-    semanticEntries = [...supported, ...typingErrors, ...unsupportedDefinitions, epsilon];
+    semanticEntries = [...supported, ...capabilityDefinitions, ...typingErrors, epsilon];
   } finally {
     rmSync(temporary, { recursive: true, force: true });
   }
@@ -501,7 +476,7 @@ async function buildManifest(options) {
     contractEntry(
       'contract.driver-profile',
       'tools/contracts/driver-closure-v1.json',
-      ['driver-catalog', 'driver-closure', 'trusted-snapshot'],
+      ['driver-catalog', 'driver-closure', 'source-profile'],
       {
         driverFiles: driver.driver.loadOrder,
         theoryRoots: driver.driver.theoryRoots,
@@ -540,18 +515,6 @@ async function buildManifest(options) {
     }
   }
   const resolvableFixtures = new Set([...entryIds, ...groupIds]);
-  for (const variant of features.variants) {
-    for (const id of [variant.fixtureId, variant.rejectionFixtureId]) {
-      if (id && !resolvableFixtures.has(id)) {
-        fail(`feature ${variant.enum}.${variant.variant} has unresolved fixture ${id}`);
-      }
-    }
-  }
-  for (const lane of features.parserLanes) {
-    if (!resolvableFixtures.has(lane.fixtureId)) {
-      fail(`parser lane has unresolved fixture ${lane.fixtureId}`);
-    }
-  }
 
   const capabilityCoverage = [
     ['identity-shadowing-qualified-lookup', ['mvp.logic-core', 'mvp.namespace']],
@@ -566,17 +529,17 @@ async function buildManifest(options) {
     ['requires-ensures-result-assert-assume-call', ['mvp.abs', 'mvp.assert-assume', 'mvp.routine-call']],
     ['raw-vc-and-transform-checkpoints', ['mvp.abs', 'contract.transform-profile']],
     ['polymorphic-driver-checkpoints', ['transform.polymorphism', 'transform.polymorphic-definition', 'contract.transform-profile']],
-    ['trusted-inductive-elimination-checkpoint', ['transform.inductive-snapshot', 'contract.transform-profile']],
+    ['inductive-elimination-checkpoint', ['transform.inductive', 'contract.transform-profile']],
     ['smt-generated-name-reserved-word-negation', ['smt.identifier-safety']],
-    ['driver-catalog-and-trusted-types', ['contract.driver-profile', 'unsupported.driver-only-theory']],
+    ['driver-catalog-and-source-types', ['contract.driver-profile', 'capability.driver-only-theory']],
     ['program-real', ['mvp.program-real']],
     ['program-false-postcondition', ['mutation.false-postcondition']],
     ['real-solver-unsat-sat-unknown', ['solver.outcomes']],
     [
-      'all-unsupported-feature-groups',
-      [...entryIds].filter(id => id.startsWith('unsupported.')).sort(compareUtf8),
+      'all-exact-capability-groups',
+      [...entryIds].filter(id => id.startsWith('capability.')).sort(compareUtf8),
     ],
-    ['parser-989', ['parser.ptree-exact', 'parser.why3-rejects', 'parser.module-interface-extension']],
+    ['parser-989', ['parser.ptree-exact', 'parser.why3-rejects', 'parser.module-interface-exact']],
   ].map(([id, members]) => ({ id, members }));
   for (const capability of capabilityCoverage) {
     for (const member of capability.members) {
@@ -587,7 +550,7 @@ async function buildManifest(options) {
   }
 
   const parserSourceInventory = parserSources.map(source => ({
-    path: source.snapshotRelativePath,
+    path: source.corpusRelativePath,
     kind: source.kind,
     sha256: source.sha256,
     ...(source.symlinkTarget ? { symlinkTarget: source.symlinkTarget } : {}),
@@ -614,7 +577,7 @@ async function buildManifest(options) {
       },
     ],
     sourceInventories: {
-      parserSnapshot: {
+      parserCorpus: {
         root: 'fixtures/why3-1.7.2',
         regular: parserInventory.regular,
         symlink: parserInventory.symlink,
@@ -629,16 +592,17 @@ async function buildManifest(options) {
       },
     },
     contractHashes: {
-      featuresV1Sha256: sha256(readFileSync(featuresPath)),
+      targetFeaturesV2Sha256: sha256(readFileSync(targetFeaturesPath)),
       driverClosureV1Sha256: sha256(readFileSync(driverPath)),
       canonicalVectorsV1Sha256: sha256(readFileSync(join(PROJECT_ROOT, 'tools/contracts/canonical-vectors-v1.json'))),
       transformProfileV1Sha256: sha256(readFileSync(join(PROJECT_ROOT, 'tools/contracts/transform-profile-v1.json'))),
     },
     counts: {
       entries: entries.length,
-      parserExact: parserGroups['parser.ptree-exact'].length,
+      parserExact: parserGroups['parser.ptree-exact'].length +
+        parserGroups['parser.module-interface-exact'].length,
       parserReject: parserGroups['parser.why3-rejects'].length,
-      parserIntentionalDivergence: parserGroups['parser.module-interface-extension'].length,
+      parserIntentionalDivergence: 0,
       semantic: semanticEntries.length,
       contracts: contracts.length,
       goals: entries.reduce((count, entry) => count + entry.goalInventory.length, 0),

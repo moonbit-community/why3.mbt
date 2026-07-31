@@ -23,6 +23,7 @@ pub(all) enum CloneTypeInstantiation {
 
 type CloneWitness
 pub fn CloneWitness::context_anchor(Self) -> @identity.SemanticId
+pub fn CloneWitness::symbol_map(Self) -> SymbolMap
 pub fn CloneWitness::trusted_new(@identity.SemanticId, TheoryKey, UInt, ArrayView[CloneTypeInstantiation], ArrayView[(@logic.LSymbol, @logic.LSymbol)], ArrayView[(@logic.PrSymbol, @logic.PrSymbol)], @identity.SourceSpan?) -> Self raise TheoryError
 pub fn CloneWitness::view(Self) -> CloneWitnessView
 
@@ -34,7 +35,17 @@ pub(all) struct CloneWitnessView {
   proposition_instantiations : ArrayView[(@logic.PrSymbol, @logic.PrSymbol)]
 }
 
+type CoercionMap
+pub fn CoercionMap::add(Self, @logic.LSymbol, @identity.SourceSpan?) -> Self raise TheoryError
+pub fn CoercionMap::empty() -> Self
+pub fn CoercionMap::find(Self, @logic.Ty, @logic.Ty, @identity.SourceSpan?) -> Array[@logic.LSymbol] raise TheoryError
+pub fn CoercionMap::find_by_symbols(Self, @logic.TypeSymbol, @logic.TypeSymbol) -> Array[@logic.LSymbol]?
+pub fn CoercionMap::has_target_symbol(Self, @logic.TypeSymbol) -> Bool
+pub fn CoercionMap::union(Self, Self, @identity.SourceSpan?) -> Self raise TheoryError
+
 type Meta
+pub fn Meta::clone_through(Self, Theory, CloneWitness, @identity.SourceSpan?) -> Self? raise TheoryError
+pub fn Meta::exclusive(BytesView, ArrayView[MetaArgument]) -> Self
 pub fn Meta::new(BytesView, ArrayView[MetaArgument]) -> Self
 pub fn Meta::validate_context(Self, @identity.SemanticId, @identity.SourceSpan?) -> Unit raise TheoryError
 pub fn Meta::view(Self) -> MetaView
@@ -49,8 +60,32 @@ pub(all) enum MetaArgument {
   MetaIdentifier(SemanticName)
 }
 
+pub(all) enum MetaArgumentType {
+  MetaTypeArgument
+  MetaTypeSymbolArgument
+  MetaLogicSymbolArgument
+  MetaPropositionSymbolArgument
+  MetaStringArgument
+  MetaIntegerArgument
+  MetaIdentifierArgument
+} derive(Eq, @debug.Debug)
+
+type MetaDescriptor
+pub fn MetaDescriptor::apply(Self, ArrayView[MetaArgument], @identity.SourceSpan?) -> Meta raise TheoryError
+pub fn MetaDescriptor::new(BytesView, ArrayView[MetaArgumentType], Bool, BytesView, @identity.SourceSpan?) -> Self raise TheoryError
+pub fn MetaDescriptor::view(Self) -> MetaDescriptorView
+
+pub(all) struct MetaDescriptorView {
+  name : Bytes
+  argument_types : ArrayView[MetaArgumentType]
+  exclusive : Bool
+  description : Bytes
+}
+
 pub(all) struct MetaView {
   name : Bytes
+  argument_types : ArrayView[MetaArgumentType]
+  exclusive : Bool
   arguments : ArrayView[MetaArgument]
 }
 
@@ -67,6 +102,8 @@ pub fn Namespace::find_subspace(Self, BytesView, @identity.SourceSpan?) -> Self 
 pub fn Namespace::find_type(Self, ArrayView[Bytes], @identity.SourceSpan?) -> @logic.TypeSymbol raise TheoryError
 pub fn Namespace::import_scope(Self, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise TheoryError
 pub fn Namespace::merge(Self, Self, @identity.SourceSpan?) -> Self raise TheoryError
+pub fn Namespace::open_scope(Self, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise TheoryError
+pub fn Namespace::overlay(Self, Self) -> Self
 pub fn Namespace::view(Self) -> NamespaceView
 
 pub(all) struct NamespaceView {
@@ -86,34 +123,118 @@ pub(all) struct SemanticNameView {
   source_span : @identity.SourceSpan?
 }
 
+type SymbolMap
+pub fn SymbolMap::cloned_item_boundary(Self, Int) -> Int?
+pub fn SymbolMap::empty() -> Self
+pub fn SymbolMap::find_logic_symbol(Self, @logic.LSymbol) -> @logic.LSymbol?
+pub fn SymbolMap::find_proposition(Self, @logic.PrSymbol) -> @logic.PrSymbol?
+pub fn SymbolMap::find_type(Self, @logic.TypeSymbol) -> @logic.Ty?
+pub fn SymbolMap::find_type_symbol(Self, @logic.TypeSymbol) -> @logic.TypeSymbol?
+pub fn SymbolMap::translate_pattern(Self, @identity.CompilationContext, @logic.Pattern, ArrayView[(@logic.VSymbol, @logic.VSymbol)], @identity.SourceSpan?) -> @logic.Pattern raise
+pub fn SymbolMap::translate_term(Self, @identity.CompilationContext, @logic.Term, ArrayView[(@logic.VSymbol, @logic.VSymbol)], @identity.SourceSpan?) -> @logic.Term raise
+pub fn SymbolMap::translate_type(Self, @identity.CompilationContext, @logic.Ty, @identity.SourceSpan?) -> @logic.Ty raise
+pub fn SymbolMap::view(Self) -> SymbolMapView
+
+pub(all) struct SymbolMapView {
+  sm_ty : ArrayView[(@logic.TypeSymbol, @logic.Ty)]
+  sm_ts : ArrayView[(@logic.TypeSymbol, @logic.TypeSymbol)]
+  sm_ls : ArrayView[(@logic.LSymbol, @logic.LSymbol)]
+  sm_pr : ArrayView[(@logic.PrSymbol, @logic.PrSymbol)]
+}
+
+type TDecl
+pub fn TDecl::clone(CloneWitness) -> Self
+pub fn TDecl::declaration(@logic.Decl) -> Self
+pub fn TDecl::meta(Meta) -> Self
+pub fn TDecl::use_(Theory) -> Self
+pub fn TDecl::view(Self) -> TDeclView
+
+type TDeclSet
+pub fn TDeclSet::view(Self) -> TDeclSetView
+
+pub(all) struct TDeclSetView {
+  tds_set : ArrayView[TheoryItem]
+}
+
+pub(all) struct TDeclView {
+  td_node : TheoryItem
+}
+
 type Task
+pub fn Task::clone_history(Self, Theory) -> TDeclSet
+pub fn Task::cloned_theory_maps(Self, Theory) -> Array[SymbolMap]
 pub fn Task::context_anchor(Self) -> @identity.SemanticId
+pub fn Task::dependency_theories(Self) -> ArrayView[(TheoryKey, Theory)]
+pub fn Task::exclusive_meta(Self, Meta, @identity.SourceSpan?) -> Array[MetaArgument]? raise TheoryError
+pub fn Task::goal(Self) -> @logic.PrSymbol raise TheoryError
+pub fn Task::goal_formula(Self) -> @logic.Term raise TheoryError
+pub fn Task::head(Self) -> TaskHead?
+pub fn Task::known(Self) -> @logic.KnownMap?
+pub fn Task::meta_applications(Self, Meta) -> Array[Array[MetaArgument]]
+pub fn Task::meta_history(Self, Meta) -> TDeclSet
+pub fn Task::referenced_theory(Self, TheoryKey) -> Theory?
+pub fn Task::tagged_logic_symbols(Self, Meta, @identity.SourceSpan?) -> Array[@logic.LSymbol] raise TheoryError
+pub fn Task::tagged_propositions(Self, Meta, @identity.SourceSpan?) -> Array[@logic.PrSymbol] raise TheoryError
+pub fn Task::tagged_type_symbols(Self, Meta, @identity.SourceSpan?) -> Array[@logic.TypeSymbol] raise TheoryError
+pub fn Task::tagged_types(Self, Meta, @identity.SourceSpan?) -> Array[@logic.Ty] raise TheoryError
 pub fn Task::trusted_new(@identity.SemanticId, ArrayView[TheoryItem], @identity.SourceSpan?) -> Self raise TheoryError
+pub fn Task::trusted_new_with_dependencies(@identity.SemanticId, ArrayView[TheoryItem], ArrayView[(TheoryKey, Theory)], @identity.SourceSpan?) -> Self raise TheoryError
+pub fn Task::uses_theory(Self, Theory) -> Bool
 pub fn Task::view(Self) -> TaskView
+
+type TaskHead
+pub fn TaskHead::view(Self) -> TaskHeadView
+
+pub(all) struct TaskHeadView {
+  task_decl : TDecl
+  task_prev : TaskHead?
+  task_known : @logic.KnownMap?
+  task_clone : ArrayView[(TheoryKey, TDeclSet)]
+  task_meta : ArrayView[(Meta, TDeclSet)]
+}
 
 pub(all) struct TaskView {
   items : ArrayView[TheoryItem]
+  task_hd : TaskHead?
+  dependencies : ArrayView[(TheoryKey, Theory)]
 }
 
 type Theory
 pub fn Theory::append_declarations(Self, @identity.CompilationContext, ArrayView[@logic.Decl], @identity.SourceSpan?) -> Self raise
+pub fn Theory::append_hidden_use(Self, @identity.CompilationContext, Self, @identity.SourceSpan?) -> Self raise
+pub fn Theory::clone_source(Self, TheoryKey) -> Self?
+pub fn Theory::coercions(Self) -> CoercionMap
 pub fn Theory::context_anchor(Self) -> @identity.SemanticId
 pub fn Theory::export_namespace(Self) -> Namespace
+pub fn Theory::float_projections(Self, @logic.TypeSymbol) -> (@logic.LSymbol, @logic.LSymbol)?
+pub fn Theory::insert_declarations_at_item_boundaries(Self, @identity.CompilationContext, ArrayView[(Int, Array[Bytes], Array[@logic.Decl])], @identity.SourceSpan?) -> Self raise
+pub fn Theory::is_local_id(Self, @identity.SemanticId) -> Bool
 pub fn Theory::key(Self) -> TheoryKey
-pub fn Theory::trusted_import_known(Self, ArrayView[Self], @identity.SourceSpan?) -> Self raise
-pub fn Theory::trusted_snapshot(@identity.CompilationContext, TheoryKey, SemanticName, ArrayView[TheoryItem], Namespace, ArrayView[Self], @identity.SourceSpan?) -> Self raise
+pub fn Theory::known_map(Self) -> @logic.KnownMap
+pub fn Theory::proved_wf(Self, @logic.LSymbol) -> (@logic.PrSymbol, @logic.LSymbol)?
+pub fn Theory::range_projection(Self, @logic.TypeSymbol) -> @logic.LSymbol?
+pub fn Theory::tdecls(Self) -> Array[TDecl]
+pub fn Theory::used_theories(Self) -> Array[Self]
+pub fn Theory::used_theory(Self, TheoryKey) -> Self
 pub fn Theory::view(Self) -> TheoryView
 
 type TheoryBuilder
+pub fn TheoryBuilder::add_clone(Self, Theory, TheoryInstantiation, @identity.SourceSpan?, logic_origin_overrides? : ArrayView[(@logic.LSymbol, @identity.Origin)], proposition_origin_overrides? : ArrayView[(@logic.PrSymbol, @identity.Origin)], omitted_propositions? : ArrayView[@logic.PrSymbol], logic_definition_overrides? : ArrayView[(Array[@logic.LogicDefinition], Array[@logic.PrSymbol])], omit_empty_source_subspaces? : Bool) -> SymbolMap raise
 pub fn TheoryBuilder::add_clone_witness(Self, CloneWitness, @identity.SourceSpan?) -> Unit raise TheoryError
 pub fn TheoryBuilder::add_decl(Self, @logic.Decl, @identity.SourceSpan?) -> Unit raise
+pub fn TheoryBuilder::add_hidden_use(Self, Theory, @identity.SourceSpan?) -> Unit raise
 pub fn TheoryBuilder::add_meta(Self, Meta, @identity.SourceSpan?) -> Unit raise TheoryError
 pub fn TheoryBuilder::add_use(Self, Theory, Bool, @identity.SourceSpan?) -> Unit raise
 pub fn TheoryBuilder::close(Self) -> Theory raise TheoryError
 pub fn TheoryBuilder::close_scope(Self, Bool, @identity.SourceSpan?) -> Unit raise TheoryError
+pub fn TheoryBuilder::current_coercions(Self) -> CoercionMap
+pub fn TheoryBuilder::current_known(Self) -> @logic.KnownMap
 pub fn TheoryBuilder::current_namespace(Self) -> Namespace
 pub fn TheoryBuilder::export_namespace(Self) -> Namespace
 pub fn TheoryBuilder::import_scope(Self, ArrayView[Bytes], @identity.SourceSpan?) -> Unit raise TheoryError
+pub fn TheoryBuilder::item_at(Self, Int, @identity.SourceSpan?) -> TheoryItem raise TheoryError
+pub fn TheoryBuilder::item_count(Self) -> Int
+pub fn TheoryBuilder::knows_theory(Self, Theory) -> Bool
 pub fn TheoryBuilder::new(@identity.CompilationContext, TheoryKey, SemanticName) -> Self
 pub fn TheoryBuilder::open_scope(Self, BytesView, @identity.SourceSpan?) -> Unit raise TheoryError
 
@@ -135,7 +256,42 @@ pub(all) enum TheoryErrorKind {
   GoalNotLast
   MissingGoal
   MultipleGoals
+  NotACoercion
+  CoercionCycle
+  CoercionAlreadyDefined
+  CoercionNotFound
+  BadMetaArity
+  MetaTypeMismatch
+  UnboundMetaArgument
+  RangeConflict
+  FloatConflict
+  NonLocalCloneSymbol
+  DuplicateCloneInstantiation
+  CannotInstantiate
+  MissingCloneSymbol
+  CloneTypeVariableMismatch
+  CloneTypeArityMismatch
+  CloneLogicKindMismatch
+  CloneLogicArityMismatch
+  CloneLogicTypeMismatch
+  NotTaggingMeta
+  NotExclusiveMeta
+  IllFormedProvedWf
+  ProvedWfConflict
 } derive(Eq, @debug.Debug)
+
+type TheoryInstantiation
+pub fn TheoryInstantiation::empty() -> Self
+pub fn TheoryInstantiation::new(ArrayView[(@logic.TypeSymbol, @logic.Ty)], ArrayView[(@logic.TypeSymbol, @logic.TypeSymbol)], ArrayView[(@logic.LSymbol, @logic.LSymbol)], ArrayView[(@logic.PrSymbol, @logic.PropositionKind)], @logic.PropositionKind, @identity.SourceSpan?) -> Self raise TheoryError
+pub fn TheoryInstantiation::view(Self) -> TheoryInstantiationView
+
+pub(all) struct TheoryInstantiationView {
+  inst_ty : ArrayView[(@logic.TypeSymbol, @logic.Ty)]
+  inst_ts : ArrayView[(@logic.TypeSymbol, @logic.TypeSymbol)]
+  inst_ls : ArrayView[(@logic.LSymbol, @logic.LSymbol)]
+  inst_pr : ArrayView[(@logic.PrSymbol, @logic.PropositionKind)]
+  inst_df : @logic.PropositionKind
+}
 
 pub(all) enum TheoryItem {
   TheoryDecl(@logic.Decl)
@@ -161,6 +317,7 @@ pub(all) struct TheoryView {
   key : TheoryKey
   name : SemanticName
   items : ArrayView[TheoryItem]
+  tdecls : Array[TDecl]
   export_namespace : Namespace
 }
 

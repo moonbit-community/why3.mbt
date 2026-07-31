@@ -2,6 +2,7 @@
 package "moonbit-community/why3/elab"
 
 import {
+  "moonbit-community/why3/core/env",
   "moonbit-community/why3/core/identity",
   "moonbit-community/why3/core/logic",
   "moonbit-community/why3/core/theory",
@@ -14,11 +15,15 @@ import {
 // Values
 pub fn elaborate_file(@identity.CompilationContext, @environment.Environment, @parser.MlwFile) -> ElaboratedFile raise ElabError
 
+pub fn elaborate_file_at_path(@identity.CompilationContext, @environment.Environment, @parser.MlwFile, ArrayView[Bytes]) -> ElaboratedFile raise ElabError
+
 pub fn elaborate_program_unit(@identity.CompilationContext, @environment.Environment, @parser.MlwModule) -> @mlw.Pmodule raise ElabError
 
 pub fn elaborate_pure_file(@identity.CompilationContext, @environment.Environment, @parser.MlwFile) -> PureFile raise ElabError
 
 pub fn elaborate_pure_unit(@identity.CompilationContext, @environment.Environment, @parser.MlwModule) -> @theory.Theory raise ElabError
+
+pub fn load_mlw_library(@identity.CompilationContext, @environment.Environment, @env.SourceCandidate) -> @environment.TypedLibrary raise
 
 // Errors
 pub(all) suberror ElabError {
@@ -31,6 +36,7 @@ type Dty
 type DtyContext
 pub fn DtyContext::app(Self, @logic.TypeSymbol, ArrayView[Dty], @identity.SourceSpan?) -> Dty raise @logic.TypeError
 pub fn DtyContext::arrow(Self, Dty, Dty, @identity.SourceSpan?) -> Dty raise @logic.TypeError
+pub fn DtyContext::finalize_higher_order(Self, Dty, @logic.TypeSymbol, @identity.SourceSpan?) -> @logic.Ty raise @logic.TypeError
 pub fn DtyContext::finalize_pure(Self, Dty, @identity.SourceSpan?) -> @logic.Ty raise @logic.TypeError
 pub fn DtyContext::finalize_strict(Self, Dty, @identity.SourceSpan?) -> @logic.Ty raise @logic.TypeError
 pub fn DtyContext::fresh(Self) -> Dty
@@ -50,15 +56,24 @@ pub(all) struct ElabDiagnostic {
 } derive(Eq, @debug.Debug)
 
 pub(all) enum ElabErrorKind {
-  Unsupported(UnsupportedFeature)
+  InvalidInput(ElabInputErrorKind)
   TypeFailure(@logic.TypeErrorKind)
   TheoryFailure(@theory.TheoryErrorKind)
   EnvironmentFailure(@environment.EnvironmentErrorKind)
+  SourceFailure(@env.SourceErrorKind)
   ProgramFailure(@mlw.MlwErrorKind)
 } derive(Eq, @debug.Debug)
 
+pub(all) enum ElabInputErrorKind {
+  InvalidBinder
+  InvalidDeclaration
+  InvalidPattern
+  InvalidSpecification
+  InvalidTypeDeclaration
+  InvalidUnit
+} derive(Eq, @debug.Debug)
+
 pub(all) enum ElabStage {
-  FeatureClassification
   DeclarationElaboration
   PureTyping
   ProgramTyping
@@ -79,48 +94,6 @@ pub fn PureFile::view(Self) -> PureFileView
 pub(all) struct PureFileView {
   theories : ArrayView[@theory.Theory]
 }
-
-pub(all) enum UnsupportedFeature {
-  AbstractRoutineShape
-  AlgebraicData
-  CheckAssertion
-  Clone
-  ControlAttribute
-  Datatype
-  DestructuringPattern
-  DriverOnlyTheory
-  DriverOnlyType
-  Epsilon
-  Exception
-  ExternalOrDriverOnlyImport
-  Ghost
-  HigherOrder
-  HigherOrderApplication
-  Inductive
-  Lambda
-  LocalRoutine
-  Loop
-  NestedUnsupportedExpression
-  NestedUnsupportedTerm
-  OldAt
-  PrivateType
-  ProgramExpression
-  ProgramRoutineShape
-  ProofControlConnective
-  RecordOrInvariant
-  Recursion
-  RecursiveOrHigherOrderLogic
-  Reference
-  RoutineKind
-  StringLiteral
-  TupleExpression
-  TupleTerm
-  TupleType
-  TypeDeclarationShape
-  TypePurification
-  TypeVisibilityShape
-  UserMeta
-} derive(Eq, @debug.Debug)
 
 // Type aliases
 

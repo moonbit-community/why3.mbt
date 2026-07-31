@@ -115,22 +115,22 @@ fn theory_key_from_string(
 fn symbol_kind(
   text : String,
   path : String,
-) -> @identity.SnapshotSymbolKind raise BindError {
+) -> @identity.SourceSymbolKind raise BindError {
   match text {
     "type" => Type
     "logic" => Logic
     "proposition" => Proposition
     "program" => Program
     "region" => Region
-    _ => fail_bind(InvalidProfile, path, "unknown snapshot symbol kind")
+    _ => fail_bind(InvalidProfile, path, "unknown source symbol kind")
   }
 }
 
 ///|
-fn snapshot_key(
+fn source_key(
   value : Json,
   path : String,
-) -> @identity.SnapshotSymbolKey raise BindError {
+) -> @identity.SourceSymbolKey raise BindError {
   let object = json_object(value, path)
   let theory = json_string(
     json_field(object, "theoryKey", path),
@@ -145,7 +145,7 @@ fn snapshot_key(
     path + ".declarationInnerOrdinal",
   )
   if item < 0 || inner < 0 {
-    fail_bind(InvalidProfile, path, "negative snapshot symbol ordinal")
+    fail_bind(InvalidProfile, path, "negative source symbol ordinal")
   }
   let kind_text = json_string(
     json_field(object, "symbolKind", path),
@@ -156,9 +156,9 @@ fn snapshot_key(
     path + ".digest",
   )
   if digest.length() != 32 {
-    fail_bind(InvalidProfile, path, "snapshot symbol digest is not SHA-256")
+    fail_bind(InvalidProfile, path, "source symbol digest is not SHA-256")
   }
-  @identity.SnapshotSymbolKey::new(
+  @identity.SourceSymbolKey::new(
     string_bytes(theory),
     item.reinterpret_as_uint(),
     inner.reinterpret_as_uint(),
@@ -189,7 +189,7 @@ fn unbound_ty(value : Json, path : String) -> UnboundTy raise BindError {
         )
       }
       UnboundTyApplication(
-        snapshot_key(json_field(object, "symbol", path), path + ".symbol"),
+        source_key(json_field(object, "symbol", path), path + ".symbol"),
         arguments,
       )
     }
@@ -210,15 +210,15 @@ fn unbound_meta_argument(
       )
     "typeSymbol" =>
       UnboundMetaTypeSymbol(
-        snapshot_key(json_field(object, "value", path), path + ".value"),
+        source_key(json_field(object, "value", path), path + ".value"),
       )
     "logicSymbol" =>
       UnboundMetaLogicSymbol(
-        snapshot_key(json_field(object, "value", path), path + ".value"),
+        source_key(json_field(object, "value", path), path + ".value"),
       )
     "propositionSymbol" =>
       UnboundMetaPropositionSymbol(
-        snapshot_key(json_field(object, "value", path), path + ".value"),
+        source_key(json_field(object, "value", path), path + ".value"),
       )
     "string" =>
       UnboundMetaString(
@@ -451,9 +451,9 @@ fn result_exit_codes(
 ///|
 fn derive_printer_entries(
   groups : ArrayView[UnboundMetaGroup],
-) -> (Array[UnboundSyntaxEntry], Array[@identity.SnapshotSymbolKey]) {
+) -> (Array[UnboundSyntaxEntry], Array[@identity.SourceSymbolKey]) {
   let syntax : Array[UnboundSyntaxEntry] = []
-  let remove : Array[@identity.SnapshotSymbolKey] = []
+  let remove : Array[@identity.SourceSymbolKey] = []
   for group in groups {
     for meta in group.entries {
       match (meta.name, meta.arguments) {
@@ -547,7 +547,9 @@ pub fn z3_static_spec() -> Z3StaticSpec raise BindError {
   }
   if json_string(json_field(object, "driverProfile", "$"), "$.driverProfile") !=
     "z3_487" ||
-    json_string(json_field(object, "printer", "$"), "$.printer") != "smtv2.6" {
+    json_string(json_field(object, "printer", "$"), "$.printer") != "smtv2.6" ||
+    json_string(json_field(object, "modelParser", "$"), "$.modelParser") !=
+    "smtv2" {
     fail_bind(InvalidProfile, "$", "Z3 driver identity drift")
   }
   let transforms : Array[TransformId] = []
@@ -570,14 +572,14 @@ pub fn z3_static_spec() -> Z3StaticSpec raise BindError {
     json_field(object, "driverMetaGroups", "$"),
     "$.driverMetaGroups",
   )
-  let snapshot_meta_groups = unbound_meta_groups(
-    json_field(object, "snapshotMetaClosure", "$"),
-    "$.snapshotMetaClosure",
+  let theory_meta_groups = unbound_meta_groups(
+    json_field(object, "theoryMetaClosure", "$"),
+    "$.theoryMetaClosure",
   )
   if meta_groups.length() != 48 ||
     meta_count(meta_groups) != 992 ||
-    snapshot_meta_groups.length() != 14 ||
-    meta_count(snapshot_meta_groups) != 491 {
+    theory_meta_groups.length() != 14 ||
+    meta_count(theory_meta_groups) != 491 {
     fail_bind(InvalidProfile, "$", "static profile inventory drift")
   }
   let (syntax, remove) = derive_printer_entries(meta_groups)
@@ -602,9 +604,10 @@ pub fn z3_static_spec() -> Z3StaticSpec raise BindError {
   )
   {
     printer: SmtV26,
+    model_parser: SmtV2,
     transforms,
     meta_groups,
-    snapshot_meta_groups,
+    theory_meta_groups,
     syntax,
     remove,
     preludes: byte_strings(json_field(object, "preludes", "$"), "$.preludes"),

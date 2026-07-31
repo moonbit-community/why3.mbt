@@ -7,12 +7,12 @@
   },
   "evidence": {
     "driverClosureSha256": "c2cddacc1c95919326ef23dc97f5cd6db88b1abc902c73a72cf595a20ec624c2",
-    "transformProfileSha256": "62577b120308fd1281fbbb0767e44a53bdc00f4b8405e5d81af295738787bbf8",
-    "snapshotPayloadSha256": "15878b10328d2bbbc71207dd59b869a9566a2137cbe3f1001b4fc262753ad31d",
-    "snapshotCatalogSha256": "f8820bca3de63a878b46d870412ad4b55326c9bc840464623c57bb557e979712",
+    "transformProfileSha256": "c6e7b7632a225b3cda87c19d4e1a1b81171b92629cb81742b4d5b6115a1a8639",
+    "stdlibSourceTreeSha256": "355ec847dee8c9083ed6392ad5fa121285ce36f682950accc7982e3ba343dcc6",
+    "sourceCatalogSha256": "220f6fceafb5f619f93c0be324a3fd52e8746d7d99b86f555e150c406cd99145",
     "tracePatchSha256": "6042c3a336ed31a6b33835e6b170ef0257c8d699ddf8ac293df90b157ad003d5",
-    "exporterSha256": "3380d6a8aeb887ebdbbe8e885a4265f6af8c8672888074f50f0bfb89fa4b9e7c",
-    "generatorSha256": "6ac492434c4806f13db4a11e53b2ebcbb70112706efd131c7ad21bf98512945e"
+    "exporterSha256": "f69be062733e74588678abdd26ad17e2f32ac172269155d8c9f33045be7fd617",
+    "generatorSha256": "eaa834180e2528a931470e30d84b841c879ed2c3d1a001e88aefbb8362eceb83"
   },
   "tracePatch": {
     "targetWhy3Commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
@@ -86,6 +86,7 @@
   "driverProfile": "z3_487",
   "rootDriver": "z3_487.drv",
   "printer": "smtv2.6",
+  "modelParser": "smtv2",
   "filename": "%f-%t-%g.smt2",
   "transforms": [
     "counterexamples_dependent_intros",
@@ -207,7 +208,7 @@
                 "theoryItemOrdinal": 3,
                 "declarationInnerOrdinal": 0,
                 "symbolKind": "logic",
-                "digest": "b63c85b3574c5501032556e7eacc47581178189e141a6c803de35e70555ecca3"
+                "digest": "fdd1a36dceb6c3c72b531ba85e15836420f9f1609c43204fd7ab044acabbc4a4"
               }
             },
             {
@@ -251,7 +252,7 @@
                 "theoryItemOrdinal": 3,
                 "declarationInnerOrdinal": 0,
                 "symbolKind": "logic",
-                "digest": "b63c85b3574c5501032556e7eacc47581178189e141a6c803de35e70555ecca3"
+                "digest": "fdd1a36dceb6c3c72b531ba85e15836420f9f1609c43204fd7ab044acabbc4a4"
               }
             }
           ]
@@ -377,7 +378,7 @@
                 "theoryItemOrdinal": 0,
                 "declarationInnerOrdinal": 0,
                 "symbolKind": "logic",
-                "digest": "0934d218e4d4b093da31198909e1d525182e4fe86e30e394898adab12e0d83b1"
+                "digest": "f870cfd626a3aa7bebde48c5a143a87c5d90c8ef29d5bb7b188e4dc56dc37874"
               }
             },
             {
@@ -401,7 +402,7 @@
                 "theoryItemOrdinal": 0,
                 "declarationInnerOrdinal": 0,
                 "symbolKind": "logic",
-                "digest": "0934d218e4d4b093da31198909e1d525182e4fe86e30e394898adab12e0d83b1"
+                "digest": "f870cfd626a3aa7bebde48c5a143a87c5d90c8ef29d5bb7b188e4dc56dc37874"
               }
             }
           ]
@@ -519,7 +520,7 @@
                 "theoryItemOrdinal": 0,
                 "declarationInnerOrdinal": 0,
                 "symbolKind": "type",
-                "digest": "d7afe6e17fd26e746ed123c2573dd63138cad0d54c1fb230797e7ed43b5d82ba"
+                "digest": "8a56adc35f8d57cb4c72afe4ff3d9260ed6ec5e112125c095d3af85f1286b168"
               }
             },
             {
@@ -543,7 +544,7 @@
                 "theoryItemOrdinal": 1,
                 "declarationInnerOrdinal": 0,
                 "symbolKind": "logic",
-                "digest": "1e414dfcc15c858d7a92e7ab61987d0b92516f1b2fab1536ea9f035f33f13925"
+                "digest": "46fad71e7fb1bf060c9a6934cd5838b1336e6ba4795cf096a44c7c9af7ccf105"
               }
             },
             {
@@ -567,7 +568,7 @@
                 "theoryItemOrdinal": 1,
                 "declarationInnerOrdinal": 0,
                 "symbolKind": "logic",
-                "digest": "1e414dfcc15c858d7a92e7ab61987d0b92516f1b2fab1536ea9f035f33f13925"
+                "digest": "46fad71e7fb1bf060c9a6934cd5838b1336e6ba4795cf096a44c7c9af7ccf105"
               }
             }
           ]
@@ -583,7 +584,7 @@
                 "theoryItemOrdinal": 0,
                 "declarationInnerOrdinal": 0,
                 "symbolKind": "type",
-                "digest": "d7afe6e17fd26e746ed123c2573dd63138cad0d54c1fb230797e7ed43b5d82ba"
+                "digest": "8a56adc35f8d57cb4c72afe4ff3d9260ed6ec5e112125c095d3af85f1286b168"
               }
             }
           ]
@@ -599,7 +600,2368 @@
                 "theoryItemOrdinal": 1,
                 "declarationInnerOrdinal": 0,
                 "symbolKind": "logic",
-                "digest": "1e414dfcc15c858d7a92e7ab61987d0b92516f1b2fab1536ea9f035f33f13925"
+                "digest": "46fad71e7fb1bf060c9a6934cd5838b1336e6ba4795cf096a44c7c9af7ccf105"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theoryKey": "int.Int",
+      "entries": [
+        {
+          "ordinal": 0,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 3,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "ae01307eae2a514e5182323ade29082b0b5884e3e4d3262445912dd628438929"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "0"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 1,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 4,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "1c6768c7456ed9517cf53839520b22289983e6bc765e6b9849f3fa78f7aa41c9"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "1"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 6,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "44ff080814d8748e0b39c3bbbb3dc5ad62b0b8f22a465712d85ecaa674e20e3c"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(+ %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 9,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "6b17767feb00bf3948f1c7039a43673d7f46d620503f82d5365c52928eb0e994"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(- %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 7,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "bf5033fd7cf875fc88d85b07078b7c72f40f7c40b228e2a86695c5b09ed81bee"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(* %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 5,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "2612a95a1f2126f84ad2af945ee075b7c3982a8e148aeff942b71091d3413297"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(- %1)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 11,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "e5b1a87bebff4a4980edf92fdf431f29f18b81eb43a7d29df6681e6278ccd7ca"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(<= %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 8,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "21dd5c6ae1351357012eb29cac5cf06a3fd65caaf868777c34840ed4d6f565e6"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(< %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 12,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "f7a9a55ca6ee31d92fb4ed3c8100f7435aa3f93cae2316b049dde81534a35125"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(>= %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 10,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "3ae94de78fad3dd7d2184acfd7168623568c44118c47b2c74e2d932fa1bc7747"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(> %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 30,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "7b584c69cab11aac04e13df121d2f60f78bc41880d4ceed7213db22d26098810"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 11,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 25,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "8a05a3dec76afed63df63d158f249734a2c0b578fdfb1d1f03ea4878ee4eeb9f"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 12,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 15,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "690dbf4a5babf3f8a9805f6d13c4d5d75c07ab0ab8895231ad59bdf419b479d5"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 13,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 16,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "f0d3f889428ca7dd0873952d872495f504c917c4b182525257f7776cebd2db64"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 14,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 18,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "fd905ae8e05d1ba4d4d0a15951c4ef530992059996a314a4d238b38653adf5e3"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 15,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 19,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "cbc60b826c4f8006a46d108f7cac094c0b10bdf1ab4ec827a0a40addd72540f5"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 16,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 13,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "8a05a3dec76afed63df63d158f249734a2c0b578fdfb1d1f03ea4878ee4eeb9f"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 17,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 27,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "095df98acccb761bdc32abb1fcd91ad80805c734ea1ad6825ce471826e84197a"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 18,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 28,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "f94dc857bd0776a7cd2d93f1955052d561f12bfdb69c6af229b93efc0468a6c9"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 19,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 21,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "7b584c69cab11aac04e13df121d2f60f78bc41880d4ceed7213db22d26098810"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 20,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 34,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "c109732bf5a5f4c8d11031601a2f1b7f076ed84263f4f68e82538463af5fa42b"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 21,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 38,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "d514d0f456e58e485f69c6adf5bc3047ee694d5ac16775815645d535c87ee1b8"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 22,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 41,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "bc2de0a1276488a530d2d1e9194ff7d005a113afd5e26dee9e56dc3bbfd6e45e"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 23,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 45,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "ccfecbfd0bfd391c4c85c66132dc6f9136f875788ad59139fbdc6ffce1c41f7e"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 24,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 49,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "1a929989fcd4343b86c5741280b96a66021ddf53fbe1fc2d79229714fc9140f4"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 25,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 35,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "8e54cebde6b9d4c2127de57ec37df88785ee3b1b393d49c4d0134434d236877d"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 26,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 53,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "e97fda8e3c72533e9fe52fb1bd640a0bac4dc2a3bbb7db603e1d819de6bf8e5e"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 27,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 52,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "ada6e2b368d339338a9602cb004a24d7d56a3512900c188825c62f915d22a5be"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 28,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.Int",
+                "theoryItemOrdinal": 54,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "2199c50c5808efb0cc3558b95b7240c63f474b769311eac493b5c0c35ddc3120"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theoryKey": "int.MinMax",
+      "entries": [
+        {
+          "ordinal": 0,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.MinMax",
+                "theoryItemOrdinal": 5,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "d514d0f456e58e485f69c6adf5bc3047ee694d5ac16775815645d535c87ee1b8"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 1,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.MinMax",
+                "theoryItemOrdinal": 8,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "bc2de0a1276488a530d2d1e9194ff7d005a113afd5e26dee9e56dc3bbfd6e45e"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.MinMax",
+                "theoryItemOrdinal": 12,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "ccfecbfd0bfd391c4c85c66132dc6f9136f875788ad59139fbdc6ffce1c41f7e"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.MinMax",
+                "theoryItemOrdinal": 16,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "1a929989fcd4343b86c5741280b96a66021ddf53fbe1fc2d79229714fc9140f4"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.MinMax",
+                "theoryItemOrdinal": 21,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "4c061aea264fd7317b60aecf3739f53109ba10671832d93b54f601755953e353"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.MinMax",
+                "theoryItemOrdinal": 22,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "efe7ce3ddfe5977a6eb04c64a3b8f75240094dfa78a35333789b520962b02ec5"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.MinMax",
+                "theoryItemOrdinal": 23,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "1e8442c0574989fd265d8c548993e24196a946e176f2f8a079251db7e7b869c9"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.MinMax",
+                "theoryItemOrdinal": 24,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "6664fb94c26e3c8545c0b4cd499a8a8144cfad2e5d298472eb843fe86087c439"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.MinMax",
+                "theoryItemOrdinal": 25,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "134dbe1f681fe0c6339b8b059490d5d6d940774c852c939e8e95659ee95cddd5"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.MinMax",
+                "theoryItemOrdinal": 26,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "8f66f3aec561a450fe05d356a0286c8e0c1a713de1f19418b82b0958002c18d6"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theoryKey": "int.EuclideanDivision",
+      "entries": [
+        {
+          "ordinal": 0,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "int.EuclideanDivision",
+                "theoryItemOrdinal": 5,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "c254b032b70a6e6db31c7028241d844c8e290b5ed31c1b15021b5db0737941f0"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(div %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 1,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "int.EuclideanDivision",
+                "theoryItemOrdinal": 6,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "7f9c5e7627d2e236b358d0344ebd42014e392bca56bc0d3b67c400abcb737410"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(mod %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.EuclideanDivision",
+                "theoryItemOrdinal": 8,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "5b06fe8f685c09436f6f15786d7488649aa11930664dccddbb0f96d0cea70d16"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.EuclideanDivision",
+                "theoryItemOrdinal": 7,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "e6752bc135d23db6afec4a5c1dc6cec8b3a22a3e861329ad99432ccef6a5b05b"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.EuclideanDivision",
+                "theoryItemOrdinal": 11,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "b04c7d8e6305a9da04ace150d0c49cc955bfa3bc0ef1b5a33d64abab028fcc23"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "int.EuclideanDivision",
+                "theoryItemOrdinal": 12,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "157ca32c1e233f08f452d736a47a0166071a770186bf9433a14d800ce53cf977"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theoryKey": "real.Real",
+      "entries": [
+        {
+          "ordinal": 0,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 3,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "c381878f617aa5c2c33b3c3d3494325b5a7ff7d7d8f8a2aaf312da833435f7c9"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "0.0"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 1,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 4,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "fae0cbba5fd042518054acd65a4230d2acdb578fe7a430e327deb75975f730b7"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "1.0"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 6,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "547c05cbd49f885ec611a6601c80113a8d2b0b7b5cd8ab0f84b9324ea807449b"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(+ %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 38,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "c36088be199152611709b3232212169a008e7b7e07e3337b34aca45e88d20928"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(- %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 7,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "64d15841f0735a8900200c084c4e26a8c0c606302fdeed34360e3cb99d3dafd8"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(* %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 39,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "65b743b3fbbf046c97310f98a433b9af6a72462b22901516254fe1c020f33109"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(/ %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 5,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "35f5889a171342f923894c37b019b905e0884aeb53d42ba2b6fb444fcd7e523e"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(- %1)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 36,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "3a6eb45dea8166b5569ac809c20f5d48e1281d790c50e747732b4356ee5e283f"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(/ 1.0 %1)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 10,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "2d6095417d7f17de8e07ee62fc9e715d10439ce5de044154b8eca5132b3a1b5f"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(<= %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 8,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "f9a57b4faa7415ca99d764738b665eb92b3f817d3b81a19beec9347f1a4c41dc"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(< %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 11,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "480f821a8d6ea038dad7df92b002aa284a006579b84bdf67fc2b51e511d38045"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(>= %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 11,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 9,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "71ea9ceb98e9a5c308d44db2965878f4239833e8ae45b935d534e1874f0a1439"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(> %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 12,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 29,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "7b584c69cab11aac04e13df121d2f60f78bc41880d4ceed7213db22d26098810"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 13,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 24,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "8a05a3dec76afed63df63d158f249734a2c0b578fdfb1d1f03ea4878ee4eeb9f"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 14,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 14,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "690dbf4a5babf3f8a9805f6d13c4d5d75c07ab0ab8895231ad59bdf419b479d5"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 15,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 15,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "f0d3f889428ca7dd0873952d872495f504c917c4b182525257f7776cebd2db64"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 16,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 17,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "fd905ae8e05d1ba4d4d0a15951c4ef530992059996a314a4d238b38653adf5e3"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 17,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 18,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "cbc60b826c4f8006a46d108f7cac094c0b10bdf1ab4ec827a0a40addd72540f5"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 18,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 12,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "8a05a3dec76afed63df63d158f249734a2c0b578fdfb1d1f03ea4878ee4eeb9f"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 19,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 26,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "095df98acccb761bdc32abb1fcd91ad80805c734ea1ad6825ce471826e84197a"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 20,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 27,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "f94dc857bd0776a7cd2d93f1955052d561f12bfdb69c6af229b93efc0468a6c9"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 21,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 20,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "7b584c69cab11aac04e13df121d2f60f78bc41880d4ceed7213db22d26098810"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 22,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 33,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "c109732bf5a5f4c8d11031601a2f1b7f076ed84263f4f68e82538463af5fa42b"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 23,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 37,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "71e8fd1e695727ad603af9940119ff4a4eb0d3855d7183e0d0f39cc9c101034d"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 24,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 54,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "d514d0f456e58e485f69c6adf5bc3047ee694d5ac16775815645d535c87ee1b8"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 25,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 57,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "bc2de0a1276488a530d2d1e9194ff7d005a113afd5e26dee9e56dc3bbfd6e45e"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 26,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 61,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "ccfecbfd0bfd391c4c85c66132dc6f9136f875788ad59139fbdc6ffce1c41f7e"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 27,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 65,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "1a929989fcd4343b86c5741280b96a66021ddf53fbe1fc2d79229714fc9140f4"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 28,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 34,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "8e54cebde6b9d4c2127de57ec37df88785ee3b1b393d49c4d0134434d236877d"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 29,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 69,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "92f6f877e8b62116c61a59efc1d96281aa71ba22bcf73369927100a6c744f632"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 30,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 68,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "f05eee2cc1e2551b58d1fefb52b3a021b370d6ebef260882728d8b622bd4a6ba"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 31,
+          "name": "encoding:kept",
+          "arguments": [
+            {
+              "kind": "type",
+              "value": {
+                "kind": "application",
+                "symbol": {
+                  "theoryKey": "why3.BuiltIn.BuiltIn",
+                  "theoryItemOrdinal": 1,
+                  "declarationInnerOrdinal": 0,
+                  "symbolKind": "type",
+                  "digest": "10beffc34963159417ad780edc761e8c1def1cd5043a0160a725b898b01559d8"
+                },
+                "arguments": []
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 32,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 40,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "08a824f0a37a70b179f471220270377f171b65ac60fad794725ec46c9bc51412"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 33,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 42,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "dbf2cc1995a809c6ba218b45883bac266925ace372cf5387a4b134a7ca428c8d"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 34,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 44,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "b9050f83a10d221409f4427e23c0dbfdf94b9df49897056ad22b47e753072f1d"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 35,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 46,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "a61412ee5d824dfb0975fe67c8d35049b9bd92e61c387700228ec5072cb5e95a"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 36,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 48,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "890204f26ce826d5859ff4988d14c79f38bde6db8179a9d9bbcbd4963959a54b"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 37,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 50,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "32150c36d969bd786470a7b18bbb7c12a73b82e35f81e86ed22853f457a2e088"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 38,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Real",
+                "theoryItemOrdinal": 70,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "82108ff61970b0a02b15d07803dd47b9a86a004884920b1c64511e81b2988d98"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theoryKey": "real.Abs",
+      "entries": [
+        {
+          "ordinal": 0,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "real.Abs",
+                "theoryItemOrdinal": 4,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "67d993001f7d82c183bcce0b2637b387fa1bb43bf938ef8b2afb3e27baab072d"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(ite (>= %1 0.0) %1 (- %1))"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 1,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Abs",
+                "theoryItemOrdinal": 5,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "a886d29c66ad2c556090b11d36a0c1094bb9996399847ae718eb02cf0b612539"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Abs",
+                "theoryItemOrdinal": 6,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "aafc870598d98caa4393d708e18f9d037849513adfcff119d498769b69140dd4"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Abs",
+                "theoryItemOrdinal": 7,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "aea7cecb283b608f4678b86a4bc51febfb5333f11570402b3c303a75431fcbec"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Abs",
+                "theoryItemOrdinal": 8,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "8b41dbb7f207165eef1a5384f6d8534a8196fb02709888063f05ab9302d617f1"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Abs",
+                "theoryItemOrdinal": 9,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "96f75eda7d362419ef82ecfb937b9bccf33168bca7c96fa9633d08ba7c398d62"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theoryKey": "real.MinMax",
+      "entries": [
+        {
+          "ordinal": 0,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.MinMax",
+                "theoryItemOrdinal": 5,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "d514d0f456e58e485f69c6adf5bc3047ee694d5ac16775815645d535c87ee1b8"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 1,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.MinMax",
+                "theoryItemOrdinal": 8,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "bc2de0a1276488a530d2d1e9194ff7d005a113afd5e26dee9e56dc3bbfd6e45e"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.MinMax",
+                "theoryItemOrdinal": 12,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "ccfecbfd0bfd391c4c85c66132dc6f9136f875788ad59139fbdc6ffce1c41f7e"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.MinMax",
+                "theoryItemOrdinal": 16,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "1a929989fcd4343b86c5741280b96a66021ddf53fbe1fc2d79229714fc9140f4"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.MinMax",
+                "theoryItemOrdinal": 21,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "4c061aea264fd7317b60aecf3739f53109ba10671832d93b54f601755953e353"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.MinMax",
+                "theoryItemOrdinal": 22,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "efe7ce3ddfe5977a6eb04c64a3b8f75240094dfa78a35333789b520962b02ec5"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.MinMax",
+                "theoryItemOrdinal": 23,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "1e8442c0574989fd265d8c548993e24196a946e176f2f8a079251db7e7b869c9"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.MinMax",
+                "theoryItemOrdinal": 24,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "6664fb94c26e3c8545c0b4cd499a8a8144cfad2e5d298472eb843fe86087c439"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.MinMax",
+                "theoryItemOrdinal": 25,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "134dbe1f681fe0c6339b8b059490d5d6d940774c852c939e8e95659ee95cddd5"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.MinMax",
+                "theoryItemOrdinal": 26,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "8f66f3aec561a450fe05d356a0286c8e0c1a713de1f19418b82b0958002c18d6"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theoryKey": "real.FromInt",
+      "entries": [
+        {
+          "ordinal": 0,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "real.FromInt",
+                "theoryItemOrdinal": 5,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "afe06056e831e578d0f61b9616cc4bd0cecd9de2e664cff768a02c3f3942e5a0"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(to_real %1)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 1,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.FromInt",
+                "theoryItemOrdinal": 6,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "29ed53fd41596cd19cd505e8d39caab9d52f513956414f1f9e2bf04e1c4aecce"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.FromInt",
+                "theoryItemOrdinal": 7,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "c6f52d282ab3dbbaf7c77b4bfa1c98081e2c11d7dd26d73357ed92ec6b3817af"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.FromInt",
+                "theoryItemOrdinal": 8,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "fafa54c3509cd3bc4752372e4d5bc87c83e510f511924cb874534ca7824c0bab"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.FromInt",
+                "theoryItemOrdinal": 9,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "f74937043eaa90f9f1ab6ae3766a69d5e2ef694fb888dcc62ef4f029ebd93611"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.FromInt",
+                "theoryItemOrdinal": 10,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "f93bf86c7d7863e500b90329f4fbc64eb71a7e170c89e300f70ff45ae4798e10"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.FromInt",
+                "theoryItemOrdinal": 11,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "d0de44022ce9bf4b96ed4b67d5f551a5c3a5d697902f506364405fe23191f47c"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.FromInt",
+                "theoryItemOrdinal": 12,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "bf77e50852424e75566f23f3f0ae86c510afb2c4fc9d47c6a881e864d228d21c"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.FromInt",
+                "theoryItemOrdinal": 13,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "c182c6c5615bdf0e37e2590b73572cbc183ed8352841e014981fc9ec5ce80dae"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theoryKey": "real.Truncate",
+      "entries": [
+        {
+          "ordinal": 0,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "real.Truncate",
+                "theoryItemOrdinal": 5,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "819341db053f391899bb5a3dc9e38c9a63f892bc97b90b959e3902dcb9b02817"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(ite (>= %1 0.0) (to_int %1) (- (to_int (- %1))))"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 1,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "real.Truncate",
+                "theoryItemOrdinal": 13,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "0fd3c70ea242e7509e5940231b98daa53477fcb94f6955632fa7540db113f03d"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(to_int %1)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "real.Truncate",
+                "theoryItemOrdinal": 14,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "73b6184d77e3d5a4089933b93a1b86d13cb987ff587d57d3abc3c4d0ae8e191d"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(- (to_int (- %1)))"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Truncate",
+                "theoryItemOrdinal": 6,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "edfef000761c9df0886ce32fa363641bfafada611d8bebafe2be59b7f1117f3a"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Truncate",
+                "theoryItemOrdinal": 7,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "296232a70073f40242ba4cbc6fd417382672275e031b559024033670dcadff83"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Truncate",
+                "theoryItemOrdinal": 8,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "13e8feacd792b98285949c70cc536fcb5bcf18f8ddcb5901ce07bec0489ec85f"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Truncate",
+                "theoryItemOrdinal": 9,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "2b63065782fa5aa5d99f10c3a90dc15d0e9232cdf0b9a4d291155e2011b73724"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Truncate",
+                "theoryItemOrdinal": 10,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "b2e25a75d9940bf7137084e0082842b3ab8779fd0e9e2743f89ec2f3ccd68b35"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Truncate",
+                "theoryItemOrdinal": 11,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "90a20910157031e3e0eb39bb5738680cd6dc16c941823dd228bd8b15b664aac7"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Truncate",
+                "theoryItemOrdinal": 12,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "ced99af810825f84c6c66c22efc196d0544a54b4cc10d22467ac7a688cb283f6"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Truncate",
+                "theoryItemOrdinal": 15,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "e26e93ee58a5202e48cc190cc7a4600170d325b80eb1b7345eeb57c73084205d"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 11,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Truncate",
+                "theoryItemOrdinal": 16,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "05a3a2ad42a834abde9329f1f4de07c427f042a22ff1359c8194e94d7dbd2d66"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 12,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Truncate",
+                "theoryItemOrdinal": 17,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "a8db557a9447201d3330b25626dac97b37f10ed9202ecdbd5e864e32e795e6e9"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 13,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Truncate",
+                "theoryItemOrdinal": 18,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "428180b3aa35f7a27496030db076c3b1618547f947bd933d99b50533ce525af4"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 14,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Truncate",
+                "theoryItemOrdinal": 19,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "7be03490c4c05b4fbb912bb8d25af24c20b4f81b12c386d491aef63b9c83807d"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 15,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Truncate",
+                "theoryItemOrdinal": 20,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "d71342d2a3c7064c18583b14295046fa4afb8e8b8283c157a12e6f61a13d2818"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theoryKey": "real.Square",
+      "entries": [
+        {
+          "ordinal": 0,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Square",
+                "theoryItemOrdinal": 6,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "f61fafc8cbf0439268af20125f097678b598d669017c3083adb72ddb3165d8fa"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 1,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Square",
+                "theoryItemOrdinal": 7,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "94d32b5df08fd7fb47184cca76ff75e74725f93c795dd6dedd81d9e433ce6793"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Square",
+                "theoryItemOrdinal": 8,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "0ebfbba27b8c15198cc35d0a7f8459abddc23933a5735ff626136e8728081b9a"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Square",
+                "theoryItemOrdinal": 9,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "d91dff8fbbc2ed433ee13614357966a91bbf2bea56c7482648726efe90822478"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "name": "remove_prop",
+          "arguments": [
+            {
+              "kind": "propositionSymbol",
+              "value": {
+                "theoryKey": "real.Square",
+                "theoryItemOrdinal": 10,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "proposition",
+                "digest": "1af6483de03357d194d704b4f24383d5489281614b8e625b3f92bc8228757d97"
               }
             }
           ]
@@ -1911,837 +4273,6 @@
                 "declarationInnerOrdinal": 0,
                 "symbolKind": "proposition",
                 "digest": "127a6b481f5066d418f5bf98cf3debbfd48f5ab704bff266ad30c667d592c8d7"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "theoryKey": "int.Int",
-      "entries": [
-        {
-          "ordinal": 0,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 3,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "ae01307eae2a514e5182323ade29082b0b5884e3e4d3262445912dd628438929"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "0"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 1,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 4,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "1c6768c7456ed9517cf53839520b22289983e6bc765e6b9849f3fa78f7aa41c9"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "1"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 2,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 6,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "44ff080814d8748e0b39c3bbbb3dc5ad62b0b8f22a465712d85ecaa674e20e3c"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(+ %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 3,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 9,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "6b17767feb00bf3948f1c7039a43673d7f46d620503f82d5365c52928eb0e994"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(- %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 4,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 7,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "bf5033fd7cf875fc88d85b07078b7c72f40f7c40b228e2a86695c5b09ed81bee"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(* %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 5,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 5,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "2612a95a1f2126f84ad2af945ee075b7c3982a8e148aeff942b71091d3413297"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(- %1)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 6,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 11,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "e5b1a87bebff4a4980edf92fdf431f29f18b81eb43a7d29df6681e6278ccd7ca"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(<= %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 7,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 8,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "21dd5c6ae1351357012eb29cac5cf06a3fd65caaf868777c34840ed4d6f565e6"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(< %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 8,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 12,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "f7a9a55ca6ee31d92fb4ed3c8100f7435aa3f93cae2316b049dde81534a35125"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(>= %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 9,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 10,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "3ae94de78fad3dd7d2184acfd7168623568c44118c47b2c74e2d932fa1bc7747"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(> %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 10,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 30,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "7b584c69cab11aac04e13df121d2f60f78bc41880d4ceed7213db22d26098810"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 11,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 25,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "8a05a3dec76afed63df63d158f249734a2c0b578fdfb1d1f03ea4878ee4eeb9f"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 12,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 15,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "690dbf4a5babf3f8a9805f6d13c4d5d75c07ab0ab8895231ad59bdf419b479d5"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 13,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 16,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "f0d3f889428ca7dd0873952d872495f504c917c4b182525257f7776cebd2db64"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 14,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 18,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "fd905ae8e05d1ba4d4d0a15951c4ef530992059996a314a4d238b38653adf5e3"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 15,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 19,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "cbc60b826c4f8006a46d108f7cac094c0b10bdf1ab4ec827a0a40addd72540f5"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 16,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 13,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "8a05a3dec76afed63df63d158f249734a2c0b578fdfb1d1f03ea4878ee4eeb9f"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 17,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 27,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "095df98acccb761bdc32abb1fcd91ad80805c734ea1ad6825ce471826e84197a"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 18,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 28,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "f94dc857bd0776a7cd2d93f1955052d561f12bfdb69c6af229b93efc0468a6c9"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 19,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 21,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "7b584c69cab11aac04e13df121d2f60f78bc41880d4ceed7213db22d26098810"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 20,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 34,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "c109732bf5a5f4c8d11031601a2f1b7f076ed84263f4f68e82538463af5fa42b"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 21,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 38,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "d514d0f456e58e485f69c6adf5bc3047ee694d5ac16775815645d535c87ee1b8"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 22,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 41,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "bc2de0a1276488a530d2d1e9194ff7d005a113afd5e26dee9e56dc3bbfd6e45e"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 23,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 45,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "ccfecbfd0bfd391c4c85c66132dc6f9136f875788ad59139fbdc6ffce1c41f7e"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 24,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 49,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "1a929989fcd4343b86c5741280b96a66021ddf53fbe1fc2d79229714fc9140f4"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 25,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 35,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "8e54cebde6b9d4c2127de57ec37df88785ee3b1b393d49c4d0134434d236877d"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 26,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 53,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "e97fda8e3c72533e9fe52fb1bd640a0bac4dc2a3bbb7db603e1d819de6bf8e5e"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 27,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 52,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "ada6e2b368d339338a9602cb004a24d7d56a3512900c188825c62f915d22a5be"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 28,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.Int",
-                "theoryItemOrdinal": 54,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "2199c50c5808efb0cc3558b95b7240c63f474b769311eac493b5c0c35ddc3120"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "theoryKey": "int.MinMax",
-      "entries": [
-        {
-          "ordinal": 0,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.MinMax",
-                "theoryItemOrdinal": 5,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "d514d0f456e58e485f69c6adf5bc3047ee694d5ac16775815645d535c87ee1b8"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 1,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.MinMax",
-                "theoryItemOrdinal": 8,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "bc2de0a1276488a530d2d1e9194ff7d005a113afd5e26dee9e56dc3bbfd6e45e"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 2,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.MinMax",
-                "theoryItemOrdinal": 12,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "ccfecbfd0bfd391c4c85c66132dc6f9136f875788ad59139fbdc6ffce1c41f7e"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 3,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.MinMax",
-                "theoryItemOrdinal": 16,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "1a929989fcd4343b86c5741280b96a66021ddf53fbe1fc2d79229714fc9140f4"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 4,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.MinMax",
-                "theoryItemOrdinal": 21,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "4c061aea264fd7317b60aecf3739f53109ba10671832d93b54f601755953e353"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 5,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.MinMax",
-                "theoryItemOrdinal": 22,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "efe7ce3ddfe5977a6eb04c64a3b8f75240094dfa78a35333789b520962b02ec5"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 6,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.MinMax",
-                "theoryItemOrdinal": 23,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "1e8442c0574989fd265d8c548993e24196a946e176f2f8a079251db7e7b869c9"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 7,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.MinMax",
-                "theoryItemOrdinal": 24,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "6664fb94c26e3c8545c0b4cd499a8a8144cfad2e5d298472eb843fe86087c439"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 8,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.MinMax",
-                "theoryItemOrdinal": 25,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "134dbe1f681fe0c6339b8b059490d5d6d940774c852c939e8e95659ee95cddd5"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 9,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.MinMax",
-                "theoryItemOrdinal": 26,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "8f66f3aec561a450fe05d356a0286c8e0c1a713de1f19418b82b0958002c18d6"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "theoryKey": "int.EuclideanDivision",
-      "entries": [
-        {
-          "ordinal": 0,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "int.EuclideanDivision",
-                "theoryItemOrdinal": 5,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "c254b032b70a6e6db31c7028241d844c8e290b5ed31c1b15021b5db0737941f0"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(div %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 1,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "int.EuclideanDivision",
-                "theoryItemOrdinal": 6,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "7f9c5e7627d2e236b358d0344ebd42014e392bca56bc0d3b67c400abcb737410"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(mod %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 2,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.EuclideanDivision",
-                "theoryItemOrdinal": 8,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "5b06fe8f685c09436f6f15786d7488649aa11930664dccddbb0f96d0cea70d16"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 3,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.EuclideanDivision",
-                "theoryItemOrdinal": 7,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "e6752bc135d23db6afec4a5c1dc6cec8b3a22a3e861329ad99432ccef6a5b05b"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 4,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.EuclideanDivision",
-                "theoryItemOrdinal": 11,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "b04c7d8e6305a9da04ace150d0c49cc955bfa3bc0ef1b5a33d64abab028fcc23"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 5,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "int.EuclideanDivision",
-                "theoryItemOrdinal": 12,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "157ca32c1e233f08f452d736a47a0166071a770186bf9433a14d800ce53cf977"
               }
             }
           ]
@@ -6596,6 +8127,176 @@
       ]
     },
     {
+      "theoryKey": "map.Map",
+      "entries": [
+        {
+          "ordinal": 0,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "map.Map",
+                "theoryItemOrdinal": 5,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "f6049423e7585b433e741beed76eff9d20ee3a4a49e592bfd4fdfb975945b54b"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(select %1 %2)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 1,
+          "name": "syntax_logic",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "map.Map",
+                "theoryItemOrdinal": 6,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "8009c8c47ac6d87d60ba0d1960e005a19f487215cf58c939ed4e86f1efdd26d5"
+              }
+            },
+            {
+              "kind": "string",
+              "value": "(store %1 %2 %3)"
+            },
+            {
+              "kind": "integer",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "name": "encoding:lskept",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "map.Map",
+                "theoryItemOrdinal": 5,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "f6049423e7585b433e741beed76eff9d20ee3a4a49e592bfd4fdfb975945b54b"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "name": "encoding:lskept",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "map.Map",
+                "theoryItemOrdinal": 6,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "8009c8c47ac6d87d60ba0d1960e005a19f487215cf58c939ed4e86f1efdd26d5"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "name": "encoding:ignore_polymorphism_ls",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "map.Map",
+                "theoryItemOrdinal": 5,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "f6049423e7585b433e741beed76eff9d20ee3a4a49e592bfd4fdfb975945b54b"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "name": "encoding:ignore_polymorphism_ls",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "map.Map",
+                "theoryItemOrdinal": 7,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "99eced42821cb8479840eb350f0275145a059a548885f336b23f693c3a7385a2"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "name": "encoding:ignore_polymorphism_ls",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "map.Map",
+                "theoryItemOrdinal": 6,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "8009c8c47ac6d87d60ba0d1960e005a19f487215cf58c939ed4e86f1efdd26d5"
+              }
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "name": "encoding:ignore_polymorphism_ls",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "map.Map",
+                "theoryItemOrdinal": 8,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "0cdc5deb112a90e9c2f4d9d5f7b9ded9c177dcf5a32190c29fd374f4d01ed87c"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "theoryKey": "map.Const",
+      "entries": [
+        {
+          "ordinal": 0,
+          "name": "encoding:lskept",
+          "arguments": [
+            {
+              "kind": "logicSymbol",
+              "value": {
+                "theoryKey": "map.Const",
+                "theoryItemOrdinal": 4,
+                "declarationInnerOrdinal": 0,
+                "symbolKind": "logic",
+                "digest": "3311f7b3bac7b2e7bf52776204bc2f0c882cac191d2f89a5480861864a762631"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "theoryKey": "ieee_float.RoundingMode",
       "entries": [
         {
@@ -9351,1536 +11052,6 @@
                 "declarationInnerOrdinal": 0,
                 "symbolKind": "proposition",
                 "digest": "1e1796ababc142b6feab789e2f484ca05819ec39c88b29c406ea9b17f6620d7e"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "theoryKey": "real.Real",
-      "entries": [
-        {
-          "ordinal": 0,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 3,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "c381878f617aa5c2c33b3c3d3494325b5a7ff7d7d8f8a2aaf312da833435f7c9"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "0.0"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 1,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 4,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "fae0cbba5fd042518054acd65a4230d2acdb578fe7a430e327deb75975f730b7"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "1.0"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 2,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 6,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "547c05cbd49f885ec611a6601c80113a8d2b0b7b5cd8ab0f84b9324ea807449b"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(+ %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 3,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 38,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "c36088be199152611709b3232212169a008e7b7e07e3337b34aca45e88d20928"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(- %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 4,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 7,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "64d15841f0735a8900200c084c4e26a8c0c606302fdeed34360e3cb99d3dafd8"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(* %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 5,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 39,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "65b743b3fbbf046c97310f98a433b9af6a72462b22901516254fe1c020f33109"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(/ %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 6,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 5,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "35f5889a171342f923894c37b019b905e0884aeb53d42ba2b6fb444fcd7e523e"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(- %1)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 7,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 36,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "3a6eb45dea8166b5569ac809c20f5d48e1281d790c50e747732b4356ee5e283f"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(/ 1.0 %1)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 8,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 10,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "2d6095417d7f17de8e07ee62fc9e715d10439ce5de044154b8eca5132b3a1b5f"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(<= %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 9,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 8,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "f9a57b4faa7415ca99d764738b665eb92b3f817d3b81a19beec9347f1a4c41dc"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(< %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 10,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 11,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "480f821a8d6ea038dad7df92b002aa284a006579b84bdf67fc2b51e511d38045"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(>= %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 11,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 9,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "71ea9ceb98e9a5c308d44db2965878f4239833e8ae45b935d534e1874f0a1439"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(> %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 12,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 29,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "7b584c69cab11aac04e13df121d2f60f78bc41880d4ceed7213db22d26098810"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 13,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 24,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "8a05a3dec76afed63df63d158f249734a2c0b578fdfb1d1f03ea4878ee4eeb9f"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 14,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 14,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "690dbf4a5babf3f8a9805f6d13c4d5d75c07ab0ab8895231ad59bdf419b479d5"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 15,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 15,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "f0d3f889428ca7dd0873952d872495f504c917c4b182525257f7776cebd2db64"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 16,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 17,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "fd905ae8e05d1ba4d4d0a15951c4ef530992059996a314a4d238b38653adf5e3"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 17,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 18,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "cbc60b826c4f8006a46d108f7cac094c0b10bdf1ab4ec827a0a40addd72540f5"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 18,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 12,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "8a05a3dec76afed63df63d158f249734a2c0b578fdfb1d1f03ea4878ee4eeb9f"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 19,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 26,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "095df98acccb761bdc32abb1fcd91ad80805c734ea1ad6825ce471826e84197a"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 20,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 27,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "f94dc857bd0776a7cd2d93f1955052d561f12bfdb69c6af229b93efc0468a6c9"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 21,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 20,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "7b584c69cab11aac04e13df121d2f60f78bc41880d4ceed7213db22d26098810"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 22,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 33,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "c109732bf5a5f4c8d11031601a2f1b7f076ed84263f4f68e82538463af5fa42b"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 23,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 37,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "71e8fd1e695727ad603af9940119ff4a4eb0d3855d7183e0d0f39cc9c101034d"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 24,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 54,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "d514d0f456e58e485f69c6adf5bc3047ee694d5ac16775815645d535c87ee1b8"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 25,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 57,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "bc2de0a1276488a530d2d1e9194ff7d005a113afd5e26dee9e56dc3bbfd6e45e"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 26,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 61,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "ccfecbfd0bfd391c4c85c66132dc6f9136f875788ad59139fbdc6ffce1c41f7e"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 27,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 65,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "1a929989fcd4343b86c5741280b96a66021ddf53fbe1fc2d79229714fc9140f4"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 28,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 34,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "8e54cebde6b9d4c2127de57ec37df88785ee3b1b393d49c4d0134434d236877d"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 29,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 69,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "92f6f877e8b62116c61a59efc1d96281aa71ba22bcf73369927100a6c744f632"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 30,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 68,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "f05eee2cc1e2551b58d1fefb52b3a021b370d6ebef260882728d8b622bd4a6ba"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 31,
-          "name": "encoding:kept",
-          "arguments": [
-            {
-              "kind": "type",
-              "value": {
-                "kind": "application",
-                "symbol": {
-                  "theoryKey": "why3.BuiltIn.BuiltIn",
-                  "theoryItemOrdinal": 1,
-                  "declarationInnerOrdinal": 0,
-                  "symbolKind": "type",
-                  "digest": "10beffc34963159417ad780edc761e8c1def1cd5043a0160a725b898b01559d8"
-                },
-                "arguments": []
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 32,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 40,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "08a824f0a37a70b179f471220270377f171b65ac60fad794725ec46c9bc51412"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 33,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 42,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "dbf2cc1995a809c6ba218b45883bac266925ace372cf5387a4b134a7ca428c8d"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 34,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 44,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "b9050f83a10d221409f4427e23c0dbfdf94b9df49897056ad22b47e753072f1d"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 35,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 46,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "a61412ee5d824dfb0975fe67c8d35049b9bd92e61c387700228ec5072cb5e95a"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 36,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 48,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "890204f26ce826d5859ff4988d14c79f38bde6db8179a9d9bbcbd4963959a54b"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 37,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 50,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "32150c36d969bd786470a7b18bbb7c12a73b82e35f81e86ed22853f457a2e088"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 38,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Real",
-                "theoryItemOrdinal": 70,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "82108ff61970b0a02b15d07803dd47b9a86a004884920b1c64511e81b2988d98"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "theoryKey": "real.Abs",
-      "entries": [
-        {
-          "ordinal": 0,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "real.Abs",
-                "theoryItemOrdinal": 4,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "67d993001f7d82c183bcce0b2637b387fa1bb43bf938ef8b2afb3e27baab072d"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(ite (>= %1 0.0) %1 (- %1))"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 1,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Abs",
-                "theoryItemOrdinal": 5,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "a886d29c66ad2c556090b11d36a0c1094bb9996399847ae718eb02cf0b612539"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 2,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Abs",
-                "theoryItemOrdinal": 6,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "aafc870598d98caa4393d708e18f9d037849513adfcff119d498769b69140dd4"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 3,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Abs",
-                "theoryItemOrdinal": 7,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "aea7cecb283b608f4678b86a4bc51febfb5333f11570402b3c303a75431fcbec"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 4,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Abs",
-                "theoryItemOrdinal": 8,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "8b41dbb7f207165eef1a5384f6d8534a8196fb02709888063f05ab9302d617f1"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 5,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Abs",
-                "theoryItemOrdinal": 9,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "96f75eda7d362419ef82ecfb937b9bccf33168bca7c96fa9633d08ba7c398d62"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "theoryKey": "real.MinMax",
-      "entries": [
-        {
-          "ordinal": 0,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.MinMax",
-                "theoryItemOrdinal": 5,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "d514d0f456e58e485f69c6adf5bc3047ee694d5ac16775815645d535c87ee1b8"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 1,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.MinMax",
-                "theoryItemOrdinal": 8,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "bc2de0a1276488a530d2d1e9194ff7d005a113afd5e26dee9e56dc3bbfd6e45e"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 2,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.MinMax",
-                "theoryItemOrdinal": 12,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "ccfecbfd0bfd391c4c85c66132dc6f9136f875788ad59139fbdc6ffce1c41f7e"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 3,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.MinMax",
-                "theoryItemOrdinal": 16,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "1a929989fcd4343b86c5741280b96a66021ddf53fbe1fc2d79229714fc9140f4"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 4,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.MinMax",
-                "theoryItemOrdinal": 21,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "4c061aea264fd7317b60aecf3739f53109ba10671832d93b54f601755953e353"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 5,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.MinMax",
-                "theoryItemOrdinal": 22,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "efe7ce3ddfe5977a6eb04c64a3b8f75240094dfa78a35333789b520962b02ec5"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 6,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.MinMax",
-                "theoryItemOrdinal": 23,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "1e8442c0574989fd265d8c548993e24196a946e176f2f8a079251db7e7b869c9"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 7,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.MinMax",
-                "theoryItemOrdinal": 24,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "6664fb94c26e3c8545c0b4cd499a8a8144cfad2e5d298472eb843fe86087c439"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 8,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.MinMax",
-                "theoryItemOrdinal": 25,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "134dbe1f681fe0c6339b8b059490d5d6d940774c852c939e8e95659ee95cddd5"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 9,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.MinMax",
-                "theoryItemOrdinal": 26,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "8f66f3aec561a450fe05d356a0286c8e0c1a713de1f19418b82b0958002c18d6"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "theoryKey": "real.FromInt",
-      "entries": [
-        {
-          "ordinal": 0,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "real.FromInt",
-                "theoryItemOrdinal": 5,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "afe06056e831e578d0f61b9616cc4bd0cecd9de2e664cff768a02c3f3942e5a0"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(to_real %1)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 1,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.FromInt",
-                "theoryItemOrdinal": 6,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "29ed53fd41596cd19cd505e8d39caab9d52f513956414f1f9e2bf04e1c4aecce"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 2,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.FromInt",
-                "theoryItemOrdinal": 7,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "c6f52d282ab3dbbaf7c77b4bfa1c98081e2c11d7dd26d73357ed92ec6b3817af"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 3,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.FromInt",
-                "theoryItemOrdinal": 8,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "fafa54c3509cd3bc4752372e4d5bc87c83e510f511924cb874534ca7824c0bab"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 4,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.FromInt",
-                "theoryItemOrdinal": 9,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "f74937043eaa90f9f1ab6ae3766a69d5e2ef694fb888dcc62ef4f029ebd93611"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 5,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.FromInt",
-                "theoryItemOrdinal": 10,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "f93bf86c7d7863e500b90329f4fbc64eb71a7e170c89e300f70ff45ae4798e10"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 6,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.FromInt",
-                "theoryItemOrdinal": 11,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "d0de44022ce9bf4b96ed4b67d5f551a5c3a5d697902f506364405fe23191f47c"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 7,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.FromInt",
-                "theoryItemOrdinal": 12,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "bf77e50852424e75566f23f3f0ae86c510afb2c4fc9d47c6a881e864d228d21c"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 8,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.FromInt",
-                "theoryItemOrdinal": 13,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "c182c6c5615bdf0e37e2590b73572cbc183ed8352841e014981fc9ec5ce80dae"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "theoryKey": "real.Truncate",
-      "entries": [
-        {
-          "ordinal": 0,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "real.Truncate",
-                "theoryItemOrdinal": 5,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "819341db053f391899bb5a3dc9e38c9a63f892bc97b90b959e3902dcb9b02817"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(ite (>= %1 0.0) (to_int %1) (- (to_int (- %1))))"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 1,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "real.Truncate",
-                "theoryItemOrdinal": 13,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "0fd3c70ea242e7509e5940231b98daa53477fcb94f6955632fa7540db113f03d"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(to_int %1)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 2,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "real.Truncate",
-                "theoryItemOrdinal": 14,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "73b6184d77e3d5a4089933b93a1b86d13cb987ff587d57d3abc3c4d0ae8e191d"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(- (to_int (- %1)))"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 3,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Truncate",
-                "theoryItemOrdinal": 6,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "edfef000761c9df0886ce32fa363641bfafada611d8bebafe2be59b7f1117f3a"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 4,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Truncate",
-                "theoryItemOrdinal": 7,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "296232a70073f40242ba4cbc6fd417382672275e031b559024033670dcadff83"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 5,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Truncate",
-                "theoryItemOrdinal": 8,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "13e8feacd792b98285949c70cc536fcb5bcf18f8ddcb5901ce07bec0489ec85f"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 6,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Truncate",
-                "theoryItemOrdinal": 9,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "2b63065782fa5aa5d99f10c3a90dc15d0e9232cdf0b9a4d291155e2011b73724"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 7,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Truncate",
-                "theoryItemOrdinal": 10,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "b2e25a75d9940bf7137084e0082842b3ab8779fd0e9e2743f89ec2f3ccd68b35"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 8,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Truncate",
-                "theoryItemOrdinal": 11,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "90a20910157031e3e0eb39bb5738680cd6dc16c941823dd228bd8b15b664aac7"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 9,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Truncate",
-                "theoryItemOrdinal": 12,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "ced99af810825f84c6c66c22efc196d0544a54b4cc10d22467ac7a688cb283f6"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 10,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Truncate",
-                "theoryItemOrdinal": 15,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "e26e93ee58a5202e48cc190cc7a4600170d325b80eb1b7345eeb57c73084205d"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 11,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Truncate",
-                "theoryItemOrdinal": 16,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "05a3a2ad42a834abde9329f1f4de07c427f042a22ff1359c8194e94d7dbd2d66"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 12,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Truncate",
-                "theoryItemOrdinal": 17,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "a8db557a9447201d3330b25626dac97b37f10ed9202ecdbd5e864e32e795e6e9"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 13,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Truncate",
-                "theoryItemOrdinal": 18,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "428180b3aa35f7a27496030db076c3b1618547f947bd933d99b50533ce525af4"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 14,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Truncate",
-                "theoryItemOrdinal": 19,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "7be03490c4c05b4fbb912bb8d25af24c20b4f81b12c386d491aef63b9c83807d"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 15,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Truncate",
-                "theoryItemOrdinal": 20,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "d71342d2a3c7064c18583b14295046fa4afb8e8b8283c157a12e6f61a13d2818"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "theoryKey": "real.Square",
-      "entries": [
-        {
-          "ordinal": 0,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Square",
-                "theoryItemOrdinal": 6,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "f61fafc8cbf0439268af20125f097678b598d669017c3083adb72ddb3165d8fa"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 1,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Square",
-                "theoryItemOrdinal": 7,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "94d32b5df08fd7fb47184cca76ff75e74725f93c795dd6dedd81d9e433ce6793"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 2,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Square",
-                "theoryItemOrdinal": 8,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "0ebfbba27b8c15198cc35d0a7f8459abddc23933a5735ff626136e8728081b9a"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 3,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Square",
-                "theoryItemOrdinal": 9,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "d91dff8fbbc2ed433ee13614357966a91bbf2bea56c7482648726efe90822478"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 4,
-          "name": "remove_prop",
-          "arguments": [
-            {
-              "kind": "propositionSymbol",
-              "value": {
-                "theoryKey": "real.Square",
-                "theoryItemOrdinal": 10,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "proposition",
-                "digest": "1af6483de03357d194d704b4f24383d5489281614b8e625b3f92bc8228757d97"
               }
             }
           ]
@@ -16550,176 +16721,6 @@
       ]
     },
     {
-      "theoryKey": "map.Map",
-      "entries": [
-        {
-          "ordinal": 0,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "map.Map",
-                "theoryItemOrdinal": 5,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "f6049423e7585b433e741beed76eff9d20ee3a4a49e592bfd4fdfb975945b54b"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(select %1 %2)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 1,
-          "name": "syntax_logic",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "map.Map",
-                "theoryItemOrdinal": 6,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "8009c8c47ac6d87d60ba0d1960e005a19f487215cf58c939ed4e86f1efdd26d5"
-              }
-            },
-            {
-              "kind": "string",
-              "value": "(store %1 %2 %3)"
-            },
-            {
-              "kind": "integer",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "ordinal": 2,
-          "name": "encoding:lskept",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "map.Map",
-                "theoryItemOrdinal": 5,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "f6049423e7585b433e741beed76eff9d20ee3a4a49e592bfd4fdfb975945b54b"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 3,
-          "name": "encoding:lskept",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "map.Map",
-                "theoryItemOrdinal": 6,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "8009c8c47ac6d87d60ba0d1960e005a19f487215cf58c939ed4e86f1efdd26d5"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 4,
-          "name": "encoding:ignore_polymorphism_ls",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "map.Map",
-                "theoryItemOrdinal": 5,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "f6049423e7585b433e741beed76eff9d20ee3a4a49e592bfd4fdfb975945b54b"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 5,
-          "name": "encoding:ignore_polymorphism_ls",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "map.Map",
-                "theoryItemOrdinal": 7,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "99eced42821cb8479840eb350f0275145a059a548885f336b23f693c3a7385a2"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 6,
-          "name": "encoding:ignore_polymorphism_ls",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "map.Map",
-                "theoryItemOrdinal": 6,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "8009c8c47ac6d87d60ba0d1960e005a19f487215cf58c939ed4e86f1efdd26d5"
-              }
-            }
-          ]
-        },
-        {
-          "ordinal": 7,
-          "name": "encoding:ignore_polymorphism_ls",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "map.Map",
-                "theoryItemOrdinal": 8,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "0cdc5deb112a90e9c2f4d9d5f7b9ded9c177dcf5a32190c29fd374f4d01ed87c"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "theoryKey": "map.Const",
-      "entries": [
-        {
-          "ordinal": 0,
-          "name": "encoding:lskept",
-          "arguments": [
-            {
-              "kind": "logicSymbol",
-              "value": {
-                "theoryKey": "map.Const",
-                "theoryItemOrdinal": 4,
-                "declarationInnerOrdinal": 0,
-                "symbolKind": "logic",
-                "digest": "3311f7b3bac7b2e7bf52776204bc2f0c882cac191d2f89a5480861864a762631"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
       "theoryKey": "string.String",
       "entries": [
         {
@@ -18495,7 +18496,7 @@
       ]
     }
   ],
-  "snapshotMetaClosure": [
+  "theoryMetaClosure": [
     {
       "theoryKey": "algebra.Field",
       "entries": [

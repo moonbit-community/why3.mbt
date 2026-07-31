@@ -24,14 +24,17 @@ fn collect_polymorphism_exceptions(
       {
         name: b"encoding:ignore_polymorphism_ts",
         arguments: [MetaTypeSymbol(symbol)],
+        ..,
       } => exceptions.type_symbols[symbol] = ()
       {
         name: b"encoding:ignore_polymorphism_ls",
         arguments: [MetaLogicSymbol(symbol)],
+        ..,
       } => exceptions.logic_symbols[symbol] = ()
       {
         name: b"encoding:ignore_polymorphism_pr",
         arguments: [MetaPropositionSymbol(symbol)],
+        ..,
       } => exceptions.propositions[symbol] = ()
       _ => ()
     }
@@ -76,7 +79,7 @@ fn declaration_is_polymorphic(
       definitions.any(definition => {
         polymorphic_logic_symbol(exceptions, definition.view().symbol)
       })
-    Dind(declarations) =>
+    Dind(_, declarations) =>
       declarations.any(declaration => {
         polymorphic_logic_symbol(exceptions, declaration.view().predicate)
       })
@@ -102,11 +105,9 @@ pub fn detect_polymorphism(
   }
   let items = task.view().items.to_owned()
   let monomorphic = @theory.TheoryMeta(
-    @theory.Meta::new(b"encoding:monomorphic_only", []),
+    @theory.Meta::exclusive(b"encoding:monomorphic_only", []),
   )
-  guard !items.is_empty() else {
-    return checked_task(task.context_anchor(), items, stage)
-  }
+  guard !items.is_empty() else { return checked_task(task, items, stage) }
   items.insert(items.length() - 1, monomorphic)
-  checked_task(task.context_anchor(), items, stage)
+  checked_task(task, items, stage)
 }

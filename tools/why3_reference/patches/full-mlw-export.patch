@@ -1,0 +1,169 @@
+diff --git a/src/parser/ptree.ml b/src/parser/ptree.ml
+--- a/src/parser/ptree.ml
++++ b/src/parser/ptree.ml
+@@ -466,3 +466,32 @@ type mlw_file =
+   | Decls of decl list
+   (** a list of declarations outside any module *)
+ [@@deriving sexp]
++
++type full_parse_error =
++  | FullSyntax
++  | FullNestedModule
++  | FullUnsupportedEpsilon
++
++exception FullParseError of full_parse_error
++
++(** Lossless file envelope used by the pinned canonical reference. Unlike
++    [mlw_file], this records whether a unit was introduced by [theory] or
++    [module], retains a module's optional interface, and includes the complete
++    unit source location. *)
++type full_unit_kind =
++  | FullTheory
++  | FullModule of qualid option
++[@@deriving sexp]
++
++type full_unit = {
++  full_kind : full_unit_kind;
++  full_name : ident;
++  full_decls : decl list;
++  full_loc : Loc.position;
++}
++[@@deriving sexp]
++
++type full_mlw_file =
++  | FullModules of full_unit list
++  | FullDecls of decl list
++[@@deriving sexp]
+diff --git a/src/parser/parser.mly b/src/parser/parser.mly
+--- a/src/parser/parser.mly
++++ b/src/parser/parser.mly
+@@ -17,6 +17,7 @@
+ 
+ %start <Pmodule.pmodule Wstdlib.Mstr.t> mlw_file
+ %start <Ptree.mlw_file> mlw_file_parsing_only
++%start <Ptree.full_mlw_file> full_mlw_file
+ %start <Ptree.term> term_eof
+ %start <Ptree.expr> expr_eof
+ %start <Ptree.decl> decl_eof
+@@ -72,6 +73,33 @@ mlw_file_parsing_only:
+ | mlw_module_parsing_only mlw_module_no_decl_parsing_only* EOF { (Modules( [$1] @ $2)) }
+ | module_decl_parsing_only module_decl_no_head_parsing_only* EOF { (Decls( [$1] @ $2)) }
+ 
++full_module_head:
++| THEORY attrs(uident_nq) { (Ptree.FullTheory, $2) }
++| MODULE attrs(uident_nq) intf = option(preceded(COLON, tqualid))
++    { (Ptree.FullModule intf, $2) }
++
++full_mlw_file:
++| EOF { Ptree.FullModules [] }
++| full_mlw_module full_mlw_module_no_decl* EOF
++    { Ptree.FullModules ($1 :: $2) }
++| module_decl_parsing_only module_decl_no_head_parsing_only* EOF
++    { Ptree.FullDecls ($1 :: $2) }
++
++full_mlw_module:
++| full_module_head module_decl_no_head_parsing_only* END
++    { let kind, name = $1 in
++      { Ptree.full_kind = kind;
++        Ptree.full_name = name;
++        Ptree.full_decls = $2;
++        Ptree.full_loc = floc $startpos $endpos } }
++
++full_mlw_module_no_decl:
++| SCOPE | IMPORT | USE | CLONE | pure_decl | prog_decl | meta_decl
++   { let loc = floc $startpos $endpos in
++     Loc.error ~loc (Ptree.FullParseError Ptree.FullNestedModule) }
++| full_mlw_module
++   { $1 }
++
+ 
+ mlw_module:
+ | module_head module_decl_no_head* END
+@@ -109,29 +137,29 @@ mlw_module_no_decl:
+ | SCOPE | IMPORT | USE | CLONE | pure_decl | prog_decl | meta_decl
+    { let loc = floc $startpos $endpos in
+-     Loc.errorm ~loc "trying to open a module inside another module" }
++     Loc.error ~loc (Ptree.FullParseError Ptree.FullNestedModule) }
+ | mlw_module
+    { $1 }
+ 
+ mlw_module_no_decl_parsing_only:
+ | SCOPE | IMPORT | USE | CLONE | pure_decl | prog_decl | meta_decl
+    { let loc = floc $startpos $endpos in
+-     Loc.errorm ~loc "trying to open a module inside another module" }
++     Loc.error ~loc (Ptree.FullParseError Ptree.FullNestedModule) }
+ | mlw_module_parsing_only
+    { $1 }
+ 
+ module_decl_no_head:
+ | THEORY | MODULE
+    { let loc = floc $startpos $endpos in
+-     Loc.errorm ~loc "trying to open a module inside another module" }
++     Loc.error ~loc (Ptree.FullParseError Ptree.FullNestedModule) }
+ | module_decl
+    { $1 }
+ 
+ module_decl_no_head_parsing_only:
+ | THEORY | MODULE
+    { let loc = floc $startpos $endpos in
+-     Loc.errorm ~loc "trying to open a module inside another module" }
++     Loc.error ~loc (Ptree.FullParseError Ptree.FullNestedModule) }
+ | module_decl_parsing_only
+    { $1 }
+ 
+ 
+ (* Use and clone *)
+diff --git a/src/parser/parser_common.mly b/src/parser/parser_common.mly
+--- a/src/parser/parser_common.mly
++++ b/src/parser/parser_common.mly
+@@ -771,7 +771,7 @@ single_term_:
+ | FUN binders ARROW term
+     { Tquant (Dterm.DTlambda, $2, [], $4) }
+ | EPSILON
+-    { Loc.errorm "Epsilon terms are currently not supported in WhyML" }
++    { raise (Ptree.FullParseError Ptree.FullUnsupportedEpsilon) }
+ | attr single_term %prec prec_attr
+     { Tattr ($1, $2) }
+ | single_term cast
+diff --git a/src/parser/lexer.mli b/src/parser/lexer.mli
+--- a/src/parser/lexer.mli
++++ b/src/parser/lexer.mli
+@@ -25,5 +25,9 @@ val parse_list_ident: Lexing.lexbuf -> Ptree.ident list
+ 
+ val parse_mlw_file: Lexing.lexbuf -> Ptree.mlw_file
+ 
++val parse_full_mlw_file: Lexing.lexbuf -> Ptree.full_mlw_file
++
++val classify_full_parse_error: exn -> Ptree.full_parse_error option
++
+ val read_channel: Env.env -> Env.pathname -> string -> in_channel ->
+   Pmodule.mlw_file
+diff --git a/src/parser/lexer.mll b/src/parser/lexer.mll
+--- a/src/parser/lexer.mll
++++ b/src/parser/lexer.mll
+@@ -267,6 +267,14 @@
+ 
+   let parse_mlw_file lb = build_parsing_function Parser.Incremental.mlw_file_parsing_only lb
+ 
++  let classify_full_parse_error = function
++    | Error _ | Loc.Message _ -> Some Ptree.FullSyntax
++    | Ptree.FullParseError category -> Some category
++    | _ -> None
++
++  let parse_full_mlw_file lb =
++    build_parsing_function Parser.Incremental.full_mlw_file lb
++
+   let read_channel env path file c =
+     let lb = Lexing.from_channel c in
+     Loc.set_file file lb;
+diff --git a/src/parser/handcrafted.messages b/src/parser/handcrafted.messages
+--- a/src/parser/handcrafted.messages
++++ b/src/parser/handcrafted.messages
+@@ -1,6 +1,6 @@
+ mlw_file: MODULE WRITES
+ ##
+-## Ends in an error in state: 1217.
++## Ends in an error in state: 1346.
+ ##
+ ## module_head -> MODULE . attrs(uident_nq) option(preceded(COLON,tqualid)) [ VAL USE TYPE THEORY SCOPE PREDICATE MODULE META LET LEMMA INDUCTIVE IMPORT GOAL FUNCTION EXCEPTION END CONSTANT COINDUCTIVE CLONE AXIOM ]
+ ##

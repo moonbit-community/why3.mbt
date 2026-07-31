@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
+// Derived from Why3 1.7.2 (Copyright 2010-2023 Inria, CNRS, Paris-Saclay University).
+// MoonBit translation and semantic modifications recorded on 2026-07-24.
 
 ///|
 pub(all) enum DeclDependency {
@@ -199,7 +201,17 @@ fn introduced_symbols(node : DeclNode) -> Array[DeclDependency] {
           result.push(LogicDependency(data_constructor.symbol))
           for projection in data_constructor.projections {
             if projection is Some(projection) {
-              result.push(LogicDependency(projection))
+              let mut introduced = false
+              for dependency in result {
+                if dependency is LogicDependency(existing) &&
+                  existing == projection {
+                  introduced = true
+                  break
+                }
+              }
+              if !introduced {
+                result.push(LogicDependency(projection))
+              }
             }
           }
         }
@@ -209,7 +221,7 @@ fn introduced_symbols(node : DeclNode) -> Array[DeclDependency] {
       for definition in definitions {
         result.push(LogicDependency(definition.symbol))
       }
-    InductiveDeclarationNode(declarations) =>
+    InductiveDeclarationNode(_, declarations) =>
       for declaration in declarations {
         result.push(LogicDependency(declaration.predicate))
         for case_ in declaration.cases {
@@ -247,7 +259,7 @@ fn collect_node_dependencies(node : DeclNode) -> Array[DeclDependency] {
         collect_logic_signature(collector, definition.symbol)
         collect_term_dependencies(collector, definition.body)
       }
-    InductiveDeclarationNode(declarations) =>
+    InductiveDeclarationNode(_, declarations) =>
       for declaration in declarations {
         collect_logic_signature(collector, declaration.predicate)
         for case_ in declaration.cases {
@@ -312,7 +324,7 @@ fn make_decl(
       dependencies.push(dependency)
     }
   }
-  { origin, dependencies, introduced, node }
+  { id: context.fresh_declaration_id(), origin, dependencies, introduced, node }
 }
 
 ///|
@@ -332,6 +344,128 @@ pub fn KnownMap::contains(self : KnownMap, dependency : DeclDependency) -> Bool 
 }
 
 ///|
+fn KnownMap::declaration(
+  self : KnownMap,
+  dependency : DeclDependency,
+  span : @identity.SourceSpan?,
+) -> Decl raise TypeError {
+  match self.entries.get((dependency.kind_tag(), dependency.semantic_id())) {
+    Some(declaration) => declaration
+    None =>
+      fail_type(
+        UnknownDependency,
+        span,
+        "declaration references a symbol that has not been declared",
+      )
+  }
+}
+
+///|
+/// Returns the declaration that introduced `dependency`, if it is present.
+/// Clone consumers use this to pair the program projection with declarations
+/// already emitted by the corresponding pure-theory clone.
+pub fn KnownMap::find_declaration(
+  self : KnownMap,
+  dependency : DeclDependency,
+) -> Decl? {
+  self.entries.get((dependency.kind_tag(), dependency.semantic_id()))
+}
+
+///|
+pub fn KnownMap::find_constructors(
+  self : KnownMap,
+  symbol : TypeSymbol,
+  span : @identity.SourceSpan?,
+) -> Array[DataConstructor] raise TypeError {
+  match self.declaration(TypeDependency(symbol), span).node {
+    TypeDeclaration(_) => []
+    DataDeclarationNode(declarations) => {
+      for declaration in declarations {
+        if declaration.type_symbol == symbol {
+          return declaration.constructors.copy()
+        }
+      }
+      abort("known data declaration lost its type symbol")
+    }
+    ParameterDeclaration(_)
+    | LogicDeclaration(_)
+    | InductiveDeclarationNode(_, _)
+    | PropositionDeclaration(_, _, _) =>
+      abort("type symbol maps to a non-type declaration")
+  }
+}
+
+///|
+pub fn KnownMap::find_inductive_cases(
+  self : KnownMap,
+  symbol : LSymbol,
+  span : @identity.SourceSpan?,
+) -> Array[InductiveCase] raise TypeError {
+  match self.declaration(LogicDependency(symbol), span).node {
+    InductiveDeclarationNode(_, declarations) => {
+      for declaration in declarations {
+        if declaration.predicate == symbol {
+          return declaration.cases.copy()
+        }
+      }
+      abort("known inductive declaration lost its predicate")
+    }
+    LogicDeclaration(_) | ParameterDeclaration(_) | DataDeclarationNode(_) => []
+    TypeDeclaration(_) | PropositionDeclaration(_, _, _) =>
+      abort("logic symbol maps to an invalid declaration")
+  }
+}
+
+///|
+pub fn KnownMap::find_logic_definition(
+  self : KnownMap,
+  symbol : LSymbol,
+  span : @identity.SourceSpan?,
+) -> LogicDefinition? raise TypeError {
+  match self.declaration(LogicDependency(symbol), span).node {
+    LogicDeclaration(definitions) => {
+      for definition in definitions {
+        if definition.symbol == symbol {
+          return Some(definition)
+        }
+      }
+      abort("known logic declaration lost its definition")
+    }
+    ParameterDeclaration(_)
+    | DataDeclarationNode(_)
+    | InductiveDeclarationNode(_, _) => None
+    TypeDeclaration(_) | PropositionDeclaration(_, _, _) =>
+      abort("logic symbol maps to an invalid declaration")
+  }
+}
+
+///|
+pub fn KnownMap::find_proposition(
+  self : KnownMap,
+  symbol : PrSymbol,
+  span : @identity.SourceSpan?,
+) -> (PropositionKind, Term) raise TypeError {
+  match self.declaration(PropositionDependency(symbol), span).node {
+    PropositionDeclaration(kind, _, formula) => (kind, formula)
+    InductiveDeclarationNode(_, declarations) => {
+      for declaration in declarations {
+        for case_ in declaration.cases {
+          if case_.proposition == symbol {
+            return (Paxiom, case_.formula)
+          }
+        }
+      }
+      abort("known inductive declaration lost its proposition")
+    }
+    TypeDeclaration(_)
+    | DataDeclarationNode(_)
+    | ParameterDeclaration(_)
+    | LogicDeclaration(_) =>
+      abort("proposition symbol maps to an invalid declaration")
+  }
+}
+
+///|
 /// Adds a declaration only after every ordered dependency is known. The
 /// returned map is independent of the original value.
 pub fn KnownMap::add(
@@ -347,11 +481,7 @@ pub fn KnownMap::add(
       "known-map dependency belongs to another compilation context",
     )
     if !self.contains(dependency) {
-      fail_type(
-        UnknownDependency,
-        span,
-        "declaration references a symbol that has not been declared",
-      )
+      ignore(self.declaration(dependency, span))
     }
   }
   let entries = self.entries.copy()
@@ -372,7 +502,9 @@ pub fn KnownMap::add(
     }
     entries[key] = declaration
   }
-  { context: self.context, entries }
+  let result = { context: self.context, entries }
+  validate_known_declaration(result, declaration, span)
+  result
 }
 
 ///|
@@ -394,43 +526,6 @@ pub fn KnownMap::merge(
     if !entries.contains(key) {
       entries[key] = declaration
     }
-  }
-  { context: self.context, entries }
-}
-
-///|
-/// Trusted snapshot insertion validates context and duplicate identities but
-/// permits dependencies supplied by a recorded Use/Clone history. User-built
-/// theories must continue to use `add`, which enforces declaration order.
-pub fn KnownMap::trusted_add_snapshot(
-  self : KnownMap,
-  declaration : Decl,
-  span : @identity.SourceSpan?,
-) -> KnownMap raise TypeError {
-  if !(declaration.origin.kind().view() is SnapshotKind) {
-    fail_type(
-      SnapshotOriginRequired,
-      span,
-      "trusted known-map insertion requires snapshot provenance",
-    )
-  }
-  let entries = self.entries.copy()
-  for introduced in declaration.introduced {
-    require_context_id(
-      self.context,
-      introduced.semantic_id(),
-      span,
-      "trusted known-map declaration belongs to another compilation context",
-    )
-    let key = (introduced.kind_tag(), introduced.semantic_id())
-    if entries.contains(key) {
-      fail_type(
-        DuplicateDeclarationSymbol,
-        span,
-        "trusted known map already contains the declared symbol",
-      )
-    }
-    entries[key] = declaration
   }
   { context: self.context, entries }
 }

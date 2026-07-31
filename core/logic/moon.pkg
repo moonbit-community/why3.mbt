@@ -1,4 +1,5 @@
 import {
   "moonbit-community/why3/core/identity",
-  "moonbit-community/why3/parser",
+  "moonbit-community/why3/literal",
+  "moonbitlang/core/encoding/utf8",
 }

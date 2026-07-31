@@ -14,42 +14,16 @@ fn source_span(span : @parser.Span) -> @identity.SourceSpan {
 }
 
 ///|
-fn attribute_is_prefix(attribute : BytesView, prefix : BytesView) -> Bool {
-  attribute.length() >= prefix.length() && attribute[:prefix.length()] == prefix
-}
-
-///|
-fn is_control_attribute(attribute : BytesView) -> Bool {
-  attribute_is_prefix(attribute, b"vc:") ||
-  attribute_is_prefix(attribute, b"encoding:") ||
-  attribute_is_prefix(attribute, b"algebraic:") ||
-  attribute_is_prefix(attribute, b"remove_unused:") ||
-  attribute == b"select_alginst_default" ||
-  attribute == b"eliminate_algebraic" ||
-  attribute == b"get_counterexmp" ||
-  attribute == b"stop_split"
-}
-
-///|
 fn checked_text_attribute(
   attribute : BytesView,
   span : @identity.SourceSpan?,
-) -> Bytes raise ElabError {
-  if is_control_attribute(attribute) {
-    fail_unsupported(
-      ControlAttribute,
-      FeatureClassification,
-      span,
-      "user control attribute is outside the frozen allowlist",
-    )
-  }
+) -> Bytes {
+  ignore(span)
   attribute.to_owned()
 }
 
 ///|
-fn ident_parts(
-  ident : @parser.Ident,
-) -> (@identity.SourceSpan, Array[Bytes]) raise ElabError {
+fn ident_parts(ident : @parser.Ident) -> (@identity.SourceSpan, Array[Bytes]) {
   let mut location = source_span(ident.span)
   let attributes : Array[Bytes] = []
   for attribute in ident.attributes {
@@ -63,15 +37,39 @@ fn ident_parts(
 }
 
 ///|
-fn user_origin(ident : @parser.Ident) -> @identity.Origin raise ElabError {
+fn user_origin(ident : @parser.Ident) -> @identity.Origin {
   let (span, attributes) = ident_parts(ident)
   @identity.Origin::user(ident.name, Some(span), attributes)
 }
 
 ///|
-fn semantic_name(ident : @parser.Ident) -> @theory.SemanticName raise ElabError {
+fn user_origin_with_attributes(
+  ident : @parser.Ident,
+  added : ArrayView[Bytes],
+) -> @identity.Origin {
   let (span, attributes) = ident_parts(ident)
-  @theory.SemanticName::new(ident.name, attributes, Some(span))
+  for attribute in added {
+    attributes.push(attribute)
+  }
+  @identity.Origin::user(ident.name, Some(span), attributes)
+}
+
+///|
+fn semantic_name(ident : @parser.Ident) -> @theory.SemanticName {
+  let (span, attributes) = ident_parts(ident)
+  let view = span.view()
+  let source_span = if view.relative_path.is_empty() &&
+    view.start_byte == 0 &&
+    view.end_byte == 0 &&
+    view.start_line == 1L &&
+    view.start_column == 0L &&
+    view.end_line == 1L &&
+    view.end_column == 0L {
+    None
+  } else {
+    Some(span)
+  }
+  @theory.SemanticName::new(ident.name, attributes, source_span)
 }
 
 ///|

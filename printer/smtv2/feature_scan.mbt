@@ -75,13 +75,45 @@ fn scan_logic_symbol(
   if view.result_type is Some(ty) {
     scan_type(anchor, syntax, ty)
   }
-  if view.origin.attributes().any(attribute => attribute == b"builtin") &&
+  let attributes = view.origin.attributes()
+  if attributes.any(attribute => attribute == b"builtin") &&
+    !attributes.any(attribute => attribute == b"is_field_id") &&
     view.role is Ordinary &&
+    view.origin.kind().view() is UserKind &&
     syntax.logic_template(symbol) is None {
     fail_printer(
       MissingBuiltinSyntax,
-      "builtin logic symbol has no bound driver syntax",
+      "builtin logic symbol " +
+      view.name.to_string() +
+      " has no bound driver syntax",
     )
+  }
+}
+
+///|
+fn scan_pattern(
+  anchor : @identity.SemanticId,
+  syntax : SyntaxMaps,
+  pattern : @logic.Pattern,
+) -> Unit raise PrinterError {
+  scan_type(anchor, syntax, pattern.ty())
+  match pattern.view() {
+    Pwild(_) => ()
+    Pvar(variable) => {
+      require_same_context(anchor, variable.semantic_id())
+      scan_type(anchor, syntax, variable.ty())
+    }
+    Papp(symbol, arguments, _) => {
+      require_same_context(anchor, symbol.semantic_id())
+      for argument in arguments {
+        scan_pattern(anchor, syntax, argument)
+      }
+    }
+    Por(_, _, _) | Pas(_, _, _) =>
+      fail_printer(
+        UnsupportedTerm,
+        "nested pattern matching must be compiled before SMT printing",
+      )
   }
 }
 
@@ -101,12 +133,22 @@ fn scan_term(
     }
     Tconst(_) | Ttrue | Tfalse => ()
     Tapp(symbol, instantiation, arguments) => {
-      scan_logic_symbol(anchor, syntax, symbol)
-      if syntax.logic_template(symbol) is None && !instantiation.is_empty() {
-        fail_printer(
-          ResidualTypeVariable,
-          "SMT printer received a residual type instantiation",
-        )
+      let view = symbol.view()
+      if syntax.logic_template(symbol) is None &&
+        (view.role is Constructor(_) || view.role is Projection) {
+        require_same_context(anchor, view.id)
+        for entry in instantiation {
+          require_same_context(anchor, entry.0.semantic_id())
+          scan_type(anchor, syntax, entry.1)
+        }
+      } else {
+        scan_logic_symbol(anchor, syntax, symbol)
+        if syntax.logic_template(symbol) is None && !instantiation.is_empty() {
+          fail_printer(
+            ResidualTypeVariable,
+            "SMT printer received a residual type instantiation",
+          )
+        }
       }
       for argument in arguments {
         scan_term(anchor, syntax, argument)
@@ -123,11 +165,14 @@ fn scan_term(
       scan_term(anchor, syntax, value)
       scan_term(anchor, syntax, body)
     }
-    Tcase(_, _) =>
-      fail_printer(
-        UnsupportedTerm,
-        "pattern matching must be eliminated before SMT printing",
-      )
+    Tcase(scrutinee, branches) => {
+      scan_term(anchor, syntax, scrutinee)
+      for branch in branches {
+        let view = branch.view()
+        scan_pattern(anchor, syntax, view.pattern)
+        scan_term(anchor, syntax, view.body)
+      }
+    }
     Teps(_, _) =>
       fail_printer(
         UnsupportedTerm,
@@ -154,62 +199,79 @@ fn scan_term(
 }
 
 ///|
-fn snapshot_key_matches(
-  origin : @identity.Origin,
-  theory_key : BytesView,
-  item : UInt,
-  inner : UInt,
-  digest : BytesView,
-) -> Bool {
-  guard origin.view() is SnapshotOrigin(_, key, _) else { return false }
-  let view = key.view()
-  view.theory_key[:] == theory_key &&
-  view.theory_item_ordinal == item &&
-  view.declaration_inner_ordinal == inner &&
-  view.symbol_digest[:] == digest
+fn scan_data_type(
+  anchor : @identity.SemanticId,
+  syntax : SyntaxMaps,
+  allowed : Map[@logic.TyVarSymbol, Unit],
+  ty : @logic.Ty,
+) -> Unit raise PrinterError {
+  require_same_context(anchor, ty.context_anchor())
+  match ty.view() {
+    TyVar(variable) =>
+      if !allowed.contains(variable) {
+        fail_printer(
+          ResidualTypeVariable,
+          "datatype refers to an undeclared type variable",
+        )
+      }
+    TyApp(symbol, arguments) => {
+      if symbol.builtin_kind() is Some(_) &&
+        syntax.type_template(symbol) is None {
+        fail_printer(
+          MissingBuiltinSyntax,
+          "builtin datatype field has no bound driver syntax",
+        )
+      }
+      for argument in arguments {
+        scan_data_type(anchor, syntax, allowed, argument)
+      }
+    }
+  }
 }
 
 ///|
-fn trusted_tuple0_error(declaration : @logic.DataDeclaration) -> String? {
+fn scan_data_declaration(
+  anchor : @identity.SemanticId,
+  syntax : SyntaxMaps,
+  declaration : @logic.DataDeclaration,
+) -> Unit raise PrinterError {
   let view = declaration.view()
   let type_view = view.type_symbol.view()
-  if type_view.name != b"tuple0" {
-    return Some("datatype is not the pinned tuple0 type")
+  require_same_context(anchor, type_view.id)
+  let allowed : Map[@logic.TyVarSymbol, Unit] = Map([])
+  for parameter in type_view.parameters {
+    require_same_context(anchor, parameter.semantic_id())
+    allowed[parameter] = ()
   }
-  if !type_view.parameters.is_empty() || !(type_view.definition is NoDef) {
-    return Some("Tuple0 type shape does not match the manifest")
+  let is_record = view.constructors.length() == 1
+  for data_constructor in view.constructors {
+    let constructor_view = data_constructor.view()
+    let symbol_view = constructor_view.symbol.view()
+    require_same_context(anchor, symbol_view.id)
+    if !(symbol_view.role is Constructor(_)) {
+      fail_printer(
+        UnsupportedDatatype,
+        "datatype declaration contains a non-constructor symbol",
+      )
+    }
+    for argument in symbol_view.argument_types {
+      scan_data_type(anchor, syntax, allowed, argument)
+    }
+    if symbol_view.result_type is Some(result_type) {
+      scan_data_type(anchor, syntax, allowed, result_type)
+    }
+    for projection in constructor_view.projections {
+      if projection is Some(projection) {
+        require_same_context(anchor, projection.semantic_id())
+        if !is_record {
+          fail_printer(
+            UnsupportedDatatype,
+            "sum types cannot declare projections in SMT-LIB 2.6",
+          )
+        }
+      }
+    }
   }
-  if view.constructors.length() != 1 {
-    return Some("Tuple0 must have exactly one constructor")
-  }
-  if !snapshot_key_matches(
-      type_view.origin,
-      b"why3.Tuple0.Tuple0",
-      0U,
-      0U,
-      b"\xb4\x3a\xdf\x23\x68\x0d\xdf\xd4\x46\xb2\xf6\x34\x60\xf5\x77\x00\x99\xf1\x92\x0b\x97\x75\x72\x1b\xec\xf4\x00\xc4\x58\x55\x74\x23",
-    ) {
-    return Some("Tuple0 type snapshot key does not match the manifest")
-  }
-  let data_constructor = view.constructors[0].view()
-  let symbol = data_constructor.symbol.view()
-  if symbol.name != b"Tuple0" ||
-    !symbol.argument_types.is_empty() ||
-    !(symbol.result_type is Some(_)) ||
-    symbol.role != Constructor(1) ||
-    !data_constructor.projections.is_empty() {
-    return Some("Tuple0 constructor shape does not match the manifest")
-  }
-  if !snapshot_key_matches(
-      symbol.origin,
-      b"why3.Tuple0.Tuple0",
-      0U,
-      1U,
-      b"\xe9\xd3\x05\x33\xff\xf3\xec\x08\xc2\x86\xcb\x56\x4e\xa5\xad\xbf\x83\xd3\x02\x64\xa4\x40\x3a\xfa\x8f\x2d\x12\x31\x61\xfe\x96\x19",
-    ) {
-    return Some("Tuple0 constructor snapshot key does not match the manifest")
-  }
-  None
 }
 
 ///|
@@ -230,11 +292,8 @@ fn scan_declaration(
         if syntax.type_template(symbol) is Some(_) {
           continue
         }
-        if !view.parameters.is_empty() {
-          fail_printer(
-            ResidualTypeVariable,
-            "SMT printer received a parameterized type declaration",
-          )
+        for parameter in view.parameters {
+          require_same_context(anchor, parameter.semantic_id())
         }
         match view.definition {
           Range(_, _) | Float(_, _) =>
@@ -242,7 +301,7 @@ fn scan_declaration(
               UnsupportedType,
               "range and float declarations are outside the SMT MVP printer",
             )
-          Alias(ty) => scan_type(anchor, syntax, ty)
+          Alias(_) => ()
           NoDef => ()
         }
       }
@@ -256,8 +315,8 @@ fn scan_declaration(
               "only driver-syntax Bool data may bypass datatype printing",
             )
           }
-        } else if trusted_tuple0_error(entry) is Some(message) {
-          fail_printer(UnsupportedDatatype, message)
+        } else {
+          scan_data_declaration(anchor, syntax, entry)
         }
       }
     Dparam(symbol) => scan_logic_symbol(anchor, syntax, symbol)
@@ -290,7 +349,7 @@ fn scan_declaration(
         scan_term(anchor, syntax, view.body)
       }
     }
-    Dind(_) =>
+    Dind(_, _) =>
       fail_printer(
         UnsupportedDeclaration,
         "inductive declarations must be eliminated before SMT printing",

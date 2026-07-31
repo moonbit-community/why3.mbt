@@ -31,27 +31,200 @@ fn print_term_template(
 }
 
 ///|
+fn type_contains_variable(
+  ty : @logic.Ty,
+  variable : @logic.TyVarSymbol,
+) -> Bool {
+  match ty.view() {
+    TyVar(candidate) => candidate == variable
+    TyApp(_, arguments) =>
+      arguments.any(argument => type_contains_variable(argument, variable))
+  }
+}
+
+///|
+fn logic_symbol_is_unambiguous(symbol : @logic.LSymbol) -> Bool {
+  let view = symbol.view()
+  guard view.result_type is Some(result_type) else { return true }
+  result_type
+  .free_variables()
+  .all(variable => {
+    view.argument_types.any(argument => {
+      type_contains_variable(argument, variable)
+    })
+  })
+}
+
+///|
 fn print_application(
   state : PrinterState,
   symbol : @logic.LSymbol,
   arguments : ArrayView[@logic.Term],
+  result_type : @logic.Ty?,
 ) -> Unit raise PrinterError {
   match state.syntax.logic_template(symbol) {
     Some(template) => print_term_template(state, template, arguments)
     None => {
-      if !arguments.is_empty() {
-        state.writer.write(b"(")
-      }
-      print_logic_identifier(state, symbol)
-      for argument in arguments {
+      let ambiguous = result_type is Some(_) &&
+        !logic_symbol_is_unambiguous(symbol)
+      if arguments.is_empty() {
+        if ambiguous {
+          state.writer.write(b"(as ")
+          print_logic_identifier(state, symbol)
+          state.writer.write(b" ")
+          guard result_type is Some(result_type) else {
+            fail_printer(
+              UnsupportedTerm,
+              "ambiguous value application has no result type",
+            )
+          }
+          print_type(state, result_type)
+          state.writer.write(b")")
+        } else {
+          print_logic_identifier(state, symbol)
+        }
+      } else if ambiguous {
+        state.writer.write(b"((as ")
+        print_logic_identifier(state, symbol)
         state.writer.write(b" ")
-        print_expression(state, argument)
-      }
-      if !arguments.is_empty() {
+        guard result_type is Some(result_type) else {
+          fail_printer(
+            UnsupportedTerm,
+            "ambiguous value application has no result type",
+          )
+        }
+        print_type(state, result_type)
+        state.writer.write(b")")
+        for argument in arguments {
+          state.writer.write(b" ")
+          print_expression(state, argument)
+        }
+        state.writer.write(b")")
+      } else {
+        state.writer.write(b"(")
+        print_logic_identifier(state, symbol)
+        for argument in arguments {
+          state.writer.write(b" ")
+          print_expression(state, argument)
+        }
         state.writer.write(b")")
       }
     }
   }
+}
+
+///|
+fn print_case_body(
+  state : PrinterState,
+  body : @logic.Term,
+  formula_body : Bool,
+) -> Unit raise PrinterError {
+  if formula_body {
+    print_formula(state, body)
+  } else {
+    print_term(state, body)
+  }
+}
+
+///|
+fn print_match_pattern(
+  state : PrinterState,
+  pattern : @logic.Pattern,
+) -> Unit raise PrinterError {
+  match pattern.view() {
+    Pwild(_) => state.writer.write(state.names.fresh(b"wildcard"))
+    Papp(symbol, arguments, _) =>
+      if arguments.is_empty() {
+        print_logic_identifier(state, symbol)
+      } else {
+        state.writer.write(b"(")
+        print_logic_identifier(state, symbol)
+        for argument in arguments {
+          guard argument.view() is Pvar(variable) else {
+            fail_printer(
+              UnsupportedTerm,
+              "nested pattern matching must be compiled before SMT printing",
+            )
+          }
+          state.writer.write(b" ")
+          print_variable_identifier(state, variable)
+        }
+        state.writer.write(b")")
+      }
+    Pvar(_) | Por(_, _, _) | Pas(_, _, _) =>
+      fail_printer(
+        UnsupportedTerm,
+        "nested pattern matching must be compiled before SMT printing",
+      )
+  }
+}
+
+///|
+fn print_boolean_case(
+  state : PrinterState,
+  scrutinee : @logic.Term,
+  branches : ArrayView[@logic.TermBranch],
+  formula_body : Bool,
+) -> Unit raise PrinterError {
+  guard branches.length() == 2 else {
+    fail_printer(
+      UnsupportedTerm,
+      "Boolean pattern matching must have exactly two branches",
+    )
+  }
+  let first = branches[0].view()
+  let second = branches[1].view()
+  guard first.pattern.view() is Papp(first_constructor, _, _) else {
+    fail_printer(
+      UnsupportedTerm,
+      "Boolean pattern matching must start with a constructor",
+    )
+  }
+  let first_is_true = first_constructor.view().origin
+    .attributes()
+    .any(attribute => attribute == b"why3:builtin:boolean:true")
+  let (then_branch, else_branch) = if first_is_true {
+    (first.body, second.body)
+  } else {
+    (second.body, first.body)
+  }
+  state.writer.write(b"(ite ")
+  print_term(state, scrutinee)
+  state.writer.write(b" ")
+  print_case_body(state, then_branch, formula_body)
+  state.writer.write(b" ")
+  print_case_body(state, else_branch, formula_body)
+  state.writer.write(b")")
+}
+
+///|
+fn print_case(
+  state : PrinterState,
+  scrutinee : @logic.Term,
+  branches : ArrayView[@logic.TermBranch],
+  formula_body : Bool,
+) -> Unit raise PrinterError {
+  if scrutinee.ty() is Some(ty) &&
+    ty.view() is TyApp(symbol, _) &&
+    symbol.builtin_kind() == Some(BuiltinBoolean) {
+    print_boolean_case(state, scrutinee, branches, formula_body)
+    return
+  }
+  state.writer.write(b"(match ")
+  print_term(state, scrutinee)
+  state.writer.write(b" (")
+  for index, branch in branches {
+    if index > 0 {
+      state.writer.write(b" ")
+    }
+    let view = branch.view()
+    state.writer.write(b"(")
+    print_match_pattern(state, view.pattern)
+    state.writer.write(b" ")
+    print_case_body(state, view.body, formula_body)
+    state.writer.write(b")")
+  }
+  state.writer.write(b"))")
 }
 
 ///|
@@ -62,7 +235,8 @@ fn print_term(
   match term.view() {
     Tvar(variable) => print_variable_identifier(state, variable)
     Tconst(constant) => print_constant(state, constant)
-    Tapp(symbol, _, arguments) => print_application(state, symbol, arguments)
+    Tapp(symbol, _, arguments) =>
+      print_application(state, symbol, arguments, term.ty())
     Tif(condition, then_branch, else_branch) => {
       state.writer.write(b"(ite ")
       print_formula(state, condition)
@@ -82,8 +256,7 @@ fn print_term(
       state.writer.write(b")")
       state.names.forget(variable.semantic_id())
     }
-    Tcase(_, _) =>
-      fail_printer(UnsupportedTerm, "SMT term still contains pattern matching")
+    Tcase(scrutinee, branches) => print_case(state, scrutinee, branches, false)
     Teps(_, _) =>
       fail_printer(UnsupportedTerm, "SMT term still contains epsilon")
     Tquant(_, _, _, _) | Tbinop(_, _, _) | Tnot(_) | Ttrue | Tfalse =>
@@ -117,7 +290,8 @@ fn print_formula(
   formula : @logic.Term,
 ) -> Unit raise PrinterError {
   match formula.view() {
-    Tapp(symbol, _, arguments) => print_application(state, symbol, arguments)
+    Tapp(symbol, _, arguments) =>
+      print_application(state, symbol, arguments, None)
     Tquant(quantifier, binders, triggers, body) => {
       state.writer.write(
         if quantifier == ForallQuantifier {
@@ -187,11 +361,7 @@ fn print_formula(
       state.writer.write(b")")
       state.names.forget(variable.semantic_id())
     }
-    Tcase(_, _) =>
-      fail_printer(
-        UnsupportedTerm,
-        "SMT formula still contains pattern matching",
-      )
+    Tcase(scrutinee, branches) => print_case(state, scrutinee, branches, true)
     Tvar(_) | Tconst(_) | Teps(_, _) =>
       fail_printer(
         UnsupportedTerm,

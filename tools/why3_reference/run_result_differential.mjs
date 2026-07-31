@@ -5,15 +5,13 @@ import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import {
   existsSync,
-  mkdirSync,
   mkdtempSync,
   readFileSync,
   rmSync,
-  writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import referenceEnvironment from './reference_environment.cjs';
 
@@ -25,6 +23,8 @@ const POLYMORPHISM_FIXTURE =
   'tools/why3_reference/fixtures/transform-polymorphism.mlw';
 const POLYMORPHIC_DEFINITION_FIXTURE =
   'tools/why3_reference/fixtures/transform-polymorphic-definition.mlw';
+const INDUCTIVE_FIXTURE =
+  'tools/why3_reference/fixtures/transform-inductive.mlw';
 const IDENTIFIER_FIXTURE = 'tools/why3_reference/fixtures/smt-identifiers.mlw';
 const SOLVER_FIXTURE = 'tools/why3_reference/fixtures/solver-outcomes.mlw';
 const FALSE_POST_FIXTURE = 'tests/vc/false-post.mlw';
@@ -33,12 +33,6 @@ const CORPUS_PATH = join(
   'tools',
   'contracts',
   'pr-corpus-v1.json',
-);
-const RESULT_BASELINE = join(
-  SCRIPT_DIRECTORY,
-  'baselines',
-  'pr-v1',
-  'prover-result.json',
 );
 const CLI = join(
   PROJECT_ROOT,
@@ -104,6 +98,12 @@ const CASES = [
     ['reflexive_goal'],
   ),
   ...resultCases(
+    'transform.inductive',
+    INDUCTIVE_FIXTURE,
+    'InductiveSnapshot',
+    [['well_founded_smoke', 'Unknown', 'unknown']],
+  ),
+  ...resultCases(
     'smt.identifier-safety',
     IDENTIFIER_FIXTURE,
     'SmtIdentifiers',
@@ -147,18 +147,7 @@ function canonicalSha(value) {
 }
 
 function parseArguments(argv) {
-  if (argv.length === 0 || (argv.length === 1 && argv[0] === '--check')) {
-    return { mode: 'check', path: RESULT_BASELINE };
-  }
-  if (argv.length === 2 && argv[0] === '--candidate') {
-    return { mode: 'candidate', path: resolve(argv[1]) };
-  }
-  if (argv.length === 2 && argv[0] === '--promote') {
-    return { mode: 'promote', path: resolve(argv[1]) };
-  }
-  fail(
-    'usage: run_result_differential.mjs [--check | --candidate PATH | --promote PATH]',
-  );
+  if (argv.length !== 0) fail('run_result_differential.mjs accepts no arguments');
 }
 
 function corpusCaseMap(corpus) {
@@ -182,7 +171,7 @@ function corpusCaseMap(corpus) {
   return cases;
 }
 
-function bindCasesToCorpus(corpus) {
+export function bindCasesToCorpus(corpus) {
   const contracted = corpusCaseMap(corpus);
   const bound = CASES.map(testCase => {
     const key = `${testCase.fixtureId}\u0000${testCase.unit}\u0000${testCase.goal}`;
@@ -302,10 +291,7 @@ function assertDetectedZ3Profile(configText) {
 }
 
 function main() {
-  const arguments_ = parseArguments(process.argv.slice(2));
-  if (arguments_.mode !== 'check' && arguments_.path === RESULT_BASELINE) {
-    fail('candidate path must be separate from the checked-in result baseline');
-  }
+  parseArguments(process.argv.slice(2));
   const corpusBytes = readFileSync(CORPUS_PATH);
   const corpus = JSON.parse(corpusBytes);
   const cases = bindCasesToCorpus(corpus);
@@ -423,54 +409,22 @@ function main() {
       },
       compared,
     };
-    const result = {
-      ...resultBase,
-      resultSetSha256: canonicalSha(resultBase),
-    };
-    const rendered = `${JSON.stringify(result, null, 2)}\n`;
-    if (arguments_.mode === 'candidate') {
-      if (existsSync(arguments_.path)) {
-        fail(`candidate already exists: ${arguments_.path}`);
-      }
-      mkdirSync(dirname(arguments_.path), { recursive: true });
-      writeFileSync(arguments_.path, rendered);
-      const before = existsSync(RESULT_BASELINE)
-        ? sha256(readFileSync(RESULT_BASELINE))
-        : null;
-      process.stdout.write(`${JSON.stringify({
-        candidate: arguments_.path,
-        beforeSha256: before,
-        candidateSha256: sha256(rendered),
-        compared: compared.length,
-      }, null, 2)}\n`);
-    } else if (arguments_.mode === 'promote') {
-      if (!existsSync(arguments_.path) ||
-          readFileSync(arguments_.path, 'utf8') !== rendered) {
-        fail('candidate does not match a fresh fixed-image result differential');
-      }
-      mkdirSync(dirname(RESULT_BASELINE), { recursive: true });
-      writeFileSync(RESULT_BASELINE, rendered);
-      process.stdout.write(
-        `run_result_differential: promoted ${compared.length} result records\n`,
-      );
-    } else {
-      if (!existsSync(RESULT_BASELINE) ||
-          readFileSync(RESULT_BASELINE, 'utf8') !== rendered) {
-        fail('checked-in prover-result baseline differs from fixed-image results');
-      }
-      process.stdout.write(
-        `run_result_differential: ${compared.length}/${compared.length} ` +
-        'fixed-image result records exact\n',
-      );
-    }
+    process.stdout.write(
+      `run_result_differential: ${compared.length}/${compared.length} ` +
+      `fixed-image result records exact; set ${canonicalSha(resultBase)}\n`,
+    );
   } finally {
     rmSync(directory, { recursive: true, force: true });
   }
 }
 
-try {
-  main();
-} catch (error) {
-  process.stderr.write(`run_result_differential: ${error.message}\n`);
-  process.exitCode = 1;
+const isMain = process.argv[1] !== undefined &&
+  pathToFileURL(resolve(process.argv[1])).href === import.meta.url;
+if (isMain) {
+  try {
+    main();
+  } catch (error) {
+    process.stderr.write(`run_result_differential: ${error.message}\n`);
+    process.exitCode = 1;
+  }
 }

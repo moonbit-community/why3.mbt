@@ -2,7 +2,6 @@
 
 ///|
 pub(all) enum ElabStage {
-  FeatureClassification
   DeclarationElaboration
   PureTyping
   ProgramTyping
@@ -10,54 +9,22 @@ pub(all) enum ElabStage {
 } derive(Eq, Debug)
 
 ///|
-pub(all) enum UnsupportedFeature {
-  AbstractRoutineShape
-  AlgebraicData
-  CheckAssertion
-  Clone
-  ControlAttribute
-  Datatype
-  DestructuringPattern
-  DriverOnlyTheory
-  DriverOnlyType
-  Epsilon
-  Exception
-  ExternalOrDriverOnlyImport
-  Ghost
-  HigherOrder
-  HigherOrderApplication
-  Inductive
-  Lambda
-  LocalRoutine
-  Loop
-  NestedUnsupportedExpression
-  NestedUnsupportedTerm
-  OldAt
-  PrivateType
-  ProgramExpression
-  ProgramRoutineShape
-  ProofControlConnective
-  RecordOrInvariant
-  Recursion
-  RecursiveOrHigherOrderLogic
-  Reference
-  RoutineKind
-  StringLiteral
-  TupleExpression
-  TupleTerm
-  TupleType
-  TypeDeclarationShape
-  TypePurification
-  TypeVisibilityShape
-  UserMeta
+pub(all) enum ElabInputErrorKind {
+  InvalidBinder
+  InvalidDeclaration
+  InvalidPattern
+  InvalidSpecification
+  InvalidTypeDeclaration
+  InvalidUnit
 } derive(Eq, Debug)
 
 ///|
 pub(all) enum ElabErrorKind {
-  Unsupported(UnsupportedFeature)
+  InvalidInput(ElabInputErrorKind)
   TypeFailure(@logic.TypeErrorKind)
   TheoryFailure(@theory.TheoryErrorKind)
   EnvironmentFailure(@environment.EnvironmentErrorKind)
+  SourceFailure(@env.SourceErrorKind)
   ProgramFailure(@mlw.MlwErrorKind)
 } derive(Eq, Debug)
 
@@ -77,14 +44,14 @@ pub(all) suberror ElabError {
 } derive(Eq, Debug)
 
 ///|
-fn[A] fail_unsupported(
-  feature : UnsupportedFeature,
+fn[A] fail_invalid_input(
+  kind : ElabInputErrorKind,
   stage : ElabStage,
   span : @identity.SourceSpan?,
   message : String,
 ) -> A raise ElabError {
   raise ElabError({
-    kind: Unsupported(feature),
+    kind: InvalidInput(kind),
     stage,
     span,
     actual_type: None,
@@ -151,6 +118,21 @@ fn program_failure_diagnostic(
 }
 
 ///|
+fn source_failure_diagnostic(
+  diagnostic : @env.SourceDiagnostic,
+  stage : ElabStage,
+) -> ElabDiagnostic {
+  {
+    kind: SourceFailure(diagnostic.kind),
+    stage,
+    span: None,
+    actual_type: None,
+    expected_type: None,
+    message: diagnostic.message,
+  }
+}
+
+///|
 fn[A] normalize_elaboration_errors(
   action : () -> A raise,
   environment_stage : ElabStage,
@@ -164,6 +146,8 @@ fn[A] normalize_elaboration_errors(
       raise ElabError(
         environment_failure_diagnostic(diagnostic, environment_stage),
       )
+    @env.SourceError(diagnostic) =>
+      raise ElabError(source_failure_diagnostic(diagnostic, environment_stage))
     @mlw.MlwError(diagnostic) =>
       raise ElabError(program_failure_diagnostic(diagnostic))
     ElabError(diagnostic) => raise ElabError(diagnostic)

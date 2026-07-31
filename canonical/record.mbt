@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
 
 ///|
-let semantic_profile_sha256_v1 : Bytes = b"bc2e01a30b60d325e17cde6875271c90f46e2264bb4bb856a66bd16cee02ccf9"
+let semantic_profile_sha256_v3 : Bytes = b"a8fcc8f7ad658c34e3ca90716be2056529f7a7b99d4cbb1ae021e3dd2c11606c"
+
+///|
+let diagnostic_contract_sha256_v1 : Bytes = b"79075b594bc75d904188d4ac0bc7ccbbc56e939df3ee52d783e6c33620726bf0"
 
 ///|
 fn write_record_field_name(buffer : @buffer.Buffer, name : BytesView) -> Unit {
@@ -62,9 +65,12 @@ fn start_portable_record(
   let buffer = @buffer.Buffer()
   buffer.write_byte(b'{')
   write_record_field_name(buffer, b"schema")
-  buffer.write_byte(b'2')
+  buffer.write_byte(b'3')
   write_record_text_field(
-    buffer, b"semantic_profile_sha256", semantic_profile_sha256_v1, false,
+    buffer, b"semantic_profile_sha256", semantic_profile_sha256_v3, false,
+  )
+  write_record_text_field(
+    buffer, b"diagnostic_contract_sha256", diagnostic_contract_sha256_v1, false,
   )
   write_record_text_field(buffer, b"fixture", fixture, false)
   write_record_text_field(buffer, b"source_sha256", sha256_hex(source), false)
@@ -91,7 +97,7 @@ pub fn encode_typed_theory_record(
     view.name.view().name,
   )
   write_record_text_field(buffer, b"stage", b"typed-semantic", false)
-  write_canonical_field(buffer, encode_theory(theory))
+  write_canonical_field(buffer, encode_theory_for_source(theory, fixture))
   buffer.write_bytes(b"}\n")
   buffer.to_bytes()
 }
@@ -102,7 +108,7 @@ pub fn encode_typed_module_record(
   fixture : BytesView,
   source : BytesView,
   pmodule : @mlw.Pmodule,
-) -> Bytes raise {
+) -> Bytes {
   let view = pmodule.pure_theory().view()
   let buffer = start_portable_record(
     fixture,
@@ -112,7 +118,7 @@ pub fn encode_typed_module_record(
     view.name.view().name,
   )
   write_record_text_field(buffer, b"stage", b"typed-program", false)
-  write_canonical_field(buffer, encode_pmodule(pmodule))
+  write_canonical_field(buffer, encode_pmodule_for_source(pmodule, fixture))
   buffer.write_bytes(b"}\n")
   buffer.to_bytes()
 }
@@ -172,7 +178,7 @@ pub fn encode_task_checkpoint_record(
   write_record_field_name(buffer, b"goal_ordinal")
   buffer.write_string_utf8(goal_ordinal.to_string())
   write_record_text_field(buffer, b"stage", stage, false)
-  write_canonical_field(buffer, encode_task(task))
+  write_canonical_field(buffer, encode_task_for_source(task, fixture))
   buffer.write_bytes(b"}\n")
   buffer.to_bytes()
 }

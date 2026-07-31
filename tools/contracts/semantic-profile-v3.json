@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "profileVersion": 3,
+  "profile": "why3-1.7.2-z3-4.8.12-complete-v3",
+  "status": "active",
+  "why3Commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
+  "canonicalSchemaVersion": 3,
+  "diagnosticSchemaVersion": 1,
+  "driverProfile": "z3_487",
+  "policy": {
+    "portableOnly": true,
+    "excludesMachineEnvironmentAndAbsolutePaths": true,
+    "completeTargetHasNoUnsupportedLane": true,
+    "canonicalV3IsOnlyCanonicalRecord": true,
+    "hashInput": "compact JSON of all preceding profile fields plus one LF",
+    "artifactOrder": "the fixed order in this manifest"
+  },
+  "artifacts": [
+    {
+      "id": "canonical-schema-v3",
+      "path": "tools/contracts/canonical-schema-v3.json",
+      "sha256": "5f0534f8ba2d4102559e966240204b3bd13586ab142cd02ba54e7f3a8c66376d"
+    },
+    {
+      "id": "canonical-record-v3-json-schema",
+      "path": "tools/contracts/schema/canonical-record-v3.schema.json",
+      "sha256": "0442fa142858d8f9ab5933d98cab6bb5cdf15aea5ec542088a68edb96f45cddb"
+    },
+    {
+      "id": "diagnostic-record-v1-json-schema",
+      "path": "tools/contracts/schema/diagnostic-record-v1.schema.json",
+      "sha256": "6272654cc4e288b896ce52aa2d6d866707f43e44c3d026350cb495890419b759"
+    },
+    {
+      "id": "diagnostics-v1",
+      "path": "tools/contracts/diagnostics-v1.json",
+      "sha256": "73a30bc4db95741f13c2aaf326b23e235ef57dae547e28b4ab303c11f1302716"
+    },
+    {
+      "id": "features-v2",
+      "path": "tools/contracts/features-v2.json",
+      "sha256": "bc50ca1d7ab0e067381d5e59ee947c41d5fdf1458f434a0687b576eef8777a42"
+    },
+    {
+      "id": "driver-closure-v1",
+      "path": "tools/contracts/driver-closure-v1.json",
+      "sha256": "a0651a2bd0ac0bb7d98e74f1429f8de7ea52ae333ae4a28a16d3bf48957a2e5b"
+    },
+    {
+      "id": "transform-profile-v1",
+      "path": "tools/contracts/transform-profile-v1.json",
+      "sha256": "c6e7b7632a225b3cda87c19d4e1a1b81171b92629cb81742b4d5b6115a1a8639"
+    },
+    {
+      "id": "z3-static-profile-v1",
+      "path": "prover/z3/z3-static-profile-v1.json",
+      "sha256": "d5bb00527cf85b8881df067eb6e8426f14475114c6c4bf15e507c862ef3ae726"
+    }
+  ],
+  "semanticProfileSha256": "a8fcc8f7ad658c34e3ca90716be2056529f7a7b99d4cbb1ae021e3dd2c11606c"
+}

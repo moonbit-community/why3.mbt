@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
+// Derived from Why3 1.7.2 (Copyright 2010-2023 Inria, CNRS, Paris-Saclay University).
+// MoonBit translation and semantic modifications recorded on 2026-07-24.
 
 ///|
 pub(all) enum PropositionKind {
@@ -8,10 +10,17 @@ pub(all) enum PropositionKind {
 } derive(Eq, Debug)
 
 ///|
+pub(all) enum InductiveSign {
+  Ind
+  Coind
+} derive(Eq, Debug)
+
+///|
 struct LogicDefinition {
   symbol : LSymbol
   parameters : Array[VSymbol]
   body : Term
+  decreasing_parameters : Array[Int]
 }
 
 ///|
@@ -44,12 +53,13 @@ priv enum DeclNode {
   DataDeclarationNode(Array[DataDeclaration])
   ParameterDeclaration(LSymbol)
   LogicDeclaration(Array[LogicDefinition])
-  InductiveDeclarationNode(Array[InductiveDeclaration])
+  InductiveDeclarationNode(InductiveSign, Array[InductiveDeclaration])
   PropositionDeclaration(PropositionKind, PrSymbol, Term)
 }
 
 ///|
 struct Decl {
+  id : @identity.DeclarationId
   origin : @identity.Origin
   dependencies : Array[DeclDependency]
   introduced : Array[DeclDependency]
@@ -61,6 +71,7 @@ pub(all) struct LogicDefinitionView {
   symbol : LSymbol
   parameters : ArrayView[VSymbol]
   body : Term
+  decreasing_parameters : ArrayView[Int]
 }
 
 ///|
@@ -93,13 +104,18 @@ pub(all) enum DeclView {
   Ddata(ArrayView[DataDeclaration])
   Dparam(LSymbol)
   Dlogic(ArrayView[LogicDefinition])
-  Dind(ArrayView[InductiveDeclaration])
+  Dind(InductiveSign, ArrayView[InductiveDeclaration])
   Dprop(PropositionKind, PrSymbol, Term)
 }
 
 ///|
 pub fn LogicDefinition::view(self : LogicDefinition) -> LogicDefinitionView {
-  { symbol: self.symbol, parameters: self.parameters[:], body: self.body }
+  {
+    symbol: self.symbol,
+    parameters: self.parameters[:],
+    body: self.body,
+    decreasing_parameters: self.decreasing_parameters[:],
+  }
 }
 
 ///|
@@ -130,6 +146,11 @@ pub fn Decl::origin(self : Decl) -> @identity.Origin {
 }
 
 ///|
+pub fn Decl::declaration_id(self : Decl) -> @identity.DeclarationId {
+  self.id
+}
+
+///|
 pub fn Decl::dependencies(self : Decl) -> ArrayView[DeclDependency] {
   self.dependencies[:]
 }
@@ -146,7 +167,7 @@ pub fn Decl::view(self : Decl) -> DeclView {
     DataDeclarationNode(declarations) => Ddata(declarations[:])
     ParameterDeclaration(symbol) => Dparam(symbol)
     LogicDeclaration(definitions) => Dlogic(definitions[:])
-    InductiveDeclarationNode(declarations) => Dind(declarations[:])
+    InductiveDeclarationNode(sign, declarations) => Dind(sign, declarations[:])
     PropositionDeclaration(kind, symbol, formula) =>
       Dprop(kind, symbol, formula)
   }
@@ -291,7 +312,6 @@ fn validate_logic_definition(
   symbol : LSymbol,
   parameters : ArrayView[VSymbol],
   body : Term,
-  allow_recursive : Bool,
   span : @identity.SourceSpan?,
 ) -> LogicDefinition raise TypeError {
   require_context_id(
@@ -365,14 +385,7 @@ fn validate_logic_definition(
       )
     }
   }
-  if !allow_recursive && body.contains_logic_symbol(symbol) {
-    fail_type(
-      CyclicDefinition,
-      span,
-      "user logic definitions must be non-recursive",
-    )
-  }
-  { symbol, parameters: copied, body }
+  { symbol, parameters: copied, body, decreasing_parameters: [] }
 }
 
 ///|
@@ -383,33 +396,31 @@ pub fn LogicDefinition::new(
   body : Term,
   span : @identity.SourceSpan?,
 ) -> LogicDefinition raise TypeError {
-  validate_logic_definition(context, symbol, parameters, body, false, span)
+  validate_logic_definition(context, symbol, parameters, body, span)
 }
 
 ///|
-pub fn LogicDefinition::trusted_recursive(
+pub fn LogicDefinition::recursive(
   context : @identity.CompilationContext,
   symbol : LSymbol,
   parameters : ArrayView[VSymbol],
   body : Term,
   span : @identity.SourceSpan?,
 ) -> LogicDefinition raise TypeError {
-  require_snapshot_origin(symbol.origin, span)
-  validate_logic_definition(context, symbol, parameters, body, true, span)
+  validate_logic_definition(context, symbol, parameters, body, span)
 }
 
 ///|
-pub fn DataConstructor::trusted_new(
+pub fn DataConstructor::new(
   symbol : LSymbol,
   projections : ArrayView[LSymbol?],
   span : @identity.SourceSpan?,
 ) -> DataConstructor raise TypeError {
-  require_snapshot_origin(symbol.origin, span)
   guard symbol.role is ConstructorRole(_) else {
     fail_type(
       InvalidDeclaration,
       span,
-      "data constructor requires a trusted constructor symbol",
+      "data constructor requires a constructor symbol",
     )
   }
   if projections.length() != symbol.argument_types.length() {
@@ -422,12 +433,11 @@ pub fn DataConstructor::trusted_new(
   let copied = projections.to_owned()
   for projection in copied {
     if projection is Some(projection) {
-      require_snapshot_origin(projection.origin, span)
       if !(projection.role is ProjectionRole) {
         fail_type(
           InvalidDeclaration,
           span,
-          "data field requires a trusted projection symbol",
+          "data field requires a projection symbol",
         )
       }
     }
@@ -436,12 +446,11 @@ pub fn DataConstructor::trusted_new(
 }
 
 ///|
-pub fn DataDeclaration::trusted_new(
+pub fn DataDeclaration::new(
   type_symbol : TypeSymbol,
   constructors : ArrayView[DataConstructor],
   span : @identity.SourceSpan?,
 ) -> DataDeclaration raise TypeError {
-  require_snapshot_origin(type_symbol.origin, span)
   let invalid_builtin = match type_symbol.builtin_kind {
     None => false
     Some(BuiltinBoolean) => false
@@ -451,7 +460,7 @@ pub fn DataDeclaration::trusted_new(
     fail_type(
       InvalidDeclaration,
       span,
-      "data declaration requires a NoDef type or trusted builtin boolean",
+      "data declaration requires a NoDef type or builtin boolean",
     )
   }
   if constructors.is_empty() {
@@ -589,13 +598,12 @@ fn validate_data_declaration_group(
 }
 
 ///|
-pub fn InductiveCase::trusted_new(
+pub fn InductiveCase::new(
   context : @identity.CompilationContext,
   proposition : PrSymbol,
   formula : Term,
   span : @identity.SourceSpan?,
 ) -> InductiveCase raise TypeError {
-  require_snapshot_origin(proposition.origin, span)
   require_formula(formula, span)
   validate_term_context(context, formula, span)
   if !formula.free_variables().is_empty() {
@@ -609,12 +617,11 @@ pub fn InductiveCase::trusted_new(
 }
 
 ///|
-pub fn InductiveDeclaration::trusted_new(
+pub fn InductiveDeclaration::new(
   predicate : LSymbol,
   cases : ArrayView[InductiveCase],
   span : @identity.SourceSpan?,
 ) -> InductiveDeclaration raise TypeError {
-  require_snapshot_origin(predicate.origin, span)
   if predicate.result_type is Some(_) {
     fail_type(
       PredicateExpected,
@@ -804,41 +811,6 @@ pub fn Decl::type_declaration(
       span,
       "type declaration belongs to another compilation context",
     )
-    match symbol.definition {
-      DefinitionNone | DefinitionAlias(_) => ()
-      DefinitionRange(_, _) | DefinitionFloat(_, _) =>
-        fail_type(
-          InvalidDeclaration,
-          span,
-          "user declarations cannot create Range or Float types",
-        )
-    }
-  }
-  make_decl(context, origin, TypeDeclaration(copied), span)
-}
-
-///|
-/// Trusted decoder entry point for snapshot type declarations, including
-/// Range and Float definitions that user declarations cannot construct.
-pub fn Decl::trusted_type_declaration(
-  context : @identity.CompilationContext,
-  origin : @identity.Origin,
-  symbols : ArrayView[TypeSymbol],
-  span : @identity.SourceSpan?,
-) -> Decl raise TypeError {
-  require_snapshot_origin(origin, span)
-  if symbols.is_empty() {
-    fail_type(EmptyDeclaration, span, "trusted type declaration is empty")
-  }
-  let copied = symbols.to_owned()
-  for symbol in copied {
-    require_snapshot_origin(symbol.origin, span)
-    require_context_id(
-      context,
-      symbol.semantic_id(),
-      span,
-      "trusted type declaration belongs to another compilation context",
-    )
   }
   make_decl(context, origin, TypeDeclaration(copied), span)
 }
@@ -856,11 +828,11 @@ pub fn Decl::parameter(
     span,
     "parameter declaration belongs to another compilation context",
   )
-  if !(symbol.role is OrdinaryRole) {
+  if symbol.role is ConstructorRole(_) {
     fail_type(
       InvalidDeclaration,
       span,
-      "user parameter cannot be a constructor or projection",
+      "constructor symbols must be introduced by a data declaration",
     )
   }
   make_decl(context, origin, ParameterDeclaration(symbol), span)
@@ -888,32 +860,8 @@ pub fn Decl::logic(
     }
     defined[definition.symbol] = ()
   }
-  for definition in copied {
-    for symbol in defined.keys() {
-      if definition.body.contains_logic_symbol(symbol) {
-        fail_type(CyclicDefinition, span, "user logic declaration is recursive")
-      }
-    }
-  }
-  make_decl(context, origin, LogicDeclaration(copied), span)
-}
-
-///|
-pub fn Decl::trusted_logic(
-  context : @identity.CompilationContext,
-  origin : @identity.Origin,
-  definitions : ArrayView[LogicDefinition],
-  span : @identity.SourceSpan?,
-) -> Decl raise TypeError {
-  require_snapshot_origin(origin, span)
-  if definitions.is_empty() {
-    fail_type(EmptyDeclaration, span, "trusted logic declaration is empty")
-  }
-  let copied = definitions.to_owned()
-  for definition in copied {
-    require_snapshot_origin(definition.symbol.origin, span)
-  }
-  make_decl(context, origin, LogicDeclaration(copied), span)
+  let checked = check_logic_termination(copied, span)
+  make_decl(context, origin, LogicDeclaration(checked), span)
 }
 
 ///|
@@ -971,15 +919,14 @@ pub fn Decl::reclassify_proposition(
 }
 
 ///|
-pub fn Decl::trusted_data(
+pub fn Decl::data(
   context : @identity.CompilationContext,
   origin : @identity.Origin,
   declarations : ArrayView[DataDeclaration],
   span : @identity.SourceSpan?,
 ) -> Decl raise TypeError {
-  require_snapshot_origin(origin, span)
   if declarations.is_empty() {
-    fail_type(EmptyDeclaration, span, "trusted data declaration is empty")
+    fail_type(EmptyDeclaration, span, "data declaration is empty")
   }
   let copied = declarations.to_owned()
   validate_data_declaration_group(copied, span)
@@ -987,15 +934,15 @@ pub fn Decl::trusted_data(
 }
 
 ///|
-pub fn Decl::trusted_inductive(
+pub fn Decl::inductive(
   context : @identity.CompilationContext,
   origin : @identity.Origin,
+  sign : InductiveSign,
   declarations : ArrayView[InductiveDeclaration],
   span : @identity.SourceSpan?,
 ) -> Decl raise TypeError {
-  require_snapshot_origin(origin, span)
   if declarations.is_empty() {
-    fail_type(EmptyDeclaration, span, "trusted inductive declaration is empty")
+    fail_type(EmptyDeclaration, span, "inductive declaration is empty")
   }
   let copied = declarations.to_owned()
   let predicates : Map[LSymbol, Unit] = Map([])
@@ -1007,5 +954,5 @@ pub fn Decl::trusted_inductive(
       validate_inductive_clause_polarity(case_.formula, predicates, span)
     }
   }
-  make_decl(context, origin, InductiveDeclarationNode(copied), span)
+  make_decl(context, origin, InductiveDeclarationNode(sign, copied), span)
 }

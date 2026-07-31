@@ -12,23 +12,18 @@ fn canonical_goal_unit_kind(kind : @z3.GoalUnitKind) -> CanonicalValue {
 
 ///|
 fn canonical_goal_info(
-  numbering : GlobalSymbolNumbering,
+  state : CanonicalV3State,
   info : @z3.GoalInfo,
 ) -> CanonicalValue {
   let view = info.view()
-  canonical_array([
-    canonical_text(b"GoalInfoV1"),
+  v3_node(b"GoalInfoV1", [
     canonical_goal_unit_kind(view.unit_kind),
-    canonical_hex(view.unit_name),
-    canonical_prsymbol(numbering, view.goal),
-    canonical_hex(view.display_name),
-    Unsigned(view.ordinal.reinterpret_as_uint()),
-    canonical_origin(view.origin),
-    canonical_array(
-      [
-        for attribute in view.expl_attributes => canonical_hex(attribute)
-      ],
-    ),
+    v3_bytes(view.unit_name),
+    v3_prsymbol(state, view.goal),
+    v3_bytes(view.display_name),
+    v3_int(view.ordinal),
+    v3_origin(state, view.origin),
+    v3_set([ for attribute in view.expl_attributes => v3_bytes(attribute) ]),
   ])
 }
 
@@ -72,18 +67,41 @@ fn canonical_command(command : @prover.CommandSpec) -> CanonicalValue {
 pub fn encode_prepared_call(
   call : @z3.PreparedCall,
 ) -> CanonicalJson raise @smtv2.PrinterError {
-  let numbering = GlobalSymbolNumbering::new()
+  let state = CanonicalV3State::new()
   let tokens = @smtv2.normalize_smt_query(call.query())
-  encode_canonical_value(
-    canonical_array([
-      canonical_text(b"PreparedCallV1"),
-      canonical_task(numbering, call.raw_task()),
-      canonical_task(numbering, call.prepared_task()),
+  let raw_task = v3_task(state, call.raw_task())
+  let prepared_task = v3_task(state, call.prepared_task())
+  let goal = canonical_goal_info(state, call.goal_info())
+  state.finish([
+    v3_node(b"PreparedCallV1", [
+      raw_task,
+      prepared_task,
       canonical_smt_token_stream(tokens),
       canonical_command(call.command()),
-      canonical_goal_info(numbering, call.goal_info()),
+      goal,
     ]),
-  )
+  ])
+}
+
+///|
+fn encode_prepared_call_for_source(
+  call : @z3.PreparedCall,
+  selected_source_path : BytesView,
+) -> CanonicalJson raise @smtv2.PrinterError {
+  let state = CanonicalV3State::new_for_source(selected_source_path)
+  let tokens = @smtv2.normalize_smt_query(call.query())
+  let raw_task = v3_task(state, call.raw_task())
+  let prepared_task = v3_task(state, call.prepared_task())
+  let goal = canonical_goal_info(state, call.goal_info())
+  state.finish([
+    v3_node(b"PreparedCallV1", [
+      raw_task,
+      prepared_task,
+      canonical_smt_token_stream(tokens),
+      canonical_command(call.command()),
+      goal,
+    ]),
+  ])
 }
 
 ///|
@@ -109,7 +127,7 @@ pub fn encode_prepared_call_record(
   write_record_field_name(buffer, b"goal_ordinal")
   buffer.write_string_utf8(info.ordinal.to_string())
   write_record_text_field(buffer, b"stage", b"prepared-call", false)
-  write_canonical_field(buffer, encode_prepared_call(call))
+  write_canonical_field(buffer, encode_prepared_call_for_source(call, fixture))
   buffer.write_bytes(b"}\n")
   buffer.to_bytes()
 }

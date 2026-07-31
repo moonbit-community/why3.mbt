@@ -1,0 +1,9 @@
+import {
+  "moonbit-community/why3/core/env",
+  "moonbit-community/why3/core/identity",
+  "moonbit-community/why3/elab" @why3_elab,
+  "moonbit-community/why3/environment",
+  "moonbit-community/why3/stdlib",
+  "moonbitlang/core/encoding/utf8",
+  "moonbitlang/x/fs",
+}

@@ -4,6 +4,7 @@ package "moonbit-community/why3/vc"
 import {
   "moonbit-community/why3/core/identity",
   "moonbit-community/why3/core/logic",
+  "moonbit-community/why3/core/theory",
   "moonbit-community/why3/mlw",
   "moonbitlang/core/debug",
 }
@@ -11,9 +12,23 @@ import {
 // Values
 pub fn classical_wp(@identity.CompilationContext, @mlw.Pmodule, Kode) -> @logic.Term raise
 
+pub fn efficient_wp(@identity.CompilationContext, @mlw.Pmodule, Kode) -> @logic.Term raise
+
 pub fn generate_module(@identity.CompilationContext, @mlw.Pmodule) -> @mlw.Pmodule raise
 
+pub fn generate_module_with_options(@identity.CompilationContext, @mlw.Pmodule, VcOptions) -> @mlw.Pmodule raise
+
+pub fn generate_module_with_support(@identity.CompilationContext, @mlw.Pmodule, @theory.Theory, @theory.Theory) -> @mlw.Pmodule raise
+
+pub fn generate_module_with_support_and_options(@identity.CompilationContext, @mlw.Pmodule, @theory.Theory, @theory.Theory, VcOptions) -> @mlw.Pmodule raise
+
+pub fn generate_routine_module_with_support_and_options(@identity.CompilationContext, @mlw.Pmodule, @theory.Theory, @theory.Theory, VcOptions) -> @mlw.Pmodule raise
+
 pub fn generate_routine_vc(@identity.CompilationContext, @mlw.Pmodule, @mlw.RoutineSymbol, @mlw.Cty, @mlw.Expr) -> @logic.Decl? raise
+
+pub fn generate_routine_vc_with_options(@identity.CompilationContext, @mlw.Pmodule, @mlw.RoutineSymbol, @mlw.Cty, @mlw.Expr, VcOptions) -> @logic.Decl? raise
+
+pub fn generate_type_module(@identity.CompilationContext, @mlw.Pmodule) -> @mlw.Pmodule raise
 
 pub fn lower_routine(@identity.CompilationContext, @mlw.Pmodule, @mlw.Cty, @mlw.Expr) -> Kode raise
 
@@ -31,11 +46,17 @@ pub(all) enum KodeView {
   Kseq(Kode, Int, Kode)
   Kpar(Kode, Kode)
   Kif(@mlw.PVariable, Kode, Kode)
+  Kcase(@mlw.PVariable, ArrayView[(@logic.Pattern, Kode)])
+  Khavoc(ArrayView[@mlw.PVariable], ArrayView[VcHavocWrite], @identity.SourceSpan?)
   Klet(@mlw.PVariable, @logic.Term, @logic.Term)
   Kval(ArrayView[@mlw.PVariable], @logic.Term)
   Kcut(@logic.Term)
   Kstop(@logic.Term)
   Kcont(Int)
+  Koff(BytesView, Kode)
+  Kmode(VcMode, Kode)
+  Kout(ArrayView[Int], Kode)
+  Kpush(Bool, Kode)
 }
 
 pub(all) struct VcDiagnostic {
@@ -50,6 +71,27 @@ pub(all) enum VcErrorKind {
   UnsupportedComputation
   InvariantFailure
 } derive(Eq, @debug.Debug)
+
+pub(all) struct VcHavocWrite {
+  region : @mlw.Region
+  fields : Array[@mlw.PVariable]
+}
+
+pub(all) enum VcMode {
+  ClassicalWp
+  EfficientSp
+} derive(Eq, @debug.Debug)
+
+pub struct VcOptions {
+  mode : VcMode
+  keep_trace : Bool
+  evaluate_matches : Bool
+} derive(Eq, @debug.Debug)
+pub fn VcOptions::classical() -> Self
+pub fn VcOptions::efficient() -> Self
+pub fn VcOptions::uses_efficient_sp(Self) -> Bool
+pub fn VcOptions::with_keep_trace(Self, Bool) -> Self
+pub fn VcOptions::with_match_evaluation(Self, Bool) -> Self
 
 // Type aliases
 

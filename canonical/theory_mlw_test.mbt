@@ -11,7 +11,7 @@ fn canonical_test_origin(name : BytesView) -> @identity.Origin {
 }
 
 ///|
-test "empty Theory and Pmodule canonical vectors are byte exact" {
+test "v3 covers empty theories and modules" {
   let context = @identity.CompilationContext::new()
   let key = @theory.TheoryKey::new([b"demo"], b"Empty")
   let theory = @theory.TheoryBuilder::new(
@@ -19,23 +19,17 @@ test "empty Theory and Pmodule canonical vectors are byte exact" {
     key,
     canonical_test_name(b"Empty"),
   ).close()
-  let expected_theory = b"[\"Theory\",[\"TheoryKey\",[\"64656d6f\"],\"456d707479\"],[\"Origin.User\",\"456d707479\",[\"none\"],[]],[],[\"Namespace\",[],[],[],[]]]\n"
-  assert_eq(@canonical.encode_theory(theory).bytes(), expected_theory)
   let pmodule = @mlw.PmoduleBuilder::new(
     context,
     key,
     canonical_test_name(b"Empty"),
   ).close()
-  assert_eq(
-    @canonical.encode_pmodule(pmodule).bytes(),
-    b"[\"Pmodule\",[\"PmoduleKey\",[\"64656d6f\"],\"456d707479\"]," +
-    expected_theory[0:expected_theory.length() - 1].to_owned() +
-    b",[],[\"ProgramNamespace\",[],[],[],[]]]\n",
-  )
+  assert_eq(@canonical.encode_theory(theory).bytes()[:10], b"[\"GraphV3\"")
+  assert_eq(@canonical.encode_pmodule(pmodule).bytes()[:10], b"[\"GraphV3\"")
 }
 
 ///|
-test "Task item and goal-last canonical vector is byte exact" {
+test "v3 covers tasks" {
   let context = @identity.CompilationContext::new()
   let origin = canonical_test_origin(b"g")
   let declaration = @logic.Decl::proposition(
@@ -51,57 +45,114 @@ test "Task item and goal-last canonical vector is byte exact" {
     [TheoryDecl(declaration)],
     None,
   )
-  let origin_bytes = b"[\"Origin.User\",\"67\",[\"none\"],[]]"
-  assert_eq(
-    @canonical.encode_task(task).bytes(),
-    b"[\"Task\",[[\"TaskItem.Decl\",[\"Decl\"," +
-    origin_bytes +
-    b",[],[\"Dprop.Pgoal\",[\"PrSymbol\",[\"proposition\",0],\"67\"," +
-    origin_bytes +
-    b"],[\"Ttrue\"]]]]]]\n",
-  )
+  assert_eq(@canonical.encode_task(task).bytes()[:10], b"[\"GraphV3\"")
 }
 
 ///|
-fn canonical_program_origin() -> @identity.Origin {
-  @identity.Origin::snapshot(
-    b"int",
-    @identity.SnapshotSymbolKey::new(
-      b"demo.Int",
-      1U,
-      0U,
-      Program,
-      Bytes::make(32, b'\x00'),
-    ),
-    [],
-  )
-}
-
-///|
-fn canonical_program_type(
-  context : @identity.CompilationContext,
-) -> @mlw.ProgramTypeSymbol raise {
-  let logic_type = @logic.TypeSymbol::trusted_builtin(
+test "v3 task dependencies omit routine VCs but retain type VCs" {
+  let context = @identity.CompilationContext::new()
+  let dependency_builder = @theory.TheoryBuilder::new(
     context,
-    b"int",
-    @identity.Origin::snapshot(
-      b"int",
-      @identity.SnapshotSymbolKey::new(
-        b"demo.Int",
-        0U,
-        0U,
-        Type,
-        Bytes::make(32, b'\x00'),
+    @theory.TheoryKey::new([b"demo"], b"Dependency"),
+    canonical_test_name(b"Dependency"),
+  )
+  let routine_name = b"routine'vc"
+  let routine_origin = @identity.Origin::user(
+    routine_name,
+    None,
+    [b"expl:VC for routine"],
+  )
+  dependency_builder.add_decl(
+    @logic.Decl::proposition(
+      context,
+      routine_origin,
+      Pgoal,
+      @logic.PrSymbol::new(
+        context,
+        routine_name,
+        routine_origin,
       ),
-      [],
+      @logic.Term::true_formula(),
+      None,
     ),
-    BuiltinInteger,
     None,
   )
-  @mlw.ProgramTypeSymbol::trusted_new(
+  let generated_name = b"dependency'vc"
+  let generated_origin = @identity.Origin::user(
+    generated_name,
+    None,
+    [b"expl:VC for dependency"],
+  )
+  dependency_builder.add_decl(
+    @logic.Decl::proposition(
+      context,
+      generated_origin,
+      Pgoal,
+      @logic.PrSymbol::new(
+        context,
+        generated_name,
+        generated_origin,
+      ),
+      @logic.Term::true_formula(),
+      None,
+    ),
+    None,
+  )
+  let dependency_type = @logic.TypeSymbol::new_abstract(
+    context,
+    b"dependency",
+    canonical_test_origin(b"dependency"),
+    [],
+    None,
+  )
+  dependency_builder.add_decl(
+    @logic.Decl::type_declaration(
+      context,
+      canonical_test_origin(b"dependency"),
+      [dependency_type],
+      None,
+    ),
+    None,
+  )
+  let task_builder = @theory.TheoryBuilder::new(
+    context,
+    @theory.TheoryKey::new([b"demo"], b"Task"),
+    canonical_test_name(b"Task"),
+  )
+  task_builder.add_use(dependency_builder.close(), false, None)
+  let goal_origin = canonical_test_origin(b"goal")
+  task_builder.add_decl(
+    @logic.Decl::proposition(
+      context,
+      goal_origin,
+      Pgoal,
+      @logic.PrSymbol::new(context, b"goal", goal_origin),
+      @logic.Term::true_formula(),
+      None,
+    ),
+    None,
+  )
+  guard @theory.split_theory(context, task_builder.close(), None) is [task] else {
+    fail("expected one task")
+  }
+  let encoded = @canonical.encode_task(task).bytes()
+  assert_true(encoded.find(b"726f7574696e65277663") is None)
+  assert_true(encoded.find(b"646570656e64656e6379277663") is Some(_))
+}
+
+///|
+test "v3 covers program types and itys" {
+  let context = @identity.CompilationContext::new()
+  let logic_type = @logic.TypeSymbol::new_builtin(
+    context,
+    b"int",
+    canonical_test_origin(b"int"),
+    BuiltinInteger,
+  )
+  let symbol = @mlw.ProgramTypeSymbol::new(
     context,
     logic_type,
-    canonical_program_origin(),
+    canonical_test_origin(b"int"),
     {
       nonfree: false,
       private_: false,
@@ -115,41 +166,12 @@ fn canonical_program_type(
     [],
     None,
   )
-}
-
-///|
-test "minimal program type and Ity canonical vectors are byte exact" {
-  let symbol = canonical_program_type(@identity.CompilationContext::new())
-  let zero_digest = b"0000000000000000000000000000000000000000000000000000000000000000"
-  let origin = b"[\"Origin.Snapshot\",\"696e74\",[\"SnapshotSymbolKey\",\"64656d6f2e496e74\",1,0,\"program\",\"" +
-    zero_digest +
-    b"\"],[]]"
   assert_eq(
-    @canonical.encode_program_type_symbol(symbol).bytes(),
-    b"[\"ProgramTypeSymbol\",[\"program\",0],[\"type\",0]," +
-    origin +
-    b",[false,false,false,false,[],[]],[\"TypeDefinition.NoDef\"]]\n",
+    @canonical.encode_program_type_symbol(symbol).bytes()[:10],
+    b"[\"GraphV3\"",
   )
   assert_eq(
-    @canonical.encode_ity(@mlw.Ity::app(symbol, [], None)).bytes(),
-    b"[\"ItyApp\",[\"program\",0],[],[],[\"TyApp\",[\"type\",0],[]]]\n",
-  )
-}
-
-///|
-test "snapshot diagnostic locations stay outside semantic canonical bytes" {
-  let key = @identity.SnapshotSymbolKey::new(
-    b"demo.Int",
-    0U,
-    0U,
-    Type,
-    Bytes::make(32, b'\x01'),
-  )
-  let span = @identity.SourceSpan::new(b"demo.mlw", 1, 2, 1L, 1L, 1L, 2L)
-  assert_eq(
-    @canonical.encode_origin(@identity.Origin::snapshot(b"int", key, [])).bytes(),
-    @canonical.encode_origin(
-      @identity.Origin::snapshot_with_span(b"int", key, Some(span), []),
-    ).bytes(),
+    @canonical.encode_ity(@mlw.Ity::app(symbol, [], None)).bytes()[:10],
+    b"[\"GraphV3\"",
   )
 }

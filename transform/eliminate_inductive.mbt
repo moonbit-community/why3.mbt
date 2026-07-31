@@ -240,18 +240,58 @@ fn remove_trivial_quantification(
 
 ///|
 fn inversion_case(
+  context : @identity.CompilationContext,
   equality : @logic.LSymbol,
   formal_arguments : ArrayView[@logic.Term],
   formula : @logic.Term,
 ) -> @logic.Term raise TransformError {
   let stage = @identity.EliminateInductive
   match formula.view() {
-    Tquant(ForallQuantifier, binders, triggers, body) =>
+    Tquant(ForallQuantifier, binders, triggers, body) => {
+      let replacements : Array[@logic.VSymbol] = []
+      let values : Map[@logic.VSymbol, @logic.Term] = Map([])
+      for binder in binders {
+        let replacement = binder.clone_identifier(context, None) catch {
+          _ =>
+            return fail_transform(
+              InvariantFailure,
+              stage,
+              "invalid inversion existential binder",
+            )
+        }
+        replacements.push(replacement)
+        values[binder] = @logic.Term::variable(replacement)
+      }
+      let substitution = @logic.TySubstitution::new()
+      let opened_triggers = [
+        for group in triggers => {
+          [
+            for trigger in group => {
+              instantiate_term(
+                context,
+                substitution,
+                values,
+                trigger,
+                stage,
+                None,
+              )
+            }
+          ]
+        }
+      ]
+      let opened_body = instantiate_term(
+        context,
+        substitution,
+        values,
+        body,
+        stage,
+        None,
+      )
       @logic.Term::quantify(
         ExistsQuantifier,
-        binders,
-        triggers,
-        inversion_case(equality, formal_arguments, body),
+        replacements,
+        opened_triggers,
+        inversion_case(context, equality, formal_arguments, opened_body),
         None,
       ) catch {
         _ =>
@@ -261,11 +301,12 @@ fn inversion_case(
             "invalid inversion existential",
           )
       }
+    }
     Tbinop(Implies, premise, conclusion) =>
       raw_binary(
         And,
         premise,
-        inversion_case(equality, formal_arguments, conclusion),
+        inversion_case(context, equality, formal_arguments, conclusion),
         stage,
       )
     Tapp(_, _, actual_arguments) => {
@@ -291,7 +332,7 @@ fn inversion_case(
       @logic.Term::let_in(
         variable,
         value,
-        inversion_case(equality, formal_arguments, body),
+        inversion_case(context, equality, formal_arguments, body),
         None,
       ) catch {
         _ => fail_transform(InvariantFailure, stage, "invalid inversion let")
@@ -335,6 +376,7 @@ fn inversion_axiom(
     )
   }
   let mut cases = inversion_case(
+    context,
     equality,
     arguments,
     view.cases[0].view().formula,
@@ -343,7 +385,12 @@ fn inversion_axiom(
     cases = raw_binary(
       Or,
       cases,
-      inversion_case(equality, arguments, view.cases[index].view().formula),
+      inversion_case(
+        context,
+        equality,
+        arguments,
+        view.cases[index].view().formula,
+      ),
       stage,
     )
   }
@@ -430,6 +477,49 @@ fn eliminate_inductive_group(
 }
 
 ///|
+priv struct EliminateInductiveCacheEntry {
+  output : Array[@theory.TheoryItem]
+  generation : Int64
+  persistent : Bool
+}
+
+///|
+let eliminate_inductive_cache : Ref[
+  Map[@identity.DeclarationId, EliminateInductiveCacheEntry],
+] = Ref(Map([]))
+
+///|
+fn eliminate_inductive_declaration(
+  context : @identity.CompilationContext,
+  equality : @logic.LSymbol,
+  declaration : @logic.Decl,
+  declarations : ArrayView[@logic.InductiveDeclaration],
+) -> Array[@theory.TheoryItem] raise TransformError {
+  let generation = current_declaration_cache_generation()
+  let persistent = declaration_cache_is_persistent(declaration)
+  let cache = eliminate_inductive_cache.val
+  match cache.get(declaration.declaration_id()) {
+    Some(entry) =>
+      if (entry.persistent && persistent) ||
+        (!entry.persistent && !persistent && entry.generation == generation) {
+        return entry.output
+      }
+    None => ()
+  }
+  let output = eliminate_inductive_group(context, equality, declarations)
+  if persistent {
+    for item in output {
+      if item is TheoryDecl(declaration) {
+        declaration_cache_retain(declaration)
+      }
+    }
+  }
+  cache[declaration.declaration_id()] = { output, generation, persistent }
+  eliminate_inductive_cache.val = cache
+  output
+}
+
+///|
 pub fn eliminate_inductive(
   context : @identity.CompilationContext,
   task : @theory.Task,
@@ -442,7 +532,7 @@ pub fn eliminate_inductive(
     match item {
       TheoryDecl(declaration) =>
         match declaration.view() {
-          Dind(declarations) => {
+          Dind(_, declarations) => {
             guard equality is Some(equality) else {
               return fail_transform(
                 InvariantFailure,
@@ -451,8 +541,8 @@ pub fn eliminate_inductive(
               )
             }
             for
-              mapped in eliminate_inductive_group(
-                context, equality, declarations,
+              mapped in eliminate_inductive_declaration(
+                context, equality, declaration, declarations,
               ) {
               result.push(mapped)
             }
@@ -462,5 +552,5 @@ pub fn eliminate_inductive(
       TheoryUse(_) | TheoryClone(_) | TheoryMeta(_) => result.push(item)
     }
   }
-  checked_task(task.context_anchor(), result, stage)
+  checked_task(task, result, stage)
 }

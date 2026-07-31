@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
+// Derived from Why3 1.7.2 (Copyright 2010-2023 Inria, CNRS, Paris-Saclay University).
+// MoonBit translation and semantic modifications recorded on 2026-07-24.
 
 ///|
 fn require_value_type(
@@ -150,27 +152,6 @@ pub fn Term::elaborated_apply(
   result_type : Ty?,
   span : @identity.SourceSpan?,
 ) -> Term raise TypeError {
-  apply_logic_symbol_with_result(symbol, arguments, result_type, span)
-}
-
-///|
-/// Trusted snapshot application constructor. Unlike ordinary elaboration,
-/// the frozen representation carries the expected result type explicitly;
-/// matching it is necessary for nullary polymorphic symbols whose type
-/// arguments cannot be recovered from value arguments alone.
-pub fn Term::trusted_snapshot_apply(
-  symbol : LSymbol,
-  arguments : ArrayView[Term],
-  result_type : Ty?,
-  span : @identity.SourceSpan?,
-) -> Term raise TypeError {
-  if !(symbol.origin.kind().view() is SnapshotKind) {
-    fail_type(
-      SnapshotOriginRequired,
-      span,
-      "trusted term application requires a snapshot logic symbol",
-    )
-  }
   apply_logic_symbol_with_result(symbol, arguments, result_type, span)
 }
 
@@ -335,7 +316,7 @@ pub fn Term::false_formula() -> Term {
 }
 
 ///|
-pub fn Term::trusted_case(
+pub fn Term::case(
   scrutinee : Term,
   branches : ArrayView[(Pattern, Term)],
   span : @identity.SourceSpan?,
@@ -364,7 +345,7 @@ pub fn Term::trusted_case(
 }
 
 ///|
-pub fn Term::trusted_epsilon(
+pub fn Term::epsilon(
   variable : VSymbol,
   body : Term,
   span : @identity.SourceSpan?,

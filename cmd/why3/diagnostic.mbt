@@ -5,7 +5,9 @@ enum CliErrorKind {
   UsageError
   InvalidArgument
   InvalidTimeout
-  ExternalLoadpath
+  UnsupportedCliFeature
+  ConfigurationError
+  LoadpathError
   SelectionError
   OutputError
 } derive(Eq, Debug)

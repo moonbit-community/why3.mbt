@@ -11,22 +11,12 @@ fn term_user_origin(name : BytesView) -> @identity.Origin {
 }
 
 ///|
-fn term_snapshot_origin(
+fn term_catalog_origin(
   name : BytesView,
-  kind : @identity.SnapshotSymbolKind,
-  ordinal : UInt,
+  _kind : @identity.SourceSymbolKind,
+  _ordinal : UInt,
 ) -> @identity.Origin {
-  @identity.Origin::snapshot(
-    name,
-    @identity.SnapshotSymbolKey::new(
-      b"why3.TermTest",
-      ordinal,
-      0U,
-      kind,
-      Bytes::make(32, b'\x00'),
-    ),
-    [],
-  )
+  @identity.Origin::user(name, Some(term_test_span()), [b"builtin"])
 }
 
 ///|
@@ -36,12 +26,11 @@ fn term_builtin(
   kind : @logic.BuiltinTypeKind,
   ordinal : UInt,
 ) -> (@logic.TypeSymbol, @logic.Ty) raise @logic.TypeError {
-  let symbol = @logic.TypeSymbol::trusted_builtin(
+  let symbol = @logic.TypeSymbol::new_builtin(
     context,
     name,
-    term_snapshot_origin(name, Type, ordinal),
+    term_catalog_origin(name, Type, ordinal),
     kind,
-    Some(term_test_span()),
   )
   (symbol, @logic.Ty::app(symbol, [], Some(term_test_span())))
 }
@@ -166,6 +155,57 @@ test "formula and boolean values never mix implicitly" {
   } noraise {
     _ => fail("expected explicit boolean-to-formula coercion requirement")
   }
+}
+
+///|
+test "public epsilon and pattern combinators preserve binders and types" {
+  let context = @identity.CompilationContext::new()
+  let (_, integer) = term_builtin(context, b"int", BuiltinInteger, 0U)
+  let witness = @logic.VSymbol::new(
+    context,
+    b"witness",
+    term_user_origin(b"witness"),
+    integer,
+    Some(term_test_span()),
+  )
+  let predicate = @logic.LSymbol::new_predicate(
+    context,
+    b"holds",
+    term_user_origin(b"holds"),
+    [integer],
+    Some(term_test_span()),
+  )
+  let body = @logic.Term::apply_predicate(
+    predicate,
+    [@logic.Term::variable(witness)],
+    Some(term_test_span()),
+  )
+  let epsilon = @logic.Term::epsilon(witness, body, Some(term_test_span()))
+  assert_true(epsilon.view() is Teps(found, _) && found == witness)
+  assert_true(epsilon.ty() == Some(integer))
+  let variable_pattern = @logic.Pattern::variable(witness)
+  let alternative = @logic.Pattern::or(
+    variable_pattern,
+    variable_pattern,
+    Some(term_test_span()),
+  )
+  assert_true(
+    alternative.bound_variables().length() == 1 &&
+    alternative.bound_variables()[0] == witness,
+  )
+  let alias_variable = @logic.VSymbol::new(
+    context,
+    b"alias",
+    term_user_origin(b"alias"),
+    integer,
+    Some(term_test_span()),
+  )
+  let as_pattern = @logic.Pattern::as_pattern(
+    @logic.Pattern::wild(integer),
+    alias_variable,
+    Some(term_test_span()),
+  )
+  assert_true(as_pattern.view() is Pas(_, found, _) && found == alias_variable)
 }
 
 ///|
@@ -318,10 +358,10 @@ test "one polymorphic symbol records distinct type instances" {
 test "exact constants enforce Range Float and string types" {
   let context = @identity.CompilationContext::new()
   let (_, string_type) = term_builtin(context, b"string", BuiltinString, 0U)
-  let range_symbol = @logic.TypeSymbol::trusted_range(
+  let range_symbol = @logic.TypeSymbol::new_range(
     context,
     b"range8",
-    term_snapshot_origin(b"range8", Type, 1U),
+    term_catalog_origin(b"range8", Type, 1U),
     BigInt::from_int(-128),
     BigInt::from_int(127),
     Some(term_test_span()),
@@ -329,14 +369,14 @@ test "exact constants enforce Range Float and string types" {
   let range_type = @logic.Ty::app(range_symbol, [], Some(term_test_span()))
   ignore(
     @logic.Term::constant(
-      @logic.Constant::integer(IntegerDecimal, BigInt::from_int(127)),
+      @logic.Constant::integer(ILitDec, BigInt::from_int(127)),
       range_type,
       Some(term_test_span()),
     ),
   )
   try
     @logic.Term::constant(
-      @logic.Constant::integer(IntegerDecimal, BigInt::from_int(128)),
+      @logic.Constant::integer(ILitDec, BigInt::from_int(128)),
       range_type,
       Some(term_test_span()),
     )
@@ -350,15 +390,14 @@ test "exact constants enforce Range Float and string types" {
     string_type,
     Some(term_test_span()),
   )
-  guard string_term.view() is Tconst(string_constant) &&
-    string_constant.view() is StringConstant(bytes) else {
+  guard string_term.view() is Tconst(ConstStr(bytes)) else {
     fail("expected string constant")
   }
   assert_eq(bytes, b"a\x00\xff")
-  let float_symbol = @logic.TypeSymbol::trusted_float(
+  let float_symbol = @logic.TypeSymbol::new_float(
     context,
     b"float32",
-    term_snapshot_origin(b"float32", Type, 2U),
+    term_catalog_origin(b"float32", Type, 2U),
     8,
     24,
     Some(term_test_span()),
@@ -367,8 +406,8 @@ test "exact constants enforce Range Float and string types" {
   ignore(
     @logic.Term::constant(
       @logic.Constant::real(
-        RealDecimal(0L),
-        @parser.RealValue::normalized(
+        RLitDec(0L),
+        @logic.RealValue::normalized(
           BigInt::from_int(1),
           BigInt::from_int(0),
           BigInt::from_int(0),
@@ -381,8 +420,8 @@ test "exact constants enforce Range Float and string types" {
   try
     @logic.Term::constant(
       @logic.Constant::real(
-        RealDecimal(0L),
-        @parser.RealValue::normalized(
+        RLitDec(0L),
+        @logic.RealValue::normalized(
           BigInt::from_int(1),
           BigInt::from_int(0),
           BigInt::from_int(-1),

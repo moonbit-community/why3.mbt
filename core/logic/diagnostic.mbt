@@ -7,7 +7,6 @@ pub(all) enum TypeErrorKind {
   DuplicateTypeParameter
   UnboundTypeVariable
   ContextMismatch
-  SnapshotOriginRequired
   InvalidRange
   InvalidFloat
   TypeMismatch
@@ -27,6 +26,15 @@ pub(all) enum TypeErrorKind {
   DuplicateDeclarationSymbol
   UnknownDependency
   CyclicDefinition
+  NoTerminationProof
+  NonFoundedTypeDeclaration
+  NonPositiveTypeDeclaration
+  NonExhaustivePattern
+  EmptyRecord
+  BadRecordField
+  BadRecordType
+  RecordFieldMissing
+  DuplicateRecordField
   InvalidDeclaration
   EmptyDeclaration
 } derive(Eq, Debug)

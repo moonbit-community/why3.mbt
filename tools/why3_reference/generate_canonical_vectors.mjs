@@ -112,7 +112,7 @@ export function renderCanonicalVectors(kind) {
   if (kind !== 'schema') fail(`unknown canonical vector set ${kind}`);
   return `${JSON.stringify({
     schemaVersion: 1,
-    canonicalSchemaVersion: 2,
+    canonicalSchemaVersion: 3,
     hashInputIncludesFinalLf: true,
     vectors: vectors(schemaCases),
   }, null, 2)}\n`;

@@ -35,7 +35,7 @@ let print_with_identifier_markers driver provenance prepared =
     if candidate != formatter then original
     else begin
       let event, marker =
-        Canonical_v2.smt_identifier_event !ordinal identifier original
+        Canonical_graph_v3.smt_identifier_event !ordinal identifier original
       in
       incr ordinal;
       events_reversed := event :: !events_reversed;
@@ -44,7 +44,7 @@ let print_with_identifier_markers driver provenance prepared =
   in
   ignore
     (Ident.with_clone_observer
-       (Canonical_v2.observe_identifier_clone provenance)
+       (Canonical_graph_v3.observe_identifier_clone provenance)
        (fun () ->
          Smtv2.with_identifier_rewriter rewrite (fun () ->
            Driver.print_task_prepared driver formatter prepared)));
@@ -53,30 +53,26 @@ let print_with_identifier_markers driver provenance prepared =
 
 let () =
   let why3_root = ref None in
-  let snapshot = ref None in
   let fixture = ref None in
   let file = ref None in
   let root_driver = ref "z3_487.drv" in
   let units = ref [] in
   Arg.parse
     [ ("--why3-root", Arg.String (fun value -> why3_root := Some value), "PATH");
-      ("--snapshot", Arg.String (fun value -> snapshot := Some value), "PATH");
       ("--fixture", Arg.String (fun value -> fixture := Some value), "PATH");
       ("--file", Arg.String (fun value -> file := Some value), "PATH");
       ("--driver", Arg.String (fun value -> root_driver := value), "NAME");
       ("--unit", Arg.String (fun value -> units := value :: !units), "NAME") ]
     (fun value -> fail ("unexpected argument " ^ value))
-    "export_smt_trace --why3-root PATH --snapshot JSON --fixture LABEL --file PATH --unit NAME...";
+    "export_smt_trace --why3-root PATH --fixture LABEL --file PATH --unit NAME...";
   let why3_root = Unix.realpath (required "--why3-root" !why3_root) in
   let stdlib = Filename.concat why3_root "stdlib" in
-  let snapshot = Unix.realpath (required "--snapshot" !snapshot) in
   let fixture = required "--fixture" !fixture in
   let file = Unix.realpath (required "--file" !file) in
   let units = List.rev !units in
   if units = [] then fail "at least one --unit is required";
   let environment = Env.create_env [stdlib; Filename.dirname file] in
-  let catalog = Canonical_v2.load_catalog environment snapshot in
-  let source = Canonical_v2.read_source fixture file in
+  let source = Canonical_v3.read_source fixture file in
   let modules, _ = Env.read_file Pmodule.mlw_language environment file in
   let config = Whyconf.init_config None in
   let main =
@@ -95,16 +91,16 @@ let () =
              let raw_goal = Task.task_goal raw_task in
              let goal_name = raw_goal.Decl.pr_name.Ident.id_string in
              let provenance =
-               Canonical_v2.task_trace_provenance catalog source raw_task
+               Canonical_graph_v3.task_trace_provenance source raw_task
              in
              let trace stage task =
                ignore
-                 (Canonical_v2.canonical_checkpoint_task catalog source
+                 (Canonical_graph_v3.graph_of_checkpoint_task source
                     provenance stage task)
              in
              let prepared =
                Ident.with_clone_observer
-                 (Canonical_v2.observe_identifier_clone provenance)
+                 (Canonical_graph_v3.observe_identifier_clone provenance)
                  (fun () ->
                    Driver.prepare_task_trace trace driver raw_task)
              in
@@ -117,7 +113,7 @@ let () =
              let events, output =
                print_with_identifier_markers driver provenance prepared
              in
-             Canonical_v2.write_record stdout
-               (Canonical_v2.smt_token_record source name goal_name ordinal
+             Canonical_graph_v3.write_record stdout
+               (Canonical_graph_v3.smt_token_record source name goal_name ordinal
                   provenance events output)))
     units

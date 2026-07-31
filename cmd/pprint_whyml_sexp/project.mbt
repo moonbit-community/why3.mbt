@@ -853,3 +853,34 @@ fn sexp_of_mlw_file(file : @parser.MlwFile) -> Sexp {
       sexp_variant("Decls", [sexp_array(declarations, sexp_of_decl)])
   }
 }
+
+///|
+fn sexp_of_full_unit_kind(module_ : @parser.MlwModule) -> Sexp {
+  match module_.kind {
+    Theory => sexp_variant("FullTheory", [])
+    Module =>
+      sexp_variant("FullModule", [
+        sexp_option(module_.interface, sexp_of_qualid),
+      ])
+  }
+}
+
+///|
+fn sexp_of_full_unit(module_ : @parser.MlwModule) -> Sexp {
+  sexp_record([
+    ("full_kind", sexp_of_full_unit_kind(module_)),
+    ("full_name", sexp_of_ident(module_.name)),
+    ("full_decls", sexp_array(module_.declarations, sexp_of_decl)),
+    ("full_loc", sexp_of_span(module_.span)),
+  ])
+}
+
+///|
+fn sexp_of_full_mlw_file(file : @parser.MlwFile) -> Sexp {
+  match file {
+    Modules(modules) =>
+      sexp_variant("FullModules", [sexp_array(modules, sexp_of_full_unit)])
+    Decls(declarations) =>
+      sexp_variant("FullDecls", [sexp_array(declarations, sexp_of_decl)])
+  }
+}

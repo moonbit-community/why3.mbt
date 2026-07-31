@@ -84,11 +84,12 @@ async fn report_parse_error(diagnostic : @parser.ParseDiagnostic) -> Unit {
 ///|
 async fn main {
   let arguments = @env.args()
-  if arguments.length() != 2 {
-    fail_pprinter("expected exactly one fixture path")
+  let full = arguments.length() == 3 && arguments[1] == "--full"
+  if arguments.length() != 2 && !full {
+    fail_pprinter("expected [--full] FIXTURE")
     return
   }
-  let path = arguments[1]
+  let path = arguments[if full { 2 } else { 1 }]
   if !path_is_valid_utf16(path[:]) {
     fail_pprinter("fixture path is not valid UTF-16")
     return
@@ -106,5 +107,11 @@ async fn main {
       return
     }
   }
-  @stdio.stdout.write(sexp_of_mlw_file(file).render())
+  @stdio.stdout.write(
+    if full {
+      sexp_of_full_mlw_file(file).render()
+    } else {
+      sexp_of_mlw_file(file).render()
+    },
+  )
 }

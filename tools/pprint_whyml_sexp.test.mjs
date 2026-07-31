@@ -45,7 +45,7 @@ test('pprint_whyml_sexp process protocol is stdout-clean and deterministic', () 
     assert.equal(missingArguments.stdout, '');
     assert.equal(
       missingArguments.stderr,
-      'pprint_whyml_sexp: expected exactly one fixture path\n',
+      'pprint_whyml_sexp: expected [--full] FIXTURE\n',
     );
 
     const absent = runPprintWhymlSexp(join(directory, 'absent.mlw'));

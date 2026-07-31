@@ -44,8 +44,22 @@ fn print_data_declarations(
     if declaration_index > 0 {
       state.writer.write(b" ")
     }
-    state.writer.write(b"(")
-    for constructor_index, data_constructor in declaration.view().constructors {
+    let declaration_view = declaration.view()
+    let parameters = declaration_view.type_symbol.view().parameters
+    if parameters.is_empty() {
+      state.writer.write(b"(")
+    } else {
+      state.writer.write(b"(par (")
+      for index, parameter in parameters {
+        if index > 0 {
+          state.writer.write(b" ")
+        }
+        print_type_variable_identifier(state, parameter)
+      }
+      state.writer.write(b") (")
+    }
+    let is_record = declaration_view.constructors.length() == 1
+    for constructor_index, data_constructor in declaration_view.constructors {
       if constructor_index > 0 {
         state.writer.write(b" ")
       }
@@ -55,12 +69,19 @@ fn print_data_declarations(
       for argument_index, argument in view.symbol.view().argument_types {
         state.writer.write(b" (")
         match view.projections[argument_index] {
-          Some(projection) => print_logic_identifier(state, projection)
-          None =>
-            fail_printer(
-              UnsupportedDatatype,
-              "anonymous datatype fields are outside the SMT MVP printer",
-            )
+          Some(projection) => {
+            if !is_record {
+              fail_printer(
+                UnsupportedDatatype,
+                "sum types cannot declare projections in SMT-LIB 2.6",
+              )
+            }
+            print_logic_identifier(state, projection)
+          }
+          None => {
+            let name = view.symbol.view().name + b"_proj"
+            state.writer.write(state.names.fresh(name))
+          }
         }
         state.writer.write(b" ")
         print_type(state, argument)
@@ -68,7 +89,7 @@ fn print_data_declarations(
       }
       state.writer.write(b")")
     }
-    state.writer.write(b")")
+    state.writer.write(if parameters.is_empty() { b")" } else { b"))" })
   }
   state.writer.write(b"))\n")
 }
@@ -143,7 +164,14 @@ fn print_proposition(
     Pgoal => {
       state.writer.write(b"(assert (not ")
       print_formula(state, formula)
-      state.writer.write(b"))\n(check-sat)\n")
+      state.writer.write(b"))\n")
+      if state.request_model && state.model_needs_push {
+        state.writer.write(b"(push)\n")
+      }
+      state.writer.write(b"(check-sat)\n")
+      if state.request_model {
+        state.writer.write(b"(get-model)\n")
+      }
     }
     Plemma =>
       fail_printer(
@@ -169,7 +197,7 @@ fn print_declaration(
       for definition in definitions {
         print_logic_definition(state, definition)
       }
-    Dind(_) =>
+    Dind(_, _) =>
       fail_printer(
         UnsupportedDeclaration,
         "inductive declaration reached the SMT printer",

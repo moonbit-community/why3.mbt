@@ -3,21 +3,6 @@
 // MoonBit translation and semantic modifications recorded on 2026-07-21.
 
 ///|
-fn task_uses_theory(
-  items : ArrayView[@theory.TheoryItem],
-  key : @theory.TheoryKey,
-) -> Bool {
-  for item in items {
-    match item {
-      TheoryUse(used) => if used == key { return true }
-      TheoryClone(witness) => if witness.view().source == key { return true }
-      TheoryDecl(_) | TheoryMeta(_) => ()
-    }
-  }
-  false
-}
-
-///|
 fn Z3Profile::printer_preludes(
   self : Z3Profile,
   task : @theory.Task,
@@ -79,15 +64,50 @@ pub fn Z3Profile::driver_update(
   for index = 0; index + 1 < original.length(); index = index + 1 {
     result.push(original[index])
   }
+  let applicable : Array[(TypedMetaGroup, @theory.Theory)] = []
   for group in self.meta_groups {
-    if task_uses_theory(original, group.theory_key) {
-      for entry in group.entries {
-        result.push(TheoryMeta(entry.meta))
+    match task.referenced_theory(group.theory_key) {
+      Some(source) => applicable.push((group, source))
+      None => ()
+    }
+  }
+  applicable.sort_by((left, right) => {
+    left.1
+    .context_anchor()
+    .local_id()
+    .compare(right.1.context_anchor().local_id())
+  })
+  for entry in applicable {
+    let group = entry.0
+    let source = entry.1
+    for declaration in task.clone_history(source).view().tds_set {
+      match declaration {
+        TheoryUse(_) =>
+          for entry in group.entries {
+            result.push(TheoryMeta(entry.meta))
+          }
+        TheoryClone(witness) =>
+          for entry in group.entries {
+            let cloned = entry.meta.clone_through(source, witness, None) catch {
+              _ =>
+                fail_bind(InvalidTask, "$.task", "driver meta cloning failed")
+            }
+            match cloned {
+              Some(meta) => result.push(TheoryMeta(meta))
+              None => ()
+            }
+          }
+        TheoryDecl(_) | TheoryMeta(_) => ()
       }
     }
   }
   result.push(original[original.length() - 1])
-  @theory.Task::trusted_new(self.anchor, result, None) catch {
+  @theory.Task::trusted_new_with_dependencies(
+    self.anchor,
+    result,
+    task.dependency_theories(),
+    None,
+  ) catch {
     _ =>
       fail_bind(InvalidTask, "$.task", "driver update violated task invariants")
   }

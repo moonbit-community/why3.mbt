@@ -4,17 +4,134 @@
 extern "C" fn exit_process(code : Int) -> Unit = "exit"
 
 ///|
+fn final_qualified_segment(value : BytesView) -> BytesView {
+  let mut start = 0
+  for index, byte in value {
+    if byte == b'.' {
+      start = index + 1
+    }
+  }
+  value[start:]
+}
+
+///|
+fn selected_name_matches(actual : BytesView, requested : BytesView) -> Bool {
+  actual == requested || actual == final_qualified_segment(requested)
+}
+
+///|
+fn ascii_equal_ignoring_case(left : BytesView, right : BytesView) -> Bool {
+  if left.length() != right.length() {
+    return false
+  }
+  for index = 0; index < left.length(); index = index + 1 {
+    let left = if left[index] >= b'A' && left[index] <= b'Z' {
+      left[index] + 32
+    } else {
+      left[index]
+    }
+    let right = if right[index] >= b'A' && right[index] <= b'Z' {
+      right[index] + 32
+    } else {
+      right[index]
+    }
+    if left != right {
+      return false
+    }
+  }
+  true
+}
+
+///|
+fn diagnostic_location(span : @identity.SourceSpan?) -> String {
+  match span {
+    None => ""
+    Some(span) => {
+      let view = span.view()
+      display_bytes(view.relative_path) +
+      ":" +
+      view.start_line.to_string() +
+      ":" +
+      view.start_column.to_string() +
+      ": "
+    }
+  }
+}
+
+///|
+fn matches_sub_goal(
+  info : @z3.GoalInfoView,
+  selector : CliSubGoal,
+  default_file : String,
+) -> Bool {
+  let span = info.origin.source_span()
+  if selector.file is Some(requested_file) {
+    let requested_file = if requested_file.is_empty() {
+      default_file
+    } else {
+      requested_file
+    }
+    guard span is Some(span) else { return false }
+    if span.view().relative_path != @utf8.encode(requested_file) {
+      return false
+    }
+  }
+  if selector.line is Some(requested_line) {
+    guard span is Some(span) else { return false }
+    let view = span.view()
+    if requested_line < view.start_line || requested_line > view.end_line {
+      return false
+    }
+  }
+  if selector.explanation is Some(requested) {
+    let mut found = false
+    for attribute in info.expl_attributes {
+      let explanation = if attribute.has_prefix(b"expl:") {
+        attribute[5:]
+      } else {
+        attribute[:]
+      }
+      if ascii_equal_ignoring_case(explanation, requested) {
+        found = true
+        break
+      }
+    }
+    if !found {
+      return false
+    }
+  }
+  true
+}
+
+///|
 fn selected_goal_indices(
   infos : ArrayView[@z3.GoalInfo],
+  input : CliInput,
   options : CliOptions,
 ) -> Array[Int] raise CliError {
   let candidates : Array[Int] = []
   for index, info in infos {
     let view = info.view()
-    if options.theory is Some(theory) && view.unit_name != theory {
+    let mut selected_by_name = input.theories.is_empty()
+    for theory in input.theories {
+      if selected_name_matches(view.unit_name, theory.name) &&
+        (
+          theory.goals.is_empty() ||
+          theory.goals.any(goal => {
+            selected_name_matches(view.goal.view().name, goal)
+          })
+        ) {
+        selected_by_name = true
+        break
+      }
+    }
+    if !selected_by_name {
       continue
     }
-    if options.goal is Some(goal) && view.goal.view().name != goal {
+    if !options.sub_goals.is_empty() &&
+      !options.sub_goals.any(selector => {
+        matches_sub_goal(view, selector, input.file)
+      }) {
       continue
     }
     candidates.push(index)
@@ -38,13 +155,14 @@ fn selected_goal_indices(
 async fn run_check(
   checked : @pipeline.CheckedFile,
   options : CliOptions,
+  input : CliInput,
   fixture : BytesView,
   source : BytesView,
 ) -> Int {
   match options.output_mode {
     HumanOutput =>
       @stdio.stdout.write(
-        options.file +
+        input.file +
         ": checked " +
         checked.typed_units().length().to_string() +
         " unit(s)\n",
@@ -62,7 +180,7 @@ async fn run_check(
             )
         }
       }
-    JsonOutput =>
+    JsonOutput | JsonModelValuesOutput =>
       for unit in checked.typed_units() {
         let (kind, unit_name, items) = match unit {
           Theory(theory) =>
@@ -102,12 +220,13 @@ async fn run_check(
 async fn run_task(
   checked : @pipeline.CheckedFile,
   options : CliOptions,
+  input : CliInput,
   fixture : BytesView,
   source : BytesView,
 ) -> Int {
   let tasked = @pipeline.tasks(checked)
   let infos = tasked.goal_infos()
-  let selected = selected_goal_indices(infos, options)
+  let selected = selected_goal_indices(infos, input, options)
   for index in selected {
     let info = infos[index].view()
     match options.output_mode {
@@ -118,7 +237,7 @@ async fn run_task(
           display_bytes(info.goal.view().name) +
           ": task ready\n",
         )
-      JsonOutput =>
+      JsonOutput | JsonModelValuesOutput =>
         @stdio.stdout.write(
           goal_json_prefix(info, "task") + ",\"status\":\"ready\"}\n",
         )
@@ -142,11 +261,13 @@ async fn write_smt_files(
   calls : ArrayView[@z3.PreparedCall],
   selected : ArrayView[Int],
   directory : String,
+  filename_prefix? : String = "",
 ) -> Unit {
   let outputs : Array[(Int, String)] = []
   for index in selected {
     let info = calls[index].goal_info().view()
-    let filename = six_digit_ordinal(info.ordinal) +
+    let filename = filename_prefix +
+      six_digit_ordinal(info.ordinal) +
       "-" +
       bytes_hex_string(info.goal.view().name) +
       ".smt2"
@@ -182,12 +303,18 @@ async fn write_smt_files(
 async fn run_emit_smt(
   checked : @pipeline.CheckedFile,
   options : CliOptions,
+  input : CliInput,
+  input_index : Int,
   fixture : BytesView,
   source : BytesView,
 ) -> Int {
-  let calls = @pipeline.prepare_proof(checked)
+  let calls = @pipeline.prepare_proof(
+    checked,
+    transforms=cli_transform_names(options),
+    metas=cli_metas(options),
+  )
   let infos = [ for call in calls => call.goal_info() ]
-  let selected = selected_goal_indices(infos, options)
+  let selected = selected_goal_indices(infos, input, options)
   if selected.length() > 1 && options.output_directory is None {
     fail_cli(
       OutputError,
@@ -195,7 +322,16 @@ async fn run_emit_smt(
     )
   }
   if options.output_directory is Some(directory) {
-    write_smt_files(calls, selected, directory)
+    write_smt_files(
+      calls,
+      selected,
+      directory,
+      filename_prefix=if options.inputs.length() > 1 {
+        six_digit_ordinal(input_index) + "-"
+      } else {
+        ""
+      },
+    )
   }
   for index in selected {
     let call = calls[index]
@@ -212,7 +348,7 @@ async fn run_emit_smt(
               ": SMT emitted\n",
             )
         }
-      JsonOutput =>
+      JsonOutput | JsonModelValuesOutput =>
         @stdio.stdout.write(
           goal_json_prefix(info, "emit-smt") +
           ",\"smt_hex\":\"" +
@@ -232,24 +368,60 @@ async fn run_emit_smt(
 async fn run_prove(
   checked : @pipeline.CheckedFile,
   options : CliOptions,
+  input : CliInput,
+  input_index : Int,
   fixture : BytesView,
   source : BytesView,
 ) -> Int {
   ignore(options.prover)
+  let request_model = options.output_mode == JsonModelValuesOutput ||
+    options.metas.any(value => meta_parts(value).0 == "get_counterexmp")
   let calls = @pipeline.prepare_proof(
     checked,
     solver_seconds=options.solver_seconds,
+    steps_limit=options.steps_limit,
+    memory_limit_mib=options.memory_limit_mib,
     executable_request=options.z3.map(value => value[:]),
+    transforms=cli_transform_names(options),
+    metas=cli_metas(options),
+    request_model~,
   )
   let infos = [ for call in calls => call.goal_info() ]
-  let selected = selected_goal_indices(infos, options)
+  let selected = selected_goal_indices(infos, input, options)
+  if options.output_directory is Some(directory) {
+    write_smt_files(
+      calls,
+      selected,
+      directory,
+      filename_prefix=if options.inputs.length() > 1 {
+        six_digit_ordinal(input_index) + "-"
+      } else {
+        ""
+      },
+    )
+    return 0
+  }
+  if options.driver is Some(_) {
+    for index in selected {
+      write_bytes_stdout(calls[index].query().bytes())
+    }
+    return 0
+  }
   let runner = @native.NativeRunner::new(calls[selected[0]].command())
   let mut classified_nonvalid = false
   for index in selected {
     let call = calls[index]
-    let result = match runner.run(call.query().bytes()) {
-      ParentDeadlineExceeded => @prover.Timeout
-      Completed(raw) => @z3.parse_result(raw)
+    let (result, model_values) = match runner.run(call.query().bytes()) {
+      ParentDeadlineExceeded => (@prover.Timeout, [])
+      Completed(raw) => {
+        let result = @z3.parse_result(raw)
+        let model_values = if request_model && result != @prover.Valid {
+          @z3.parse_smtv2_model_for_query(call.query(), raw.view().stdout)
+        } else {
+          []
+        }
+        (result, model_values)
+      }
     }
     if result != @prover.Valid {
       classified_nonvalid = true
@@ -265,11 +437,16 @@ async fn run_prove(
           prover_result_human(result) +
           "\n",
         )
-      JsonOutput =>
+      JsonOutput | JsonModelValuesOutput =>
         @stdio.stdout.write(
           goal_json_prefix(info, "prove") +
           ",\"result\":" +
           prover_result_json(result) +
+          (if request_model {
+            ",\"model_values\":" + model_values_json(model_values)
+          } else {
+            ""
+          }) +
           "}\n",
         )
       CanonicalJsonOutput =>
@@ -291,17 +468,141 @@ async fn run_prove(
 }
 
 ///|
-async fn run_cli(arguments : ArrayView[String]) -> Int {
-  let options = parse_arguments(arguments)
-  let source = @fs.read_file(options.file).binary()
-  let fixture = @utf8.encode(options.file)
-  let checked = @pipeline.check(source, filename=fixture)
-  match options.command {
-    CheckCommand => run_check(checked, options, fixture, source)
-    TaskCommand => run_task(checked, options, fixture, source)
-    EmitSmtCommand => run_emit_smt(checked, options, fixture, source)
-    ProveCommand => run_prove(checked, options, fixture, source)
+async fn read_cli_input(input : CliInput) -> (Bytes, Bytes) {
+  if input.file == "-" {
+    (@stdio.stdin.read_all().binary(), b"stdin")
+  } else {
+    (@fs.read_file(input.file).binary(), @utf8.encode(input.file))
   }
+}
+
+///|
+async fn print_typed_units(
+  checked : @pipeline.CheckedFile,
+  input : CliInput,
+  options : CliOptions,
+) -> Unit {
+  if !options.print_theory && !options.print_namespace {
+    return
+  }
+  for unit in checked.typed_units() {
+    let (kind, theory) = match unit {
+      Theory(theory) => ("theory", theory)
+      Module(pmodule) => ("module", pmodule.pure_theory())
+    }
+    let name = theory.view().name.view().name
+    let mut selected = input.theories.is_empty()
+    for selection in input.theories {
+      if selected_name_matches(name, selection.name) {
+        selected = true
+        break
+      }
+    }
+    if selected {
+      if options.print_theory {
+        @stdio.stdout.write(
+          kind +
+          " " +
+          display_bytes(name) +
+          " (" +
+          theory.view().items.length().to_string() +
+          " items)\n",
+        )
+      } else {
+        let namespace_view = theory.export_namespace().view()
+        @stdio.stdout.write(
+          kind +
+          " " +
+          display_bytes(name) +
+          ": " +
+          namespace_view.types.length().to_string() +
+          " type(s), " +
+          namespace_view.logic.length().to_string() +
+          " logic symbol(s), " +
+          namespace_view.propositions.length().to_string() +
+          " proposition(s)\n",
+        )
+      }
+    }
+  }
+}
+
+///|
+async fn run_cli(arguments : ArrayView[String]) -> Int {
+  let options = resolve_cli_configuration(parse_arguments(arguments))
+  validate_driver_and_task_options(options)
+  let providers : Array[@source_env.SourceProvider] = []
+  for loadpath in options.loadpaths {
+    providers.push(loadpath_source_provider(loadpath))
+  }
+  if options.use_stdlib {
+    providers.push(@stdlib.embedded_source_provider())
+  }
+  let environment = @environment.Environment::with_source(
+    @source_env.SourceProvider::combine(providers),
+  )
+  let loaded_paths : Array[String] = []
+  let loaded_sources : Array[Bytes] = []
+  let loaded_fixtures : Array[Bytes] = []
+  let loaded_checked : Array[@pipeline.CheckedFile] = []
+  let mut exit_code = 0
+  for input_index, input in options.inputs {
+    if options.stop_stage == ParseOnly {
+      let (source, fixture) = read_cli_input(input)
+      ignore(@parser.parse_mlw_file(source, filename=fixture))
+      continue
+    }
+    let mut cached_index = -1
+    if input.file != "-" {
+      for index, path in loaded_paths {
+        if path == input.file {
+          cached_index = index
+          break
+        }
+      }
+    }
+    let (source, fixture, checked) = if cached_index >= 0 {
+      (
+        loaded_sources[cached_index],
+        loaded_fixtures[cached_index],
+        loaded_checked[cached_index],
+      )
+    } else {
+      let (source, fixture) = read_cli_input(input)
+      let checked = @pipeline.check_with_environment(
+        source,
+        environment,
+        filename=fixture,
+      )
+      if input.file != "-" {
+        loaded_paths.push(input.file)
+        loaded_sources.push(source)
+        loaded_fixtures.push(fixture)
+        loaded_checked.push(checked)
+      }
+      (source, fixture, checked)
+    }
+    print_typed_units(checked, input, options)
+    if options.stop_stage == TypeOnly ||
+      options.print_theory ||
+      options.print_namespace {
+      continue
+    }
+    let code = match options.command {
+      CheckCommand => run_check(checked, options, input, fixture, source)
+      TaskCommand => run_task(checked, options, input, fixture, source)
+      EmitSmtCommand =>
+        run_emit_smt(checked, options, input, input_index, fixture, source)
+      ProveCommand =>
+        run_prove(checked, options, input, input_index, fixture, source)
+    }
+    if code == 2 {
+      exit_code = 2
+    } else if code != 0 && exit_code == 0 {
+      exit_code = code
+    }
+  }
+  exit_code
 }
 
 ///|
@@ -336,7 +637,9 @@ async fn main {
     }
     @elab.ElabError(diagnostic) => {
       @stdio.stderr.write(
-        "why3mbt: ElabError(" +
+        "why3mbt: " +
+        diagnostic_location(diagnostic.span) +
+        "ElabError(" +
         @debug.to_string(diagnostic.stage) +
         "," +
         @debug.to_string(diagnostic.kind) +
@@ -402,6 +705,18 @@ async fn main {
       @stdio.stderr.write(
         "why3mbt: MalformedProverOutput(" +
         @debug.to_string(diagnostic.kind) +
+        "): " +
+        diagnostic.message +
+        "\n",
+      )
+      1
+    }
+    @z3.ModelParseError(diagnostic) => {
+      @stdio.stderr.write(
+        "why3mbt: ModelParseError(" +
+        @debug.to_string(diagnostic.kind) +
+        "," +
+        diagnostic.byte_offset.to_string() +
         "): " +
         diagnostic.message +
         "\n",

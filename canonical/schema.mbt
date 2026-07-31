@@ -3,7 +3,7 @@
 ///|
 /// The frozen portable canonical semantic schema version.
 pub fn canonical_schema_version() -> Int {
-  2
+  3
 }
 
 ///|
@@ -35,7 +35,6 @@ priv enum CanonicalValue {
   Boolean(Bool)
   Signed(Int64)
   Unsigned(UInt)
-  Decimal(BigInt)
   Array(Array[CanonicalValue])
 }
 
@@ -99,7 +98,6 @@ fn CanonicalValue::write_json(
     Boolean(value) => buffer.write_bytes(if value { b"true" } else { b"false" })
     Signed(value) => buffer.write_string_utf8(value.to_string())
     Unsigned(value) => buffer.write_string_utf8(value.to_string())
-    Decimal(value) => buffer.write_string_utf8(value.to_string())
     Array(values) => {
       buffer.write_byte(b'[')
       for index, value in values {

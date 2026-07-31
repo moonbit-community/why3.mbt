@@ -34,7 +34,7 @@ test('fixture inventory and reject manifest are exact', async () => {
       manifest,
       inventory.fixtures.map(fixture => fixture.relativePath),
     ),
-    { reject: 58, extension: 2 },
+    { reject: 58, mainExact: 2 },
   );
 });
 

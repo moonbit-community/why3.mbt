@@ -65,10 +65,10 @@ fn rename_pattern(
   span : @identity.SourceSpan?,
 ) -> Pattern raise TypeError {
   match pattern.node {
-    WildPattern => Pattern::trusted_wild(pattern.ty)
-    VariablePattern(variable) => Pattern::trusted_variable(renamed[variable])
+    WildPattern => Pattern::wild(pattern.ty)
+    VariablePattern(variable) => Pattern::variable(renamed[variable])
     ApplicationPattern(symbol, arguments) =>
-      Pattern::trusted_app(
+      Pattern::app(
         symbol,
         [
           for argument in arguments => rename_pattern(argument, renamed, span)
@@ -77,13 +77,13 @@ fn rename_pattern(
         span,
       )
     OrPattern(left, right) =>
-      Pattern::trusted_or(
+      Pattern::or(
         rename_pattern(left, renamed, span),
         rename_pattern(right, renamed, span),
         span,
       )
     AsPattern(inner, variable) =>
-      Pattern::trusted_as(
+      Pattern::as_pattern(
         rename_pattern(inner, renamed, span),
         renamed[variable],
         span,
@@ -119,11 +119,12 @@ fn substitute_term(
       Term::constant(constant, result_type, span)
     }
     ApplicationTerm(symbol, _, arguments) =>
-      apply_logic_symbol(
+      apply_logic_symbol_with_result(
         symbol,
         [
           for argument in arguments => recurse(argument)
         ],
+        term.result_type,
         span,
       )
     IfTerm(condition, then_branch, else_branch) =>
@@ -150,7 +151,11 @@ fn substitute_term(
       for branch in branches {
         let mut branch_bound = bound
         let renamed : Map[VSymbol, VSymbol] = Map([])
-        for variable in branch.pattern.bound_variables {
+        let variables = branch.pattern.bound_variables.copy()
+        variables.sort_by((left, right) => {
+          left.semantic_id().local_id().compare(right.semantic_id().local_id())
+        })
+        for variable in variables {
           let replacement = variable.fresh_like(context, span)
           renamed[variable] = replacement
           branch_bound = extend_bound_renaming(
@@ -170,11 +175,11 @@ fn substitute_term(
           ),
         )
       }
-      Term::trusted_case(recurse(scrutinee), rebuilt_branches, span)
+      Term::case(recurse(scrutinee), rebuilt_branches, span)
     }
     EpsilonTerm(variable, body) => {
       let replacement = variable.fresh_like(context, span)
-      Term::trusted_epsilon(
+      Term::epsilon(
         replacement,
         substitute_term(
           context,

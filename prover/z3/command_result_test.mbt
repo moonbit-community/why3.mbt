@@ -31,10 +31,18 @@ test "z3 argv freezes default, zero, and maximum timeout" {
     maximum.parent_deadline_policy,
     @prover.DeadlineAfterSeconds(345601),
   )
+  let bounded = spec
+    .command_spec(solver_seconds=3, steps_limit=1200, memory_limit_mib=64)
+    .view()
+  assert_eq(bounded.arguments, [
+    b"-smt2", b"-in", b"sat.random_seed=42", b"nlsat.randomize=false", b"smt.random_seed=42",
+    b"-st", b"rlimit=1200", b"memory_max_size=64",
+  ])
+  assert_eq(bounded.parent_deadline_policy, @prover.DeadlineAfterSeconds(13))
 }
 
 ///|
-test "z3 result parser follows frozen canned answer precedence" {
+test "z3 result parser follows pinned canned answer precedence" {
   assert_eq(parse_result(outcome(b"unsat\n", b"")), @prover.Valid)
   assert_eq(parse_result(outcome(b"sat\n", b"")), @prover.Unknown(b"sat"))
   assert_eq(

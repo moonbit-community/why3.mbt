@@ -23,22 +23,19 @@ let required name = function
 
 let () =
   let stdlib = ref None in
-  let snapshot = ref None in
   let fixture = ref None in
   let file = ref None in
   let theories = ref [] in
   let program_modules = ref [] in
   Arg.parse
     [ ("--stdlib", Arg.String (fun value -> stdlib := Some value), "PATH");
-      ("--snapshot", Arg.String (fun value -> snapshot := Some value), "PATH");
       ("--fixture", Arg.String (fun value -> fixture := Some value), "PATH");
       ("--file", Arg.String (fun value -> file := Some value), "PATH");
       ("--unit", Arg.String (fun value -> theories := value :: !theories), "NAME");
       ("--module", Arg.String (fun value -> program_modules := value :: !program_modules), "NAME") ]
     (fun value -> fail ("unexpected argument " ^ value))
-    "export_elab_typed --stdlib PATH --snapshot JSON --fixture LABEL --file PATH --unit NAME... --module NAME...";
+    "export_elab_typed --stdlib PATH --fixture LABEL --file PATH --unit NAME... --module NAME...";
   let stdlib = required "--stdlib" !stdlib in
-  let snapshot = required "--snapshot" !snapshot in
   let fixture = required "--fixture" !fixture in
   let file = required "--file" !file in
   let theories = List.rev !theories in
@@ -46,8 +43,7 @@ let () =
   if theories = [] && program_modules = [] then
     fail "at least one --unit or --module is required";
   let environment = Env.create_env [stdlib; Filename.dirname file] in
-  let catalog = Canonical_v2.load_catalog environment snapshot in
-  let source = Canonical_v2.read_source fixture file in
+  let source = Canonical_v3.read_source fixture file in
   let modules, _ = Env.read_file Pmodule.mlw_language environment file in
   List.iter
     (fun name ->
@@ -56,8 +52,8 @@ let () =
         | Some value -> value
         | None -> fail ("typed file has no unit " ^ name)
       in
-      Canonical_v2.write_record stdout
-        (Canonical_v2.typed_theory_record catalog source
+      Canonical_graph_v3.write_record stdout
+        (Canonical_graph_v3.typed_theory_record source
            pmodule.Pmodule.mod_theory))
     theories;
   List.iter
@@ -67,6 +63,6 @@ let () =
         | Some value -> value
         | None -> fail ("typed file has no program module " ^ name)
       in
-      Canonical_v2.write_record stdout
-        (Canonical_v2.typed_module_record catalog source pmodule))
+      Canonical_graph_v3.write_record stdout
+        (Canonical_graph_v3.typed_module_record source pmodule))
     program_modules

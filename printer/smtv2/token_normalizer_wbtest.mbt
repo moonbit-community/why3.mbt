@@ -52,18 +52,32 @@ test "normalizer alpha-renames only generated identifier occurrences" {
   let query : SmtQuery = {
     bytes: b"(x x x x)\n",
     identifiers: [
-      { start: 1, end: 2, semantic_id: first, origin: generated_origin },
-      { start: 3, end: 4, semantic_id: first, origin: generated_origin },
+      {
+        start: 1,
+        end: 2,
+        semantic_id: first,
+        identifier_id: first.identifier_id(),
+        origin: generated_origin,
+      },
+      {
+        start: 3,
+        end: 4,
+        semantic_id: first,
+        identifier_id: first.identifier_id(),
+        origin: generated_origin,
+      },
       {
         start: 5,
         end: 6,
         semantic_id: second,
+        identifier_id: second.identifier_id(),
         origin: @identity.Origin::generated(@identity.Guards, b"x", None, []),
       },
       {
         start: 7,
         end: 8,
         semantic_id: user,
+        identifier_id: user.identifier_id(),
         origin: @identity.Origin::user(b"x", None, []),
       },
     ],
@@ -75,15 +89,99 @@ test "normalizer alpha-renames only generated identifier occurrences" {
 }
 
 ///|
+test "definition binders remain generated through type-preserving guards clones" {
+  let context = @identity.CompilationContext::new()
+  let user_origin = @identity.Origin::user(b"hl", None, [])
+  let type_symbol = @logic.TypeSymbol::new_abstract(
+    context,
+    b"t",
+    @identity.Origin::user(b"t", None, []),
+    [],
+    None,
+  )
+  let ty = @logic.Ty::app(type_symbol, [], None)
+  let raw = @logic.VSymbol::new(context, b"hl", user_origin, ty, None)
+  let hidden = raw.clone_identifier(context, None)
+  let defined = hidden.clone_identifier_with_origin(
+    context,
+    @identity.Origin::generated(
+      @identity.EliminateDefinitionConditionally,
+      b"hl",
+      None,
+      [],
+    ),
+    None,
+  )
+  let task_with_binder = fn(variable : @logic.VSymbol) -> @theory.Task raise {
+    let formula = @logic.Term::quantify(
+      ForallQuantifier,
+      [variable],
+      [],
+      @logic.Term::true_formula(),
+      None,
+    )
+    let proposition = @logic.PrSymbol::new(
+      context,
+      b"goal",
+      @identity.Origin::user(b"goal", None, []),
+    )
+    let declaration = @logic.Decl::proposition(
+      context,
+      proposition.view().origin,
+      Pgoal,
+      proposition,
+      formula,
+      None,
+    )
+    @theory.Task::trusted_new(
+      context.fresh_id(),
+      [TheoryDecl(declaration)],
+      None,
+    )
+  }
+  let provenance = SmtProvenance::new(context)
+  provenance.observe_task(task_with_binder(raw), None)
+  provenance.observe_task(
+    task_with_binder(defined),
+    Some(@identity.EliminateAlgebraicIfPoly),
+  )
+  let guarded = defined.clone_as(
+    context,
+    b"hl",
+    @identity.Origin::generated(@identity.Guards, b"hl", None, []),
+    ty,
+    None,
+  )
+  provenance.observe_task(task_with_binder(guarded), Some(@identity.Guards))
+  let query : SmtQuery = {
+    bytes: b"(hl)\n",
+    identifiers: [
+      {
+        start: 1,
+        end: 3,
+        semantic_id: guarded.semantic_id(),
+        identifier_id: guarded.identifier_id(),
+        origin: guarded.view().origin,
+      },
+    ],
+  }
+  assert_eq(normalize_smt_query_with_provenance(query, provenance).tokens(), [
+    b"(", b"$generated[eliminate_definition_conditionally][0]", b")",
+  ])
+}
+
+///|
 test "normalizer rejects identifier spans that do not align to one atom" {
   let context = @identity.CompilationContext::new()
+  let identifier = context.fresh_id()
   let query : SmtQuery = {
     bytes: b"|quoted name|\n",
     identifiers: [
       {
         start: 0,
         end: 13,
-        semantic_id: context.fresh_id(),
+        semantic_id: identifier,
+        identifier_id: identifier.identifier_id(),
         origin: @identity.Origin::generated(
           @identity.Wp,
           b"quoted name",

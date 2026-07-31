@@ -27,6 +27,7 @@ function descriptorFixture(overrides = {}) {
     lock: referenceEnvironment.readEnvironmentLock(),
     ocamlVersion: '4.14.4',
     patchBytes: Buffer.from(overrides.patch ?? 'patch-a'),
+    fullMlwPatchBytes: Buffer.from(overrides.fullMlwPatch ?? 'full-mlw-a'),
     builderBytes: Buffer.from(overrides.builder ?? 'builder-a'),
   });
 }
@@ -51,7 +52,7 @@ function completeFixture(directory, key, descriptor) {
 
 test('adapter dependencies are repository-pinned outside the Why3 cache key', () => {
   assert.deepEqual(readRuntimeDependencies().packages, [
-    { opam: 'digestif', version: '1.3.0', findlib: ['digestif.ocaml'] },
+    { opam: 'digestif', version: '1.1.4', findlib: ['digestif.ocaml'] },
     { opam: 'yojson', version: '2.1.0', findlib: ['yojson'] },
   ]);
   assert.equal(Object.hasOwn(descriptorFixture(), 'runtimeDependencies'), false);
@@ -75,7 +76,7 @@ test('runtime dependency installation refreshes opam before exact install', () =
     ['opam', [
       'install',
       '--yes',
-      'digestif.1.3.0',
+      'digestif.1.1.4',
       'yojson.2.1.0',
     ]],
   ]);
@@ -110,7 +111,7 @@ test('root installs runtime dependencies as the owner of the locked opam root', 
       ...prefix,
       'install',
       '--yes',
-      'digestif.1.3.0',
+      'digestif.1.1.4',
       'yojson.2.1.0',
     ]],
   ]);
@@ -120,6 +121,7 @@ test('runtime key binds environment, source, patch, builder, arguments, and OCam
   const first = descriptorFixture();
   const second = descriptorFixture({ patch: 'patch-b' });
   const third = descriptorFixture({ builder: 'builder-b' });
+  const fourth = descriptorFixture({ fullMlwPatch: 'full-mlw-b' });
   const changedLock = referenceEnvironment.readEnvironmentLock();
   changedLock.image.digest = `sha256:${'b'.repeat(64)}`;
   const changedEnvironment = buildRuntimeDescriptor({
@@ -144,6 +146,7 @@ test('runtime key binds environment, source, patch, builder, arguments, and OCam
   });
   assert.notEqual(runtimeCacheKey(first), runtimeCacheKey(second));
   assert.notEqual(runtimeCacheKey(first), runtimeCacheKey(third));
+  assert.notEqual(runtimeCacheKey(first), runtimeCacheKey(fourth));
   assert.notEqual(runtimeCacheKey(first), runtimeCacheKey(changedEnvironment));
   assert.notEqual(runtimeCacheKey(first), runtimeCacheKey(changedSource));
   assert.notEqual(runtimeCacheKey(first), runtimeCacheKey(changedCompiler));

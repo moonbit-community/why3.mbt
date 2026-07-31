@@ -1,0 +1,3 @@
+import {
+  "moonbit-community/why3/tests/stdlib_slices",
+} for "test"

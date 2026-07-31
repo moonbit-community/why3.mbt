@@ -8,7 +8,6 @@ import { fileURLToPath } from 'node:url';
 import {
   EXPECTED_WHY3_COMMIT,
   EXPECTED_WHY3_TREE,
-  PROGRAM_ROOTS,
   canonicalSha,
   runChecked,
   sha256,
@@ -20,17 +19,17 @@ import {
 
 const SCRIPT_DIRECTORY = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = resolve(SCRIPT_DIRECTORY, '..', '..');
-const DRIVER_CONTRACT = join(
-  PROJECT_ROOT,
-  'tools',
-  'contracts',
-  'driver-closure-v1.json',
-);
 const SEMANTIC_PROFILE = join(
   PROJECT_ROOT,
   'tools',
   'contracts',
-  'semantic-profile-v1.json',
+  'semantic-profile-v3.json',
+);
+const DIAGNOSTIC_CONTRACT = join(
+  PROJECT_ROOT,
+  'tools',
+  'contracts',
+  'diagnostics-v1.json',
 );
 const Z3_PROFILE = join(
   PROJECT_ROOT,
@@ -159,30 +158,27 @@ function copyReferenceSource(buildDirectory, name) {
 function compileReferences(buildDirectory, runtime) {
   const env = referenceRuntimeEnvironment(runtime);
   for (const name of [
-    'export_snapshot.ml',
-    'canonical_v2.ml',
+    'canonical_v3_profile.ml',
+    'canonical_v3.ml',
+    'canonical_graph_v3.ml',
     'export_smt_trace.ml',
   ]) {
     copyReferenceSource(buildDirectory, name);
   }
-  const snapshot = join(buildDirectory, 'export-snapshot');
   const smtTrace = join(buildDirectory, 'export-smt-trace');
-  runChecked('ocamlfind', [
-    'ocamlopt',
-    '-linkpkg',
-    '-package',
-    'why3,yojson,unix',
-    '-o',
-    snapshot,
-    'export_snapshot.ml',
-  ], { cwd: buildDirectory, env });
-  runChecked('ocamlfind', [
-    'ocamlopt',
-    '-package',
-    'why3,yojson,digestif.ocaml,unix',
-    '-c',
-    'canonical_v2.ml',
-  ], { cwd: buildDirectory, env });
+  for (const source of [
+    'canonical_v3_profile.ml',
+    'canonical_v3.ml',
+    'canonical_graph_v3.ml',
+  ]) {
+    runChecked('ocamlfind', [
+      'ocamlopt',
+      '-package',
+      'why3,yojson,digestif.ocaml,unix',
+      '-c',
+      source,
+    ], { cwd: buildDirectory, env });
+  }
   runChecked('ocamlfind', [
     'ocamlopt',
     '-linkpkg',
@@ -190,33 +186,18 @@ function compileReferences(buildDirectory, runtime) {
     'why3,yojson,digestif.ocaml,unix',
     '-o',
     smtTrace,
-    'canonical_v2.cmx',
+    'canonical_v3_profile.cmx',
+    'canonical_v3.cmx',
+    'canonical_graph_v3.cmx',
     'export_smt_trace.ml',
   ], { cwd: buildDirectory, env });
-  return { snapshot, smtTrace };
+  return { smtTrace };
 }
 
-function exportSnapshot(executable, outputPath, why3Root, driver) {
-  const argv = ['--stdlib', join(why3Root, 'stdlib')];
-  for (const theory of driver.driver.theoryRoots) {
-    argv.push('--theory', theory);
-  }
-  for (const pmodule of PROGRAM_ROOTS) argv.push('--module', pmodule);
-  const output = runChecked(executable, argv, {
-    cwd: PROJECT_ROOT,
-    env: { ...process.env, LC_ALL: 'C' },
-    maxBuffer: 128 * 1024 * 1024,
-  });
-  if (!output.endsWith('\n')) fail('snapshot exporter output has no final LF');
-  writeFileSync(outputPath, output);
-}
-
-function runReference(executable, why3Root, snapshot, fixture) {
+function runReference(executable, why3Root, fixture) {
   const argv = [
     '--why3-root',
     why3Root,
-    '--snapshot',
-    snapshot,
     '--fixture',
     fixture.label,
     '--file',
@@ -247,7 +228,13 @@ function runMoon(stage, fixture) {
   });
 }
 
-function parseCanonicalRecords(output, label, fixture, semanticProfileSha256) {
+function parseCanonicalRecords(
+  output,
+  label,
+  fixture,
+  semanticProfileSha256,
+  diagnosticContractSha256,
+) {
   if (!output.endsWith('\n')) fail(`${label} output has no final LF`);
   const lines = output.slice(0, -1).split('\n');
   if (lines.length !== fixture.goalCount) {
@@ -264,13 +251,15 @@ function parseCanonicalRecords(output, label, fixture, semanticProfileSha256) {
     if (JSON.stringify(record) !== line) {
       fail(`${label} record ${index} is not compact canonical JSON`);
     }
-    if (record.schema !== 2 ||
+    if (record.schema !== 3 ||
         record.semantic_profile_sha256 !== semanticProfileSha256 ||
+        record.diagnostic_contract_sha256 !== diagnosticContractSha256 ||
         record.fixture !== fixture.label ||
         record.source_sha256 !== sourceSha256 ||
         record.scope !== 'goal' ||
         record.unit_kind !== 'theory' ||
-        record.stage !== 'smt-token-stream' ||
+        record.stage !== 'smt-tokens' ||
+        record.canonical?.[0] !== 'SmtTokenStreamV1' ||
         record.canonical_sha256 !== canonicalSha(record.canonical)) {
       fail(`${label} record ${index} has invalid portable metadata or hash`);
     }
@@ -400,25 +389,24 @@ function parseOnlyWithZ3(query, label) {
 
 function main(argv = process.argv.slice(2)) {
   const options = parseArguments(argv);
-  const driver = readJson(DRIVER_CONTRACT);
   const semanticProfile = readJson(SEMANTIC_PROFILE);
+  const diagnostics = readJson(DIAGNOSTIC_CONTRACT);
   const z3Profile = readJson(Z3_PROFILE);
-  if (semanticProfile.semanticProfileSha256 === undefined) {
-    fail('semantic-profile-v1.json has no semantic profile hash');
+  if (semanticProfile.canonicalSchemaVersion !== 3 ||
+      semanticProfile.semanticProfileSha256 === undefined ||
+      diagnostics.diagnosticContractSha256 === undefined) {
+    fail('canonical v3 contracts are incomplete');
   }
   const buildDirectory = mkdtempSync(join(tmpdir(), 'why3-smt-differential-'));
   try {
     const runtime = verifyWhy3(options, z3Profile);
     const why3Root = runtime.sourceRoot;
     const executables = compileReferences(buildDirectory, runtime);
-    const snapshot = join(buildDirectory, 'snapshot.json');
-    exportSnapshot(executables.snapshot, snapshot, why3Root, driver);
     let queryCount = 0;
     for (const fixture of FIXTURES) {
       const referenceOutput = runReference(
         executables.smtTrace,
         why3Root,
-        snapshot,
         fixture,
       );
       const reference = parseCanonicalRecords(
@@ -426,13 +414,15 @@ function main(argv = process.argv.slice(2)) {
         `Why3 ${fixture.label}`,
         fixture,
         semanticProfile.semanticProfileSha256,
+        diagnostics.diagnosticContractSha256,
       );
-      const moonOutput = runMoon('smt-token-stream', fixture);
+      const moonOutput = runMoon('smt-tokens', fixture);
       parseCanonicalRecords(
         moonOutput,
         `MoonBit ${fixture.label}`,
         fixture,
         semanticProfile.semanticProfileSha256,
+        diagnostics.diagnosticContractSha256,
       );
       assertSameOutput(
         moonOutput,

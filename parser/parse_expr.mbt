@@ -525,7 +525,7 @@ fn Parser::parse_signed_expr_numeral(self : Parser) -> Expr raise {
   let mark = self.mark()
   ignore(self.expect_symbol(Minus))
   let token = self.peek()
-  let constant = match token.kind {
+  let constant : Constant = match token.kind {
     Integer(constant) => ConstInt(constant.negated())
     Real(constant) => ConstReal(constant.negated())
     _ => return self.fail_syntax("numeric literal")

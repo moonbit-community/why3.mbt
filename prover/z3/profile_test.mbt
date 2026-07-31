@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
 
 ///|
-test "static Z3 profile decodes the complete frozen inventory" {
+test "static Z3 profile decodes the complete pinned inventory" {
   let spec = z3_static_spec()
   let view = spec.view()
   assert_eq(view.printer, SmtV26)
+  assert_eq(view.model_parser, SmtV2)
   assert_eq(view.transforms.length(), 15)
   assert_eq(view.driver_meta_group_count, 48)
   assert_eq(view.driver_meta_count, 992)
-  assert_eq(view.snapshot_meta_group_count, 14)
-  assert_eq(view.snapshot_meta_count, 491)
+  assert_eq(view.theory_meta_group_count, 14)
+  assert_eq(view.theory_meta_count, 491)
   assert_eq(view.syntax_count, 284)
   assert_eq(view.remove_count, 680)
   assert_eq(view.preludes.length(), 3)

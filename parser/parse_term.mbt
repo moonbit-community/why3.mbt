@@ -423,7 +423,7 @@ fn Parser::parse_signed_term_numeral(self : Parser) -> Term raise {
   ignore(self.expect_symbol(Minus))
   ignore(signed_numeral_binding_power())
   let token = self.peek()
-  let constant = match token.kind {
+  let constant : Constant = match token.kind {
     Integer(constant) => ConstInt(constant.negated())
     Real(constant) => ConstReal(constant.negated())
     _ => return self.fail_syntax("numeric literal")

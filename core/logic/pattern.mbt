@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
+// Derived from Why3 1.7.2 (Copyright 2010-2023 Inria, CNRS, Paris-Saclay University).
+// MoonBit translation and semantic modifications recorded on 2026-07-24.
 
 ///|
 priv enum PatternNode {
@@ -47,12 +49,12 @@ pub fn Pattern::view(self : Pattern) -> PatternView {
 }
 
 ///|
-pub fn Pattern::trusted_wild(ty : Ty) -> Pattern {
+pub fn Pattern::wild(ty : Ty) -> Pattern {
   { node: WildPattern, ty, bound_variables: [] }
 }
 
 ///|
-pub fn Pattern::trusted_variable(variable : VSymbol) -> Pattern {
+pub fn Pattern::variable(variable : VSymbol) -> Pattern {
   {
     node: VariablePattern(variable),
     ty: variable.ty,
@@ -84,7 +86,7 @@ fn merge_pattern_variables(
 }
 
 ///|
-pub fn Pattern::trusted_app(
+pub fn Pattern::app(
   symbol : LSymbol,
   arguments : ArrayView[Pattern],
   result_type : Ty,
@@ -94,7 +96,7 @@ pub fn Pattern::trusted_app(
     fail_type(
       InvalidDeclaration,
       span,
-      "pattern application requires a trusted constructor",
+      "pattern application requires a constructor",
     )
   }
   if arguments.length() != symbol.argument_types.length() {
@@ -133,7 +135,7 @@ fn same_bound_variables(left : Pattern, right : Pattern) -> Bool {
 }
 
 ///|
-pub fn Pattern::trusted_or(
+pub fn Pattern::or(
   left : Pattern,
   right : Pattern,
   span : @identity.SourceSpan?,
@@ -153,7 +155,7 @@ pub fn Pattern::trusted_or(
 }
 
 ///|
-pub fn Pattern::trusted_as(
+pub fn Pattern::as_pattern(
   pattern : Pattern,
   variable : VSymbol,
   span : @identity.SourceSpan?,

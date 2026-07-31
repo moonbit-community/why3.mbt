@@ -15,7 +15,7 @@ priv struct RawGoal {
 ///|
 struct CheckedFile {
   context : @identity.CompilationContext
-  environment : @stdlib.FrozenEnvironment
+  environment : @environment.Environment
   typed_units : Array[TypedUnitView]
   raw_goal_entries : Array[RawGoal]
   raw_goals : Array[@theory.Task]
@@ -24,7 +24,7 @@ struct CheckedFile {
 ///|
 fn CheckedFile::new(
   context : @identity.CompilationContext,
-  environment : @stdlib.FrozenEnvironment,
+  environment : @environment.Environment,
   typed_units : Array[TypedUnitView],
 ) -> CheckedFile {
   { context, environment, typed_units, raw_goal_entries: [], raw_goals: [] }

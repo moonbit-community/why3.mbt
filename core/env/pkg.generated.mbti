@@ -1,0 +1,104 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonbit-community/why3/core/env"
+
+import {
+  "moonbit-community/why3/core/identity",
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+pub(all) suberror SourceError {
+  SourceError(SourceDiagnostic)
+} derive(Eq, @debug.Debug)
+
+// Types and methods
+type BuiltinRegistry[T]
+pub fn[T] BuiltinRegistry::add(Self[T], (LibraryPath) -> T? raise) -> Unit
+pub fn[T] BuiltinRegistry::new() -> Self[T]
+pub fn[T] BuiltinRegistry::resolve(Self[T], LibraryPath, (T, T) -> Bool) -> T? raise
+
+type CoreEnvironment
+pub fn CoreEnvironment::compilation_context(Self) -> @identity.CompilationContext
+pub fn CoreEnvironment::empty(@identity.CompilationContext) -> Self
+pub fn CoreEnvironment::extensions(Self) -> ArrayView[Bytes]
+pub fn CoreEnvironment::locate_library(Self, LibraryPath) -> SourceCandidate raise SourceError
+pub fn CoreEnvironment::new(SourceProvider, extensions? : ArrayView[Bytes]) -> Self raise SourceError
+pub fn CoreEnvironment::source_provider(Self) -> SourceProvider
+pub fn CoreEnvironment::with_context(@identity.CompilationContext, SourceProvider, extensions? : ArrayView[Bytes]) -> Self raise SourceError
+
+type LibraryCache[T]
+pub fn[T] LibraryCache::cached_paths(Self[T]) -> Array[LibraryPath]
+pub fn[T] LibraryCache::contains(Self[T], LibraryPath) -> Bool
+pub fn[T] LibraryCache::get(Self[T], LibraryPath) -> T?
+pub fn[T] LibraryCache::loading_paths(Self[T]) -> Array[LibraryPath]
+pub fn[T] LibraryCache::new() -> Self[T]
+pub fn[T] LibraryCache::read(Self[T], LibraryPath, () -> T raise) -> T raise
+pub fn[T] LibraryCache::store(Self[T], LibraryPath, T) -> Unit raise SourceError
+
+type LibraryPath
+pub fn LibraryPath::is_builtin(Self) -> Bool
+pub fn LibraryPath::is_empty(Self) -> Bool
+pub fn LibraryPath::lexical_compare(Self, Self) -> Int
+pub fn LibraryPath::new(ArrayView[Bytes]) -> Self raise SourceError
+pub fn LibraryPath::normalized_request(Self) -> Self
+pub fn LibraryPath::view(Self) -> LibraryPathView
+pub fn LibraryPath::without_builtin_prefix(Self) -> Self?
+pub impl Eq for LibraryPath
+pub impl Hash for LibraryPath
+
+pub(all) struct LibraryPathView {
+  segments : ArrayView[Bytes]
+}
+
+type MemorySource
+pub fn MemorySource::new(LibraryPath, BytesView, BytesView) -> Self raise SourceError
+pub fn MemorySource::view(Self) -> MemorySourceView
+
+pub(all) struct MemorySourceView {
+  path : LibraryPath
+  extension : Bytes
+  contents : Bytes
+}
+
+type SourceCandidate
+pub fn SourceCandidate::view(Self) -> SourceCandidateView
+
+pub(all) struct SourceCandidateView {
+  provider_root : Bytes
+  path : LibraryPath
+  extension : Bytes
+  location : Bytes
+  contents : Bytes
+}
+
+pub(all) struct SourceDiagnostic {
+  kind : SourceErrorKind
+  path : Array[Bytes]
+  candidates : Array[Bytes]
+  dependency_chain : Array[Array[Bytes]]
+  message : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum SourceErrorKind {
+  InvalidLibraryPath
+  LibraryNotFound
+  AmbiguousPath
+  CircularDependency
+  LibraryConflict
+  InvalidExtension
+  CacheProtocolError
+} derive(Eq, @debug.Debug)
+
+type SourceProvider
+pub fn SourceProvider::candidates(Self, LibraryPath, ArrayView[Bytes]) -> Array[SourceCandidate] raise SourceError
+pub fn SourceProvider::combine(ArrayView[Self]) -> Self
+pub fn SourceProvider::empty() -> Self
+pub fn SourceProvider::locate(Self, LibraryPath, ArrayView[Bytes]) -> SourceCandidate raise SourceError
+pub fn SourceProvider::memory(BytesView, ArrayView[MemorySource]) -> Self
+
+// Type aliases
+
+// Traits
+

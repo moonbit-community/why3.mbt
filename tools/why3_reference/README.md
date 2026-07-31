@@ -1,8 +1,8 @@
 # Why3 reference checks
 
 This directory contains the repository-owned half of the differential reference:
-the OCaml adapters, the trace patch, curated fixtures, behavioral baselines, and
-the runtime builder that connects them.
+the OCaml adapters, trace patches, curated fixtures, canonical v3 contracts,
+and the runtime builder that connects them.
 
 The container image is deliberately separate. `infra/reference-env/` builds an
 environment containing OCaml, an unmodified Why3 1.7.2 installation, the exact
@@ -21,7 +21,7 @@ contains only:
 - the hash of `/opt/reference-env/manifest.json`.
 
 The lock intentionally does not contain workflow revisions, MoonBit versions,
-project contracts, trace patches, adapters, generated files, or baselines.
+project contracts, trace patches, adapters, or generated files.
 Fixed-environment workflows read this one file in a small preliminary job and
 feed its image reference to later jobs through `needs.environment.outputs.image`.
 
@@ -38,8 +38,9 @@ locally.
 ## Repository-owned runtime
 
 `reference_runtime.mjs` verifies either the fixed upstream archive or an
-explicit Why3 checkout, extracts a private source tree, applies
-`patches/driver-trace.patch`, configures Why3, and builds only:
+explicit Why3 checkout, extracts a private source tree, applies the isolated
+`patches/driver-trace.patch` and `patches/full-mlw-export.patch` reference
+hooks, configures Why3, and builds only:
 
 ```text
 lib/why3/why3.cmxa
@@ -77,8 +78,22 @@ node tools/run.mjs check \
 ```
 
 This includes the all-target project checks and tests, ASan and Node.js tool
-tests, the full Why3 fixture corpus, project-contract regeneration, all four
-differential layers, and the behavioral baseline checks.
+tests, the full Why3 fixture corpus, project-contract regeneration, the
+official upstream type corpus, and all four live differential layers.
+
+The upstream type-corpus contract covers every `.mlw` and `.why` file under
+the exact Why3 commit's `examples` and `tests` roots (446 + 58 files), while
+excluding `examples_in_progress`. It records the exact source hashes and the
+official Why3 accepted/rejected result for all 504 files. The target check
+compares both classification and process exit code, with no language-feature
+exemptions:
+
+```sh
+node tools/run.mjs upstream --why3-root /path/to/why3
+```
+
+`tools/contracts/upstream-corpus-v1.json` is regenerated and checked against
+the fixed Why3 executable by the non-quick contract check.
 
 Run one or all layered differentials with either source form:
 
@@ -87,33 +102,23 @@ node tools/run.mjs layers all --why3-archive /path/to/why3-source.tar.gz
 node tools/run.mjs layers transform --why3-root /path/to/why3
 ```
 
+The two module-interface fixtures use the official main WhyML entry rather
+than the simplified `why3 pp --output=sexp` entry. Their lossless parse
+envelopes (unit category, optional interface, declarations, and unit span) are
+checked byte-for-byte with:
+
+```sh
+node tools/why3_reference/check_full_whyml_reference.mjs \
+  --why3-root /path/to/why3
+```
+
 `run-fixed` is the fixture-scoped entrypoint for the pristine installed Why3.
 It verifies the environment manifest, source archive, driver closure, standard
 library, loadpath profile, and fixture identity before running Why3. Image and
 runtime provenance is written to stderr and `resolved_context.json`; it is not
-part of any baseline.
+part of canonical behavior.
 
 ```sh
 tools/why3_reference/run-fixed mvp.abs -- \
   prove --parse-only tools/why3_reference/fixtures/mvp.mlw
 ```
-
-Behavioral baselines use an explicit candidate/promote split:
-
-```sh
-node tools/run.mjs baselines check
-
-node tools/run.mjs baselines candidate \
-  --records /tmp/reference-records \
-  --result /tmp/prover-result.json \
-  --compare
-
-node tools/run.mjs baselines promote \
-  --records /tmp/reference-records \
-  --result /tmp/prover-result.json
-```
-
-Structural records contain only portable canonical behavior. The prover result
-baseline contains the corpus identity, comparison target, normalized answers,
-and its self-hash. Candidate generation and promotion never read or modify the
-environment lock.

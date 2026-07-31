@@ -1,7 +1,14 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
 
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, readFileSync, readdirSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import {
+  lstatSync,
+  mkdirSync,
+  readFileSync,
+  readlinkSync,
+  readdirSync,
+} from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -11,25 +18,15 @@ import {
 
 const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const REFERENCE_ROOT = join(PROJECT_ROOT, 'tools', 'why3_reference');
-const BASELINE_ROOT = join(REFERENCE_ROOT, 'baselines', 'pr-v1');
-const STRUCTURAL_BASELINES = [
-  'manifest.json',
-  'typed-semantic.ndjson',
-  'raw-task.ndjson',
-  'transform-checkpoints.ndjson',
-  'prepared-task.ndjson',
-  'smt-token-stream.ndjson',
-];
 
 const SCRIPTS = {
   contracts: join(PROJECT_ROOT, 'tools', 'check_contracts.mjs'),
   elab: join(REFERENCE_ROOT, 'run_elab_differential.mjs'),
   transform: join(REFERENCE_ROOT, 'run_transform_differential.mjs'),
   smt: join(REFERENCE_ROOT, 'run_smt_differential.mjs'),
-  unsupported: join(REFERENCE_ROOT, 'run_unsupported_gate.mjs'),
   result: join(REFERENCE_ROOT, 'run_result_differential.mjs'),
-  baselines: join(REFERENCE_ROOT, 'manage_pr_baselines.mjs'),
   fixtures: join(PROJECT_ROOT, 'tools', 'check_whyml_parser.mjs'),
+  upstream: join(REFERENCE_ROOT, 'check_upstream_corpus.mjs'),
 };
 
 function fail(message) {
@@ -141,6 +138,10 @@ function checkContracts(options) {
   runNode(SCRIPTS.contracts, contractArguments(options));
 }
 
+function checkUpstreamCorpus(options) {
+  runNode(SCRIPTS.upstream, sourceArguments(options));
+}
+
 function smokeFixedReference() {
   const contextRoot = resolve(
     process.env.WHY3_REFERENCE_CONTEXT_DIR ??
@@ -160,105 +161,75 @@ function smokeFixedReference() {
   ]);
 }
 
-const LAYERS = ['elab', 'transform', 'smt', 'unsupported'];
+const LAYERS = ['elab', 'transform', 'smt', 'result'];
 
 function runLayers(options, layers = LAYERS) {
   const source = sourceArguments(options);
   for (const layer of layers) {
     if (!LAYERS.includes(layer)) fail(`unknown reference layer ${layer}`);
-    runNode(SCRIPTS[layer], layer === 'unsupported' ? [] : source);
+    runNode(SCRIPTS[layer], layer === 'result' ? [] : source);
   }
 }
 
-export function parseBaselinesOptions(argv) {
-  const mode = argv[0];
-  if (!['check', 'candidate', 'promote'].includes(mode)) {
-    fail('baselines requires check, candidate, or promote');
-  }
-  const result = {
-    mode,
-    records: null,
-    result: null,
-    compare: false,
-  };
-  const seen = new Set();
-  for (let index = 1; index < argv.length; index += 1) {
-    const option = argv[index];
-    if (seen.has(option)) fail(`duplicate option ${option}`);
-    seen.add(option);
-    if (option === '--compare') {
-      result.compare = true;
-      continue;
-    }
-    if (!['--records', '--result'].includes(option)) {
-      fail(`unknown option ${option}`);
-    }
-    const value = resolve(requiredValue(argv, index, option));
-    if (option === '--records') result.records = value;
-    else result.result = value;
-    index += 1;
-  }
-  if (mode === 'check') {
-    if (argv.length !== 1) fail('baselines check does not accept paths or --compare');
-  } else if (result.records === null || result.result === null) {
-    fail(`baselines ${mode} requires --records and --result`);
-  }
-  if (mode !== 'candidate' && result.compare) {
-    fail('--compare is valid only for baselines candidate');
-  }
-  return result;
+function projectPathNames({ moonDiffOnly = false } = {}) {
+  const output = run('git', [
+    'ls-files',
+    '--cached',
+    '--others',
+    '--exclude-standard',
+    '-z',
+  ], { capture: true });
+  return output
+    .split('\0')
+    .filter(name => name !== '')
+    .filter(name => !moonDiffOnly || name.endsWith('.mbt') || name.endsWith('.mbti'))
+    .sort();
 }
 
-function assertSameFile(actualPath, expectedPath) {
-  const actual = readFileSync(actualPath);
-  const expected = readFileSync(expectedPath);
-  if (!actual.equals(expected)) {
-    fail(`${actualPath} differs from ${expectedPath}`);
+function projectPathDigest(name) {
+  const path = join(PROJECT_ROOT, name);
+  let stat;
+  try {
+    stat = lstatSync(path);
+  } catch (error) {
+    if (error.code === 'ENOENT') return '<missing>';
+    throw error;
+  }
+  if (stat.isSymbolicLink()) return `symlink:${readlinkSync(path)}`;
+  if (!stat.isFile()) return `<${stat.isDirectory() ? 'directory' : 'special'}>`;
+  return createHash('sha256').update(readFileSync(path)).digest('hex');
+}
+
+export function captureProjectState(options = {}) {
+  return new Map(projectPathNames(options).map(name => [
+    name,
+    projectPathDigest(name),
+  ]));
+}
+
+export function changedProjectPaths(before, after) {
+  const names = new Set([...before.keys(), ...after.keys()]);
+  return [...names]
+    .filter(name => before.get(name) !== after.get(name))
+    .sort();
+}
+
+function assertProjectUnchanged(before, options, operation) {
+  const changed = changedProjectPaths(before, captureProjectState(options));
+  if (changed.length !== 0) {
+    fail(
+      `${operation} changed project files:\n` +
+      changed.map(name => `  ${name}`).join('\n'),
+    );
   }
 }
 
-function compareBaselineCandidate(options) {
-  for (const name of STRUCTURAL_BASELINES) {
-    assertSameFile(join(options.records, name), join(BASELINE_ROOT, name));
-  }
-  assertSameFile(options.result, join(BASELINE_ROOT, 'prover-result.json'));
-  process.stdout.write('baselines: candidate matches the checked-in baseline records\n');
-}
-
-function runBaselines(options) {
-  if (options.mode === 'check') {
-    runNode(SCRIPTS.baselines, ['--check']);
-    runNode(SCRIPTS.result, []);
-    return;
-  }
-
-  if (options.mode === 'candidate') {
-    runNode(SCRIPTS.baselines, ['--candidate', options.records]);
-    runNode(SCRIPTS.result, ['--candidate', options.result]);
-    if (options.compare) compareBaselineCandidate(options);
-    return;
-  }
-
-  runNode(SCRIPTS.baselines, ['--promote', options.records]);
-  runNode(SCRIPTS.result, ['--promote', options.result]);
-  runNode(SCRIPTS.contracts, ['--quick']);
-}
-
-function projectDiffArguments({ moonDiffOnly = false } = {}) {
-  return [
-    'diff',
-    '--exit-code',
-    ...(moonDiffOnly ? ['--', '*.mbt', '*.mbti'] : []),
-  ];
-}
-
-function checkProjectHygiene(options) {
-  const diffArguments = projectDiffArguments(options);
+function checkProjectHygiene(options, initialState) {
   run('moon', ['check', '--target', 'all']);
   run('moon', ['info']);
-  run('git', diffArguments);
+  assertProjectUnchanged(initialState, options, 'moon info');
   run('moon', ['fmt']);
-  run('git', diffArguments);
+  assertProjectUnchanged(initialState, options, 'moon fmt');
 }
 
 function runQuickTests() {
@@ -277,10 +248,6 @@ function runProjectTests() {
   run('moon', ['test', '--target', 'all', '--serial']);
 }
 
-function assertProjectClean(options) {
-  run('git', projectDiffArguments(options));
-}
-
 export function runCheckPipeline(options, actions) {
   const projectOptions = { moonDiffOnly: options.moonDiffOnly };
   actions.projectHygiene(projectOptions);
@@ -290,23 +257,26 @@ export function runCheckPipeline(options, actions) {
   actions.fixtures();
   actions.preflight();
   actions.contracts(options);
+  actions.upstream(options);
   actions.layers(options);
-  actions.baselines();
   actions.finalCleanliness(projectOptions);
 }
 
 function check(options) {
+  const projectOptions = { moonDiffOnly: options.moonDiffOnly };
+  const initialState = captureProjectState(projectOptions);
   runCheckPipeline(options, {
-    projectHygiene: checkProjectHygiene,
+    projectHygiene: current => checkProjectHygiene(current, initialState),
     quickTests: runQuickTests,
     smoke: smokeFixedReference,
     projectTests: runProjectTests,
     fixtures: () => runNode(SCRIPTS.fixtures, []),
     preflight: ensureRuntimeDependencies,
     contracts: checkContracts,
+    upstream: checkUpstreamCorpus,
     layers: runLayers,
-    baselines: () => runBaselines(parseBaselinesOptions(['check'])),
-    finalCleanliness: assertProjectClean,
+    finalCleanliness: current =>
+      assertProjectUnchanged(initialState, current, 'check pipeline'),
   });
 }
 
@@ -318,10 +288,8 @@ function usage() {
     '  bootstrap',
     '  contracts [--why3-root PATH | --why3-archive PATH] [--quick]',
     '  fixtures',
-    '  layers [all|elab|transform|smt|unsupported] [source options]',
-    '  baselines check',
-    '  baselines candidate --records DIR --result PATH [--compare]',
-    '  baselines promote --records DIR --result PATH',
+    '  upstream [--why3-root PATH | --why3-archive PATH]',
+    '  layers [all|elab|transform|smt|result] [source options]',
     '  check [--moon-diff-only] [--why3-root PATH | --why3-archive PATH]',
     '',
   ].join('\n');
@@ -342,14 +310,14 @@ export function main(argv = process.argv.slice(2)) {
   } else if (command === 'fixtures') {
     assertNoArguments(command, rest);
     runNode(SCRIPTS.fixtures, []);
+  } else if (command === 'upstream') {
+    checkUpstreamCorpus(parseReferenceOptions(rest));
   } else if (command === 'layers') {
     const layer = rest[0] !== undefined && !rest[0].startsWith('--')
       ? rest[0]
       : 'all';
     const options = parseReferenceOptions(layer === 'all' && rest[0] !== 'all' ? rest : rest.slice(1));
     runLayers(options, layer === 'all' ? LAYERS : [layer]);
-  } else if (command === 'baselines') {
-    runBaselines(parseBaselinesOptions(rest));
   } else if (command === 'check') {
     check(parseCheckOptions(rest));
   } else {

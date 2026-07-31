@@ -18,6 +18,7 @@ pub fn prover_stream_limit_bytes() -> Int {
 ///|
 pub(all) enum ConfigErrorKind {
   InvalidTimeout
+  InvalidResourceLimit
   InvalidCommand
   NonUtf8Path
 } derive(Eq, Debug)

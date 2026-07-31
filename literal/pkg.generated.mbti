@@ -1,0 +1,62 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonbit-community/why3/literal"
+
+import {
+  "moonbitlang/core/bigint",
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub(all) enum Constant {
+  ConstInt(IntConstant)
+  ConstReal(RealConstant)
+  ConstStr(Bytes)
+} derive(Eq, @debug.Debug)
+pub fn Constant::integer(IntLiteralKind, @bigint.BigInt) -> Self
+pub fn Constant::real(RealLiteralKind, RealValue) -> Self
+pub fn Constant::string(BytesView) -> Self
+
+pub(all) struct IntConstant {
+  kind : IntLiteralKind
+  value : @bigint.BigInt
+} derive(Eq, @debug.Debug)
+pub fn IntConstant::negated(Self) -> Self
+
+pub(all) enum IntLiteralKind {
+  ILitUnk
+  ILitDec
+  ILitHex
+  ILitOct
+  ILitBin
+} derive(Eq, @debug.Debug)
+
+pub(all) struct RealConstant {
+  kind : RealLiteralKind
+  value : RealValue
+} derive(Eq, @debug.Debug)
+pub fn RealConstant::negated(Self) -> Self
+
+pub(all) enum RealLiteralKind {
+  RLitUnk
+  RLitDec(Int64)
+  RLitHex(Int64)
+} derive(Eq, @debug.Debug)
+
+pub struct RealValue {
+  significand : @bigint.BigInt
+  pow2 : @bigint.BigInt
+  pow5 : @bigint.BigInt
+} derive(Eq, @debug.Debug)
+pub fn RealValue::normalized(@bigint.BigInt, @bigint.BigInt, @bigint.BigInt) -> Self
+pub fn RealValue::pow2(Self) -> @bigint.BigInt
+pub fn RealValue::pow5(Self) -> @bigint.BigInt
+pub fn RealValue::significand(Self) -> @bigint.BigInt
+
+// Type aliases
+
+// Traits
+

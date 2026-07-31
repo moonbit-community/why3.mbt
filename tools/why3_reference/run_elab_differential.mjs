@@ -13,8 +13,6 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   EXPECTED_WHY3_COMMIT,
-  EXPECTED_WHY3_TREE,
-  PROGRAM_ROOTS,
   canonicalSha,
   runChecked,
   sha256,
@@ -26,17 +24,17 @@ import {
 
 const SCRIPT_DIRECTORY = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = resolve(SCRIPT_DIRECTORY, '..', '..');
-const DRIVER_CONTRACT = join(
-  PROJECT_ROOT,
-  'tools',
-  'contracts',
-  'driver-closure-v1.json',
-);
 const SEMANTIC_PROFILE = join(
   PROJECT_ROOT,
   'tools',
   'contracts',
-  'semantic-profile-v1.json',
+  'semantic-profile-v3.json',
+);
+const DIAGNOSTIC_CONTRACT = join(
+  PROJECT_ROOT,
+  'tools',
+  'contracts',
+  'diagnostics-v1.json',
 );
 const PR_CORPUS = join(
   PROJECT_ROOT,
@@ -173,12 +171,8 @@ function parseArguments(argv) {
   return { why3Root, why3Archive };
 }
 
-function verifyWhy3SourceAndTools(driver, options) {
+function verifyWhy3SourceAndTools(options) {
   const runtime = prepareReferenceRuntime(options);
-  if (driver.why3.commit !== EXPECTED_WHY3_COMMIT ||
-      driver.why3.tree !== EXPECTED_WHY3_TREE) {
-    fail('driver-closure-v1.json does not describe the selected ../why3 tree');
-  }
   const ocamlVersion = runChecked(
     'ocamlfind',
     ['query', '-format', '%v', 'why3'],
@@ -205,33 +199,30 @@ function copyReferenceSource(buildDirectory, name) {
 function compileReferences(buildDirectory, runtime) {
   const env = referenceRuntimeEnvironment(runtime);
   for (const name of [
-    'export_snapshot.ml',
-    'canonical_v2.ml',
+    'canonical_v3_profile.ml',
+    'canonical_v3.ml',
+    'canonical_graph_v3.ml',
     'export_elab_typed.ml',
     'export_elab_raw.ml',
   ]) {
     copyReferenceSource(buildDirectory, name);
   }
 
-  const snapshot = join(buildDirectory, 'export-snapshot');
   const typed = join(buildDirectory, 'export-elab-typed');
   const raw = join(buildDirectory, 'export-elab-raw');
-  runChecked('ocamlfind', [
-    'ocamlopt',
-    '-linkpkg',
-    '-package',
-    'why3,yojson,unix',
-    '-o',
-    snapshot,
-    'export_snapshot.ml',
-  ], { cwd: buildDirectory, env });
-  runChecked('ocamlfind', [
-    'ocamlopt',
-    '-package',
-    'why3,yojson,digestif.ocaml,unix',
-    '-c',
-    'canonical_v2.ml',
-  ], { cwd: buildDirectory, env });
+  for (const source of [
+    'canonical_v3_profile.ml',
+    'canonical_v3.ml',
+    'canonical_graph_v3.ml',
+  ]) {
+    runChecked('ocamlfind', [
+      'ocamlopt',
+      '-package',
+      'why3,yojson,digestif.ocaml,unix',
+      '-c',
+      source,
+    ], { cwd: buildDirectory, env });
+  }
   for (const [output, source] of [
     [typed, 'export_elab_typed.ml'],
     [raw, 'export_elab_raw.ml'],
@@ -243,50 +234,19 @@ function compileReferences(buildDirectory, runtime) {
       'why3,yojson,digestif.ocaml,unix',
       '-o',
       output,
-      'canonical_v2.cmx',
+      'canonical_v3_profile.cmx',
+      'canonical_v3.cmx',
+      'canonical_graph_v3.cmx',
       source,
     ], { cwd: buildDirectory, env });
   }
-  return { snapshot, typed, raw };
+  return { typed, raw };
 }
 
-function exportSnapshot(executable, outputPath, why3Root, driver) {
-  assertEqual(
-    driver.semanticSnapshot.userVisibleProgramRoots,
-    PROGRAM_ROOTS,
-    'program roots',
-  );
-  const argv = ['--stdlib', join(why3Root, 'stdlib')];
-  for (const theory of driver.driver.theoryRoots) {
-    argv.push('--theory', theory);
-  }
-  for (const pmodule of PROGRAM_ROOTS) argv.push('--module', pmodule);
-  const output = runChecked(executable, argv, {
-    cwd: PROJECT_ROOT,
-    env: { ...process.env, LC_ALL: 'C' },
-    maxBuffer: 128 * 1024 * 1024,
-  });
-  if (!output.endsWith('\n')) fail('snapshot exporter output has no final LF');
-  const snapshot = JSON.parse(output);
-  assertEqual(
-    snapshot.roots.theories.map(entry => entry.requested),
-    driver.driver.theoryRoots,
-    'snapshot theory roots',
-  );
-  assertEqual(
-    snapshot.roots.modules.map(entry => entry.requested),
-    PROGRAM_ROOTS,
-    'snapshot program roots',
-  );
-  writeFileSync(outputPath, output);
-}
-
-function referenceArguments(why3Root, snapshot, fixture, file) {
+function referenceArguments(why3Root, fixture, file) {
   const argv = [
     '--stdlib',
     join(why3Root, 'stdlib'),
-    '--snapshot',
-    snapshot,
     '--fixture',
     fixture.label,
     '--file',
@@ -297,10 +257,10 @@ function referenceArguments(why3Root, snapshot, fixture, file) {
   return argv;
 }
 
-function runReference(executable, why3Root, snapshot, fixture, file) {
+function runReference(executable, why3Root, fixture, file) {
   return runChecked(
     executable,
-    referenceArguments(why3Root, snapshot, fixture, file),
+    referenceArguments(why3Root, fixture, file),
     {
       cwd: PROJECT_ROOT,
       env: { ...process.env, LC_ALL: 'C' },
@@ -333,13 +293,13 @@ function expectedRecords(stage, fixture) {
         unit,
         kind: 'theory',
         recordStage: 'typed-semantic',
-        canonicalTag: 'Theory',
+        canonicalTag: 'GraphV3',
       })),
       ...fixture.modules.map(([unit]) => ({
         unit,
         kind: 'module',
         recordStage: 'typed-program',
-        canonicalTag: 'Pmodule',
+        canonicalTag: 'GraphV3',
       })),
     ];
   }
@@ -353,6 +313,7 @@ function validateRecords(
   fixture,
   sourceSha256,
   semanticProfileSha256,
+  diagnosticContractSha256,
   producer,
 ) {
   if (!output.endsWith('\n')) fail(`${producer} ${stage} output has no final LF`);
@@ -364,6 +325,7 @@ function validateRecords(
   const typedKeys = [
     'schema',
     'semantic_profile_sha256',
+    'diagnostic_contract_sha256',
     'fixture',
     'source_sha256',
     'scope',
@@ -376,6 +338,7 @@ function validateRecords(
   const rawKeys = [
     'schema',
     'semantic_profile_sha256',
+    'diagnostic_contract_sha256',
     'fixture',
     'source_sha256',
     'scope',
@@ -403,8 +366,9 @@ function validateRecords(
       `${producer} ${stage} record ${index} field order`,
     );
     const wanted = expected[index];
-    if (record.schema !== 2 ||
+    if (record.schema !== 3 ||
         record.semantic_profile_sha256 !== semanticProfileSha256 ||
+        record.diagnostic_contract_sha256 !== diagnosticContractSha256 ||
         record.fixture !== fixture.label ||
         record.source_sha256 !== sourceSha256 ||
         record.unit_kind !== (wanted.kind ?? 'theory') ||
@@ -420,8 +384,8 @@ function validateRecords(
     } else if (record.scope !== 'goal' ||
                record.goal_name_hex !== hex(wanted.goal) ||
                record.goal_ordinal !== wanted.ordinal ||
-               record.canonical?.[0] !== 'Task') {
-      fail(`${producer} ${stage} record ${index} is not the expected raw Task`);
+               record.canonical?.[0] !== 'GraphV3') {
+      fail(`${producer} ${stage} record ${index} is not the expected task graph`);
     }
     const digest = canonicalSha(record.canonical);
     if (record.canonical_sha256 !== digest) {
@@ -701,7 +665,6 @@ function validatePortability(
   buildDirectory,
   executables,
   why3Root,
-  snapshot,
   fixture,
   primaryTyped,
   primaryRaw,
@@ -714,8 +677,8 @@ function validatePortability(
     const file = join(root, 'mvp.mlw');
     writeFileSync(file, fixtureBytes);
     outputs.push({
-      typed: runReference(executables.typed, why3Root, snapshot, fixture, file),
-      raw: runReference(executables.raw, why3Root, snapshot, fixture, file),
+      typed: runReference(executables.typed, why3Root, fixture, file),
+      raw: runReference(executables.raw, why3Root, fixture, file),
     });
   }
   assertSameOutput(
@@ -768,23 +731,23 @@ function validateFixtureContract(fixture, corpus) {
 
 function main(argv = process.argv.slice(2)) {
   const options = parseArguments(argv);
-  const driver = readJson(DRIVER_CONTRACT);
   const profile = readJson(SEMANTIC_PROFILE);
+  const diagnostics = readJson(DIAGNOSTIC_CONTRACT);
   const corpus = readJson(PR_CORPUS);
   if (profile.why3Commit !== EXPECTED_WHY3_COMMIT ||
-      profile.semanticProfileSha256 === undefined) {
-    fail('semantic-profile-v1.json does not describe the selected Why3 source');
+      profile.canonicalSchemaVersion !== 3 ||
+      profile.semanticProfileSha256 === undefined ||
+      diagnostics.diagnosticContractSha256 === undefined) {
+    fail('canonical v3 contracts do not describe the selected Why3 source');
   }
 
   const buildDirectory = mkdtempSync(join(tmpdir(), 'why3-elab-differential-'));
   try {
-    const runtime = verifyWhy3SourceAndTools(driver, options);
+    const runtime = verifyWhy3SourceAndTools(options);
     const why3Root = runtime.sourceRoot;
     const executables = compileReferences(buildDirectory, runtime);
-    const snapshot = join(buildDirectory, 'snapshot.json');
     const why3Config = join(buildDirectory, 'why3.conf');
     writeFileSync(why3Config, '');
-    exportSnapshot(executables.snapshot, snapshot, why3Root, driver);
 
     let typedRecords = 0;
     let rawRecords = 0;
@@ -794,14 +757,12 @@ function main(argv = process.argv.slice(2)) {
       const ocamlTyped = runReference(
         executables.typed,
         why3Root,
-        snapshot,
         fixture,
         fixturePath,
       );
       const ocamlRaw = runReference(
         executables.raw,
         why3Root,
-        snapshot,
         fixture,
         fixturePath,
       );
@@ -819,6 +780,7 @@ function main(argv = process.argv.slice(2)) {
           fixture,
           sourceSha256,
           profile.semanticProfileSha256,
+          diagnostics.diagnosticContractSha256,
           producer,
         );
       }
@@ -839,7 +801,6 @@ function main(argv = process.argv.slice(2)) {
           buildDirectory,
           executables,
           why3Root,
-          snapshot,
           fixture,
           ocamlTyped,
           ocamlRaw,

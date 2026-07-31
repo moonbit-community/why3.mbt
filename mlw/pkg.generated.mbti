@@ -5,6 +5,7 @@ import {
   "moonbit-community/why3/core/identity",
   "moonbit-community/why3/core/logic",
   "moonbit-community/why3/core/theory",
+  "moonbit-community/why3/literal",
   "moonbitlang/core/bigint",
   "moonbitlang/core/debug",
 }
@@ -17,9 +18,59 @@ pub(all) suberror MlwError {
 } derive(Eq, @debug.Debug)
 
 // Types and methods
+pub(all) enum AssertionKind {
+  Assert
+  Assume
+  Check
+} derive(Eq, @debug.Debug)
+
+type Assignment
+pub fn Assignment::new(PVariable, RoutineSymbol, PVariable, @identity.SourceSpan?) -> Self raise MlwError
+pub fn Assignment::view(Self) -> AssignmentView
+
+pub(all) struct AssignmentView {
+  region : PVariable
+  field : RoutineSymbol
+  value : PVariable
+}
+
+type Cexp
+pub fn Cexp::any(Cty) -> Self
+pub fn Cexp::call(RoutineSymbol, ArrayView[PVariable], ArrayView[Ity], Ity, @identity.SourceSpan?) -> Self raise
+pub fn Cexp::cty(Self) -> Cty
+pub fn Cexp::function(Cty, Expr, @identity.SourceSpan?) -> Self raise MlwError
+pub fn Cexp::function_with_specification(ArrayView[PVariable], ArrayView[PVariable], ArrayView[@logic.Term], ArrayView[Postcondition], ArrayView[ExceptionalPostconditions], ArrayView[OldSnapshot], Expr, @identity.SourceSpan?, mask? : ProgramMask) -> Self raise MlwError
+pub fn Cexp::is_ghost(Self) -> Bool
+pub fn Cexp::pure_application(@identity.CompilationContext, @logic.LSymbol, ArrayView[PVariable], Ity, @logic.LSymbol, @logic.LSymbol, @identity.SourceSpan?) -> Self raise
+pub fn Cexp::trusted_new(CexpView, Cty, @identity.SourceSpan?) -> Self raise MlwError
+pub fn Cexp::view(Self) -> CexpView
+
+pub(all) enum CexpView {
+  Capp(RoutineSymbol, ArrayView[PVariable])
+  Cpur(@logic.LSymbol, ArrayView[PVariable])
+  Cfun(Expr)
+  Cany
+}
+
 type Cty
+pub fn Cty::add_postconditions(Self, ArrayView[Postcondition], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Cty::add_postconditions_with_variables(Self, ArrayView[PVariable], ArrayView[Postcondition], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Cty::add_preconditions(Self, ArrayView[@logic.Term], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Cty::add_preconditions_with_variables(Self, ArrayView[PVariable], ArrayView[@logic.Term], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Cty::apply(Self, @identity.CompilationContext, ArrayView[PVariable], ArrayView[Ity], Ity, @identity.SourceSpan?) -> Self raise
 pub fn Cty::context_anchor(Self) -> @identity.SemanticId
+pub fn Cty::execute_as_function(Self, @identity.CompilationContext, ProgramTypeSymbol, @logic.LSymbol, @identity.SourceSpan?) -> Self raise
+pub fn Cty::from_formula(@identity.CompilationContext, @theory.Namespace, ProgramNamespace, @logic.Term, @identity.SourceSpan?) -> Self? raise
+pub fn Cty::ghostify(Self, Bool, @identity.SourceSpan?) -> Self raise MlwError
+pub fn Cty::is_ghost(Self) -> Bool
+pub fn Cty::is_pure(Self) -> Bool
+pub fn Cty::new(ArrayView[PVariable], ArrayView[@logic.Term], ArrayView[Postcondition], ArrayView[ExceptionalPostconditions], ArrayView[OldSnapshot], Effect, Ity, @identity.SourceSpan?, mask? : ProgramMask, defensive? : Bool) -> Self raise MlwError
+pub fn Cty::new_with_variables(ArrayView[PVariable], ArrayView[PVariable], ArrayView[@logic.Term], ArrayView[Postcondition], ArrayView[ExceptionalPostconditions], ArrayView[OldSnapshot], Effect, Ity, @identity.SourceSpan?, mask? : ProgramMask, defensive? : Bool) -> Self raise MlwError
+pub fn Cty::read_post(Self, ArrayView[PVariable], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Cty::read_pre(Self, ArrayView[PVariable], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Cty::reads(Self) -> ArrayView[PVariable]
 pub fn Cty::trusted_new(@identity.SemanticId, ArrayView[PVariable], ArrayView[PVariable], ArrayView[@logic.Term], ArrayView[Postcondition], Effect, Ity, ProgramMask, @identity.SourceSpan?) -> Self raise MlwError
+pub fn Cty::trusted_new_full(@identity.SemanticId, ArrayView[PVariable], ArrayView[PVariable], ArrayView[@logic.Term], ArrayView[Postcondition], ArrayView[ExceptionalPostconditions], ArrayView[OldSnapshot], Effect, Ity, ProgramMask, ItySubstitution, @identity.SourceSpan?) -> Self raise MlwError
 pub fn Cty::view(Self) -> CtyView
 
 pub(all) struct CtyView {
@@ -27,64 +78,205 @@ pub(all) struct CtyView {
   arguments : ArrayView[PVariable]
   preconditions : ArrayView[@logic.Term]
   postconditions : ArrayView[Postcondition]
+  exceptional_postconditions : ArrayView[ExceptionalPostconditions]
+  oldies : ArrayView[OldSnapshot]
   effect : Effect
   result : Ity
   mask : ProgramMask
+  freeze : ItySubstitution
 }
 
 type Effect
+pub fn Effect::affected(Self, Ity) -> Bool
+pub fn Effect::assign(ArrayView[(PVariable, PVariable, PVariable)], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Effect::bind(Self, ArrayView[PVariable]) -> Self
+pub fn Effect::catch_exception(Self, XSymbol) -> Self
+pub fn Effect::diverge(Self, @identity.SourceSpan?) -> Self raise MlwError
 pub fn Effect::from_reads(ArrayView[PVariable], Bool) -> Self
+pub fn Effect::fusion(Self, Self, @identity.SourceSpan?) -> Self raise MlwError
+pub fn Effect::ghostify(Self, Bool, @identity.SourceSpan?) -> Self raise MlwError
+pub fn Effect::instantiate(Self, ItySubstitution, @identity.SourceSpan?) -> Self raise MlwError
+pub fn Effect::is_pure(Self) -> Bool
+pub fn Effect::partial(Self, @identity.SourceSpan?) -> Self raise MlwError
 pub fn Effect::pure(Bool) -> Self
+pub fn Effect::raise_exception(Self, XSymbol) -> Self
+pub fn Effect::read_post(Self, ArrayView[PVariable], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Effect::read_pre(Self, ArrayView[PVariable], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Effect::reset(Self, ArrayView[Region], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Effect::reset_overwritten(Self, @identity.SourceSpan?) -> Self raise MlwError
+pub fn Effect::spoil(Self, Ity) -> Self
+pub fn Effect::trusted_new(@identity.SemanticId, ArrayView[PVariable], ArrayView[EffectWrite], ArrayView[Region], ArrayView[Region], ArrayView[Region], ArrayView[XSymbol], ArrayView[@logic.TyVarSymbol], ProgramTermination, Bool, @identity.SourceSpan?) -> Self raise MlwError
+pub fn Effect::union_parallel(Self, Self, @identity.SourceSpan?) -> Self raise MlwError
+pub fn Effect::union_sequential(Self, Self, @identity.SourceSpan?) -> Self raise MlwError
 pub fn Effect::view(Self) -> EffectView
+pub fn Effect::write(ArrayView[PVariable], ArrayView[EffectWrite], @identity.SourceSpan?) -> Self raise MlwError
+pub impl Eq for Effect
 
 pub(all) struct EffectView {
   reads : ArrayView[PVariable]
+  writes : ArrayView[EffectWrite]
+  taints : ArrayView[Region]
+  covers : ArrayView[Region]
+  resets : ArrayView[Region]
+  raises : ArrayView[XSymbol]
+  spoils : ArrayView[@logic.TyVarSymbol]
   termination : ProgramTermination
   ghost : Bool
 }
 
+type EffectWrite
+pub fn EffectWrite::new(Region, ArrayView[PVariable], @identity.SourceSpan?) -> Self raise MlwError
+pub fn EffectWrite::view(Self) -> EffectWriteView
+
+pub(all) struct EffectWriteView {
+  region : Region
+  fields : ArrayView[PVariable]
+}
+
+type ExceptionalBranch
+pub fn ExceptionalBranch::new(XSymbol, ArrayView[PVariable], Expr, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ExceptionalBranch::view(Self) -> ExceptionalBranchView
+
+pub(all) struct ExceptionalBranchView {
+  exception : XSymbol
+  variables : ArrayView[PVariable]
+  body : Expr
+}
+
+type ExceptionalPostconditions
+pub fn ExceptionalPostconditions::new(XSymbol, ArrayView[Postcondition], @identity.SourceSpan?) -> Self raise MlwError
+pub fn ExceptionalPostconditions::view(Self) -> ExceptionalPostconditionsView
+
+pub(all) struct ExceptionalPostconditionsView {
+  exception : XSymbol
+  postconditions : ArrayView[Postcondition]
+}
+
 type Expr
+pub fn Expr::absurd(Ity, @identity.Origin, ArrayView[Bytes]) -> Self
 pub fn Expr::assert_formula(@logic.Term, ArrayView[PVariable], Ity, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Expr::assertion(AssertionKind, @logic.Term, ArrayView[PVariable], Ity, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Expr::assertion_with_variables(AssertionKind, @logic.Term, ArrayView[PVariable], Ity, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Expr::assignment(ArrayView[Assignment], Ity, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
 pub fn Expr::assume_formula(@logic.Term, ArrayView[PVariable], Ity, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
 pub fn Expr::attributes(Self) -> ArrayView[Bytes]
-pub fn Expr::constant(@logic.Constant, Ity, @identity.Origin, ArrayView[Bytes]) -> Self
+pub fn Expr::constant(@literal.Constant, Ity, @identity.Origin, ArrayView[Bytes]) -> Self raise
 pub fn Expr::context_anchor(Self) -> @identity.SemanticId
 pub fn Expr::effect(Self) -> Effect
+pub fn Expr::exception_scope(XSymbol, Self, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Expr::execute(Cexp, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Expr::execute_function_value(Cexp, @identity.CompilationContext, ProgramTypeSymbol, @logic.LSymbol, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise
+pub fn Expr::for_loop(PVariable, ForBounds, PVariable, ArrayView[@logic.Term], Self, Ity, Ity, ArrayView[PVariable], @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Expr::ghostify(Self, Bool, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
 pub fn Expr::if_then_else(Self, Self, Self, Ity, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
 pub fn Expr::ity(Self) -> Ity
+pub fn Expr::let_definition(LetDefinition, Self, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
 pub fn Expr::let_in(PVariable, Self, Self, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
 pub fn Expr::mask(Self) -> ProgramMask
+pub fn Expr::match_with(Self, ArrayView[RegularBranch], ArrayView[ExceptionalBranch], Ity, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
 pub fn Expr::origin(Self) -> @identity.Origin
-pub fn Expr::pure_application(@logic.LSymbol, ArrayView[PVariable], Ity, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
-pub fn Expr::routine_call(RoutineSymbol, ArrayView[PVariable], Ity, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Expr::pure_application(@identity.CompilationContext, @logic.LSymbol, ArrayView[PVariable], Ity, @logic.LSymbol, @logic.LSymbol, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise
+pub fn Expr::pure_term(@logic.Term, Ity, ArrayView[PVariable], @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise
+pub fn Expr::raise_exception(XSymbol, Self, Ity, Ity, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Expr::routine_call(RoutineSymbol, ArrayView[PVariable], Ity, @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise
+pub fn Expr::trusted_new(ExprView, Ity, @identity.Origin, ArrayView[Bytes], Effect, ProgramMask, @identity.SourceSpan?) -> Self
 pub fn Expr::variable(PVariable, @identity.Origin, ArrayView[Bytes]) -> Self
 pub fn Expr::view(Self) -> ExprView
+pub fn Expr::while_loop(Self, ArrayView[@logic.Term], ArrayView[ProgramVariant], Self, Ity, Ity, ArrayView[PVariable], @identity.Origin, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
 
 pub(all) enum ExprView {
-  Evar(PVariable, Ity)
-  Econst(@logic.Constant, Ity)
-  EpureApp(@logic.LSymbol, ArrayView[PVariable], Ity)
-  EroutineCall(RoutineSymbol, ArrayView[PVariable], Ity)
-  Elet(PVariable, Expr, Expr, Ity)
-  Eif(Expr, Expr, Expr, Ity)
-  Eassert(@logic.Term)
-  Eassume(@logic.Term)
+  Evar(PVariable)
+  Econst(@literal.Constant)
+  Eexec(Cexp, Cty)
+  Eassign(ArrayView[Assignment])
+  Elet(LetDefinition, Expr)
+  Eif(Expr, Expr, Expr)
+  Ematch(Expr, ArrayView[RegularBranch], ArrayView[ExceptionalBranch])
+  Ewhile(Expr, ArrayView[@logic.Term], ArrayView[ProgramVariant], Expr)
+  Efor(PVariable, ForBounds, PVariable, ArrayView[@logic.Term], Expr)
+  Eraise(XSymbol, Expr)
+  Eexn(XSymbol, Expr)
+  Eassert(AssertionKind, @logic.Term)
+  Eghost(Expr)
+  Epure(@logic.Term)
+  Eabsurd
 }
+
+type ForBounds
+pub fn ForBounds::new(PVariable, ForDirection, PVariable, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ForBounds::view(Self) -> ForBoundsView
+
+pub(all) struct ForBoundsView {
+  first : PVariable
+  direction : ForDirection
+  last : PVariable
+}
+
+pub(all) enum ForDirection {
+  To
+  DownTo
+} derive(Eq, @debug.Debug)
 
 type Ity
 pub fn Ity::app(ProgramTypeSymbol, ArrayView[Self], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Ity::app_with_regions(ProgramTypeSymbol, ArrayView[Self], ArrayView[Self], @identity.SourceSpan?) -> Self raise MlwError
 pub fn Ity::context_anchor(Self) -> @identity.SemanticId
+pub fn Ity::exposed_regions(Self) -> Array[Region]
+pub fn Ity::free_type_variables(Self) -> Array[@logic.TyVarSymbol]
 pub fn Ity::from_ty(ProgramNamespace, @logic.Ty, @identity.SourceSpan?) -> Self raise
+pub fn Ity::frozen_regions(Self) -> Array[Region]
+pub fn Ity::has_stale_region(Self, ArrayView[Region], ArrayView[Region]) -> Bool
+pub fn Ity::instantiate(ProgramTypeSymbol, ArrayView[Self], ArrayView[Self], @identity.SourceSpan?) -> Self raise MlwError
 pub fn Ity::is_closed(Self) -> Bool
+pub fn Ity::is_fragile(Self) -> Bool
+pub fn Ity::is_pure(Self) -> Bool
+pub fn Ity::member_ity(Self, PVariable, @identity.SourceSpan?) -> Self raise MlwError
+pub fn Ity::purify(Self) -> Self
+pub fn Ity::reachable_regions(Self) -> Array[Region]
+pub fn Ity::reachable_type_variables(Self) -> Array[@logic.TyVarSymbol]
+pub fn Ity::region(Region) -> Self
+pub fn Ity::same_skeleton(Self, Self, @identity.SourceSpan?) -> Bool raise MlwError
 pub fn Ity::to_ty(Self, @identity.SourceSpan?) -> @logic.Ty raise @logic.TypeError
+pub fn Ity::top_regions(Self) -> Array[Region]
 pub fn Ity::variable(@logic.TyVarSymbol) -> Self
 pub fn Ity::view(Self) -> ItyView
+pub fn Ity::visible_regions(Self) -> Array[Region]
 pub impl Eq for Ity
 pub impl Hash for Ity
 
+type ItySubstitution
+pub fn ItySubstitution::empty() -> Self
+pub fn ItySubstitution::freeze(Self, Ity, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ItySubstitution::instantiate(Self, Ity, @identity.SourceSpan?) -> Ity raise MlwError
+pub fn ItySubstitution::instantiate_call_result(Self, @identity.CompilationContext, Ity, @identity.SourceSpan?) -> Ity raise MlwError
+pub fn ItySubstitution::instantiate_generalized_call_result(Self, @identity.CompilationContext, Ity, @identity.SourceSpan?) -> Ity raise MlwError
+pub fn ItySubstitution::instantiate_inference_expected(Self, @identity.CompilationContext, Ity, @identity.SourceSpan?) -> (Self, Ity) raise MlwError
+pub fn ItySubstitution::instantiate_partial(Self, ArrayView[Ity], @identity.SourceSpan?) -> Array[Ity] raise MlwError
+pub fn ItySubstitution::match_ity(Self, Ity, Ity, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ItySubstitution::match_region(Self, Region, Ity, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ItySubstitution::view(Self) -> ItySubstitutionView
+
+pub(all) struct ItySubstitutionView {
+  type_variables : ArrayView[(@logic.TyVarSymbol, Ity)]
+  regions : ArrayView[(Region, Ity)]
+}
+
 pub(all) enum ItyView {
   ItyVar(@logic.TyVarSymbol)
-  ItyApp(ProgramTypeSymbol, ArrayView[Ity])
+  ItyApp(ProgramTypeSymbol, ArrayView[Ity], ArrayView[Ity])
+  ItyReg(Region)
+}
+
+type LetDefinition
+pub fn LetDefinition::recursive(ArrayView[RecursiveDefinition], @identity.SourceSpan?) -> Self raise MlwError
+pub fn LetDefinition::symbol(RoutineSymbol, Cexp, @identity.SourceSpan?) -> Self raise MlwError
+pub fn LetDefinition::variable(PVariable, Expr, @identity.SourceSpan?) -> Self raise MlwError
+pub fn LetDefinition::view(Self) -> LetDefinitionView
+
+pub(all) enum LetDefinitionView {
+  LDvar(PVariable, Expr)
+  LDsym(RoutineSymbol, Cexp)
+  LDrec(ArrayView[RecursiveDefinition])
 }
 
 pub(all) struct MlwDiagnostic {
@@ -95,8 +287,31 @@ pub(all) struct MlwDiagnostic {
 
 pub(all) enum MlwErrorKind {
   MlwContextMismatch
-  SnapshotProgramOriginRequired
   UnsupportedProgramType
+  BadProgramTypeArity
+  BadRegionArity
+  InvalidRegion
+  InvalidProgramTypeInvariant
+  ProgramTypeMismatch
+  UnboundProgramTypeVariable
+  UnboundRegion
+  InvalidExceptionType
+  InvalidProgramMask
+  InvalidOldSnapshot
+  UnboundSpecificationVariable
+  InvalidEffect
+  DuplicateEffectField
+  AssignSnapshot
+  AssignPrivate
+  WriteImmutable
+  IllegalAssignment
+  IllegalUpdate
+  IllegalSnapshot
+  IllegalAlias
+  ImpureVariable
+  StaleVariable
+  BadGhostWrite
+  GhostDivergence
   UnsupportedEffect
   InvalidComputationType
   DuplicateProgramName
@@ -104,6 +319,10 @@ pub(all) enum MlwErrorKind {
   UnboundProgramName
   InvalidProgramDeclaration
   ProgramModuleBuilderSealed
+  NoOpenedProgramNamespace
+  UnsupportedProgramInterfaceUnit
+  ProgramInterfaceSymbolNotFound
+  ProgramInterfaceMismatch
 } derive(Eq, @debug.Debug)
 
 pub(all) enum ModuleItem {
@@ -111,11 +330,22 @@ pub(all) enum ModuleItem {
   Uuse(@theory.TheoryKey)
   Uclone(ProgramCloneWitness)
   Umeta(@theory.Meta)
+  Uscope(Bytes, Array[ModuleItem])
+}
+
+type OldSnapshot
+pub fn OldSnapshot::new(PVariable, PVariable, @identity.SourceSpan?) -> Self raise MlwError
+pub fn OldSnapshot::view(Self) -> OldSnapshotView
+
+pub(all) struct OldSnapshotView {
+  snapshot : PVariable
+  original : PVariable
 }
 
 type PVariable
 pub fn PVariable::semantic_id(Self) -> @identity.SemanticId
 pub fn PVariable::trusted_new(@identity.CompilationContext, @theory.SemanticName, Ity, Bool, @identity.SourceSpan?) -> Self raise
+pub fn PVariable::trusted_old_snapshot(Self, @identity.CompilationContext, @identity.SourceSpan?) -> Self raise
 pub fn PVariable::view(Self) -> PVariableView
 pub impl Eq for PVariable
 pub impl Hash for PVariable
@@ -128,22 +358,60 @@ pub(all) struct PVariableView {
   pure_symbol : @logic.VSymbol
 }
 
+pub(all) enum PatternGhost {
+  PGfail
+  PGlast
+  PGnone
+} derive(Eq, @debug.Debug)
+
 type Pmodule
 pub fn Pmodule::context_anchor(Self) -> @identity.SemanticId
+pub fn Pmodule::dependency_modules(Self) -> ArrayView[(@theory.TheoryKey, Self)]
 pub fn Pmodule::export_namespace(Self) -> ProgramNamespace
 pub fn Pmodule::key(Self) -> @theory.TheoryKey
+pub fn Pmodule::match_interface(Self, Self, @identity.SourceSpan?) -> ProgramInterfaceMatch raise MlwError
+pub fn Pmodule::pure_known(Self) -> @logic.KnownMap
 pub fn Pmodule::pure_theory(Self) -> @theory.Theory
+pub fn Pmodule::referenced_module(Self, @theory.TheoryKey) -> Self?
 pub fn Pmodule::trusted_new(@theory.TheoryKey, @theory.Theory, ArrayView[ModuleItem], ProgramNamespace) -> Self raise
+pub fn Pmodule::trusted_new_with_dependencies(@theory.TheoryKey, @theory.Theory, ArrayView[ModuleItem], ProgramNamespace, ArrayView[(@theory.TheoryKey, Self)]) -> Self raise
 pub fn Pmodule::view(Self) -> PmoduleView
 
 type PmoduleBuilder
+pub fn PmoduleBuilder::add_clone(Self, Pmodule, @theory.TheoryInstantiation, ProgramCloneWitness, ProgramNamespace, @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_exception_decl(Self, XSymbol, ArrayView[@logic.Decl], @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_exception_decl_with_metas(Self, XSymbol, ArrayView[@logic.Decl], ArrayView[@theory.Meta], @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_existing_clone(Self, Pmodule, ProgramCloneWitness, @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_existing_meta(Self, @theory.Meta, @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_existing_program_declaration(Self, ProgramDeclaration, @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_existing_type_declarations(Self, ArrayView[ProgramTypeDeclaration], ArrayView[@logic.Decl], ArrayView[@theory.Meta], @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_hidden_use(Self, Pmodule, @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_meta(Self, @theory.Meta, @identity.SourceSpan?) -> Unit raise
 pub fn PmoduleBuilder::add_program_decl(Self, RoutineSymbol, ProgramComputation, ArrayView[@logic.Decl], @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_program_decl_with_metas(Self, RoutineSymbol, ProgramComputation, ArrayView[@logic.Decl], ArrayView[@theory.Meta], @identity.SourceSpan?) -> Unit raise
 pub fn PmoduleBuilder::add_pure_decl(Self, @logic.Decl, @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_pure_decl_with_metas(Self, @logic.Decl, ArrayView[@theory.Meta], @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_pure_proposition(Self, @logic.Decl, @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_pure_use(Self, @theory.Theory, Bool, @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_recursive_decl(Self, ArrayView[RecursiveDefinition], ArrayView[@logic.Decl], @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_recursive_decl_with_metas(Self, ArrayView[RecursiveDefinition], ArrayView[@logic.Decl], ArrayView[@theory.Meta], @identity.SourceSpan?) -> Unit raise
 pub fn PmoduleBuilder::add_scoped_use(Self, BytesView, Pmodule, Bool, @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_type_declarations(Self, ArrayView[ProgramTypeDeclaration], ArrayView[@logic.Decl], ArrayView[@theory.Meta], @identity.SourceSpan?) -> Unit raise
 pub fn PmoduleBuilder::add_use(Self, Pmodule, Bool, @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_variable_decl(Self, PVariable, Expr, ArrayView[@logic.Decl], @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::add_variable_decl_with_metas(Self, PVariable, Expr, ArrayView[@logic.Decl], ArrayView[@theory.Meta], @identity.SourceSpan?) -> Unit raise
 pub fn PmoduleBuilder::close(Self) -> Pmodule raise
+pub fn PmoduleBuilder::close_scope(Self, Bool, @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::finish_clone(Self, Pmodule, ProgramCloneWitness, ProgramNamespace, @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::finish_pure_elaboration(Self, Int, @identity.SourceSpan?) -> Unit raise
+pub fn PmoduleBuilder::import_scope(Self, ArrayView[Bytes], @identity.SourceSpan?) -> Unit raise
 pub fn PmoduleBuilder::new(@identity.CompilationContext, @theory.TheoryKey, @theory.SemanticName) -> Self
+pub fn PmoduleBuilder::open_scope(Self, BytesView, @identity.SourceSpan?) -> Unit raise
 pub fn PmoduleBuilder::program_namespace(Self) -> ProgramNamespace
+pub fn PmoduleBuilder::pure_coercions(Self) -> @theory.CoercionMap
+pub fn PmoduleBuilder::pure_elaboration_builder(Self) -> @theory.TheoryBuilder
+pub fn PmoduleBuilder::pure_elaboration_checkpoint(Self) -> Int
+pub fn PmoduleBuilder::pure_known(Self) -> @logic.KnownMap
 pub fn PmoduleBuilder::pure_namespace(Self) -> @theory.Namespace
 
 pub(all) struct PmoduleView {
@@ -151,6 +419,7 @@ pub(all) struct PmoduleView {
   pure_theory : @theory.Theory
   items : ArrayView[ModuleItem]
   export_namespace : ProgramNamespace
+  dependencies : ArrayView[(@theory.TheoryKey, Pmodule)]
 }
 
 type Postcondition
@@ -162,9 +431,20 @@ pub(all) struct PostconditionView {
   formula : @logic.Term
 }
 
+pub(all) enum PrePattern {
+  PPwild
+  PPvar(@theory.SemanticName, Bool)
+  PPapp(RoutineSymbol, Array[PrePattern])
+  PPas(PrePattern, @theory.SemanticName, Bool)
+  PPor(PrePattern, PrePattern)
+}
+
 type ProgramCloneWitness
 pub fn ProgramCloneWitness::context_anchor(Self) -> @identity.SemanticId
-pub fn ProgramCloneWitness::trusted_new(@identity.SemanticId, @theory.TheoryKey, ArrayView[(@logic.TypeSymbol, Ity)], ArrayView[(@logic.TypeSymbol, ProgramTypeSymbol)], ArrayView[(@logic.LSymbol, @logic.LSymbol)], ArrayView[(@logic.PrSymbol, @logic.PrSymbol)], ArrayView[(@logic.PrSymbol, @logic.PropositionKind)], ArrayView[(@logic.VSymbol, PVariable)], ArrayView[(RoutineSymbol, RoutineSymbol)], @logic.PropositionKind, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramCloneWitness::trusted_new(@identity.SemanticId, @theory.TheoryKey, ArrayView[(@logic.TypeSymbol, Ity)], ArrayView[(@logic.TypeSymbol, ProgramTypeSymbol)], ArrayView[(@logic.LSymbol, @logic.LSymbol)], ArrayView[(@logic.PrSymbol, @logic.PrSymbol)], ArrayView[(@logic.PrSymbol, @logic.PropositionKind)], ArrayView[(@logic.VSymbol, PVariable)], ArrayView[(RoutineSymbol, RoutineSymbol)], ArrayView[(XSymbol, XSymbol)], @logic.PropositionKind, @identity.SourceSpan?, vc_refinements? : ArrayView[(RoutineSymbol, Cty, Expr, Int)], vc_suppressed_routines? : ArrayView[RoutineSymbol], vc_suppressed_types? : ArrayView[ProgramTypeSymbol]) -> Self raise MlwError
+pub fn ProgramCloneWitness::vc_refinements(Self) -> ArrayView[(RoutineSymbol, Cty, Expr, Int)]
+pub fn ProgramCloneWitness::vc_suppressed_routines(Self) -> ArrayView[RoutineSymbol]
+pub fn ProgramCloneWitness::vc_suppressed_types(Self) -> ArrayView[ProgramTypeSymbol]
 pub fn ProgramCloneWitness::view(Self) -> ProgramCloneWitnessView
 
 pub(all) struct ProgramCloneWitnessView {
@@ -176,47 +456,127 @@ pub(all) struct ProgramCloneWitnessView {
   proposition_kinds : ArrayView[(@logic.PrSymbol, @logic.PropositionKind)]
   program_variable_instantiations : ArrayView[(@logic.VSymbol, PVariable)]
   routine_instantiations : ArrayView[(RoutineSymbol, RoutineSymbol)]
+  exception_instantiations : ArrayView[(XSymbol, XSymbol)]
   default_proposition_kind : @logic.PropositionKind
 }
 
 pub(all) enum ProgramComputation {
   Cany(Cty)
   Cfun(Cty, Expr?)
+  Cexpression(Cexp)
 }
+pub fn ProgramComputation::body(Self) -> Expr?
+pub fn ProgramComputation::cty(Self) -> Cty
 
 pub(all) enum ProgramDeclaration {
-  PDtype(Array[ProgramTypeDeclaration], Array[@logic.Decl])
-  PDpure(Array[@logic.Decl])
-  PDlet(RoutineSymbol, ProgramComputation, Array[@logic.Decl])
+  PDtype(Array[ProgramTypeDeclaration], Array[@logic.Decl], Array[@theory.Meta])
+  PDpure(Array[@logic.Decl], Array[@theory.Meta])
+  PDlet(RoutineSymbol, ProgramComputation, Array[@logic.Decl], Array[@theory.Meta])
+  PDvar(PVariable, Expr, Array[@logic.Decl], Array[@theory.Meta])
+  PDrec(Array[RecursiveDefinition], Array[@logic.Decl], Array[@theory.Meta])
+  PDexn(XSymbol, Array[@logic.Decl], Array[@theory.Meta])
+}
+pub fn ProgramDeclaration::dependencies(Self) -> Array[ProgramDependency]
+pub fn ProgramDeclaration::exception(@identity.SemanticId, XSymbol, ArrayView[@logic.Decl], ArrayView[@theory.Meta], @identity.SourceSpan?) -> Self raise
+pub fn ProgramDeclaration::introduced_symbols(Self) -> Array[ProgramDependency]
+pub fn ProgramDeclaration::metas(Self) -> ArrayView[@theory.Meta]
+pub fn ProgramDeclaration::pure(@identity.SemanticId, ArrayView[@logic.Decl], ArrayView[@theory.Meta], @identity.SourceSpan?) -> Self raise
+pub fn ProgramDeclaration::pure_declarations(Self) -> ArrayView[@logic.Decl]
+pub fn ProgramDeclaration::recursive(@identity.SemanticId, ArrayView[RecursiveDefinition], ArrayView[@logic.Decl], ArrayView[@theory.Meta], @identity.SourceSpan?) -> Self raise
+pub fn ProgramDeclaration::routine(@identity.SemanticId, RoutineSymbol, ProgramComputation, ArrayView[@logic.Decl], ArrayView[@theory.Meta], @identity.SourceSpan?) -> Self raise
+pub fn ProgramDeclaration::type_declarations(@identity.SemanticId, ArrayView[ProgramTypeDeclaration], ArrayView[@logic.Decl], ArrayView[@theory.Meta], @identity.SourceSpan?) -> Self raise
+pub fn ProgramDeclaration::variable(@identity.SemanticId, PVariable, Expr, ArrayView[@logic.Decl], ArrayView[@theory.Meta], @identity.SourceSpan?) -> Self raise
+
+pub(all) enum ProgramDependency {
+  CoreDependency(@logic.DeclDependency)
+  ProgramTypeDependency(ProgramTypeSymbol)
+  RoutineDependency(RoutineSymbol)
+  ProgramVariableDependency(PVariable)
+  ExceptionDependency(XSymbol)
+}
+pub fn ProgramDependency::semantic_id(Self) -> @identity.SemanticId
+pub impl Eq for ProgramDependency
+
+type ProgramInterfaceMatch
+pub fn ProgramInterfaceMatch::clone_witness(Self, @identity.SemanticId, default_proposition_kind? : @logic.PropositionKind, span? : @identity.SourceSpan?) -> ProgramCloneWitness raise MlwError
+pub fn ProgramInterfaceMatch::pure_instantiation(Self, default_proposition_kind? : @logic.PropositionKind, span? : @identity.SourceSpan?) -> @theory.TheoryInstantiation raise
+pub fn ProgramInterfaceMatch::view(Self) -> ProgramInterfaceMatchView
+
+pub(all) struct ProgramInterfaceMatchView {
+  interface_module : Pmodule
+  implementation_module : Pmodule
+  pure_type_instantiations : ArrayView[(@logic.TypeSymbol, @logic.TypeSymbol)]
+  program_type_instantiations : ArrayView[(@logic.TypeSymbol, ProgramTypeSymbol)]
+  logic_instantiations : ArrayView[(@logic.LSymbol, @logic.LSymbol)]
+  program_variable_instantiations : ArrayView[(PVariable, PVariable)]
+  routine_instantiations : ArrayView[(RoutineSymbol, RoutineSymbol)]
 }
 
 pub(all) enum ProgramMask {
   Visible
+  Tuple(Array[ProgramMask])
   Ghost
 } derive(Eq, @debug.Debug)
+pub fn ProgramMask::is_ghost(Self) -> Bool
+pub fn ProgramMask::of_variable(PVariable) -> Self
+pub fn ProgramMask::reduce(Self) -> Self
+pub fn ProgramMask::spills_into(Self, Self) -> Bool
+pub fn ProgramMask::union(Self, Self, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramMask::validate_for_ity(Self, Ity, @identity.SourceSpan?) -> Self raise MlwError
 
 type ProgramNamespace
+pub fn ProgramNamespace::add_exception(Self, BytesView, XSymbol, @identity.SourceSpan?) -> Self raise MlwError
 pub fn ProgramNamespace::add_routine(Self, BytesView, RoutineSymbol, @identity.SourceSpan?) -> Self raise MlwError
 pub fn ProgramNamespace::add_subspace(Self, BytesView, Self, @identity.SourceSpan?) -> Self raise MlwError
 pub fn ProgramNamespace::add_type(Self, BytesView, ProgramTypeSymbol, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramNamespace::add_variable(Self, BytesView, PVariable, @identity.SourceSpan?) -> Self raise MlwError
 pub fn ProgramNamespace::empty() -> Self
+pub fn ProgramNamespace::find_exception(Self, ArrayView[Bytes], @identity.SourceSpan?) -> XSymbol raise MlwError
+pub fn ProgramNamespace::find_projection_by_field(Self, PVariable, @identity.SourceSpan?) -> RoutineSymbol raise MlwError
 pub fn ProgramNamespace::find_routine(Self, ArrayView[Bytes], @identity.SourceSpan?) -> RoutineSymbol raise MlwError
+pub fn ProgramNamespace::find_routine_by_logic(Self, @logic.LSymbol, @identity.SourceSpan?) -> RoutineSymbol raise MlwError
+pub fn ProgramNamespace::find_routine_candidates(Self, ArrayView[Bytes]) -> Array[RoutineSymbol]
 pub fn ProgramNamespace::find_routine_option(Self, ArrayView[Bytes]) -> RoutineSymbol?
 pub fn ProgramNamespace::find_type(Self, ArrayView[Bytes], @identity.SourceSpan?) -> ProgramTypeSymbol raise MlwError
 pub fn ProgramNamespace::find_type_by_logic(Self, @logic.TypeSymbol, @identity.SourceSpan?) -> ProgramTypeSymbol raise MlwError
+pub fn ProgramNamespace::find_variable(Self, ArrayView[Bytes], @identity.SourceSpan?) -> PVariable raise MlwError
+pub fn ProgramNamespace::find_variable_option(Self, ArrayView[Bytes]) -> PVariable?
 pub fn ProgramNamespace::import_scope(Self, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
 pub fn ProgramNamespace::merge(Self, Self, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramNamespace::open_scope(Self, ArrayView[Bytes], @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramNamespace::overlay(Self, Self) -> Self
 pub fn ProgramNamespace::view(Self) -> ProgramNamespaceView
 
 pub(all) struct ProgramNamespaceView {
   types : ArrayView[(Bytes, ProgramTypeSymbol)]
+  variables : ArrayView[(Bytes, PVariable)]
   routines : ArrayView[(Bytes, RoutineSymbol)]
+  routine_overloads : ArrayView[(Bytes, Array[RoutineSymbol])]
+  exceptions : ArrayView[(Bytes, XSymbol)]
   subspaces : ArrayView[(Bytes, ProgramNamespace)]
+}
+
+type ProgramPattern
+pub fn ProgramPattern::new(@identity.CompilationContext, PrePattern, Ity, ProgramMask, @identity.SourceSpan?) -> Self raise
+pub fn ProgramPattern::trusted_new(@logic.Pattern, Ity, ProgramMask, PatternGhost, ArrayView[PVariable], @identity.SourceSpan?) -> Self raise
+pub fn ProgramPattern::view(Self) -> ProgramPatternView
+
+pub(all) struct ProgramPatternView {
+  pattern : @logic.Pattern
+  ity : Ity
+  mask : ProgramMask
+  failure : PatternGhost
+  variables : ArrayView[PVariable]
 }
 
 pub(all) enum ProgramTermination {
   Total
+  Partial
+  Diverges
 } derive(Eq, @debug.Debug)
+pub fn ProgramTermination::diverges(Self) -> Bool
+pub fn ProgramTermination::is_partial(Self) -> Bool
+pub fn ProgramTermination::is_total(Self) -> Bool
 
 pub(all) struct ProgramTypeArgumentFlag {
   frozen : Bool
@@ -227,7 +587,9 @@ pub(all) struct ProgramTypeArgumentFlag {
 } derive(Eq, @debug.Debug)
 
 type ProgramTypeDeclaration
-pub fn ProgramTypeDeclaration::trusted_new(ProgramTypeSymbol, ArrayView[RoutineSymbol], ArrayView[RoutineSymbol], ArrayView[@logic.Term], @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramTypeDeclaration::new(ProgramTypeSymbol, ArrayView[RoutineSymbol], ArrayView[RoutineSymbol], ArrayView[@logic.Term], @identity.SourceSpan?, witness? : Expr?) -> Self raise MlwError
+pub fn ProgramTypeDeclaration::simple(ProgramTypeSymbol) -> Self
+pub fn ProgramTypeDeclaration::trusted_new(ProgramTypeSymbol, ArrayView[RoutineSymbol], ArrayView[RoutineSymbol], ArrayView[@logic.Term], @identity.SourceSpan?, witness? : Expr?) -> Self raise MlwError
 pub fn ProgramTypeDeclaration::view(Self) -> ProgramTypeDeclarationView
 
 pub(all) struct ProgramTypeDeclarationView {
@@ -235,6 +597,7 @@ pub(all) struct ProgramTypeDeclarationView {
   fields : ArrayView[RoutineSymbol]
   constructors : ArrayView[RoutineSymbol]
   invariants : ArrayView[@logic.Term]
+  witness : Expr?
 }
 
 pub(all) enum ProgramTypeDefinition {
@@ -254,8 +617,15 @@ pub(all) struct ProgramTypeFlags {
 } derive(Eq, @debug.Debug)
 
 type ProgramTypeSymbol
+pub fn ProgramTypeSymbol::is_pure(Self) -> Bool
+pub fn ProgramTypeSymbol::new(@identity.CompilationContext, @logic.TypeSymbol, @identity.Origin, ProgramTypeFlags, ProgramTypeDefinition, ArrayView[PVariable], ArrayView[PVariable], @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramTypeSymbol::new_alias(@identity.CompilationContext, @logic.TypeSymbol, @identity.Origin, Ity, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramTypeSymbol::new_float(@identity.CompilationContext, @logic.TypeSymbol, @identity.Origin, Int, Int, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramTypeSymbol::new_range(@identity.CompilationContext, @logic.TypeSymbol, @identity.Origin, @bigint.BigInt, @bigint.BigInt, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramTypeSymbol::new_record(@identity.CompilationContext, @logic.TypeSymbol, @identity.Origin, Bool, Bool, ArrayView[PVariable], ArrayView[PVariable], ArrayView[@logic.Term], @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramTypeSymbol::new_recursive(@identity.CompilationContext, @logic.TypeSymbol, @identity.Origin, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramTypeSymbol::new_variant(@identity.CompilationContext, @logic.TypeSymbol, @identity.Origin, ArrayView[Array[PVariable]], @identity.SourceSpan?) -> Self raise MlwError
 pub fn ProgramTypeSymbol::semantic_id(Self) -> @identity.SemanticId
-pub fn ProgramTypeSymbol::trusted_new(@identity.CompilationContext, @logic.TypeSymbol, @identity.Origin, ProgramTypeFlags, ProgramTypeDefinition, ArrayView[PVariable], ArrayView[PVariable], @identity.SourceSpan?) -> Self raise MlwError
 pub fn ProgramTypeSymbol::view(Self) -> ProgramTypeSymbolView
 pub impl Eq for ProgramTypeSymbol
 pub impl Hash for ProgramTypeSymbol
@@ -268,17 +638,80 @@ pub(all) struct ProgramTypeSymbolView {
   definition : ProgramTypeDefinition
   mutable_fields : ArrayView[PVariable]
   immutable_fields : ArrayView[PVariable]
+  invariants : ArrayView[@logic.Term]
+  regions : ArrayView[Region]
 }
+
+type ProgramVariant
+pub fn ProgramVariant::new(@logic.Term, @logic.LSymbol?, @identity.SourceSpan?) -> Self raise MlwError
+pub fn ProgramVariant::view(Self) -> ProgramVariantView
+
+pub(all) struct ProgramVariantView {
+  term : @logic.Term
+  relation : @logic.LSymbol?
+}
+
+type RecursiveDefinition
+pub fn RecursiveDefinition::new(RoutineSymbol, RoutineSymbol, Cexp, ArrayView[ProgramVariant], @identity.SourceSpan?) -> Self raise MlwError
+pub fn RecursiveDefinition::view(Self) -> RecursiveDefinitionView
+
+pub(all) struct RecursiveDefinitionView {
+  symbol : RoutineSymbol
+  internal_symbol : RoutineSymbol
+  function_ : Cexp
+  variants : ArrayView[ProgramVariant]
+}
+
+type Region
+pub fn Region::instantiate(@identity.CompilationContext, @theory.SemanticName, ProgramTypeSymbol, ArrayView[Ity], ArrayView[Ity], @identity.SourceSpan?, inference? : Bool) -> Self raise MlwError
+pub fn Region::member_ity(Self, PVariable, @identity.SourceSpan?) -> Ity raise MlwError
+pub fn Region::new(@identity.CompilationContext, @theory.SemanticName, ProgramTypeSymbol, ArrayView[Ity], ArrayView[Ity], @identity.SourceSpan?) -> Self raise MlwError
+pub fn Region::reachable_regions(Self) -> Array[Self]
+pub fn Region::semantic_id(Self) -> @identity.SemanticId
+pub fn Region::view(Self) -> RegionView
+pub impl Eq for Region
+pub impl Hash for Region
+
+pub(all) struct RegionView {
+  id : @identity.SemanticId
+  name : @theory.SemanticName
+  symbol : ProgramTypeSymbol
+  arguments : ArrayView[Ity]
+  regions : ArrayView[Ity]
+  inference : Bool
+}
+
+type RegularBranch
+pub fn RegularBranch::new(ProgramPattern, Expr, @identity.SourceSpan?) -> Self raise MlwError
+pub fn RegularBranch::view(Self) -> RegularBranchView
+
+pub(all) struct RegularBranchView {
+  pattern : ProgramPattern
+  body : Expr
+}
+
+pub(all) enum RoutineKind {
+  RKnone
+  RKlocal
+  RKfunc
+  RKpred
+  RKlemma
+} derive(Eq, @debug.Debug)
 
 pub(all) enum RoutineLogic {
   RLnone
+  RLpv(PVariable)
   RLls(@logic.LSymbol)
+  RLlemma
 }
 
 type RoutineSymbol
+pub fn RoutineSymbol::is_ghost(Self) -> Bool
+pub fn RoutineSymbol::kind(Self) -> RoutineKind
+pub fn RoutineSymbol::new(@identity.CompilationContext, BytesView, @identity.Origin, Cty, RoutineLogic, PVariable?, @identity.SourceSpan?) -> Self raise MlwError
 pub fn RoutineSymbol::new_user(@identity.CompilationContext, BytesView, @identity.Origin, Cty, @identity.SourceSpan?) -> Self raise MlwError
+pub fn RoutineSymbol::new_with_logic(@identity.CompilationContext, BytesView, @identity.Origin, Cty, RoutineLogic, PVariable?, @identity.SourceSpan?) -> Self raise
 pub fn RoutineSymbol::semantic_id(Self) -> @identity.SemanticId
-pub fn RoutineSymbol::trusted_new(@identity.CompilationContext, BytesView, @identity.Origin, Cty, RoutineLogic, PVariable?, @identity.SourceSpan?) -> Self raise MlwError
 pub fn RoutineSymbol::view(Self) -> RoutineSymbolView
 pub impl Eq for RoutineSymbol
 pub impl Hash for RoutineSymbol
@@ -290,6 +723,20 @@ pub(all) struct RoutineSymbolView {
   cty : Cty
   logic : RoutineLogic
   field : PVariable?
+}
+
+type XSymbol
+pub fn XSymbol::new(@identity.CompilationContext, @theory.SemanticName, Ity, @identity.SourceSpan?, mask? : ProgramMask) -> Self raise MlwError
+pub fn XSymbol::semantic_id(Self) -> @identity.SemanticId
+pub fn XSymbol::view(Self) -> XSymbolView
+pub impl Eq for XSymbol
+pub impl Hash for XSymbol
+
+pub(all) struct XSymbolView {
+  id : @identity.SemanticId
+  name : @theory.SemanticName
+  ity : Ity
+  mask : ProgramMask
 }
 
 // Type aliases

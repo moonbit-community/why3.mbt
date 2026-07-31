@@ -9,6 +9,8 @@ import {
 }
 
 // Values
+pub fn begin_declaration_cache_goal(@theory.Task) -> Unit
+
 pub fn counterexamples_dependent_intros(@identity.CompilationContext, @theory.Task) -> @theory.Task raise TransformError
 
 pub fn detect_polymorphism(@identity.CompilationContext, @theory.Task) -> @theory.Task raise TransformError
