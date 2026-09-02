@@ -161,7 +161,7 @@ function verifyRuntime(lock, driver) {
     driver.proverDetection.sha256,
   );
   const stdlibTreeSha256 = treeInventory(join(datadir, 'stdlib')).sha256;
-  if (stdlibTreeSha256 !== driver.semanticSnapshot.stdlibTree.sha256) {
+  if (stdlibTreeSha256 !== driver.sourceCatalog.stdlibTree.sha256) {
     fail(`Why3 stdlib tree drift: ${stdlibTreeSha256}`);
   }
   return { ...verified, datadir, stdlibTreeSha256 };

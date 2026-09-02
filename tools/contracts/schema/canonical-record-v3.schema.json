@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://moonbitlang.github.io/why3.mbt/contracts/canonical-record-v3.schema.json",
+  "title": "why3.mbt complete graph canonical record v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "semantic_profile_sha256",
+    "diagnostic_contract_sha256",
+    "fixture",
+    "source_sha256",
+    "scope",
+    "stage",
+    "canonical_sha256",
+    "canonical"
+  ],
+  "properties": {
+    "schema": {
+      "const": 3
+    },
+    "semantic_profile_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "diagnostic_contract_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "fixture": {
+      "$ref": "#/$defs/relativePosixPath"
+    },
+    "source_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "scope": {
+      "enum": [
+        "file",
+        "unit",
+        "goal"
+      ]
+    },
+    "unit_kind": {
+      "enum": [
+        "theory",
+        "module"
+      ]
+    },
+    "unit_name_hex": {
+      "$ref": "#/$defs/bytesHex"
+    },
+    "goal_name_hex": {
+      "$ref": "#/$defs/bytesHex"
+    },
+    "goal_ordinal": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "stage": {
+      "type": "string",
+      "pattern": "^(parsed-surface|typed-semantic|typed-program|raw-task|vc-task|driver-update|transform:[a-z][a-z0-9_]*|prepared-task|smt-tokens|prover-result)$"
+    },
+    "canonical_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "canonical": true
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "scope": {
+            "enum": [
+              "unit",
+              "goal"
+            ]
+          }
+        },
+        "required": [
+          "scope"
+        ]
+      },
+      "then": {
+        "required": [
+          "unit_kind",
+          "unit_name_hex"
+        ]
+      },
+      "else": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "unit_kind"
+              ]
+            },
+            {
+              "required": [
+                "unit_name_hex"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "scope": {
+            "const": "goal"
+          }
+        },
+        "required": [
+          "scope"
+        ]
+      },
+      "then": {
+        "required": [
+          "goal_name_hex",
+          "goal_ordinal"
+        ]
+      },
+      "else": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "goal_name_hex"
+              ]
+            },
+            {
+              "required": [
+                "goal_ordinal"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "bytesHex": {
+      "type": "string",
+      "pattern": "^(?:[0-9a-f]{2})*$"
+    },
+    "relativePosixPath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\\\\\).+$"
+    }
+  }
+}

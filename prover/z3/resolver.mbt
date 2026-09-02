@@ -10,8 +10,8 @@ pub(all) enum ResolvedDriverSymbol {
 ///|
 struct DriverSymbolResolver {
   anchor : @identity.SemanticId
-  entries : Map[@identity.SnapshotSymbolKey, ResolvedDriverSymbol]
-  ordered_keys : Array[@identity.SnapshotSymbolKey]
+  entries : Map[@identity.SourceSymbolKey, ResolvedDriverSymbol]
+  ordered_keys : Array[@identity.SourceSymbolKey]
 }
 
 ///|
@@ -24,16 +24,7 @@ fn resolved_semantic_id(symbol : ResolvedDriverSymbol) -> @identity.SemanticId {
 }
 
 ///|
-fn resolved_origin(symbol : ResolvedDriverSymbol) -> @identity.Origin {
-  match symbol {
-    ResolvedType(value) => value.origin()
-    ResolvedLogic(value) => value.view().origin
-    ResolvedProposition(value) => value.view().origin
-  }
-}
-
-///|
-fn resolved_kind(symbol : ResolvedDriverSymbol) -> @identity.SnapshotSymbolKind {
+fn resolved_kind(symbol : ResolvedDriverSymbol) -> @identity.SourceSymbolKind {
   match symbol {
     ResolvedType(_) => Type
     ResolvedLogic(_) => Logic
@@ -42,12 +33,12 @@ fn resolved_kind(symbol : ResolvedDriverSymbol) -> @identity.SnapshotSymbolKind 
 }
 
 ///|
-pub fn DriverSymbolResolver::new(
+fn build_driver_symbol_resolver(
   anchor : @identity.SemanticId,
-  entries : ArrayView[(@identity.SnapshotSymbolKey, ResolvedDriverSymbol)],
+  entries : ArrayView[(@identity.SourceSymbolKey, ResolvedDriverSymbol)],
 ) -> DriverSymbolResolver raise BindError {
-  let table : Map[@identity.SnapshotSymbolKey, ResolvedDriverSymbol] = Map([])
-  let ordered_keys : Array[@identity.SnapshotSymbolKey] = []
+  let table : Map[@identity.SourceSymbolKey, ResolvedDriverSymbol] = Map([])
+  let ordered_keys : Array[@identity.SourceSymbolKey] = []
   for index, entry in entries {
     let (key, symbol) = entry
     let path = "$.resolver[" + index.to_string() + "]"
@@ -68,22 +59,21 @@ pub fn DriverSymbolResolver::new(
         "resolver key kind disagrees with symbol",
       )
     }
-    match resolved_origin(symbol).view() {
-      SnapshotOrigin(_, origin_key, _) =>
-        if origin_key != key {
-          fail_bind(
-            SymbolDigestMismatch,
-            path,
-            "resolver symbol origin key differs",
-          )
-        }
-      _ =>
-        fail_bind(InvalidProfile, path, "resolver symbol lacks snapshot origin")
-    }
     table[key] = symbol
     ordered_keys.push(key)
   }
   { anchor, entries: table, ordered_keys }
+}
+
+///|
+/// Binds the pinned driver locators to symbols reconstructed from original
+/// Why3 source. The caller resolves each entry by its exact
+/// theory/item/inner locator; this boundary checks context and symbol kind.
+pub fn DriverSymbolResolver::from_source(
+  anchor : @identity.SemanticId,
+  entries : ArrayView[(@identity.SourceSymbolKey, ResolvedDriverSymbol)],
+) -> DriverSymbolResolver raise BindError {
+  build_driver_symbol_resolver(anchor, entries)
 }
 
 ///|
@@ -95,8 +85,8 @@ pub fn DriverSymbolResolver::context_anchor(
 
 ///|
 fn same_locator(
-  left : @identity.SnapshotSymbolKey,
-  right : @identity.SnapshotSymbolKey,
+  left : @identity.SourceSymbolKey,
+  right : @identity.SourceSymbolKey,
 ) -> Bool {
   let left = left.view()
   let right = right.view()
@@ -108,7 +98,7 @@ fn same_locator(
 ///|
 fn DriverSymbolResolver::resolve(
   self : DriverSymbolResolver,
-  key : @identity.SnapshotSymbolKey,
+  key : @identity.SourceSymbolKey,
   path : String,
 ) -> ResolvedDriverSymbol raise BindError {
   match self.entries.get(key) {
@@ -117,16 +107,12 @@ fn DriverSymbolResolver::resolve(
       for expected in self.ordered_keys {
         if same_locator(expected, key) {
           if expected.view().symbol_kind != key.view().symbol_kind {
-            fail_bind(SymbolKindMismatch, path, "snapshot symbol kind differs")
+            fail_bind(SymbolKindMismatch, path, "source symbol kind differs")
           }
-          fail_bind(
-            SymbolDigestMismatch,
-            path,
-            "snapshot symbol digest differs",
-          )
+          fail_bind(SymbolDigestMismatch, path, "source symbol digest differs")
         }
       }
-      fail_bind(MissingSymbol, path, "snapshot symbol is absent from resolver")
+      fail_bind(MissingSymbol, path, "source symbol is absent from resolver")
     }
   }
 }
@@ -134,7 +120,7 @@ fn DriverSymbolResolver::resolve(
 ///|
 pub fn DriverSymbolResolver::resolve_type(
   self : DriverSymbolResolver,
-  key : @identity.SnapshotSymbolKey,
+  key : @identity.SourceSymbolKey,
   path? : String = "$.symbol",
 ) -> @logic.TypeSymbol raise BindError {
   match self.resolve(key, path) {
@@ -146,7 +132,7 @@ pub fn DriverSymbolResolver::resolve_type(
 ///|
 pub fn DriverSymbolResolver::resolve_logic(
   self : DriverSymbolResolver,
-  key : @identity.SnapshotSymbolKey,
+  key : @identity.SourceSymbolKey,
   path? : String = "$.symbol",
 ) -> @logic.LSymbol raise BindError {
   match self.resolve(key, path) {
@@ -158,7 +144,7 @@ pub fn DriverSymbolResolver::resolve_logic(
 ///|
 pub fn DriverSymbolResolver::resolve_proposition(
   self : DriverSymbolResolver,
-  key : @identity.SnapshotSymbolKey,
+  key : @identity.SourceSymbolKey,
   path? : String = "$.symbol",
 ) -> @logic.PrSymbol raise BindError {
   match self.resolve(key, path) {
@@ -170,8 +156,8 @@ pub fn DriverSymbolResolver::resolve_proposition(
 ///|
 fn append_unbound_ty_keys(
   ty : UnboundTy,
-  seen : Map[@identity.SnapshotSymbolKey, Unit],
-  result : Array[@identity.SnapshotSymbolKey],
+  seen : Map[@identity.SourceSymbolKey, Unit],
+  result : Array[@identity.SourceSymbolKey],
 ) -> Unit {
   match ty {
     UnboundTyVariable(_) => ()
@@ -190,8 +176,8 @@ fn append_unbound_ty_keys(
 ///|
 fn append_meta_argument_keys(
   argument : UnboundMetaArgument,
-  seen : Map[@identity.SnapshotSymbolKey, Unit],
-  result : Array[@identity.SnapshotSymbolKey],
+  seen : Map[@identity.SourceSymbolKey, Unit],
+  result : Array[@identity.SourceSymbolKey],
 ) -> Unit {
   match argument {
     UnboundMetaType(ty) => append_unbound_ty_keys(ty, seen, result)
@@ -210,10 +196,10 @@ fn append_meta_argument_keys(
 ///|
 pub fn Z3StaticSpec::required_keys(
   self : Z3StaticSpec,
-) -> Array[@identity.SnapshotSymbolKey] {
-  let seen : Map[@identity.SnapshotSymbolKey, Unit] = Map([])
-  let result : Array[@identity.SnapshotSymbolKey] = []
-  for groups in [self.meta_groups, self.snapshot_meta_groups] {
+) -> Array[@identity.SourceSymbolKey] {
+  let seen : Map[@identity.SourceSymbolKey, Unit] = Map([])
+  let result : Array[@identity.SourceSymbolKey] = []
+  for groups in [self.meta_groups, self.theory_meta_groups] {
     for group in groups {
       for meta in group.entries {
         for argument in meta.arguments {

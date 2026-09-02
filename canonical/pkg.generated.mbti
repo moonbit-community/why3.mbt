@@ -2,9 +2,9 @@
 package "moonbit-community/why3/canonical"
 
 import {
-  "moonbit-community/why3/core/identity",
   "moonbit-community/why3/core/logic",
   "moonbit-community/why3/core/theory",
+  "moonbit-community/why3/literal",
   "moonbit-community/why3/mlw",
   "moonbit-community/why3/printer/smtv2",
   "moonbit-community/why3/prover",
@@ -21,27 +21,25 @@ pub fn encode_bytes(BytesView) -> CanonicalJson
 
 pub fn encode_bytes_text_map(ArrayView[(Bytes, Bytes)]) -> CanonicalJson
 
-pub fn encode_constant(@logic.Constant) -> CanonicalJson
+pub fn encode_constant(@literal.Constant) -> CanonicalJson
 
 pub fn encode_decl(@logic.Decl) -> CanonicalJson
 
-pub fn encode_expr(@mlw.Expr) -> CanonicalJson raise
+pub fn encode_expr(@mlw.Expr) -> CanonicalJson
 
-pub fn encode_ity(@mlw.Ity) -> CanonicalJson raise
+pub fn encode_ity(@mlw.Ity) -> CanonicalJson
 
 pub fn encode_lsymbol(@logic.LSymbol) -> CanonicalJson
 
 pub fn encode_none() -> CanonicalJson
 
-pub fn encode_origin(@identity.Origin) -> CanonicalJson
-
-pub fn encode_pmodule(@mlw.Pmodule) -> CanonicalJson raise
+pub fn encode_pmodule(@mlw.Pmodule) -> CanonicalJson
 
 pub fn encode_prepared_call(@z3.PreparedCall) -> CanonicalJson raise @smtv2.PrinterError
 
 pub fn encode_prepared_call_record(BytesView, BytesView, @z3.PreparedCall) -> Bytes raise @smtv2.PrinterError
 
-pub fn encode_program_type_symbol(@mlw.ProgramTypeSymbol) -> CanonicalJson raise
+pub fn encode_program_type_symbol(@mlw.ProgramTypeSymbol) -> CanonicalJson
 
 pub fn encode_prover_result(@prover.ProverResult) -> CanonicalJson
 
@@ -51,17 +49,13 @@ pub fn encode_prsymbol(@logic.PrSymbol) -> CanonicalJson
 
 pub fn encode_raw_task_record(BytesView, BytesView, BytesView, Int, @theory.Task) -> Bytes
 
-pub fn encode_routine_symbol(@mlw.RoutineSymbol) -> CanonicalJson raise
+pub fn encode_routine_symbol(@mlw.RoutineSymbol) -> CanonicalJson
 
 pub fn encode_smt_token_record(BytesView, BytesView, BytesView, BytesView, Int, @smtv2.NormalizedSmtTokens) -> Bytes
 
 pub fn encode_smt_token_stream(@smtv2.NormalizedSmtTokens) -> CanonicalJson
 
-pub fn encode_snapshot_symbol_key(@identity.SnapshotSymbolKey) -> CanonicalJson
-
 pub fn encode_some_bytes(BytesView) -> CanonicalJson
-
-pub fn encode_symbol_events(ArrayView[(Bytes, GlobalSymbolKind, @identity.SemanticId, Bytes)]) -> CanonicalJson
 
 pub fn encode_task(@theory.Task) -> CanonicalJson
 
@@ -75,7 +69,7 @@ pub fn encode_ty(@logic.Ty) -> CanonicalJson
 
 pub fn encode_type_symbol(@logic.TypeSymbol) -> CanonicalJson
 
-pub fn encode_typed_module_record(BytesView, BytesView, @mlw.Pmodule) -> Bytes raise
+pub fn encode_typed_module_record(BytesView, BytesView, @mlw.Pmodule) -> Bytes
 
 pub fn encode_typed_theory_record(BytesView, BytesView, @theory.Theory) -> Bytes
 
@@ -92,18 +86,6 @@ type CanonicalJson derive(Eq, @debug.Debug)
 pub fn CanonicalJson::bytes(Self) -> BytesView
 pub fn CanonicalJson::sha256(Self) -> Bytes
 pub fn CanonicalJson::sha256_hex(Self) -> Bytes
-
-pub(all) enum GlobalSymbolKind {
-  Type
-  Logic
-  Program
-  Region
-  Proposition
-}
-
-type GlobalSymbolNumbering
-pub fn GlobalSymbolNumbering::encounter(Self, GlobalSymbolKind, @identity.SemanticId) -> UInt
-pub fn GlobalSymbolNumbering::new() -> Self
 
 // Type aliases
 

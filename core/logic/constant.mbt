@@ -1,107 +1,22 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
 
 ///|
-pub(all) enum IntegerLiteralKind {
-  IntegerUnknown
-  IntegerDecimal
-  IntegerHexadecimal
-  IntegerOctal
-  IntegerBinary
-} derive(Eq, Debug)
+pub type IntLiteralKind = @literal.IntLiteralKind
 
 ///|
-pub(all) enum RealLiteralKind {
-  RealUnknown
-  RealDecimal(Int64)
-  RealHexadecimal(Int64)
-} derive(Eq, Debug)
+pub type IntConstant = @literal.IntConstant
 
 ///|
-priv enum ConstantNode {
-  IntegerNode(IntegerLiteralKind, BigInt)
-  RealNode(RealLiteralKind, @parser.RealValue)
-  StringNode(Bytes)
-} derive(Eq, Debug)
+pub type RealValue = @literal.RealValue
 
 ///|
-/// Exact semantic constants. Strings remain raw bytes and real numbers retain
-/// the parser's normalized `(significand, pow2, pow5)` representation.
-struct Constant {
-  node : ConstantNode
-} derive(Eq, Debug)
+pub type RealLiteralKind = @literal.RealLiteralKind
 
 ///|
-pub(all) enum ConstantView {
-  IntegerConstant(IntegerLiteralKind, BigInt)
-  RealConstant(RealLiteralKind, @parser.RealValue)
-  StringConstant(BytesView)
-}
+pub type RealConstant = @literal.RealConstant
 
 ///|
-pub fn Constant::integer(kind : IntegerLiteralKind, value : BigInt) -> Constant {
-  { node: IntegerNode(kind, value) }
-}
-
-///|
-pub fn Constant::real(
-  kind : RealLiteralKind,
-  value : @parser.RealValue,
-) -> Constant {
-  { node: RealNode(kind, value) }
-}
-
-///|
-pub fn Constant::string(value : BytesView) -> Constant {
-  { node: StringNode(value.to_owned()) }
-}
-
-///|
-fn integer_literal_kind_from_parser(
-  kind : @parser.IntLiteralKind,
-) -> IntegerLiteralKind {
-  match kind {
-    ILitUnk => IntegerUnknown
-    ILitDec => IntegerDecimal
-    ILitHex => IntegerHexadecimal
-    ILitOct => IntegerOctal
-    ILitBin => IntegerBinary
-  }
-}
-
-///|
-fn real_literal_kind_from_parser(
-  kind : @parser.RealLiteralKind,
-) -> RealLiteralKind {
-  match kind {
-    RLitUnk => RealUnknown
-    RLitDec(exponent) => RealDecimal(exponent)
-    RLitHex(exponent) => RealHexadecimal(exponent)
-  }
-}
-
-///|
-/// Losslessly lifts a parser literal into the semantic constant layer.
-pub fn Constant::from_parser(constant : @parser.Constant) -> Constant {
-  match constant {
-    ConstInt(value) =>
-      Constant::integer(
-        integer_literal_kind_from_parser(value.kind),
-        value.value,
-      )
-    ConstReal(value) =>
-      Constant::real(real_literal_kind_from_parser(value.kind), value.value)
-    ConstStr(value) => Constant::string(value)
-  }
-}
-
-///|
-pub fn Constant::view(self : Constant) -> ConstantView {
-  match self.node {
-    IntegerNode(kind, value) => IntegerConstant(kind, value)
-    RealNode(kind, value) => RealConstant(kind, value)
-    StringNode(value) => StringConstant(value[:])
-  }
-}
+pub type Constant = @literal.Constant
 
 ///|
 fn absolute_bigint(value : BigInt) -> BigInt {
@@ -115,7 +30,7 @@ fn absolute_bigint(value : BigInt) -> BigInt {
 ///|
 /// Exact representability check corresponding to Why3's `compute_float`.
 fn real_fits_float(
-  value : @parser.RealValue,
+  value : RealValue,
   exponent_digits : Int,
   significand_digits : Int,
 ) -> Bool {
@@ -172,8 +87,8 @@ fn validate_constant_type(
       "literal result type must be a nullary literal type",
     )
   }
-  match constant.node {
-    IntegerNode(_, value) =>
+  match constant {
+    ConstInt({ value, .. }) =>
       match (symbol.builtin_kind, symbol.definition) {
         (Some(BuiltinInteger), DefinitionNone) => ()
         (None, DefinitionRange(lower, upper)) =>
@@ -191,7 +106,7 @@ fn validate_constant_type(
             "integer literal requires int or Range type",
           )
       }
-    RealNode(_, value) =>
+    ConstReal({ value, .. }) =>
       match (symbol.builtin_kind, symbol.definition) {
         (Some(BuiltinReal), DefinitionNone) => ()
         (None, DefinitionFloat(exponent_digits, significand_digits)) =>
@@ -209,7 +124,7 @@ fn validate_constant_type(
             "real literal requires real or Float type",
           )
       }
-    StringNode(_) =>
+    ConstStr(_) =>
       if symbol.builtin_kind != Some(BuiltinString) ||
         !(symbol.definition is DefinitionNone) {
         fail_type(

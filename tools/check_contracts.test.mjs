@@ -6,7 +6,7 @@ import {
   canonicalSha,
   checkAll,
   checkCanonicalContracts,
-  checkDriverAndTrustedSchema,
+  checkDriverContract,
   checkFeaturesAndCorpus,
   checkLicenseAndAttribution,
   checkProfiles,
@@ -16,7 +16,7 @@ import {
 test('checked-in contracts are internally closed', () => {
   assert.doesNotThrow(checkLicenseAndAttribution);
   assert.doesNotThrow(checkCanonicalContracts);
-  assert.doesNotThrow(checkDriverAndTrustedSchema);
+  assert.doesNotThrow(checkDriverContract);
   assert.doesNotThrow(checkFeaturesAndCorpus);
   assert.doesNotThrow(checkProfiles);
   assert.doesNotThrow(checkReferenceEnvironmentLock);

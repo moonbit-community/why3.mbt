@@ -29,6 +29,7 @@ pub(all) struct PrintedIdentifier {
   start : Int
   end : Int
   semantic_id : @identity.SemanticId
+  identifier_id : @identity.IdentifierId
   origin : @identity.Origin
 }
 
@@ -77,6 +78,7 @@ fn QueryWriter::identifier(
   self : QueryWriter,
   bytes : BytesView,
   semantic_id : @identity.SemanticId,
+  identifier_id : @identity.IdentifierId,
   origin : @identity.Origin,
 ) -> Unit {
   let start = self.buffer.length()
@@ -85,6 +87,7 @@ fn QueryWriter::identifier(
     start,
     end: self.buffer.length(),
     semantic_id,
+    identifier_id,
     origin,
   })
 }

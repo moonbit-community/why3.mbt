@@ -62,11 +62,44 @@ pub fn TySubstitution::bindings(
 }
 
 ///|
+fn resolve_inference_substitution_with(
+  substitution : TySubstitution,
+  ty : Ty,
+  active : ArrayView[TyVarSymbol],
+) -> Ty {
+  match ty.node {
+    VariableNode(variable) => {
+      if !is_logic_inference_type_variable(variable) ||
+        active.any(current => current == variable) {
+        return ty
+      }
+      match substitution.entries.get(variable) {
+        Some(replacement) =>
+          resolve_inference_substitution_with(
+            substitution,
+            replacement,
+            active.to_owned() + [variable],
+          )
+        None => ty
+      }
+    }
+    ApplicationNode(symbol, arguments) =>
+      Ty::application_unchecked(
+        symbol,
+        arguments.map(argument => {
+          resolve_inference_substitution_with(substitution, argument, active)
+        }),
+      )
+  }
+}
+
+///|
 fn apply_substitution(substitution : TySubstitution, ty : Ty) -> Ty {
   match ty.node {
     VariableNode(variable) =>
       match substitution.entries.get(variable) {
-        Some(replacement) => replacement
+        Some(replacement) =>
+          resolve_inference_substitution_with(substitution, replacement, [])
         None => ty
       }
     ApplicationNode(symbol, arguments) => {

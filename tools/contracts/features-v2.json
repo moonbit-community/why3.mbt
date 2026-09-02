@@ -1,0 +1,4984 @@
+{
+  "schemaVersion": 2,
+  "contract": "why3-1.7.2-complete-target-features-v2",
+  "why3Version": "1.7.2",
+  "why3Commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
+  "why3Tree": "f5e82693620413d7d8e3ebcba69addcb6a65f877",
+  "policy": {
+    "targetLanes": [
+      "exact",
+      "reject"
+    ],
+    "officialLegalBehavior": "exact",
+    "officialIllegalShape": "reject with structured stage/category/span",
+    "intentionalDivergenceCount": 0,
+    "englishDiagnosticMessageCompared": false,
+    "serializedIdentity": "first preorder encounter for symbols, regions, variables, exceptions, and routines",
+    "boundVariables": "de Bruijn index",
+    "mapsAndSets": "sorted by canonical key",
+    "excludedState": "derived caches, runtime tags, physical identity, localized prose"
+  },
+  "projectParserAstInventory": {
+    "path": "tools/contracts/parser-ast-inventory-v1.json",
+    "sha256": "ca47055e6bb82c9f8971bc32f5b83b112942ce11156755f684446895dc019d36",
+    "enumCount": 24,
+    "variantCount": 169,
+    "note": "MoonBit parser/literal AST variants; not an upstream Ptree constructor inventory and not a support-lane contract"
+  },
+  "fullFileGrammar": {
+    "categoryPreserved": [
+      "theory",
+      "module"
+    ],
+    "moduleInterface": {
+      "representation": "FullModule of qualid option",
+      "lane": "exact",
+      "fixtures": [
+        "bench/extraction/interface1/interface1.mlw",
+        "examples/cursor_examples.mlw"
+      ],
+      "parserEvidence": "src/parser/parser.mly",
+      "semanticsEvidence": "src/parser/typing.ml"
+    },
+    "envelopePatch": {
+      "path": "tools/why3_reference/patches/full-mlw-export.patch",
+      "sha256": "416af05442e5419cddd6ff8c3b44b07ce15bdf9f125c638bed783207f0c5ab55"
+    },
+    "parserCorpus": {
+      "total": 989,
+      "exact": 931,
+      "ptreeExact": 929,
+      "fullMainExact": 2,
+      "reject": 58,
+      "rejectMainEntry": "why3 prove --parse-only",
+      "rejectStage": "parsing",
+      "rejectCategory": "Rejected"
+    }
+  },
+  "sourceInventory": [
+    {
+      "path": "src/core/coercion.mli",
+      "sha256": "ce4c3a51a698fb6325666ae183a1321c52109e2bfef74ce9ef887e7d24d9fafa",
+      "role": "constructor and record-field inventory"
+    },
+    {
+      "path": "src/core/decl.mli",
+      "sha256": "0eb1ce88bc31116227c04bdd055e1a468928f4ebb4edd1235e2e65628309156e",
+      "role": "constructor and record-field inventory"
+    },
+    {
+      "path": "src/core/dterm.mli",
+      "sha256": "7118a172c8c4fcb63d559e6ef222184ddd744484d73d9061d71206cf46b6f3e3",
+      "role": "constructor and record-field inventory"
+    },
+    {
+      "path": "src/core/ident.mli",
+      "sha256": "a1a5af123b4a453b107e1e78dd16fe464c86bb072186fcf9756b830f95f221c0",
+      "role": "constructor and record-field inventory"
+    },
+    {
+      "path": "src/core/task.mli",
+      "sha256": "7540d330e2c980d4b8eb58866523dc603f1dc7adaff750ac7e287d88649a2e7c",
+      "role": "constructor and record-field inventory"
+    },
+    {
+      "path": "src/core/term.mli",
+      "sha256": "8949dc466ad758a7e1b1ab3d340aa75cc2d2471fac5e12a298d84f49c6faf02c",
+      "role": "constructor and record-field inventory"
+    },
+    {
+      "path": "src/core/theory.mli",
+      "sha256": "3aad47fb35e758f8fa7bf07cee9a375ab45faf973eeea79d0881407cbbc8319c",
+      "role": "constructor and record-field inventory"
+    },
+    {
+      "path": "src/core/ty.mli",
+      "sha256": "20e19d4fae5012643e4841ed15167452b77e96455369fd771ad584e23ed5834c",
+      "role": "constructor and record-field inventory"
+    },
+    {
+      "path": "src/mlw/dexpr.mli",
+      "sha256": "3f53286346823e7289f5982b2702f66412eeaf1322b0553b52e40296f1b653d3",
+      "role": "constructor and record-field inventory"
+    },
+    {
+      "path": "src/mlw/expr.mli",
+      "sha256": "9f5627387039bd71d870d886b9008b9033d83ea21c031e797c07208f62e1f235",
+      "role": "constructor and record-field inventory"
+    },
+    {
+      "path": "src/mlw/ity.mli",
+      "sha256": "e5e2c7034ae333a68d67d54a76c917c2b2b4da0431fca991c94c3822df5ad9b3",
+      "role": "constructor and record-field inventory"
+    },
+    {
+      "path": "src/mlw/pdecl.mli",
+      "sha256": "d10ec3bd89880c8baf078994defc04d71d6049f67e7f6090848b503354154e30",
+      "role": "constructor and record-field inventory"
+    },
+    {
+      "path": "src/mlw/pmodule.mli",
+      "sha256": "b2072f5a91fab84e34029897e249332f1a7cea4b18fdaea8a52c81928e31a95c",
+      "role": "constructor and record-field inventory"
+    },
+    {
+      "path": "src/parser/parser.mly",
+      "sha256": "bcccdf94a458b3cf13bf7e1e4ab67fa6b28559ec41e64b4fc5e69b3505e4b48a",
+      "role": "full-file grammar/interface semantics"
+    },
+    {
+      "path": "src/parser/ptree.ml",
+      "sha256": "be3af8ba6c54b09358ad21073d8d67ca80f27375ebcb7b9fa3a39884216b155f",
+      "role": "constructor and record-field inventory"
+    },
+    {
+      "path": "src/parser/typing.ml",
+      "sha256": "d910d349eaa50487c62522655e9c1e5bbeebe3416aff6dfe3ae38e1cccfab6c5",
+      "role": "full-file grammar/interface semantics"
+    },
+    {
+      "path": "src/util/constant.mli",
+      "sha256": "31a89926b3b01a6e9de6bc3afbb88e8bb07b6383a251e2f49a3ed0a4e1b77279",
+      "role": "constructor and record-field inventory"
+    },
+    {
+      "path": "src/util/number.mli",
+      "sha256": "3e71345aa5dfc17735cbc7841b6b9896dcfbbeb824ba84e9f931a5faf058b50d",
+      "role": "constructor and record-field inventory"
+    }
+  ],
+  "sourceInventorySha256": "2d589c1cf27ed31331c2d108f81586c954d25e31608c4eb1be37d90ad7467ca2",
+  "counts": {
+    "variantFamilies": 53,
+    "variants": 352,
+    "recordFamilies": 57,
+    "opaqueProjections": 8,
+    "canonicalV3Fields": 212,
+    "excludedRawFields": 31
+  },
+  "variants": [
+    {
+      "id": "Constant.constant.ConstInt",
+      "owner": "Constant",
+      "type": "constant",
+      "constructor": "ConstInt",
+      "source": "src/util/constant.mli",
+      "layer": "literal",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Constant.constant.ConstReal",
+      "owner": "Constant",
+      "type": "constant",
+      "constructor": "ConstReal",
+      "source": "src/util/constant.mli",
+      "layer": "literal",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Constant.constant.ConstStr",
+      "owner": "Constant",
+      "type": "constant",
+      "constructor": "ConstStr",
+      "source": "src/util/constant.mli",
+      "layer": "literal",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Decl.decl_node.Ddata",
+      "owner": "Decl",
+      "type": "decl_node",
+      "constructor": "Ddata",
+      "source": "src/core/decl.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Decl.decl_node.Dind",
+      "owner": "Decl",
+      "type": "decl_node",
+      "constructor": "Dind",
+      "source": "src/core/decl.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Decl.decl_node.Dlogic",
+      "owner": "Decl",
+      "type": "decl_node",
+      "constructor": "Dlogic",
+      "source": "src/core/decl.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Decl.decl_node.Dparam",
+      "owner": "Decl",
+      "type": "decl_node",
+      "constructor": "Dparam",
+      "source": "src/core/decl.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Decl.decl_node.Dprop",
+      "owner": "Decl",
+      "type": "decl_node",
+      "constructor": "Dprop",
+      "source": "src/core/decl.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Decl.decl_node.Dtype",
+      "owner": "Decl",
+      "type": "decl_node",
+      "constructor": "Dtype",
+      "source": "src/core/decl.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Decl.ind_sign.Coind",
+      "owner": "Decl",
+      "type": "ind_sign",
+      "constructor": "Coind",
+      "source": "src/core/decl.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Decl.ind_sign.Ind",
+      "owner": "Decl",
+      "type": "ind_sign",
+      "constructor": "Ind",
+      "source": "src/core/decl.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Decl.prop_kind.Paxiom",
+      "owner": "Decl",
+      "type": "prop_kind",
+      "constructor": "Paxiom",
+      "source": "src/core/decl.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Decl.prop_kind.Pgoal",
+      "owner": "Decl",
+      "type": "prop_kind",
+      "constructor": "Pgoal",
+      "source": "src/core/decl.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Decl.prop_kind.Plemma",
+      "owner": "Decl",
+      "type": "prop_kind",
+      "constructor": "Plemma",
+      "source": "src/core/decl.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEabsurd",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEabsurd",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEand",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEand",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEany",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEany",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEapp",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEapp",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEassert",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEassert",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEassign",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEassign",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEattr",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEattr",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEcast",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEcast",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEconst",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEconst",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEexn",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEexn",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEfalse",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEfalse",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEfor",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEfor",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEfun",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEfun",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEghost",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEghost",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEif",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEif",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DElabel",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DElabel",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DElet",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DElet",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEls_pure",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEls_pure",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEmatch",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEmatch",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEnot",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEnot",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEoptexn",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEoptexn",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEor",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEor",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEpure",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEpure",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEpv_pure",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEpv_pure",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEraise",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEraise",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DErec",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DErec",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEsym",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEsym",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEtrue",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEtrue",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEuloc",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEuloc",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEvar",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEvar",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEvar_pure",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEvar_pure",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dexpr_node.DEwhile",
+      "owner": "Dexpr",
+      "type": "dexpr_node",
+      "constructor": "DEwhile",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dpattern_node.DPapp",
+      "owner": "Dexpr",
+      "type": "dpattern_node",
+      "constructor": "DPapp",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dpattern_node.DPas",
+      "owner": "Dexpr",
+      "type": "dpattern_node",
+      "constructor": "DPas",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dpattern_node.DPcast",
+      "owner": "Dexpr",
+      "type": "dpattern_node",
+      "constructor": "DPcast",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dpattern_node.DPor",
+      "owner": "Dexpr",
+      "type": "dpattern_node",
+      "constructor": "DPor",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dpattern_node.DPvar",
+      "owner": "Dexpr",
+      "type": "dpattern_node",
+      "constructor": "DPvar",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dpattern_node.DPwild",
+      "owner": "Dexpr",
+      "type": "dpattern_node",
+      "constructor": "DPwild",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dxsymbol.DEgexn",
+      "owner": "Dexpr",
+      "type": "dxsymbol",
+      "constructor": "DEgexn",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dexpr.dxsymbol.DElexn",
+      "owner": "Dexpr",
+      "type": "dxsymbol",
+      "constructor": "DElexn",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dbinop.DTand",
+      "owner": "Dterm",
+      "type": "dbinop",
+      "constructor": "DTand",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dbinop.DTand_asym",
+      "owner": "Dterm",
+      "type": "dbinop",
+      "constructor": "DTand_asym",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dbinop.DTby",
+      "owner": "Dterm",
+      "type": "dbinop",
+      "constructor": "DTby",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dbinop.DTiff",
+      "owner": "Dterm",
+      "type": "dbinop",
+      "constructor": "DTiff",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dbinop.DTimplies",
+      "owner": "Dterm",
+      "type": "dbinop",
+      "constructor": "DTimplies",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dbinop.DTor",
+      "owner": "Dterm",
+      "type": "dbinop",
+      "constructor": "DTor",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dbinop.DTor_asym",
+      "owner": "Dterm",
+      "type": "dbinop",
+      "constructor": "DTor_asym",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dbinop.DTso",
+      "owner": "Dterm",
+      "type": "dbinop",
+      "constructor": "DTso",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dpattern_node.DPapp",
+      "owner": "Dterm",
+      "type": "dpattern_node",
+      "constructor": "DPapp",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dpattern_node.DPas",
+      "owner": "Dterm",
+      "type": "dpattern_node",
+      "constructor": "DPas",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dpattern_node.DPcast",
+      "owner": "Dterm",
+      "type": "dpattern_node",
+      "constructor": "DPcast",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dpattern_node.DPor",
+      "owner": "Dterm",
+      "type": "dpattern_node",
+      "constructor": "DPor",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dpattern_node.DPvar",
+      "owner": "Dterm",
+      "type": "dpattern_node",
+      "constructor": "DPvar",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dpattern_node.DPwild",
+      "owner": "Dterm",
+      "type": "dpattern_node",
+      "constructor": "DPwild",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dquant.DTexists",
+      "owner": "Dterm",
+      "type": "dquant",
+      "constructor": "DTexists",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dquant.DTforall",
+      "owner": "Dterm",
+      "type": "dquant",
+      "constructor": "DTforall",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dquant.DTlambda",
+      "owner": "Dterm",
+      "type": "dquant",
+      "constructor": "DTlambda",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dterm_node.DTapp",
+      "owner": "Dterm",
+      "type": "dterm_node",
+      "constructor": "DTapp",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dterm_node.DTattr",
+      "owner": "Dterm",
+      "type": "dterm_node",
+      "constructor": "DTattr",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dterm_node.DTbinop",
+      "owner": "Dterm",
+      "type": "dterm_node",
+      "constructor": "DTbinop",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dterm_node.DTcase",
+      "owner": "Dterm",
+      "type": "dterm_node",
+      "constructor": "DTcase",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dterm_node.DTcast",
+      "owner": "Dterm",
+      "type": "dterm_node",
+      "constructor": "DTcast",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dterm_node.DTconst",
+      "owner": "Dterm",
+      "type": "dterm_node",
+      "constructor": "DTconst",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dterm_node.DTeps",
+      "owner": "Dterm",
+      "type": "dterm_node",
+      "constructor": "DTeps",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dterm_node.DTfalse",
+      "owner": "Dterm",
+      "type": "dterm_node",
+      "constructor": "DTfalse",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dterm_node.DTfapp",
+      "owner": "Dterm",
+      "type": "dterm_node",
+      "constructor": "DTfapp",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dterm_node.DTgvar",
+      "owner": "Dterm",
+      "type": "dterm_node",
+      "constructor": "DTgvar",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dterm_node.DTif",
+      "owner": "Dterm",
+      "type": "dterm_node",
+      "constructor": "DTif",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dterm_node.DTlet",
+      "owner": "Dterm",
+      "type": "dterm_node",
+      "constructor": "DTlet",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dterm_node.DTnot",
+      "owner": "Dterm",
+      "type": "dterm_node",
+      "constructor": "DTnot",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dterm_node.DTquant",
+      "owner": "Dterm",
+      "type": "dterm_node",
+      "constructor": "DTquant",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dterm_node.DTtrue",
+      "owner": "Dterm",
+      "type": "dterm_node",
+      "constructor": "DTtrue",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dterm_node.DTuloc",
+      "owner": "Dterm",
+      "type": "dterm_node",
+      "constructor": "DTuloc",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Dterm.dterm_node.DTvar",
+      "owner": "Dterm",
+      "type": "dterm_node",
+      "constructor": "DTvar",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.assertion_kind.Assert",
+      "owner": "Expr",
+      "type": "assertion_kind",
+      "constructor": "Assert",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.assertion_kind.Assume",
+      "owner": "Expr",
+      "type": "assertion_kind",
+      "constructor": "Assume",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.assertion_kind.Check",
+      "owner": "Expr",
+      "type": "assertion_kind",
+      "constructor": "Check",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.cexp_node.Cany",
+      "owner": "Expr",
+      "type": "cexp_node",
+      "constructor": "Cany",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.cexp_node.Capp",
+      "owner": "Expr",
+      "type": "cexp_node",
+      "constructor": "Capp",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.cexp_node.Cfun",
+      "owner": "Expr",
+      "type": "cexp_node",
+      "constructor": "Cfun",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.cexp_node.Cpur",
+      "owner": "Expr",
+      "type": "cexp_node",
+      "constructor": "Cpur",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.expr_node.Eabsurd",
+      "owner": "Expr",
+      "type": "expr_node",
+      "constructor": "Eabsurd",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.expr_node.Eassert",
+      "owner": "Expr",
+      "type": "expr_node",
+      "constructor": "Eassert",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.expr_node.Eassign",
+      "owner": "Expr",
+      "type": "expr_node",
+      "constructor": "Eassign",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.expr_node.Econst",
+      "owner": "Expr",
+      "type": "expr_node",
+      "constructor": "Econst",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.expr_node.Eexec",
+      "owner": "Expr",
+      "type": "expr_node",
+      "constructor": "Eexec",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.expr_node.Eexn",
+      "owner": "Expr",
+      "type": "expr_node",
+      "constructor": "Eexn",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.expr_node.Efor",
+      "owner": "Expr",
+      "type": "expr_node",
+      "constructor": "Efor",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.expr_node.Eghost",
+      "owner": "Expr",
+      "type": "expr_node",
+      "constructor": "Eghost",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.expr_node.Eif",
+      "owner": "Expr",
+      "type": "expr_node",
+      "constructor": "Eif",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.expr_node.Elet",
+      "owner": "Expr",
+      "type": "expr_node",
+      "constructor": "Elet",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.expr_node.Ematch",
+      "owner": "Expr",
+      "type": "expr_node",
+      "constructor": "Ematch",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.expr_node.Epure",
+      "owner": "Expr",
+      "type": "expr_node",
+      "constructor": "Epure",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.expr_node.Eraise",
+      "owner": "Expr",
+      "type": "expr_node",
+      "constructor": "Eraise",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.expr_node.Evar",
+      "owner": "Expr",
+      "type": "expr_node",
+      "constructor": "Evar",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.expr_node.Ewhile",
+      "owner": "Expr",
+      "type": "expr_node",
+      "constructor": "Ewhile",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.for_direction.DownTo",
+      "owner": "Expr",
+      "type": "for_direction",
+      "constructor": "DownTo",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.for_direction.To",
+      "owner": "Expr",
+      "type": "for_direction",
+      "constructor": "To",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.let_defn.LDrec",
+      "owner": "Expr",
+      "type": "let_defn",
+      "constructor": "LDrec",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.let_defn.LDsym",
+      "owner": "Expr",
+      "type": "let_defn",
+      "constructor": "LDsym",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.let_defn.LDvar",
+      "owner": "Expr",
+      "type": "let_defn",
+      "constructor": "LDvar",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.pat_ghost.PGfail",
+      "owner": "Expr",
+      "type": "pat_ghost",
+      "constructor": "PGfail",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.pat_ghost.PGlast",
+      "owner": "Expr",
+      "type": "pat_ghost",
+      "constructor": "PGlast",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.pat_ghost.PGnone",
+      "owner": "Expr",
+      "type": "pat_ghost",
+      "constructor": "PGnone",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.pre_pattern.PPapp",
+      "owner": "Expr",
+      "type": "pre_pattern",
+      "constructor": "PPapp",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.pre_pattern.PPas",
+      "owner": "Expr",
+      "type": "pre_pattern",
+      "constructor": "PPas",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.pre_pattern.PPor",
+      "owner": "Expr",
+      "type": "pre_pattern",
+      "constructor": "PPor",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.pre_pattern.PPvar",
+      "owner": "Expr",
+      "type": "pre_pattern",
+      "constructor": "PPvar",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.pre_pattern.PPwild",
+      "owner": "Expr",
+      "type": "pre_pattern",
+      "constructor": "PPwild",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.rs_kind.RKfunc",
+      "owner": "Expr",
+      "type": "rs_kind",
+      "constructor": "RKfunc",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.rs_kind.RKlemma",
+      "owner": "Expr",
+      "type": "rs_kind",
+      "constructor": "RKlemma",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.rs_kind.RKlocal",
+      "owner": "Expr",
+      "type": "rs_kind",
+      "constructor": "RKlocal",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.rs_kind.RKnone",
+      "owner": "Expr",
+      "type": "rs_kind",
+      "constructor": "RKnone",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.rs_kind.RKpred",
+      "owner": "Expr",
+      "type": "rs_kind",
+      "constructor": "RKpred",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.rs_logic.RLlemma",
+      "owner": "Expr",
+      "type": "rs_logic",
+      "constructor": "RLlemma",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.rs_logic.RLls",
+      "owner": "Expr",
+      "type": "rs_logic",
+      "constructor": "RLls",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.rs_logic.RLnone",
+      "owner": "Expr",
+      "type": "rs_logic",
+      "constructor": "RLnone",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Expr.rs_logic.RLpv",
+      "owner": "Expr",
+      "type": "rs_logic",
+      "constructor": "RLpv",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ident.notation.SNcut",
+      "owner": "Ident",
+      "type": "notation",
+      "constructor": "SNcut",
+      "source": "src/core/ident.mli",
+      "layer": "core-identity",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ident.notation.SNget",
+      "owner": "Ident",
+      "type": "notation",
+      "constructor": "SNget",
+      "source": "src/core/ident.mli",
+      "layer": "core-identity",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ident.notation.SNinfix",
+      "owner": "Ident",
+      "type": "notation",
+      "constructor": "SNinfix",
+      "source": "src/core/ident.mli",
+      "layer": "core-identity",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ident.notation.SNlcut",
+      "owner": "Ident",
+      "type": "notation",
+      "constructor": "SNlcut",
+      "source": "src/core/ident.mli",
+      "layer": "core-identity",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ident.notation.SNprefix",
+      "owner": "Ident",
+      "type": "notation",
+      "constructor": "SNprefix",
+      "source": "src/core/ident.mli",
+      "layer": "core-identity",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ident.notation.SNrcut",
+      "owner": "Ident",
+      "type": "notation",
+      "constructor": "SNrcut",
+      "source": "src/core/ident.mli",
+      "layer": "core-identity",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ident.notation.SNset",
+      "owner": "Ident",
+      "type": "notation",
+      "constructor": "SNset",
+      "source": "src/core/ident.mli",
+      "layer": "core-identity",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ident.notation.SNtight",
+      "owner": "Ident",
+      "type": "notation",
+      "constructor": "SNtight",
+      "source": "src/core/ident.mli",
+      "layer": "core-identity",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ident.notation.SNupdate",
+      "owner": "Ident",
+      "type": "notation",
+      "constructor": "SNupdate",
+      "source": "src/core/ident.mli",
+      "layer": "core-identity",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ident.notation.SNword",
+      "owner": "Ident",
+      "type": "notation",
+      "constructor": "SNword",
+      "source": "src/core/ident.mli",
+      "layer": "core-identity",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ity.ity_node.Ityapp",
+      "owner": "Ity",
+      "type": "ity_node",
+      "constructor": "Ityapp",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ity.ity_node.Ityreg",
+      "owner": "Ity",
+      "type": "ity_node",
+      "constructor": "Ityreg",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ity.ity_node.Ityvar",
+      "owner": "Ity",
+      "type": "ity_node",
+      "constructor": "Ityvar",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ity.mask.MaskGhost",
+      "owner": "Ity",
+      "type": "mask",
+      "constructor": "MaskGhost",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ity.mask.MaskTuple",
+      "owner": "Ity",
+      "type": "mask",
+      "constructor": "MaskTuple",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ity.mask.MaskVisible",
+      "owner": "Ity",
+      "type": "mask",
+      "constructor": "MaskVisible",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ity.oneway.Diverges",
+      "owner": "Ity",
+      "type": "oneway",
+      "constructor": "Diverges",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ity.oneway.Partial",
+      "owner": "Ity",
+      "type": "oneway",
+      "constructor": "Partial",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ity.oneway.Total",
+      "owner": "Ity",
+      "type": "oneway",
+      "constructor": "Total",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Number.int_literal_kind.ILitBin",
+      "owner": "Number",
+      "type": "int_literal_kind",
+      "constructor": "ILitBin",
+      "source": "src/util/number.mli",
+      "layer": "literal",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Number.int_literal_kind.ILitDec",
+      "owner": "Number",
+      "type": "int_literal_kind",
+      "constructor": "ILitDec",
+      "source": "src/util/number.mli",
+      "layer": "literal",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Number.int_literal_kind.ILitHex",
+      "owner": "Number",
+      "type": "int_literal_kind",
+      "constructor": "ILitHex",
+      "source": "src/util/number.mli",
+      "layer": "literal",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Number.int_literal_kind.ILitOct",
+      "owner": "Number",
+      "type": "int_literal_kind",
+      "constructor": "ILitOct",
+      "source": "src/util/number.mli",
+      "layer": "literal",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Number.int_literal_kind.ILitUnk",
+      "owner": "Number",
+      "type": "int_literal_kind",
+      "constructor": "ILitUnk",
+      "source": "src/util/number.mli",
+      "layer": "literal",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Number.real_literal_kind.RLitDec",
+      "owner": "Number",
+      "type": "real_literal_kind",
+      "constructor": "RLitDec",
+      "source": "src/util/number.mli",
+      "layer": "literal",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Number.real_literal_kind.RLitHex",
+      "owner": "Number",
+      "type": "real_literal_kind",
+      "constructor": "RLitHex",
+      "source": "src/util/number.mli",
+      "layer": "literal",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Number.real_literal_kind.RLitUnk",
+      "owner": "Number",
+      "type": "real_literal_kind",
+      "constructor": "RLitUnk",
+      "source": "src/util/number.mli",
+      "layer": "literal",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Pdecl.pdecl_node.PDexn",
+      "owner": "Pdecl",
+      "type": "pdecl_node",
+      "constructor": "PDexn",
+      "source": "src/mlw/pdecl.mli",
+      "layer": "mlw-declaration-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Pdecl.pdecl_node.PDlet",
+      "owner": "Pdecl",
+      "type": "pdecl_node",
+      "constructor": "PDlet",
+      "source": "src/mlw/pdecl.mli",
+      "layer": "mlw-declaration-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Pdecl.pdecl_node.PDpure",
+      "owner": "Pdecl",
+      "type": "pdecl_node",
+      "constructor": "PDpure",
+      "source": "src/mlw/pdecl.mli",
+      "layer": "mlw-declaration-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Pdecl.pdecl_node.PDtype",
+      "owner": "Pdecl",
+      "type": "pdecl_node",
+      "constructor": "PDtype",
+      "source": "src/mlw/pdecl.mli",
+      "layer": "mlw-declaration-graph",
+      "migrationPhase": 3,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Pmodule.mod_unit.Uclone",
+      "owner": "Pmodule",
+      "type": "mod_unit",
+      "constructor": "Uclone",
+      "source": "src/mlw/pmodule.mli",
+      "layer": "mlw-module-graph",
+      "migrationPhase": 4,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Pmodule.mod_unit.Udecl",
+      "owner": "Pmodule",
+      "type": "mod_unit",
+      "constructor": "Udecl",
+      "source": "src/mlw/pmodule.mli",
+      "layer": "mlw-module-graph",
+      "migrationPhase": 4,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Pmodule.mod_unit.Umeta",
+      "owner": "Pmodule",
+      "type": "mod_unit",
+      "constructor": "Umeta",
+      "source": "src/mlw/pmodule.mli",
+      "layer": "mlw-module-graph",
+      "migrationPhase": 4,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Pmodule.mod_unit.Uscope",
+      "owner": "Pmodule",
+      "type": "mod_unit",
+      "constructor": "Uscope",
+      "source": "src/mlw/pmodule.mli",
+      "layer": "mlw-module-graph",
+      "migrationPhase": 4,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Pmodule.mod_unit.Uuse",
+      "owner": "Pmodule",
+      "type": "mod_unit",
+      "constructor": "Uuse",
+      "source": "src/mlw/pmodule.mli",
+      "layer": "mlw-module-graph",
+      "migrationPhase": 4,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Pmodule.overload.FixedRes",
+      "owner": "Pmodule",
+      "type": "overload",
+      "constructor": "FixedRes",
+      "source": "src/mlw/pmodule.mli",
+      "layer": "mlw-module-graph",
+      "migrationPhase": 4,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Pmodule.overload.NoOver",
+      "owner": "Pmodule",
+      "type": "overload",
+      "constructor": "NoOver",
+      "source": "src/mlw/pmodule.mli",
+      "layer": "mlw-module-graph",
+      "migrationPhase": 4,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Pmodule.overload.SameType",
+      "owner": "Pmodule",
+      "type": "overload",
+      "constructor": "SameType",
+      "source": "src/mlw/pmodule.mli",
+      "layer": "mlw-module-graph",
+      "migrationPhase": 4,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Pmodule.prog_symbol.OO",
+      "owner": "Pmodule",
+      "type": "prog_symbol",
+      "constructor": "OO",
+      "source": "src/mlw/pmodule.mli",
+      "layer": "mlw-module-graph",
+      "migrationPhase": 4,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Pmodule.prog_symbol.PV",
+      "owner": "Pmodule",
+      "type": "prog_symbol",
+      "constructor": "PV",
+      "source": "src/mlw/pmodule.mli",
+      "layer": "mlw-module-graph",
+      "migrationPhase": 4,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Pmodule.prog_symbol.RS",
+      "owner": "Pmodule",
+      "type": "prog_symbol",
+      "constructor": "RS",
+      "source": "src/mlw/pmodule.mli",
+      "layer": "mlw-module-graph",
+      "migrationPhase": 4,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.attr.ATpos",
+      "owner": "Ptree",
+      "type": "attr",
+      "constructor": "ATpos",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.attr.ATstr",
+      "owner": "Ptree",
+      "type": "attr",
+      "constructor": "ATstr",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.clone_subst.CSaxiom",
+      "owner": "Ptree",
+      "type": "clone_subst",
+      "constructor": "CSaxiom",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.clone_subst.CSfsym",
+      "owner": "Ptree",
+      "type": "clone_subst",
+      "constructor": "CSfsym",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.clone_subst.CSgoal",
+      "owner": "Ptree",
+      "type": "clone_subst",
+      "constructor": "CSgoal",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.clone_subst.CSlemma",
+      "owner": "Ptree",
+      "type": "clone_subst",
+      "constructor": "CSlemma",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.clone_subst.CSprop",
+      "owner": "Ptree",
+      "type": "clone_subst",
+      "constructor": "CSprop",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.clone_subst.CSpsym",
+      "owner": "Ptree",
+      "type": "clone_subst",
+      "constructor": "CSpsym",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.clone_subst.CStsym",
+      "owner": "Ptree",
+      "type": "clone_subst",
+      "constructor": "CStsym",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.clone_subst.CSvsym",
+      "owner": "Ptree",
+      "type": "clone_subst",
+      "constructor": "CSvsym",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.clone_subst.CSxsym",
+      "owner": "Ptree",
+      "type": "clone_subst",
+      "constructor": "CSxsym",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.decl.Dcloneexport",
+      "owner": "Ptree",
+      "type": "decl",
+      "constructor": "Dcloneexport",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.decl.Dcloneimport",
+      "owner": "Ptree",
+      "type": "decl",
+      "constructor": "Dcloneimport",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.decl.Dexn",
+      "owner": "Ptree",
+      "type": "decl",
+      "constructor": "Dexn",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.decl.Dimport",
+      "owner": "Ptree",
+      "type": "decl",
+      "constructor": "Dimport",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.decl.Dind",
+      "owner": "Ptree",
+      "type": "decl",
+      "constructor": "Dind",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.decl.Dlet",
+      "owner": "Ptree",
+      "type": "decl",
+      "constructor": "Dlet",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.decl.Dlogic",
+      "owner": "Ptree",
+      "type": "decl",
+      "constructor": "Dlogic",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.decl.Dmeta",
+      "owner": "Ptree",
+      "type": "decl",
+      "constructor": "Dmeta",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.decl.Dprop",
+      "owner": "Ptree",
+      "type": "decl",
+      "constructor": "Dprop",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.decl.Drec",
+      "owner": "Ptree",
+      "type": "decl",
+      "constructor": "Drec",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.decl.Dscope",
+      "owner": "Ptree",
+      "type": "decl",
+      "constructor": "Dscope",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.decl.Dtype",
+      "owner": "Ptree",
+      "type": "decl",
+      "constructor": "Dtype",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.decl.Duseexport",
+      "owner": "Ptree",
+      "type": "decl",
+      "constructor": "Duseexport",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.decl.Duseimport",
+      "owner": "Ptree",
+      "type": "decl",
+      "constructor": "Duseimport",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eabsurd",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eabsurd",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eand",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eand",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eany",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eany",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eapply",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eapply",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Easref",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Easref",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eassert",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eassert",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eassign",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eassign",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eattr",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eattr",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Ecast",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Ecast",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Econst",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Econst",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eexn",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eexn",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Efalse",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Efalse",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Efor",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Efor",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Efun",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Efun",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eghost",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eghost",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eidapp",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eidapp",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eident",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eident",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eidpur",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eidpur",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eif",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eif",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Einfix",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Einfix",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Einnfix",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Einnfix",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Elabel",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Elabel",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Elet",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Elet",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Ematch",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Ematch",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Enot",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Enot",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eoptexn",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eoptexn",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eor",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eor",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Epure",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Epure",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eraise",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eraise",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Erec",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Erec",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Erecord",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Erecord",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eref",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eref",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Escope",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Escope",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Esequence",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Esequence",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Etrue",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Etrue",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Etuple",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Etuple",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Eupdate",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Eupdate",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.expr_desc.Ewhile",
+      "owner": "Ptree",
+      "type": "expr_desc",
+      "constructor": "Ewhile",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.metarg.Max",
+      "owner": "Ptree",
+      "type": "metarg",
+      "constructor": "Max",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.metarg.Mfs",
+      "owner": "Ptree",
+      "type": "metarg",
+      "constructor": "Mfs",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.metarg.Mgl",
+      "owner": "Ptree",
+      "type": "metarg",
+      "constructor": "Mgl",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.metarg.Mint",
+      "owner": "Ptree",
+      "type": "metarg",
+      "constructor": "Mint",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.metarg.Mlm",
+      "owner": "Ptree",
+      "type": "metarg",
+      "constructor": "Mlm",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.metarg.Mps",
+      "owner": "Ptree",
+      "type": "metarg",
+      "constructor": "Mps",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.metarg.Mstr",
+      "owner": "Ptree",
+      "type": "metarg",
+      "constructor": "Mstr",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.metarg.Mty",
+      "owner": "Ptree",
+      "type": "metarg",
+      "constructor": "Mty",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.metarg.Mval",
+      "owner": "Ptree",
+      "type": "metarg",
+      "constructor": "Mval",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.mlw_file.Decls",
+      "owner": "Ptree",
+      "type": "mlw_file",
+      "constructor": "Decls",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.mlw_file.Modules",
+      "owner": "Ptree",
+      "type": "mlw_file",
+      "constructor": "Modules",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pat_desc.Papp",
+      "owner": "Ptree",
+      "type": "pat_desc",
+      "constructor": "Papp",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pat_desc.Pas",
+      "owner": "Ptree",
+      "type": "pat_desc",
+      "constructor": "Pas",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pat_desc.Pcast",
+      "owner": "Ptree",
+      "type": "pat_desc",
+      "constructor": "Pcast",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pat_desc.Pghost",
+      "owner": "Ptree",
+      "type": "pat_desc",
+      "constructor": "Pghost",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pat_desc.Por",
+      "owner": "Ptree",
+      "type": "pat_desc",
+      "constructor": "Por",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pat_desc.Pparen",
+      "owner": "Ptree",
+      "type": "pat_desc",
+      "constructor": "Pparen",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pat_desc.Prec",
+      "owner": "Ptree",
+      "type": "pat_desc",
+      "constructor": "Prec",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pat_desc.Pscope",
+      "owner": "Ptree",
+      "type": "pat_desc",
+      "constructor": "Pscope",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pat_desc.Ptuple",
+      "owner": "Ptree",
+      "type": "pat_desc",
+      "constructor": "Ptuple",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pat_desc.Pvar",
+      "owner": "Ptree",
+      "type": "pat_desc",
+      "constructor": "Pvar",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pat_desc.Pwild",
+      "owner": "Ptree",
+      "type": "pat_desc",
+      "constructor": "Pwild",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pty.PTarrow",
+      "owner": "Ptree",
+      "type": "pty",
+      "constructor": "PTarrow",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pty.PTparen",
+      "owner": "Ptree",
+      "type": "pty",
+      "constructor": "PTparen",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pty.PTpure",
+      "owner": "Ptree",
+      "type": "pty",
+      "constructor": "PTpure",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pty.PTref",
+      "owner": "Ptree",
+      "type": "pty",
+      "constructor": "PTref",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pty.PTscope",
+      "owner": "Ptree",
+      "type": "pty",
+      "constructor": "PTscope",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pty.PTtuple",
+      "owner": "Ptree",
+      "type": "pty",
+      "constructor": "PTtuple",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pty.PTtyapp",
+      "owner": "Ptree",
+      "type": "pty",
+      "constructor": "PTtyapp",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.pty.PTtyvar",
+      "owner": "Ptree",
+      "type": "pty",
+      "constructor": "PTtyvar",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.qualid.Qdot",
+      "owner": "Ptree",
+      "type": "qualid",
+      "constructor": "Qdot",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.qualid.Qident",
+      "owner": "Ptree",
+      "type": "qualid",
+      "constructor": "Qident",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tapply",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tapply",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tasref",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tasref",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tat",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tat",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tattr",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tattr",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tbinnop",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tbinnop",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tbinop",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tbinop",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tcase",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tcase",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tcast",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tcast",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tconst",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tconst",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Teps",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Teps",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tfalse",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tfalse",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tidapp",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tidapp",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tident",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tident",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tif",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tif",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tinfix",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tinfix",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tinnfix",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tinnfix",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tlet",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tlet",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tnot",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tnot",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tquant",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tquant",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Trecord",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Trecord",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tscope",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tscope",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Ttrue",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Ttrue",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Ttuple",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Ttuple",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.term_desc.Tupdate",
+      "owner": "Ptree",
+      "type": "term_desc",
+      "constructor": "Tupdate",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.type_def.TDalgebraic",
+      "owner": "Ptree",
+      "type": "type_def",
+      "constructor": "TDalgebraic",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.type_def.TDalias",
+      "owner": "Ptree",
+      "type": "type_def",
+      "constructor": "TDalias",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.type_def.TDfloat",
+      "owner": "Ptree",
+      "type": "type_def",
+      "constructor": "TDfloat",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.type_def.TDrange",
+      "owner": "Ptree",
+      "type": "type_def",
+      "constructor": "TDrange",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.type_def.TDrecord",
+      "owner": "Ptree",
+      "type": "type_def",
+      "constructor": "TDrecord",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.visibility.Abstract",
+      "owner": "Ptree",
+      "type": "visibility",
+      "constructor": "Abstract",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.visibility.Private",
+      "owner": "Ptree",
+      "type": "visibility",
+      "constructor": "Private",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ptree.visibility.Public",
+      "owner": "Ptree",
+      "type": "visibility",
+      "constructor": "Public",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "PtreeFull.full_mlw_file.FullDecls",
+      "owner": "PtreeFull",
+      "type": "full_mlw_file",
+      "constructor": "FullDecls",
+      "source": "tools/why3_reference/patches/full-mlw-export.patch",
+      "layer": "surface-file-envelope",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "PtreeFull.full_mlw_file.FullModules",
+      "owner": "PtreeFull",
+      "type": "full_mlw_file",
+      "constructor": "FullModules",
+      "source": "tools/why3_reference/patches/full-mlw-export.patch",
+      "layer": "surface-file-envelope",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "PtreeFull.full_unit_kind.FullModule",
+      "owner": "PtreeFull",
+      "type": "full_unit_kind",
+      "constructor": "FullModule",
+      "source": "tools/why3_reference/patches/full-mlw-export.patch",
+      "layer": "surface-file-envelope",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "PtreeFull.full_unit_kind.FullTheory",
+      "owner": "PtreeFull",
+      "type": "full_unit_kind",
+      "constructor": "FullTheory",
+      "source": "tools/why3_reference/patches/full-mlw-export.patch",
+      "layer": "surface-file-envelope",
+      "migrationPhase": 1,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.binop.Tand",
+      "owner": "Term",
+      "type": "binop",
+      "constructor": "Tand",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.binop.Tiff",
+      "owner": "Term",
+      "type": "binop",
+      "constructor": "Tiff",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.binop.Timplies",
+      "owner": "Term",
+      "type": "binop",
+      "constructor": "Timplies",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.binop.Tor",
+      "owner": "Term",
+      "type": "binop",
+      "constructor": "Tor",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.pattern_node.Papp",
+      "owner": "Term",
+      "type": "pattern_node",
+      "constructor": "Papp",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.pattern_node.Pas",
+      "owner": "Term",
+      "type": "pattern_node",
+      "constructor": "Pas",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.pattern_node.Por",
+      "owner": "Term",
+      "type": "pattern_node",
+      "constructor": "Por",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.pattern_node.Pvar",
+      "owner": "Term",
+      "type": "pattern_node",
+      "constructor": "Pvar",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.pattern_node.Pwild",
+      "owner": "Term",
+      "type": "pattern_node",
+      "constructor": "Pwild",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.quant.Texists",
+      "owner": "Term",
+      "type": "quant",
+      "constructor": "Texists",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.quant.Tforall",
+      "owner": "Term",
+      "type": "quant",
+      "constructor": "Tforall",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.term_node.Tapp",
+      "owner": "Term",
+      "type": "term_node",
+      "constructor": "Tapp",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.term_node.Tbinop",
+      "owner": "Term",
+      "type": "term_node",
+      "constructor": "Tbinop",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.term_node.Tcase",
+      "owner": "Term",
+      "type": "term_node",
+      "constructor": "Tcase",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.term_node.Tconst",
+      "owner": "Term",
+      "type": "term_node",
+      "constructor": "Tconst",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.term_node.Teps",
+      "owner": "Term",
+      "type": "term_node",
+      "constructor": "Teps",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.term_node.Tfalse",
+      "owner": "Term",
+      "type": "term_node",
+      "constructor": "Tfalse",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.term_node.Tif",
+      "owner": "Term",
+      "type": "term_node",
+      "constructor": "Tif",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.term_node.Tlet",
+      "owner": "Term",
+      "type": "term_node",
+      "constructor": "Tlet",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.term_node.Tnot",
+      "owner": "Term",
+      "type": "term_node",
+      "constructor": "Tnot",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.term_node.Tquant",
+      "owner": "Term",
+      "type": "term_node",
+      "constructor": "Tquant",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.term_node.Ttrue",
+      "owner": "Term",
+      "type": "term_node",
+      "constructor": "Ttrue",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Term.term_node.Tvar",
+      "owner": "Term",
+      "type": "term_node",
+      "constructor": "Tvar",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.meta_arg.MAid",
+      "owner": "Theory",
+      "type": "meta_arg",
+      "constructor": "MAid",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.meta_arg.MAint",
+      "owner": "Theory",
+      "type": "meta_arg",
+      "constructor": "MAint",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.meta_arg.MAls",
+      "owner": "Theory",
+      "type": "meta_arg",
+      "constructor": "MAls",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.meta_arg.MApr",
+      "owner": "Theory",
+      "type": "meta_arg",
+      "constructor": "MApr",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.meta_arg.MAstr",
+      "owner": "Theory",
+      "type": "meta_arg",
+      "constructor": "MAstr",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.meta_arg.MAts",
+      "owner": "Theory",
+      "type": "meta_arg",
+      "constructor": "MAts",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.meta_arg.MAty",
+      "owner": "Theory",
+      "type": "meta_arg",
+      "constructor": "MAty",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.meta_arg_type.MTid",
+      "owner": "Theory",
+      "type": "meta_arg_type",
+      "constructor": "MTid",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.meta_arg_type.MTint",
+      "owner": "Theory",
+      "type": "meta_arg_type",
+      "constructor": "MTint",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.meta_arg_type.MTlsymbol",
+      "owner": "Theory",
+      "type": "meta_arg_type",
+      "constructor": "MTlsymbol",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.meta_arg_type.MTprsymbol",
+      "owner": "Theory",
+      "type": "meta_arg_type",
+      "constructor": "MTprsymbol",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.meta_arg_type.MTstring",
+      "owner": "Theory",
+      "type": "meta_arg_type",
+      "constructor": "MTstring",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.meta_arg_type.MTty",
+      "owner": "Theory",
+      "type": "meta_arg_type",
+      "constructor": "MTty",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.meta_arg_type.MTtysymbol",
+      "owner": "Theory",
+      "type": "meta_arg_type",
+      "constructor": "MTtysymbol",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.tdecl_node.Clone",
+      "owner": "Theory",
+      "type": "tdecl_node",
+      "constructor": "Clone",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.tdecl_node.Decl",
+      "owner": "Theory",
+      "type": "tdecl_node",
+      "constructor": "Decl",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.tdecl_node.Meta",
+      "owner": "Theory",
+      "type": "tdecl_node",
+      "constructor": "Meta",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Theory.tdecl_node.Use",
+      "owner": "Theory",
+      "type": "tdecl_node",
+      "constructor": "Use",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ty.ty_node.Tyapp",
+      "owner": "Ty",
+      "type": "ty_node",
+      "constructor": "Tyapp",
+      "source": "src/core/ty.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ty.ty_node.Tyvar",
+      "owner": "Ty",
+      "type": "ty_node",
+      "constructor": "Tyvar",
+      "source": "src/core/ty.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ty.type_def.Alias",
+      "owner": "Ty",
+      "type": "type_def",
+      "constructor": "Alias",
+      "source": "src/core/ty.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ty.type_def.Float",
+      "owner": "Ty",
+      "type": "type_def",
+      "constructor": "Float",
+      "source": "src/core/ty.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ty.type_def.NoDef",
+      "owner": "Ty",
+      "type": "type_def",
+      "constructor": "NoDef",
+      "source": "src/core/ty.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    },
+    {
+      "id": "Ty.type_def.Range",
+      "owner": "Ty",
+      "type": "type_def",
+      "constructor": "Range",
+      "source": "src/core/ty.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "targetLane": "exact"
+    }
+  ],
+  "variantInventorySha256": "38eadf6a51fd01b64a3cb81f627ca4e9fb66d8bc3155b071a5b0a5c8d88a007c",
+  "records": [
+    {
+      "id": "Decl.decl",
+      "owner": "Decl",
+      "type": "decl",
+      "source": "src/core/decl.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "rawFields": [
+        "d_node",
+        "d_news",
+        "d_tag"
+      ],
+      "canonicalV3Fields": [
+        "d_node"
+      ],
+      "excludedFromCanonicalV3": {
+        "d_news": "derived introduced-identifier cache",
+        "d_tag": "runtime weak-table tag"
+      }
+    },
+    {
+      "id": "Decl.prsymbol",
+      "owner": "Decl",
+      "type": "prsymbol",
+      "source": "src/core/decl.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "rawFields": [
+        "pr_name"
+      ],
+      "canonicalV3Fields": [
+        "pr_name"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Dexpr.dexpr",
+      "owner": "Dexpr",
+      "type": "dexpr",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "rawFields": [
+        "de_node",
+        "de_dvty",
+        "de_loc"
+      ],
+      "canonicalV3Fields": [
+        "de_node",
+        "de_dvty",
+        "de_loc"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Dexpr.dpattern",
+      "owner": "Dexpr",
+      "type": "dpattern",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "rawFields": [
+        "dp_pat",
+        "dp_dity",
+        "dp_vars",
+        "dp_loc"
+      ],
+      "canonicalV3Fields": [
+        "dp_pat",
+        "dp_dity",
+        "dp_vars",
+        "dp_loc"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Dexpr.drec_defn",
+      "owner": "Dexpr",
+      "type": "drec_defn",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "rawFields": [
+        "fds"
+      ],
+      "canonicalV3Fields": [
+        "fds"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Dexpr.dspec_final",
+      "owner": "Dexpr",
+      "type": "dspec_final",
+      "source": "src/mlw/dexpr.mli",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5,
+      "rawFields": [
+        "ds_pre",
+        "ds_post",
+        "ds_xpost",
+        "ds_reads",
+        "ds_writes",
+        "ds_diverge",
+        "ds_partial",
+        "ds_checkrw"
+      ],
+      "canonicalV3Fields": [
+        "ds_pre",
+        "ds_post",
+        "ds_xpost",
+        "ds_reads",
+        "ds_writes",
+        "ds_diverge",
+        "ds_partial",
+        "ds_checkrw"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Dterm.dpattern",
+      "owner": "Dterm",
+      "type": "dpattern",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "rawFields": [
+        "dp_node",
+        "dp_dty",
+        "dp_vars",
+        "dp_loc"
+      ],
+      "canonicalV3Fields": [
+        "dp_node",
+        "dp_dty",
+        "dp_vars",
+        "dp_loc"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Dterm.dterm",
+      "owner": "Dterm",
+      "type": "dterm",
+      "source": "src/core/dterm.mli",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2,
+      "rawFields": [
+        "dt_node",
+        "dt_dty",
+        "dt_loc"
+      ],
+      "canonicalV3Fields": [
+        "dt_node",
+        "dt_dty",
+        "dt_loc"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Expr.cexp",
+      "owner": "Expr",
+      "type": "cexp",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "rawFields": [
+        "c_node",
+        "c_cty"
+      ],
+      "canonicalV3Fields": [
+        "c_node",
+        "c_cty"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Expr.expr",
+      "owner": "Expr",
+      "type": "expr",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "rawFields": [
+        "e_node",
+        "e_ity",
+        "e_mask",
+        "e_effect",
+        "e_attrs",
+        "e_loc",
+        "e_id"
+      ],
+      "canonicalV3Fields": [
+        "e_node",
+        "e_ity",
+        "e_mask",
+        "e_effect",
+        "e_attrs",
+        "e_loc"
+      ],
+      "excludedFromCanonicalV3": {
+        "e_id": "runtime expression identifier"
+      }
+    },
+    {
+      "id": "Expr.prog_pattern",
+      "owner": "Expr",
+      "type": "prog_pattern",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "rawFields": [
+        "pp_pat",
+        "pp_ity",
+        "pp_mask",
+        "pp_fail"
+      ],
+      "canonicalV3Fields": [
+        "pp_pat",
+        "pp_ity",
+        "pp_mask",
+        "pp_fail"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Expr.rec_defn",
+      "owner": "Expr",
+      "type": "rec_defn",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "rawFields": [
+        "rec_sym",
+        "rec_rsym",
+        "rec_fun",
+        "rec_varl"
+      ],
+      "canonicalV3Fields": [
+        "rec_sym",
+        "rec_rsym",
+        "rec_fun",
+        "rec_varl"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Expr.rsymbol",
+      "owner": "Expr",
+      "type": "rsymbol",
+      "source": "src/mlw/expr.mli",
+      "layer": "mlw-expression-graph",
+      "migrationPhase": 3,
+      "rawFields": [
+        "rs_name",
+        "rs_cty",
+        "rs_logic",
+        "rs_field"
+      ],
+      "canonicalV3Fields": [
+        "rs_name",
+        "rs_cty",
+        "rs_logic",
+        "rs_field"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ident.attribute",
+      "owner": "Ident",
+      "type": "attribute",
+      "source": "src/core/ident.mli",
+      "layer": "core-identity",
+      "migrationPhase": 2,
+      "rawFields": [
+        "attr_string",
+        "attr_tag"
+      ],
+      "canonicalV3Fields": [
+        "attr_string"
+      ],
+      "excludedFromCanonicalV3": {
+        "attr_tag": "runtime attribute registration tag"
+      }
+    },
+    {
+      "id": "Ident.ident",
+      "owner": "Ident",
+      "type": "ident",
+      "source": "src/core/ident.mli",
+      "layer": "core-identity",
+      "migrationPhase": 2,
+      "rawFields": [
+        "id_string",
+        "id_attrs",
+        "id_loc",
+        "id_tag"
+      ],
+      "canonicalV3Fields": [
+        "id_string",
+        "id_attrs",
+        "id_loc"
+      ],
+      "excludedFromCanonicalV3": {
+        "id_tag": "runtime weak-table tag"
+      }
+    },
+    {
+      "id": "Ident.preid",
+      "owner": "Ident",
+      "type": "preid",
+      "source": "src/core/ident.mli",
+      "layer": "core-identity",
+      "migrationPhase": 2,
+      "rawFields": [
+        "pre_name",
+        "pre_attrs",
+        "pre_loc"
+      ],
+      "canonicalV3Fields": [
+        "pre_name",
+        "pre_attrs",
+        "pre_loc"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ity.cty",
+      "owner": "Ity",
+      "type": "cty",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "rawFields": [
+        "cty_args",
+        "cty_pre",
+        "cty_post",
+        "cty_xpost",
+        "cty_oldies",
+        "cty_effect",
+        "cty_result",
+        "cty_mask",
+        "cty_freeze"
+      ],
+      "canonicalV3Fields": [
+        "cty_args",
+        "cty_pre",
+        "cty_post",
+        "cty_xpost",
+        "cty_oldies",
+        "cty_effect",
+        "cty_result",
+        "cty_mask",
+        "cty_freeze"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ity.effect",
+      "owner": "Ity",
+      "type": "effect",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "rawFields": [
+        "eff_reads",
+        "eff_writes",
+        "eff_taints",
+        "eff_covers",
+        "eff_resets",
+        "eff_raises",
+        "eff_spoils",
+        "eff_oneway",
+        "eff_ghost"
+      ],
+      "canonicalV3Fields": [
+        "eff_reads",
+        "eff_writes",
+        "eff_taints",
+        "eff_covers",
+        "eff_resets",
+        "eff_raises",
+        "eff_spoils",
+        "eff_oneway",
+        "eff_ghost"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ity.its_flag",
+      "owner": "Ity",
+      "type": "its_flag",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "rawFields": [
+        "its_frozen",
+        "its_exposed",
+        "its_liable",
+        "its_fixed",
+        "its_visible"
+      ],
+      "canonicalV3Fields": [
+        "its_frozen",
+        "its_exposed",
+        "its_liable",
+        "its_fixed",
+        "its_visible"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ity.ity",
+      "owner": "Ity",
+      "type": "ity",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "rawFields": [
+        "ity_node",
+        "ity_pure",
+        "ity_tag"
+      ],
+      "canonicalV3Fields": [
+        "ity_node"
+      ],
+      "excludedFromCanonicalV3": {
+        "ity_pure": "derived purity cache",
+        "ity_tag": "runtime weak-table tag"
+      }
+    },
+    {
+      "id": "Ity.ity_subst",
+      "owner": "Ity",
+      "type": "ity_subst",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "rawFields": [
+        "isb_var",
+        "isb_reg"
+      ],
+      "canonicalV3Fields": [
+        "isb_var",
+        "isb_reg"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ity.itysymbol",
+      "owner": "Ity",
+      "type": "itysymbol",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "rawFields": [
+        "its_ts",
+        "its_nonfree",
+        "its_private",
+        "its_mutable",
+        "its_fragile",
+        "its_mfields",
+        "its_ofields",
+        "its_regions",
+        "its_arg_flg",
+        "its_reg_flg",
+        "its_def"
+      ],
+      "canonicalV3Fields": [
+        "its_ts",
+        "its_nonfree",
+        "its_private",
+        "its_mutable",
+        "its_fragile",
+        "its_mfields",
+        "its_ofields",
+        "its_regions",
+        "its_arg_flg",
+        "its_reg_flg",
+        "its_def"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ity.pvsymbol",
+      "owner": "Ity",
+      "type": "pvsymbol",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "rawFields": [
+        "pv_vs",
+        "pv_ity",
+        "pv_ghost"
+      ],
+      "canonicalV3Fields": [
+        "pv_vs",
+        "pv_ity",
+        "pv_ghost"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ity.region",
+      "owner": "Ity",
+      "type": "region",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "rawFields": [
+        "reg_name",
+        "reg_its",
+        "reg_args",
+        "reg_regs"
+      ],
+      "canonicalV3Fields": [
+        "reg_name",
+        "reg_its",
+        "reg_args",
+        "reg_regs"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ity.xsymbol",
+      "owner": "Ity",
+      "type": "xsymbol",
+      "source": "src/mlw/ity.mli",
+      "layer": "mlw-type-graph",
+      "migrationPhase": 3,
+      "rawFields": [
+        "xs_name",
+        "xs_ity",
+        "xs_mask"
+      ],
+      "canonicalV3Fields": [
+        "xs_name",
+        "xs_ity",
+        "xs_mask"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Number.int_constant",
+      "owner": "Number",
+      "type": "int_constant",
+      "source": "src/util/number.mli",
+      "layer": "literal",
+      "migrationPhase": 2,
+      "rawFields": [
+        "il_kind",
+        "il_int"
+      ],
+      "canonicalV3Fields": [
+        "il_kind",
+        "il_int"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Number.real_constant",
+      "owner": "Number",
+      "type": "real_constant",
+      "source": "src/util/number.mli",
+      "layer": "literal",
+      "migrationPhase": 2,
+      "rawFields": [
+        "rl_kind",
+        "rl_real"
+      ],
+      "canonicalV3Fields": [
+        "rl_kind",
+        "rl_real"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Number.real_value",
+      "owner": "Number",
+      "type": "real_value",
+      "source": "src/util/number.mli",
+      "layer": "literal",
+      "migrationPhase": 2,
+      "rawFields": [
+        "rv_sig",
+        "rv_pow2",
+        "rv_pow5"
+      ],
+      "canonicalV3Fields": [
+        "rv_sig",
+        "rv_pow2",
+        "rv_pow5"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Pdecl.its_defn",
+      "owner": "Pdecl",
+      "type": "its_defn",
+      "source": "src/mlw/pdecl.mli",
+      "layer": "mlw-declaration-graph",
+      "migrationPhase": 3,
+      "rawFields": [
+        "itd_its",
+        "itd_fields",
+        "itd_constructors",
+        "itd_invariant",
+        "itd_witness"
+      ],
+      "canonicalV3Fields": [
+        "itd_its",
+        "itd_fields",
+        "itd_constructors",
+        "itd_invariant",
+        "itd_witness"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Pdecl.pdecl",
+      "owner": "Pdecl",
+      "type": "pdecl",
+      "source": "src/mlw/pdecl.mli",
+      "layer": "mlw-declaration-graph",
+      "migrationPhase": 3,
+      "rawFields": [
+        "pd_node",
+        "pd_pure",
+        "pd_meta",
+        "pd_syms",
+        "pd_news",
+        "pd_tag"
+      ],
+      "canonicalV3Fields": [
+        "pd_node",
+        "pd_pure",
+        "pd_meta"
+      ],
+      "excludedFromCanonicalV3": {
+        "pd_syms": "derived used-symbol set",
+        "pd_news": "derived introduced-symbol set",
+        "pd_tag": "runtime declaration tag"
+      }
+    },
+    {
+      "id": "Pmodule.mod_inst",
+      "owner": "Pmodule",
+      "type": "mod_inst",
+      "source": "src/mlw/pmodule.mli",
+      "layer": "mlw-module-graph",
+      "migrationPhase": 4,
+      "rawFields": [
+        "mi_mod",
+        "mi_ty",
+        "mi_ts",
+        "mi_ls",
+        "mi_pr",
+        "mi_pk",
+        "mi_pv",
+        "mi_rs",
+        "mi_xs",
+        "mi_df"
+      ],
+      "canonicalV3Fields": [
+        "mi_mod",
+        "mi_ty",
+        "mi_ts",
+        "mi_ls",
+        "mi_pr",
+        "mi_pk",
+        "mi_pv",
+        "mi_rs",
+        "mi_xs",
+        "mi_df"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Pmodule.namespace",
+      "owner": "Pmodule",
+      "type": "namespace",
+      "source": "src/mlw/pmodule.mli",
+      "layer": "mlw-module-graph",
+      "migrationPhase": 4,
+      "rawFields": [
+        "ns_ts",
+        "ns_ps",
+        "ns_xs",
+        "ns_ns"
+      ],
+      "canonicalV3Fields": [
+        "ns_ts",
+        "ns_ps",
+        "ns_xs",
+        "ns_ns"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Pmodule.pmodule",
+      "owner": "Pmodule",
+      "type": "pmodule",
+      "source": "src/mlw/pmodule.mli",
+      "layer": "mlw-module-graph",
+      "migrationPhase": 4,
+      "rawFields": [
+        "mod_theory",
+        "mod_units",
+        "mod_export",
+        "mod_known",
+        "mod_local",
+        "mod_used"
+      ],
+      "canonicalV3Fields": [
+        "mod_theory",
+        "mod_units",
+        "mod_export"
+      ],
+      "excludedFromCanonicalV3": {
+        "mod_known": "derived known-declaration index",
+        "mod_local": "derived local-identifier set",
+        "mod_used": "derived used-module set"
+      }
+    },
+    {
+      "id": "Ptree.expr",
+      "owner": "Ptree",
+      "type": "expr",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "rawFields": [
+        "expr_desc",
+        "expr_loc"
+      ],
+      "canonicalV3Fields": [
+        "expr_desc",
+        "expr_loc"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ptree.field",
+      "owner": "Ptree",
+      "type": "field",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "rawFields": [
+        "f_loc",
+        "f_ident",
+        "f_pty",
+        "f_mutable",
+        "f_ghost"
+      ],
+      "canonicalV3Fields": [
+        "f_loc",
+        "f_ident",
+        "f_pty",
+        "f_mutable",
+        "f_ghost"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ptree.ident",
+      "owner": "Ptree",
+      "type": "ident",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "rawFields": [
+        "id_str",
+        "id_ats",
+        "id_loc"
+      ],
+      "canonicalV3Fields": [
+        "id_str",
+        "id_ats",
+        "id_loc"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ptree.ind_decl",
+      "owner": "Ptree",
+      "type": "ind_decl",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "rawFields": [
+        "in_loc",
+        "in_ident",
+        "in_params",
+        "in_def"
+      ],
+      "canonicalV3Fields": [
+        "in_loc",
+        "in_ident",
+        "in_params",
+        "in_def"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ptree.logic_decl",
+      "owner": "Ptree",
+      "type": "logic_decl",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "rawFields": [
+        "ld_loc",
+        "ld_ident",
+        "ld_params",
+        "ld_type",
+        "ld_def"
+      ],
+      "canonicalV3Fields": [
+        "ld_loc",
+        "ld_ident",
+        "ld_params",
+        "ld_type",
+        "ld_def"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ptree.pattern",
+      "owner": "Ptree",
+      "type": "pattern",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "rawFields": [
+        "pat_desc",
+        "pat_loc"
+      ],
+      "canonicalV3Fields": [
+        "pat_desc",
+        "pat_loc"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ptree.spec",
+      "owner": "Ptree",
+      "type": "spec",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "rawFields": [
+        "sp_pre",
+        "sp_post",
+        "sp_xpost",
+        "sp_reads",
+        "sp_writes",
+        "sp_alias",
+        "sp_variant",
+        "sp_checkrw",
+        "sp_diverge",
+        "sp_partial"
+      ],
+      "canonicalV3Fields": [
+        "sp_pre",
+        "sp_post",
+        "sp_xpost",
+        "sp_reads",
+        "sp_writes",
+        "sp_alias",
+        "sp_variant",
+        "sp_checkrw",
+        "sp_diverge",
+        "sp_partial"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ptree.term",
+      "owner": "Ptree",
+      "type": "term",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "rawFields": [
+        "term_desc",
+        "term_loc"
+      ],
+      "canonicalV3Fields": [
+        "term_desc",
+        "term_loc"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ptree.type_decl",
+      "owner": "Ptree",
+      "type": "type_decl",
+      "source": "src/parser/ptree.ml",
+      "layer": "surface-ast",
+      "migrationPhase": 1,
+      "rawFields": [
+        "td_loc",
+        "td_ident",
+        "td_params",
+        "td_vis",
+        "td_mut",
+        "td_inv",
+        "td_wit",
+        "td_def"
+      ],
+      "canonicalV3Fields": [
+        "td_loc",
+        "td_ident",
+        "td_params",
+        "td_vis",
+        "td_mut",
+        "td_inv",
+        "td_wit",
+        "td_def"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "PtreeFull.full_unit",
+      "owner": "PtreeFull",
+      "type": "full_unit",
+      "source": "tools/why3_reference/patches/full-mlw-export.patch",
+      "layer": "surface-file-envelope",
+      "migrationPhase": 1,
+      "rawFields": [
+        "full_kind",
+        "full_name",
+        "full_decls",
+        "full_loc"
+      ],
+      "canonicalV3Fields": [
+        "full_kind",
+        "full_name",
+        "full_decls",
+        "full_loc"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Task.task_hd",
+      "owner": "Task",
+      "type": "task_hd",
+      "source": "src/core/task.mli",
+      "layer": "task-graph",
+      "migrationPhase": 2,
+      "rawFields": [
+        "task_decl",
+        "task_prev",
+        "task_known",
+        "task_clone",
+        "task_meta",
+        "task_tag"
+      ],
+      "canonicalV3Fields": [
+        "task_decl",
+        "task_prev"
+      ],
+      "excludedFromCanonicalV3": {
+        "task_known": "derived known-declaration index",
+        "task_clone": "derived use/clone history",
+        "task_meta": "derived meta history",
+        "task_tag": "runtime weak-table tag"
+      }
+    },
+    {
+      "id": "Task.tdecl_set",
+      "owner": "Task",
+      "type": "tdecl_set",
+      "source": "src/core/task.mli",
+      "layer": "task-graph",
+      "migrationPhase": 2,
+      "rawFields": [
+        "tds_set",
+        "tds_tag"
+      ],
+      "canonicalV3Fields": [],
+      "excludedFromCanonicalV3": {
+        "tds_set": "derived task history set",
+        "tds_tag": "runtime weak-table tag"
+      }
+    },
+    {
+      "id": "Term.lsymbol",
+      "owner": "Term",
+      "type": "lsymbol",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "rawFields": [
+        "ls_name",
+        "ls_args",
+        "ls_value",
+        "ls_constr",
+        "ls_proj"
+      ],
+      "canonicalV3Fields": [
+        "ls_name",
+        "ls_args",
+        "ls_value",
+        "ls_constr",
+        "ls_proj"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Term.pattern",
+      "owner": "Term",
+      "type": "pattern",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "rawFields": [
+        "pat_node",
+        "pat_vars",
+        "pat_ty"
+      ],
+      "canonicalV3Fields": [
+        "pat_node",
+        "pat_ty"
+      ],
+      "excludedFromCanonicalV3": {
+        "pat_vars": "derived bound-variable cache"
+      }
+    },
+    {
+      "id": "Term.term",
+      "owner": "Term",
+      "type": "term",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "rawFields": [
+        "t_node",
+        "t_ty",
+        "t_attrs",
+        "t_loc"
+      ],
+      "canonicalV3Fields": [
+        "t_node",
+        "t_ty",
+        "t_attrs",
+        "t_loc"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Term.vsymbol",
+      "owner": "Term",
+      "type": "vsymbol",
+      "source": "src/core/term.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "rawFields": [
+        "vs_name",
+        "vs_ty"
+      ],
+      "canonicalV3Fields": [
+        "vs_name",
+        "vs_ty"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Theory.meta",
+      "owner": "Theory",
+      "type": "meta",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "rawFields": [
+        "meta_name",
+        "meta_type",
+        "meta_excl",
+        "meta_desc",
+        "meta_tag"
+      ],
+      "canonicalV3Fields": [
+        "meta_name",
+        "meta_type",
+        "meta_excl"
+      ],
+      "excludedFromCanonicalV3": {
+        "meta_desc": "localized documentation text",
+        "meta_tag": "runtime registration tag"
+      }
+    },
+    {
+      "id": "Theory.namespace",
+      "owner": "Theory",
+      "type": "namespace",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "rawFields": [
+        "ns_ts",
+        "ns_ls",
+        "ns_pr",
+        "ns_ns"
+      ],
+      "canonicalV3Fields": [
+        "ns_ts",
+        "ns_ls",
+        "ns_pr",
+        "ns_ns"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Theory.symbol_map",
+      "owner": "Theory",
+      "type": "symbol_map",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "rawFields": [
+        "sm_ty",
+        "sm_ts",
+        "sm_ls",
+        "sm_pr"
+      ],
+      "canonicalV3Fields": [
+        "sm_ty",
+        "sm_ts",
+        "sm_ls",
+        "sm_pr"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Theory.tdecl",
+      "owner": "Theory",
+      "type": "tdecl",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "rawFields": [
+        "td_node",
+        "td_tag"
+      ],
+      "canonicalV3Fields": [
+        "td_node"
+      ],
+      "excludedFromCanonicalV3": {
+        "td_tag": "runtime declaration tag"
+      }
+    },
+    {
+      "id": "Theory.theory",
+      "owner": "Theory",
+      "type": "theory",
+      "source": "src/core/theory.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "rawFields": [
+        "th_name",
+        "th_path",
+        "th_decls",
+        "th_ranges",
+        "th_floats",
+        "th_crcmap",
+        "th_proved_wf",
+        "th_export",
+        "th_known",
+        "th_local",
+        "th_used"
+      ],
+      "canonicalV3Fields": [
+        "th_name",
+        "th_path",
+        "th_decls",
+        "th_export"
+      ],
+      "excludedFromCanonicalV3": {
+        "th_ranges": "derived range projection index",
+        "th_floats": "derived float projection index",
+        "th_crcmap": "derived coercion closure reconstructed from declaration/meta history",
+        "th_proved_wf": "derived well-foundedness index reconstructed from metas",
+        "th_known": "derived known-declaration index",
+        "th_local": "derived local-identifier set",
+        "th_used": "derived used-theory set"
+      }
+    },
+    {
+      "id": "Ty.tvsymbol",
+      "owner": "Ty",
+      "type": "tvsymbol",
+      "source": "src/core/ty.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "rawFields": [
+        "tv_name"
+      ],
+      "canonicalV3Fields": [
+        "tv_name"
+      ],
+      "excludedFromCanonicalV3": {}
+    },
+    {
+      "id": "Ty.ty",
+      "owner": "Ty",
+      "type": "ty",
+      "source": "src/core/ty.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "rawFields": [
+        "ty_node",
+        "ty_tag"
+      ],
+      "canonicalV3Fields": [
+        "ty_node"
+      ],
+      "excludedFromCanonicalV3": {
+        "ty_tag": "runtime weak-table tag"
+      }
+    },
+    {
+      "id": "Ty.tysymbol",
+      "owner": "Ty",
+      "type": "tysymbol",
+      "source": "src/core/ty.mli",
+      "layer": "core-graph",
+      "migrationPhase": 2,
+      "rawFields": [
+        "ts_name",
+        "ts_args",
+        "ts_def"
+      ],
+      "canonicalV3Fields": [
+        "ts_name",
+        "ts_args",
+        "ts_def"
+      ],
+      "excludedFromCanonicalV3": {}
+    }
+  ],
+  "recordInventorySha256": "832329f610a40fc4190ccb3f11b1bba2d2548c98454c784ca2f703e6191878aa",
+  "opaqueProjections": [
+    {
+      "id": "Coercion.t",
+      "source": "src/core/coercion.mli",
+      "canonicalV3Projection": "not serialized as an object; reconstructed from ordered theory declaration/meta history",
+      "layer": "core-graph",
+      "migrationPhase": 2
+    },
+    {
+      "id": "Decl.ls_defn",
+      "source": "src/core/decl.mli",
+      "canonicalV3Projection": "open_ls_defn yields ordered binders and body; decrease indexes are semantic",
+      "layer": "core-graph",
+      "migrationPhase": 2
+    },
+    {
+      "id": "Dexpr.dity",
+      "source": "src/mlw/dexpr.mli",
+      "canonicalV3Projection": "intermediate unification state is compared at the structured diagnostic boundary, not serialized in final typed graphs",
+      "layer": "program-typing-ir",
+      "migrationPhase": 5
+    },
+    {
+      "id": "Dterm.dty",
+      "source": "src/core/dterm.mli",
+      "canonicalV3Projection": "dty_fold projects symbols, variables, and unification variables without physical identity",
+      "layer": "logic-typing-ir",
+      "migrationPhase": 2
+    },
+    {
+      "id": "Task.task",
+      "source": "src/core/task.mli",
+      "canonicalV3Projection": "task_tdecls in semantic history order; task caches are excluded",
+      "layer": "task-graph",
+      "migrationPhase": 2
+    },
+    {
+      "id": "Term.term_bound",
+      "source": "src/core/term.mli",
+      "canonicalV3Projection": "t_open_bound; binder encoded by type and de Bruijn position",
+      "layer": "core-graph",
+      "migrationPhase": 2
+    },
+    {
+      "id": "Term.term_branch",
+      "source": "src/core/term.mli",
+      "canonicalV3Projection": "t_open_branch; pattern binders encoded by de Bruijn position",
+      "layer": "core-graph",
+      "migrationPhase": 2
+    },
+    {
+      "id": "Term.term_quant",
+      "source": "src/core/term.mli",
+      "canonicalV3Projection": "t_open_quant; ordered binders, triggers, and body",
+      "layer": "core-graph",
+      "migrationPhase": 2
+    }
+  ],
+  "opaqueProjectionInventorySha256": "90a8b6b7ee85ce3088d753580cf3c99bdbd7f402345645b9e21bbaeee13c6ac8"
+}

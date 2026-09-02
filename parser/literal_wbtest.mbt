@@ -150,6 +150,6 @@ test "literal: Why3 line and compressed column boundaries" {
 
 ///|
 test "literal: bytes string constant is lossless" {
-  let constant = ConstStr(b"\xff")
+  let constant : Constant = ConstStr(b"\xff")
   assert_true(constant is ConstStr(bytes) && bytes == b"\xff")
 }

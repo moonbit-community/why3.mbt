@@ -14,8 +14,8 @@ const SCRIPT_DIRECTORY = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = resolve(SCRIPT_DIRECTORY, '..', '..');
 const DRIVER_CONTRACT = join(PROJECT_ROOT, 'tools', 'contracts', 'driver-closure-v1.json');
 const TRANSFORM_CONTRACT = join(PROJECT_ROOT, 'tools', 'contracts', 'transform-profile-v1.json');
-const SNAPSHOT_MANIFEST = join(PROJECT_ROOT, 'stdlib', 'snapshot-manifest-v1.json');
 const TRACE_PATCH = join(SCRIPT_DIRECTORY, 'patches', 'driver-trace.patch');
+const SOURCE_CATALOG = join(SCRIPT_DIRECTORY, 'source_catalog.ml');
 const DEFAULT_OUTPUT = join(PROJECT_ROOT, 'prover', 'z3', 'z3-static-profile-v1.json');
 
 function fail(message) {
@@ -73,20 +73,21 @@ function buildProfile(options) {
 
   const driverContract = readJson(DRIVER_CONTRACT);
   const transformContract = readJson(TRANSFORM_CONTRACT);
-  const snapshotManifest = readJson(SNAPSHOT_MANIFEST);
   const raw = readJson(options.rawProfile);
   if (raw.schemaVersion !== 1 || raw.driverProfile !== 'z3_487' ||
       raw.rootDriver !== 'z3_487.drv') {
     fail('raw Z3 profile identity mismatch');
   }
   equal(raw.transforms, driverContract.driver.transformations, 'driver transform order');
-  if (raw.printer !== 'smtv2.6' || raw.filename !== '%f-%t-%g.smt2') {
-    fail('raw Z3 printer/filename mismatch');
+  if (raw.printer !== 'smtv2.6' || raw.modelParser !== 'smtv2' ||
+      raw.filename !== '%f-%t-%g.smt2') {
+    fail('raw Z3 printer/model-parser/filename mismatch');
   }
 
   const rootDriver = readFileSync(join(options.why3Root, 'drivers', 'z3_487.drv'), 'utf8');
   const smtDriver = readFileSync(join(options.why3Root, 'drivers', 'smt-libv2.gen'), 'utf8');
   const detection = readFileSync(join(options.why3Root, 'share', 'provers-detection-data.conf'), 'utf8');
+  requireSourceLine(rootDriver, 'model_parser "smtv2"', 'Z3 model parser');
   requireSourceLine(rootDriver, 'steps ":rlimit-count +\\\\([0-9]+\\\\)" 1', 'Z3 step pattern');
   requireSourceLine(smtDriver, 'time "why3cpulimit time : %s s"', 'SMT time pattern');
   requireSourceLine(
@@ -145,10 +146,13 @@ function buildProfile(options) {
     evidence: {
       driverClosureSha256: driverContract.driver.sha256,
       transformProfileSha256: sha256(readFileSync(TRANSFORM_CONTRACT)),
-      snapshotPayloadSha256: snapshotManifest.payload.sha256,
-      snapshotCatalogSha256: snapshotManifest.symbolDigest.catalogSha256,
+      stdlibSourceTreeSha256: driverContract.sourceCatalog.stdlibTree.sha256,
+      sourceCatalogSha256: driverContract.sourceCatalog.sha256,
       tracePatchSha256,
-      exporterSha256: sha256(readFileSync(join(SCRIPT_DIRECTORY, 'export_z3_profile.ml'))),
+      exporterSha256: sha256(Buffer.concat([
+        readFileSync(SOURCE_CATALOG),
+        readFileSync(join(SCRIPT_DIRECTORY, 'export_z3_profile.ml')),
+      ])),
       generatorSha256: sha256(readFileSync(fileURLToPath(import.meta.url))),
     },
     tracePatch: {

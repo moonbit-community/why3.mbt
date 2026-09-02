@@ -82,12 +82,13 @@ fn alpha_term_array(
   left : ArrayView[Term],
   right : ArrayView[Term],
   mapping : Map[VSymbol, VSymbol],
+  strict : Bool,
 ) -> Bool {
   if left.length() != right.length() {
     return false
   }
   for index, item in left {
-    if !alpha_term(item, right[index], mapping) {
+    if !alpha_term(item, right[index], mapping, strict) {
       return false
     }
   }
@@ -99,14 +100,25 @@ fn alpha_term(
   left : Term,
   right : Term,
   mapping : Map[VSymbol, VSymbol],
+  strict : Bool,
 ) -> Bool {
-  if left.result_type != right.result_type {
+  if left.result_type != right.result_type ||
+    (
+      strict &&
+      (
+        left.source_span != right.source_span ||
+        left.attributes.items() != right.attributes.items()
+      )
+    ) {
     return false
   }
   match (left.node, right.node) {
     (VariableTerm(left_variable), VariableTerm(right_variable)) =>
       match mapping.get(left_variable) {
         Some(mapped) => mapped == right_variable
+        None if strict =>
+          left_variable.identifier_id() == right_variable.identifier_id() &&
+          !mapping_contains_value(mapping, right_variable)
         None =>
           left_variable == right_variable &&
           !mapping_contains_value(mapping, right_variable)
@@ -119,29 +131,29 @@ fn alpha_term(
     ) =>
       left_symbol == right_symbol &&
       left_instantiation == right_instantiation &&
-      alpha_term_array(left_arguments, right_arguments, mapping)
+      alpha_term_array(left_arguments, right_arguments, mapping, strict)
     (
       IfTerm(left_condition, left_then, left_else),
       IfTerm(right_condition, right_then, right_else),
     ) =>
-      alpha_term(left_condition, right_condition, mapping) &&
-      alpha_term(left_then, right_then, mapping) &&
-      alpha_term(left_else, right_else, mapping)
+      alpha_term(left_condition, right_condition, mapping, strict) &&
+      alpha_term(left_then, right_then, mapping, strict) &&
+      alpha_term(left_else, right_else, mapping, strict)
     (
       LetTerm(left_variable, left_value, left_body),
       LetTerm(right_variable, right_value, right_body),
     ) => {
-      if !alpha_term(left_value, right_value, mapping) {
+      if !alpha_term(left_value, right_value, mapping, strict) {
         return false
       }
       guard bind_alpha_pair(mapping, left_variable, right_variable)
         is Some(inner) else {
         return false
       }
-      alpha_term(left_body, right_body, inner)
+      alpha_term(left_body, right_body, inner, strict)
     }
     (CaseTerm(left_value, left_branches), CaseTerm(right_value, right_branches)) => {
-      if !alpha_term(left_value, right_value, mapping) ||
+      if !alpha_term(left_value, right_value, mapping, strict) ||
         left_branches.length() != right_branches.length() {
         return false
       }
@@ -151,7 +163,12 @@ fn alpha_term(
           is Some(branch_mapping) else {
           return false
         }
-        if !alpha_term(left_branch.body, right_branch.body, branch_mapping) {
+        if !alpha_term(
+            left_branch.body,
+            right_branch.body,
+            branch_mapping,
+            strict,
+          ) {
           return false
         }
       }
@@ -165,7 +182,7 @@ fn alpha_term(
         is Some(inner) else {
         return false
       }
-      alpha_term(left_body, right_body, inner)
+      alpha_term(left_body, right_body, inner, strict)
     }
     (
       QuantifiedTerm(left_quantifier, left_binders, left_triggers, left_body),
@@ -190,21 +207,26 @@ fn alpha_term(
         quantified = next
       }
       for index, left_group in left_triggers {
-        if !alpha_term_array(left_group, right_triggers[index], quantified) {
+        if !alpha_term_array(
+            left_group,
+            right_triggers[index],
+            quantified,
+            strict,
+          ) {
           return false
         }
       }
-      alpha_term(left_body, right_body, quantified)
+      alpha_term(left_body, right_body, quantified, strict)
     }
     (
       BinaryTerm(left_operator, left_left, left_right),
       BinaryTerm(right_operator, right_left, right_right),
     ) =>
       left_operator == right_operator &&
-      alpha_term(left_left, right_left, mapping) &&
-      alpha_term(left_right, right_right, mapping)
+      alpha_term(left_left, right_left, mapping, strict) &&
+      alpha_term(left_right, right_right, mapping, strict)
     (NotTerm(left_inner), NotTerm(right_inner)) =>
-      alpha_term(left_inner, right_inner, mapping)
+      alpha_term(left_inner, right_inner, mapping, strict)
     (TrueTerm, TrueTerm) | (FalseTerm, FalseTerm) => true
     _ => false
   }
@@ -214,7 +236,14 @@ fn alpha_term(
 /// Alpha-equivalence ignores binder spelling/identity and term decoration but
 /// preserves all semantic symbols, types, constants, triggers, and node order.
 pub fn Term::alpha_equivalent(self : Term, other : Term) -> Bool {
-  alpha_term(self, other, Map([]))
+  alpha_term(self, other, Map([]), false)
+}
+
+///|
+/// Strict alpha-equivalence additionally preserves every term decoration.
+/// This matches Why3's strict term equality used by declaration hash-consing.
+pub fn Term::strict_alpha_equivalent(self : Term, other : Term) -> Bool {
+  alpha_term(self, other, Map([]), true)
 }
 
 ///|

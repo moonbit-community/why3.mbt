@@ -144,6 +144,11 @@ fn NameAllocator::unique(
 }
 
 ///|
+fn NameAllocator::fresh(self : NameAllocator, name : BytesView) -> Bytes {
+  self.find_unique(sanitize_identifier(name))
+}
+
+///|
 fn NameAllocator::forget(
   self : NameAllocator,
   id : @identity.SemanticId,

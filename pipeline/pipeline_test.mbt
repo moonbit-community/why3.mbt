@@ -4,6 +4,22 @@
 let closure_a_source : Bytes = b"theory T\n  use int.Int\n  constant x : int\n  axiom A : x = 1\n  goal G : x + 1 = 2\nend\n"
 
 ///|
+fn test_bytes_contains(value : BytesView, needle : BytesView) -> Bool {
+  if needle.is_empty() {
+    return true
+  }
+  if needle.length() > value.length() {
+    return false
+  }
+  for start = 0; start + needle.length() <= value.length(); start = start + 1 {
+    if value[start:start + needle.length()] == needle {
+      return true
+    }
+  }
+  false
+}
+
+///|
 test "checked file separates checking, raw tasks, and prepared calls" {
   let checked = check(closure_a_source, filename=b"closure-a.mlw")
   assert_eq(checked.typed_units().length(), 1)
@@ -32,6 +48,25 @@ test "checked file separates checking, raw tasks, and prepared calls" {
     b"-smt2", b"-in", b"-T:10", b"sat.random_seed=42", b"nlsat.randomize=false",
     b"smt.random_seed=42", b"-st",
   ])
+}
+
+///|
+test "counterexample preparation requests an SMT model without changing defaults" {
+  let tasked = tasks(check(closure_a_source, filename=b"closure-a.mlw"))
+  let ordinary = {
+    let calls = prepare_proof(tasked)
+    calls[0].query().bytes().to_owned()
+  }
+  assert_true(!test_bytes_contains(ordinary, b"(get-model)"))
+  let with_model = {
+    let calls = prepare_proof(tasked, request_model=true)
+    calls[0].query().bytes().to_owned()
+  }
+  assert_true(
+    test_bytes_contains(with_model, b"(set-option :produce-models true)\n"),
+  )
+  assert_true(test_bytes_contains(with_model, b"(push)\n(check-sat)\n"))
+  assert_true(test_bytes_contains(with_model, b"(get-model)\n"))
 }
 
 ///|

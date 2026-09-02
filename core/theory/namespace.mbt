@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
+// Derived from Why3 1.7.2 (Copyright 2010-2023 Inria, CNRS, Paris-Saclay University).
+// MoonBit translation and semantic modifications recorded on 2026-07-24.
 
 ///|
 struct Namespace {
@@ -28,26 +30,6 @@ pub fn Namespace::view(self : Namespace) -> NamespaceView {
     logic: self.logic[:],
     propositions: self.propositions[:],
     subspaces: self.subspaces[:],
-  }
-}
-
-///|
-fn Namespace::validate_context(
-  self : Namespace,
-  anchor : @identity.SemanticId,
-  span : @identity.SourceSpan?,
-) -> Unit raise TheoryError {
-  for entry in self.types {
-    require_same_id(anchor, entry.1.semantic_id(), span)
-  }
-  for entry in self.logic {
-    require_same_id(anchor, entry.1.semantic_id(), span)
-  }
-  for entry in self.propositions {
-    require_same_id(anchor, entry.1.semantic_id(), span)
-  }
-  for entry in self.subspaces {
-    entry.1.validate_context(anchor, span)
   }
 }
 
@@ -122,10 +104,11 @@ pub fn Namespace::add_subspace(
   span : @identity.SourceSpan?,
 ) -> Namespace raise TheoryError {
   let subspaces = self.subspaces.copy()
-  for entry in subspaces {
-    let (existing_name, _) = entry
+  for index, entry in subspaces {
+    let (existing_name, existing) = entry
     if existing_name[:] == name {
-      fail_theory(DuplicateName, span, "namespace subspace is already bound")
+      subspaces[index] = (existing_name, existing.merge(nested, span))
+      return { ..self, subspaces, }
     }
   }
   subspaces.push((name.to_owned(), nested))
@@ -168,6 +151,18 @@ pub fn Namespace::import_scope(
 }
 
 ///|
+/// Opens a namespace only for lexical lookup. Names from the selected scope
+/// shadow ambient unqualified names, while declaration imports continue to use
+/// the conflict-checking `import_scope` operation.
+pub fn Namespace::open_scope(
+  self : Namespace,
+  path : ArrayView[Bytes],
+  span : @identity.SourceSpan?,
+) -> Namespace raise TheoryError {
+  self.overlay(self.find_namespace(path, span))
+}
+
+///|
 fn Namespace::qualified_parent(
   self : Namespace,
   path : ArrayView[Bytes],
@@ -192,7 +187,7 @@ pub fn Namespace::find_type(
   let (parent, name) = self.qualified_parent(path, span)
   match lookup_entry(parent.types, name) {
     Some(symbol) => symbol
-    None => fail_theory(UnboundName, span, "unknown type name")
+    None => fail_theory(UnboundName, span, "unknown type name \{name}")
   }
 }
 
@@ -205,7 +200,7 @@ pub fn Namespace::find_logic(
   let (parent, name) = self.qualified_parent(path, span)
   match lookup_entry(parent.logic, name) {
     Some(symbol) => symbol
-    None => fail_theory(UnboundName, span, "unknown logic name")
+    None => fail_theory(UnboundName, span, "unknown logic name \{name}")
   }
 }
 
@@ -241,6 +236,67 @@ fn[A : Eq] merge_entries(
   }
   result.sort_by((left, right) => left.0.lexical_compare(right.0))
   result
+}
+
+///|
+fn[A] overlay_entries(
+  inherited : ArrayView[(Bytes, A)],
+  overrides : ArrayView[(Bytes, A)],
+) -> Array[(Bytes, A)] {
+  let result = inherited.to_owned()
+  for entry in overrides {
+    let (name, value) = entry
+    let mut replaced = false
+    for index, existing in result {
+      if existing.0 == name {
+        result[index] = (name, value)
+        replaced = true
+        break
+      }
+    }
+    if !replaced {
+      result.push((name, value))
+    }
+  }
+  result.sort_by((left, right) => left.0.lexical_compare(right.0))
+  result
+}
+
+///|
+fn overlay_subspaces(
+  inherited : ArrayView[(Bytes, Namespace)],
+  overrides : ArrayView[(Bytes, Namespace)],
+) -> Array[(Bytes, Namespace)] {
+  let result = inherited.to_owned()
+  for entry in overrides {
+    let (name, nested) = entry
+    let mut merged = false
+    for index, existing in result {
+      if existing.0 == name {
+        result[index] = (name, existing.1.overlay(nested))
+        merged = true
+        break
+      }
+    }
+    if !merged {
+      result.push((name, nested))
+    }
+  }
+  result.sort_by((left, right) => left.0.lexical_compare(right.0))
+  result
+}
+
+///|
+/// Overlays a scope-local namespace on inherited lookup bindings. Local names
+/// shadow inherited names; callers must validate duplicates in the local
+/// export namespace before using this operation.
+pub fn Namespace::overlay(self : Namespace, overrides : Namespace) -> Namespace {
+  {
+    types: overlay_entries(self.types, overrides.types),
+    logic: overlay_entries(self.logic, overrides.logic),
+    propositions: overlay_entries(self.propositions, overrides.propositions),
+    subspaces: overlay_subspaces(self.subspaces, overrides.subspaces),
+  }
 }
 
 ///|

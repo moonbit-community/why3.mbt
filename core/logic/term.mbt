@@ -170,22 +170,6 @@ pub fn Term::source_decorate(
 }
 
 ///|
-/// Restores the independent source location and attributes carried by the
-/// frozen Why3 term graph. The symbol origin remains unchanged because terms
-/// are not global catalog entries.
-pub fn Term::trusted_snapshot_decorate(
-  self : Term,
-  source_span : @identity.SourceSpan?,
-  attributes : ArrayView[Bytes],
-) -> Term {
-  {
-    ..self,
-    source_span,
-    attributes: @identity.SemanticAttributes::from_array(attributes),
-  }
-}
-
-///|
 pub fn Term::view(self : Term) -> TermView {
   match self.node {
     VariableTerm(variable) => Tvar(variable)

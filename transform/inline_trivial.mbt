@@ -32,6 +32,7 @@ fn unfold_application(
   definition : InlineDefinition,
   instantiation : ArrayView[(@logic.TyVarSymbol, @logic.Ty)],
   arguments : ArrayView[@logic.Term],
+  span : @identity.SourceSpan?,
 ) -> @logic.Term raise TransformError {
   if definition.parameters.length() != arguments.length() {
     fail_transform(
@@ -50,6 +51,7 @@ fn unfold_application(
     values,
     definition.body,
     @identity.InlineTrivial,
+    span,
   )
 }
 
@@ -68,11 +70,16 @@ fn rewrite_inline_term(
     Tapp(symbol, instantiation, arguments) =>
       match environment.get(symbol) {
         None => mapped
-        Some(definition) =>
-          copy_term_decoration(
-            mapped,
-            unfold_application(context, definition, instantiation, arguments),
+        Some(definition) => {
+          let unfolded = unfold_application(
+            context,
+            definition,
+            instantiation,
+            arguments,
+            mapped.source_span(),
           )
+          copy_term_decoration(mapped, unfolded)
+        }
       }
     _ => mapped
   }
@@ -85,37 +92,13 @@ fn rebuild_logic_definition(
   body : @logic.Term,
 ) -> @logic.LogicDefinition raise TransformError {
   let view = definition.view()
-  match view.symbol.view().origin.kind().view() {
-    SnapshotKind =>
-      @logic.LogicDefinition::trusted_recursive(
-        context,
-        view.symbol,
-        view.parameters,
-        body,
-        None,
-      ) catch {
-        _ =>
-          fail_transform(
-            InvariantFailure,
-            @identity.InlineTrivial,
-            "cannot rebuild trusted logic definition",
-          )
-      }
-    UserKind | GeneratedKind(_) =>
-      @logic.LogicDefinition::new(
-        context,
-        view.symbol,
-        view.parameters,
-        body,
-        None,
-      ) catch {
-        _ =>
-          fail_transform(
-            InvariantFailure,
-            @identity.InlineTrivial,
-            "cannot rebuild logic definition",
-          )
-      }
+  @logic.LogicDefinition::new(context, view.symbol, view.parameters, body, None) catch {
+    _ =>
+      fail_transform(
+        InvariantFailure,
+        @identity.InlineTrivial,
+        "cannot rebuild logic definition",
+      )
   }
 }
 
@@ -131,53 +114,44 @@ fn rewrite_inline_declaration(
   match declaration.view() {
     Dtype(_) | Ddata(_) | Dparam(_) => declaration
     Dlogic(definitions) => {
-      let mapped = [
-        for definition in definitions => {
-          rebuild_logic_definition(
-            context,
-            definition,
-            rewrite(definition.view().body),
-          )
+      let mapped : Array[@logic.LogicDefinition] = []
+      let mut changed = false
+      for definition in definitions {
+        let body = rewrite(definition.view().body)
+        if body != definition.view().body {
+          changed = true
         }
-      ]
-      match declaration.origin().kind().view() {
-        SnapshotKind =>
-          @logic.Decl::trusted_logic(
-            context,
-            declaration.origin(),
-            mapped,
-            None,
-          ) catch {
-            _ =>
-              fail_transform(
-                InvariantFailure,
-                @identity.InlineTrivial,
-                "cannot rebuild trusted logic declaration",
-              )
-          }
-        UserKind | GeneratedKind(_) =>
-          @logic.Decl::logic(context, declaration.origin(), mapped, None) catch {
-            _ =>
-              fail_transform(
-                InvariantFailure,
-                @identity.InlineTrivial,
-                "cannot rebuild logic declaration",
-              )
-          }
+        mapped.push(rebuild_logic_definition(context, definition, body))
+      }
+      if !changed {
+        return declaration
+      }
+      @logic.Decl::logic(context, declaration.origin(), mapped, None) catch {
+        _ =>
+          fail_transform(
+            InvariantFailure,
+            @identity.InlineTrivial,
+            "cannot rebuild logic declaration",
+          )
       }
     }
-    Dind(declarations) => {
+    Dind(sign, declarations) => {
       let mapped : Array[@logic.InductiveDeclaration] = []
+      let mut changed = false
       for inductive in declarations {
         let view = inductive.view()
         let cases : Array[@logic.InductiveCase] = []
         for case_ in view.cases {
           let case_view = case_.view()
+          let formula = rewrite(case_view.formula)
+          if formula != case_view.formula {
+            changed = true
+          }
           cases.push(
-            @logic.InductiveCase::trusted_new(
+            @logic.InductiveCase::new(
               context,
               case_view.proposition,
-              rewrite(case_view.formula),
+              formula,
               None,
             ) catch {
               _ =>
@@ -190,7 +164,7 @@ fn rewrite_inline_declaration(
           )
         }
         mapped.push(
-          @logic.InductiveDeclaration::trusted_new(view.predicate, cases, None) catch {
+          @logic.InductiveDeclaration::new(view.predicate, cases, None) catch {
             _ =>
               fail_transform(
                 InvariantFailure,
@@ -200,12 +174,10 @@ fn rewrite_inline_declaration(
           },
         )
       }
-      @logic.Decl::trusted_inductive(
-        context,
-        declaration.origin(),
-        mapped,
-        None,
-      ) catch {
+      if !changed {
+        return declaration
+      }
+      @logic.Decl::inductive(context, declaration.origin(), sign, mapped, None) catch {
         _ =>
           fail_transform(
             InvariantFailure,
@@ -214,13 +186,17 @@ fn rewrite_inline_declaration(
           )
       }
     }
-    Dprop(kind, proposition, formula) =>
+    Dprop(kind, proposition, formula) => {
+      let mapped = rewrite(formula)
+      if mapped == formula {
+        return declaration
+      }
       @logic.Decl::proposition(
         context,
         declaration.origin(),
         kind,
         proposition,
-        rewrite(formula),
+        mapped,
         None,
       ) catch {
         _ =>
@@ -230,6 +206,7 @@ fn rewrite_inline_declaration(
             "cannot rebuild proposition",
           )
       }
+    }
   }
 }
 
@@ -269,7 +246,7 @@ fn inline_forbidden_symbols(task : @theory.Task) -> Map[@logic.LSymbol, Unit] {
   for item in task.view().items {
     if item is TheoryMeta(meta) &&
       meta.view()
-      is { name: b"inline:no", arguments: [MetaLogicSymbol(symbol)] } {
+      is { name: b"inline:no", arguments: [MetaLogicSymbol(symbol)], .. } {
       result[symbol] = ()
     }
   }
@@ -315,5 +292,5 @@ pub fn inline_trivial(
       TheoryUse(_) | TheoryClone(_) | TheoryMeta(_) => result.push(item)
     }
   }
-  checked_task(task.context_anchor(), result, stage)
+  checked_task(task, result, stage)
 }

@@ -131,31 +131,32 @@ fn generated_token(stage : @identity.GeneratedStage, ordinal : Int) -> Bytes {
 
 ///|
 fn generated_ordinal(
-  stages : Array[(@identity.GeneratedStage, Map[@identity.SemanticId, Int])],
+  stages : Array[(@identity.GeneratedStage, Map[@identity.IdentifierId, Int])],
   stage : @identity.GeneratedStage,
-  semantic_id : @identity.SemanticId,
+  identifier_id : @identity.IdentifierId,
 ) -> Int {
   for entry in stages {
     if entry.0 == stage {
-      match entry.1.get(semantic_id) {
+      match entry.1.get(identifier_id) {
         Some(ordinal) => return ordinal
         None => {
           let ordinal = entry.1.length()
-          entry.1[semantic_id] = ordinal
+          entry.1[identifier_id] = ordinal
           return ordinal
         }
       }
     }
   }
-  let identifiers : Map[@identity.SemanticId, Int] = Map([])
-  identifiers[semantic_id] = 0
+  let identifiers : Map[@identity.IdentifierId, Int] = Map([])
+  identifiers[identifier_id] = 0
   stages.push((stage, identifiers))
   0
 }
 
 ///|
-pub fn normalize_smt_query(
+fn normalize_smt_query_impl(
   query : SmtQuery,
+  provenance : SmtProvenance?,
 ) -> NormalizedSmtTokens raise PrinterError {
   let occurrences : Map[Int, PrintedIdentifier] = Map([])
   for occurrence in query.identifiers {
@@ -171,7 +172,7 @@ pub fn normalize_smt_query(
     occurrences[occurrence.start] = occurrence
   }
   let generated : Array[
-    (@identity.GeneratedStage, Map[@identity.SemanticId, Int]),
+    (@identity.GeneratedStage, Map[@identity.IdentifierId, Int]),
   ] = []
   let normalized : Array[Bytes] = []
   let matched : Map[Int, Unit] = Map([])
@@ -186,15 +187,35 @@ pub fn normalize_smt_query(
           )
         }
         matched[token.start] = ()
-        match occurrence.origin.kind().view() {
-          GeneratedKind(stage) =>
+        let tracked = match provenance {
+          Some(provenance) =>
+            provenance.tracked_origin(occurrence.identifier_id)
+          None => None
+        }
+        match tracked {
+          Some(TrackedGenerated(stage)) =>
             normalized.push(
               generated_token(
                 stage,
-                generated_ordinal(generated, stage, occurrence.semantic_id),
+                generated_ordinal(generated, stage, occurrence.identifier_id),
               ),
             )
-          UserKind | SnapshotKind => normalized.push(token.bytes)
+          Some(TrackedUser) => normalized.push(token.bytes)
+          None =>
+            match occurrence.origin.kind().view() {
+              GeneratedKind(stage) =>
+                normalized.push(
+                  generated_token(
+                    stage,
+                    generated_ordinal(
+                      generated,
+                      stage,
+                      occurrence.identifier_id,
+                    ),
+                  ),
+                )
+              UserKind => normalized.push(token.bytes)
+            }
         }
       }
     }
@@ -206,4 +227,19 @@ pub fn normalize_smt_query(
     )
   }
   { tokens: normalized }
+}
+
+///|
+pub fn normalize_smt_query(
+  query : SmtQuery,
+) -> NormalizedSmtTokens raise PrinterError {
+  normalize_smt_query_impl(query, None)
+}
+
+///|
+pub fn normalize_smt_query_with_provenance(
+  query : SmtQuery,
+  provenance : SmtProvenance,
+) -> NormalizedSmtTokens raise PrinterError {
+  normalize_smt_query_impl(query, Some(provenance))
 }

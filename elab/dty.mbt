@@ -87,14 +87,44 @@ fn prune(ty : Dty) -> Dty {
 }
 
 ///|
-fn write_semantic_ty_diagnostic(
+fn DtyContext::head_symbol(
+  self : DtyContext,
+  delayed : Dty,
+) -> @logic.TypeSymbol? raise @logic.TypeError {
+  self.require_member(delayed, None)
+  match prune(delayed).cell.val {
+    Known(ty) =>
+      match ty.view() {
+        TyApp(symbol, _) => Some(symbol)
+        TyVar(_) => None
+      }
+    App(symbol, _) => Some(symbol)
+    Fresh(_) | Arrow(_, _) => None
+    Link(_) => abort("prune returned a Link node")
+  }
+}
+
+///|
+fn write_semantic_ty_diagnostic_nested(
   output : @buffer.Buffer,
   ty : @logic.Ty,
+  nested_arrow : Bool,
 ) -> Unit {
   match ty.view() {
     TyVar(variable) => {
       output.write_byte(b'\'')
       output.write_bytes(variable.name())
+    }
+    TyApp(symbol, [parameter, result]) if symbol.name() == b"infix ->" => {
+      if nested_arrow {
+        output.write_byte(b'(')
+      }
+      write_semantic_ty_diagnostic_nested(output, parameter, true)
+      output.write_bytes(b" -> ")
+      write_semantic_ty_diagnostic_nested(output, result, false)
+      if nested_arrow {
+        output.write_byte(b')')
+      }
     }
     TyApp(symbol, arguments) => {
       output.write_bytes(symbol.name())
@@ -104,7 +134,7 @@ fn write_semantic_ty_diagnostic(
           if index > 0 {
             output.write_bytes(b", ")
           }
-          write_semantic_ty_diagnostic(output, argument)
+          write_semantic_ty_diagnostic_nested(output, argument, true)
         }
         output.write_byte(b'>')
       }
@@ -113,14 +143,38 @@ fn write_semantic_ty_diagnostic(
 }
 
 ///|
-fn write_dty_diagnostic(output : @buffer.Buffer, ty : Dty) -> Unit {
+fn write_semantic_ty_diagnostic(
+  output : @buffer.Buffer,
+  ty : @logic.Ty,
+) -> Unit {
+  write_semantic_ty_diagnostic_nested(output, ty, false)
+}
+
+///|
+fn write_dty_diagnostic_nested(
+  output : @buffer.Buffer,
+  ty : Dty,
+  nested_arrow : Bool,
+) -> Unit {
   let ty = prune(ty)
   match ty.cell.val {
     Fresh(id) => {
       output.write_byte(b'?')
       output.write_string_utf8(id.to_string())
     }
-    Known(semantic) => write_semantic_ty_diagnostic(output, semantic)
+    Known(semantic) =>
+      write_semantic_ty_diagnostic_nested(output, semantic, nested_arrow)
+    App(symbol, [parameter, result]) if symbol.name() == b"infix ->" => {
+      if nested_arrow {
+        output.write_byte(b'(')
+      }
+      write_dty_diagnostic_nested(output, parameter, true)
+      output.write_bytes(b" -> ")
+      write_dty_diagnostic_nested(output, result, false)
+      if nested_arrow {
+        output.write_byte(b')')
+      }
+    }
     App(symbol, arguments) => {
       output.write_bytes(symbol.name())
       if !arguments.is_empty() {
@@ -129,17 +183,21 @@ fn write_dty_diagnostic(output : @buffer.Buffer, ty : Dty) -> Unit {
           if index > 0 {
             output.write_bytes(b", ")
           }
-          write_dty_diagnostic(output, argument)
+          write_dty_diagnostic_nested(output, argument, true)
         }
         output.write_byte(b'>')
       }
     }
     Arrow(parameter, result) => {
-      output.write_byte(b'(')
-      write_dty_diagnostic(output, parameter)
+      if nested_arrow {
+        output.write_byte(b'(')
+      }
+      write_dty_diagnostic_nested(output, parameter, true)
       output.write_bytes(b" -> ")
-      write_dty_diagnostic(output, result)
-      output.write_byte(b')')
+      write_dty_diagnostic_nested(output, result, false)
+      if nested_arrow {
+        output.write_byte(b')')
+      }
     }
     Link(_) => abort("prune returned a Link node")
   }
@@ -148,7 +206,7 @@ fn write_dty_diagnostic(output : @buffer.Buffer, ty : Dty) -> Unit {
 ///|
 fn dty_diagnostic_bytes(ty : Dty) -> Bytes {
   let output = @buffer.Buffer()
-  write_dty_diagnostic(output, ty)
+  write_dty_diagnostic_nested(output, ty, false)
   output.to_bytes()
 }
 
@@ -157,6 +215,30 @@ fn semantic_ty_diagnostic_bytes(ty : @logic.Ty) -> Bytes {
   let output = @buffer.Buffer()
   write_semantic_ty_diagnostic(output, ty)
   output.to_bytes()
+}
+
+///|
+fn reconcile_inferred_semantic_types(
+  left : @logic.Ty,
+  right : @logic.Ty,
+  span : @identity.SourceSpan?,
+) -> @logic.Ty raise @logic.TypeError {
+  if left == right {
+    return left
+  }
+  let substitution = @logic.TySubstitution::new().match_inference_types(
+    left, right, span,
+  )
+  let resolved_left = substitution.apply(left, span)
+  let resolved_right = substitution.apply(right, span)
+  if resolved_left != resolved_right {
+    @logic.fail_type(
+      TypeMismatch,
+      span,
+      "inference substitution did not reconcile semantic types",
+    )
+  }
+  resolved_left
 }
 
 ///|
@@ -169,7 +251,11 @@ fn application_actual_type(
   for index = supplied_arguments
       index < view.argument_types.length()
       index = index + 1 {
-    write_semantic_ty_diagnostic(output, view.argument_types[index])
+    write_semantic_ty_diagnostic_nested(
+      output,
+      view.argument_types[index],
+      true,
+    )
     output.write_bytes(b" -> ")
   }
   match view.result_type {
@@ -369,10 +455,23 @@ fn DtyContext::match_known(
   let delayed = prune(delayed)
   match delayed.cell.val {
     Fresh(_) => delayed.cell.val = Known(known)
-    Known(previous) =>
-      if previous != known {
-        @logic.fail_type(TypeMismatch, span, "semantic types do not match")
+    Known(previous) => {
+      let reconciled = reconcile_inferred_semantic_types(previous, known, span) catch {
+        @logic.TypeError(diagnostic) =>
+          if diagnostic.kind == TypeMismatch {
+            let previous_shape = semantic_ty_diagnostic_bytes(previous).to_string()
+            let known_shape = semantic_ty_diagnostic_bytes(known).to_string()
+            @logic.fail_type(
+              TypeMismatch,
+              span,
+              "semantic types do not match: \{previous_shape} vs \{known_shape}",
+            )
+          } else {
+            raise @logic.TypeError(diagnostic)
+          }
       }
+      delayed.cell.val = Known(reconciled)
+    }
     App(delayed_symbol, delayed_arguments) =>
       match known.view() {
         TyApp(known_symbol, known_arguments) => {
@@ -381,7 +480,7 @@ fn DtyContext::match_known(
             @logic.fail_type(
               TypeMismatch,
               span,
-              "delayed and semantic type constructors do not match",
+              "delayed and semantic type constructors do not match: \{delayed_symbol.name()}#\{delayed_symbol.semantic_id().local_id()} vs \{known_symbol.name()}#\{known_symbol.semantic_id().local_id()}",
             )
           }
           for index, argument in delayed_arguments {
@@ -395,12 +494,20 @@ fn DtyContext::match_known(
             "delayed type application cannot match a semantic type variable",
           )
       }
-    Arrow(_, _) =>
-      @logic.fail_type(
-        TypeMismatch,
-        span,
-        "higher-order delayed type cannot match a semantic type",
-      )
+    Arrow(parameter, result) =>
+      match known.view() {
+        TyApp(symbol, arguments) if symbol.view().name == b"infix ->" &&
+          arguments.length() == 2 => {
+          self.match_known(parameter, arguments[0], span)
+          self.match_known(result, arguments[1], span)
+        }
+        _ =>
+          @logic.fail_type(
+            TypeMismatch,
+            span,
+            "higher-order delayed type cannot match a semantic type",
+          )
+      }
     Link(_) => abort("prune returned a Link node")
   }
 }
@@ -428,25 +535,37 @@ pub fn DtyContext::unify(
       self.occurs(right, left, span)
       right.cell.val = Link(left)
     }
-    (Known(left_type), Known(right_type)) =>
-      if left_type != right_type {
-        @logic.fail_type(TypeMismatch, span, "semantic types do not unify")
+    (Known(left_type), Known(right_type)) => {
+      let reconciled = reconcile_inferred_semantic_types(
+        left_type, right_type, span,
+      ) catch {
+        @logic.TypeError(diagnostic) =>
+          if diagnostic.kind == TypeMismatch {
+            let left_shape = semantic_ty_diagnostic_bytes(left_type).to_string()
+            let right_shape = semantic_ty_diagnostic_bytes(right_type).to_string()
+            @logic.fail_type(
+              TypeMismatch,
+              span,
+              "semantic types do not unify: \{left_shape} vs \{right_shape}",
+            )
+          } else {
+            raise @logic.TypeError(diagnostic)
+          }
       }
+      left.cell.val = Known(reconciled)
+      right.cell.val = Known(reconciled)
+    }
     (Known(left_type), App(_, _)) => self.match_known(right, left_type, span)
     (App(_, _), Known(right_type)) => self.match_known(left, right_type, span)
-    (Known(_), Arrow(_, _)) | (Arrow(_, _), Known(_)) =>
-      @logic.fail_type(
-        TypeMismatch,
-        span,
-        "higher-order and semantic types do not unify",
-      )
+    (Known(left_type), Arrow(_, _)) => self.match_known(right, left_type, span)
+    (Arrow(_, _), Known(right_type)) => self.match_known(left, right_type, span)
     (App(left_symbol, left_arguments), App(right_symbol, right_arguments)) => {
       if left_symbol != right_symbol ||
         left_arguments.length() != right_arguments.length() {
         @logic.fail_type(
           TypeMismatch,
           span,
-          "delayed type constructors do not unify",
+          "delayed type constructors do not unify: \{left_symbol.name()}#\{left_symbol.semantic_id().local_id()} vs \{right_symbol.name()}#\{right_symbol.semantic_id().local_id()}",
         )
       }
       for index, argument in left_arguments {
@@ -457,12 +576,29 @@ pub fn DtyContext::unify(
       self.unify(left_parameter, right_parameter, span)
       self.unify(left_result, right_result, span)
     }
-    (App(_, _), Arrow(_, _)) | (Arrow(_, _), App(_, _)) =>
-      @logic.fail_type(
-        TypeMismatch,
-        span,
-        "higher-order and first-order types do not unify",
-      )
+    (App(left_symbol, left_arguments), Arrow(right_parameter, right_result)) =>
+      if left_symbol.view().name == b"infix ->" && left_arguments.length() == 2 {
+        self.unify(left_arguments[0], right_parameter, span)
+        self.unify(left_arguments[1], right_result, span)
+      } else {
+        @logic.fail_type(
+          TypeMismatch,
+          span,
+          "higher-order and first-order types do not unify",
+        )
+      }
+    (Arrow(left_parameter, left_result), App(right_symbol, right_arguments)) =>
+      if right_symbol.view().name == b"infix ->" &&
+        right_arguments.length() == 2 {
+        self.unify(left_parameter, right_arguments[0], span)
+        self.unify(left_result, right_arguments[1], span)
+      } else {
+        @logic.fail_type(
+          TypeMismatch,
+          span,
+          "higher-order and first-order types do not unify",
+        )
+      }
     (Link(_), _) | (_, Link(_)) => abort("prune returned a Link node")
   }
 }
@@ -552,6 +688,77 @@ pub fn DtyContext::finalize_pure(
       )
     Link(_) => abort("prune returned a Link node")
   }
+}
+
+///|
+fn DtyContext::contains_arrow(
+  self : DtyContext,
+  delayed : Dty,
+) -> Bool raise @logic.TypeError {
+  self.require_member(delayed, None)
+  let delayed = prune(delayed)
+  match delayed.cell.val {
+    Fresh(_) | Known(_) => false
+    App(_, arguments) =>
+      arguments.any(argument => self.contains_arrow(argument))
+    Arrow(_, _) => true
+    Link(_) => abort("prune returned a Link node")
+  }
+}
+
+///|
+pub fn DtyContext::finalize_higher_order(
+  self : DtyContext,
+  delayed : Dty,
+  function_type : @logic.TypeSymbol,
+  span : @identity.SourceSpan?,
+) -> @logic.Ty raise @logic.TypeError {
+  self.require_member(delayed, span)
+  if !self.semantic_context.contains(function_type.semantic_id()) {
+    @logic.fail_type(
+      ContextMismatch,
+      span,
+      "higher-order type symbol belongs to another compilation context",
+    )
+  }
+  let function_view = function_type.view()
+  if function_view.name != b"infix ->" || function_view.parameters.length() != 2 {
+    @logic.fail_type(
+      TypeMismatch,
+      span,
+      "higher-order finalization requires the builtin function type",
+    )
+  }
+  let delayed = prune(delayed)
+  let result = match delayed.cell.val {
+    Fresh(id) =>
+      @logic.fail_type(
+        UnresolvedTypeVariable,
+        span,
+        "higher-order type contains unresolved type variable xi\{id}",
+      )
+    Known(ty) => ty
+    App(symbol, arguments) =>
+      @logic.Ty::app(
+        symbol,
+        arguments.map(argument => {
+          self.finalize_higher_order(argument, function_type, span)
+        }),
+        span,
+      )
+    Arrow(parameter, result) =>
+      @logic.Ty::app(
+        function_type,
+        [
+          self.finalize_higher_order(parameter, function_type, span),
+          self.finalize_higher_order(result, function_type, span),
+        ],
+        span,
+      )
+    Link(_) => abort("prune returned a Link node")
+  }
+  delayed.cell.val = Known(result)
+  result
 }
 
 ///|

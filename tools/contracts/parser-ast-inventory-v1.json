@@ -1,0 +1,1066 @@
+{
+  "schemaVersion": 1,
+  "contract": "why3mbt-project-parser-ast-inventory-v1",
+  "why3Version": "1.7.2",
+  "why3Commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
+  "scope": {
+    "sourceOfTruth": "MoonBit public parser/literal enums listed in sourceInventory",
+    "upstreamPtreeInventory": false,
+    "note": "These are project AST variants, not an inventory of Why3 Ptree constructors."
+  },
+  "policy": {
+    "lanesAssignedHere": false,
+    "officialBehaviorContract": "tools/contracts/features-v2.json",
+    "legalBehavior": "exact",
+    "illegalShape": "reject with structured diagnostics"
+  },
+  "counts": {
+    "sourceFiles": 6,
+    "enums": 24,
+    "variants": 169
+  },
+  "sourceInventory": [
+    {
+      "path": "parser/ast_common.mbt",
+      "sha256": "4e64c78d63c6577b7dbf1f5a290b71c78cf9fdb06ed29a9ee9b80d7e48e2df04"
+    },
+    {
+      "path": "parser/ast_ident_type.mbt",
+      "sha256": "f112e9e99207790311ed87f9f7278d5e43a447dfc85bec81ec5caadb91df20a5"
+    },
+    {
+      "path": "parser/ast_term.mbt",
+      "sha256": "b21f96be0246f13734f80118de2217c6f4e24ab6b1a0a2c0392708e1e4dff58f"
+    },
+    {
+      "path": "parser/ast_decl.mbt",
+      "sha256": "18486e307c0de42cdece8354647ee497792fcd2bf0220bb1518286ea3664200f"
+    },
+    {
+      "path": "parser/ast_expr.mbt",
+      "sha256": "6d47f9058d4ba41cfa8193f54e2e4d07c1cf2237f8a5c2ca7cd0447966516e5f"
+    },
+    {
+      "path": "literal/constant.mbt",
+      "sha256": "1074673245cefc1b2f59f1b0e2db2e55040baee208452bb1de822e3918dd9bb9"
+    }
+  ],
+  "sourceInventorySha256": "a2ece0cb80f9340458d549360c364504612bb304dff0032f67712443e21796f0",
+  "variants": [
+    {
+      "id": "AssertionKind.Assert",
+      "enum": "AssertionKind",
+      "variant": "Assert",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "AssertionKind.Assume",
+      "enum": "AssertionKind",
+      "variant": "Assume",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "AssertionKind.Check",
+      "enum": "AssertionKind",
+      "variant": "Check",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "Attribute.Position",
+      "enum": "Attribute",
+      "variant": "Position",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "Attribute.Text",
+      "enum": "Attribute",
+      "variant": "Text",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "BinaryLogicOp.DTand",
+      "enum": "BinaryLogicOp",
+      "variant": "DTand",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "BinaryLogicOp.DTandAsym",
+      "enum": "BinaryLogicOp",
+      "variant": "DTandAsym",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "BinaryLogicOp.DTby",
+      "enum": "BinaryLogicOp",
+      "variant": "DTby",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "BinaryLogicOp.DTiff",
+      "enum": "BinaryLogicOp",
+      "variant": "DTiff",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "BinaryLogicOp.DTimplies",
+      "enum": "BinaryLogicOp",
+      "variant": "DTimplies",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "BinaryLogicOp.DTor",
+      "enum": "BinaryLogicOp",
+      "variant": "DTor",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "BinaryLogicOp.DTorAsym",
+      "enum": "BinaryLogicOp",
+      "variant": "DTorAsym",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "BinaryLogicOp.DTso",
+      "enum": "BinaryLogicOp",
+      "variant": "DTso",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "CloneSubstitution.CSaxiom",
+      "enum": "CloneSubstitution",
+      "variant": "CSaxiom",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "CloneSubstitution.CSfsym",
+      "enum": "CloneSubstitution",
+      "variant": "CSfsym",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "CloneSubstitution.CSgoal",
+      "enum": "CloneSubstitution",
+      "variant": "CSgoal",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "CloneSubstitution.CSlemma",
+      "enum": "CloneSubstitution",
+      "variant": "CSlemma",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "CloneSubstitution.CSprop",
+      "enum": "CloneSubstitution",
+      "variant": "CSprop",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "CloneSubstitution.CSpsym",
+      "enum": "CloneSubstitution",
+      "variant": "CSpsym",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "CloneSubstitution.CStsym",
+      "enum": "CloneSubstitution",
+      "variant": "CStsym",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "CloneSubstitution.CSvsym",
+      "enum": "CloneSubstitution",
+      "variant": "CSvsym",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "CloneSubstitution.CSxsym",
+      "enum": "CloneSubstitution",
+      "variant": "CSxsym",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "Constant.ConstInt",
+      "enum": "Constant",
+      "variant": "ConstInt",
+      "source": "literal/constant.mbt"
+    },
+    {
+      "id": "Constant.ConstReal",
+      "enum": "Constant",
+      "variant": "ConstReal",
+      "source": "literal/constant.mbt"
+    },
+    {
+      "id": "Constant.ConstStr",
+      "enum": "Constant",
+      "variant": "ConstStr",
+      "source": "literal/constant.mbt"
+    },
+    {
+      "id": "Decl.Dcloneexport",
+      "enum": "Decl",
+      "variant": "Dcloneexport",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "Decl.Dcloneimport",
+      "enum": "Decl",
+      "variant": "Dcloneimport",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "Decl.Dexn",
+      "enum": "Decl",
+      "variant": "Dexn",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "Decl.Dimport",
+      "enum": "Decl",
+      "variant": "Dimport",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "Decl.Dind",
+      "enum": "Decl",
+      "variant": "Dind",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "Decl.Dlet",
+      "enum": "Decl",
+      "variant": "Dlet",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "Decl.Dlogic",
+      "enum": "Decl",
+      "variant": "Dlogic",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "Decl.Dmeta",
+      "enum": "Decl",
+      "variant": "Dmeta",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "Decl.Dprop",
+      "enum": "Decl",
+      "variant": "Dprop",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "Decl.Drec",
+      "enum": "Decl",
+      "variant": "Drec",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "Decl.Dscope",
+      "enum": "Decl",
+      "variant": "Dscope",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "Decl.Dtype",
+      "enum": "Decl",
+      "variant": "Dtype",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "Decl.Duseexport",
+      "enum": "Decl",
+      "variant": "Duseexport",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "Decl.Duseimport",
+      "enum": "Decl",
+      "variant": "Duseimport",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "ExprDesc.Eabsurd",
+      "enum": "ExprDesc",
+      "variant": "Eabsurd",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Eand",
+      "enum": "ExprDesc",
+      "variant": "Eand",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Eany",
+      "enum": "ExprDesc",
+      "variant": "Eany",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Eapply",
+      "enum": "ExprDesc",
+      "variant": "Eapply",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Easref",
+      "enum": "ExprDesc",
+      "variant": "Easref",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Eassert",
+      "enum": "ExprDesc",
+      "variant": "Eassert",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Eassign",
+      "enum": "ExprDesc",
+      "variant": "Eassign",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Eattr",
+      "enum": "ExprDesc",
+      "variant": "Eattr",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Ecast",
+      "enum": "ExprDesc",
+      "variant": "Ecast",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Econst",
+      "enum": "ExprDesc",
+      "variant": "Econst",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Eexn",
+      "enum": "ExprDesc",
+      "variant": "Eexn",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Efalse",
+      "enum": "ExprDesc",
+      "variant": "Efalse",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Efor",
+      "enum": "ExprDesc",
+      "variant": "Efor",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Efun",
+      "enum": "ExprDesc",
+      "variant": "Efun",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Eghost",
+      "enum": "ExprDesc",
+      "variant": "Eghost",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Eidapp",
+      "enum": "ExprDesc",
+      "variant": "Eidapp",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Eident",
+      "enum": "ExprDesc",
+      "variant": "Eident",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Eidpur",
+      "enum": "ExprDesc",
+      "variant": "Eidpur",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Eif",
+      "enum": "ExprDesc",
+      "variant": "Eif",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Einfix",
+      "enum": "ExprDesc",
+      "variant": "Einfix",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Einnfix",
+      "enum": "ExprDesc",
+      "variant": "Einnfix",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Elabel",
+      "enum": "ExprDesc",
+      "variant": "Elabel",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Elet",
+      "enum": "ExprDesc",
+      "variant": "Elet",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Ematch",
+      "enum": "ExprDesc",
+      "variant": "Ematch",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Enot",
+      "enum": "ExprDesc",
+      "variant": "Enot",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Eoptexn",
+      "enum": "ExprDesc",
+      "variant": "Eoptexn",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Eor",
+      "enum": "ExprDesc",
+      "variant": "Eor",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Epure",
+      "enum": "ExprDesc",
+      "variant": "Epure",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Eraise",
+      "enum": "ExprDesc",
+      "variant": "Eraise",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Erec",
+      "enum": "ExprDesc",
+      "variant": "Erec",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Erecord",
+      "enum": "ExprDesc",
+      "variant": "Erecord",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Eref",
+      "enum": "ExprDesc",
+      "variant": "Eref",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Escope",
+      "enum": "ExprDesc",
+      "variant": "Escope",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Esequence",
+      "enum": "ExprDesc",
+      "variant": "Esequence",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Etrue",
+      "enum": "ExprDesc",
+      "variant": "Etrue",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Etuple",
+      "enum": "ExprDesc",
+      "variant": "Etuple",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Eupdate",
+      "enum": "ExprDesc",
+      "variant": "Eupdate",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ExprDesc.Ewhile",
+      "enum": "ExprDesc",
+      "variant": "Ewhile",
+      "source": "parser/ast_expr.mbt"
+    },
+    {
+      "id": "ForDirection.DownTo",
+      "enum": "ForDirection",
+      "variant": "DownTo",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "ForDirection.To",
+      "enum": "ForDirection",
+      "variant": "To",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "InductiveSign.Coind",
+      "enum": "InductiveSign",
+      "variant": "Coind",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "InductiveSign.Ind",
+      "enum": "InductiveSign",
+      "variant": "Ind",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "IntLiteralKind.ILitBin",
+      "enum": "IntLiteralKind",
+      "variant": "ILitBin",
+      "source": "literal/constant.mbt"
+    },
+    {
+      "id": "IntLiteralKind.ILitDec",
+      "enum": "IntLiteralKind",
+      "variant": "ILitDec",
+      "source": "literal/constant.mbt"
+    },
+    {
+      "id": "IntLiteralKind.ILitHex",
+      "enum": "IntLiteralKind",
+      "variant": "ILitHex",
+      "source": "literal/constant.mbt"
+    },
+    {
+      "id": "IntLiteralKind.ILitOct",
+      "enum": "IntLiteralKind",
+      "variant": "ILitOct",
+      "source": "literal/constant.mbt"
+    },
+    {
+      "id": "IntLiteralKind.ILitUnk",
+      "enum": "IntLiteralKind",
+      "variant": "ILitUnk",
+      "source": "literal/constant.mbt"
+    },
+    {
+      "id": "Mask.MaskGhost",
+      "enum": "Mask",
+      "variant": "MaskGhost",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "Mask.MaskTuple",
+      "enum": "Mask",
+      "variant": "MaskTuple",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "Mask.MaskVisible",
+      "enum": "Mask",
+      "variant": "MaskVisible",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "MetaArg.Max",
+      "enum": "MetaArg",
+      "variant": "Max",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "MetaArg.Mfs",
+      "enum": "MetaArg",
+      "variant": "Mfs",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "MetaArg.Mgl",
+      "enum": "MetaArg",
+      "variant": "Mgl",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "MetaArg.Mint",
+      "enum": "MetaArg",
+      "variant": "Mint",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "MetaArg.Mlm",
+      "enum": "MetaArg",
+      "variant": "Mlm",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "MetaArg.Mps",
+      "enum": "MetaArg",
+      "variant": "Mps",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "MetaArg.Mstr",
+      "enum": "MetaArg",
+      "variant": "Mstr",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "MetaArg.Mty",
+      "enum": "MetaArg",
+      "variant": "Mty",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "MetaArg.Mval",
+      "enum": "MetaArg",
+      "variant": "Mval",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "MlwFile.Decls",
+      "enum": "MlwFile",
+      "variant": "Decls",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "MlwFile.Modules",
+      "enum": "MlwFile",
+      "variant": "Modules",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "ModuleKind.Module",
+      "enum": "ModuleKind",
+      "variant": "Module",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "ModuleKind.Theory",
+      "enum": "ModuleKind",
+      "variant": "Theory",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "PatternDesc.Papp",
+      "enum": "PatternDesc",
+      "variant": "Papp",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "PatternDesc.Pas",
+      "enum": "PatternDesc",
+      "variant": "Pas",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "PatternDesc.Pcast",
+      "enum": "PatternDesc",
+      "variant": "Pcast",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "PatternDesc.Pghost",
+      "enum": "PatternDesc",
+      "variant": "Pghost",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "PatternDesc.Por",
+      "enum": "PatternDesc",
+      "variant": "Por",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "PatternDesc.Pparen",
+      "enum": "PatternDesc",
+      "variant": "Pparen",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "PatternDesc.Prec",
+      "enum": "PatternDesc",
+      "variant": "Prec",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "PatternDesc.Pscope",
+      "enum": "PatternDesc",
+      "variant": "Pscope",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "PatternDesc.Ptuple",
+      "enum": "PatternDesc",
+      "variant": "Ptuple",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "PatternDesc.Pvar",
+      "enum": "PatternDesc",
+      "variant": "Pvar",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "PatternDesc.Pwild",
+      "enum": "PatternDesc",
+      "variant": "Pwild",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "PropositionKind.Paxiom",
+      "enum": "PropositionKind",
+      "variant": "Paxiom",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "PropositionKind.Pgoal",
+      "enum": "PropositionKind",
+      "variant": "Pgoal",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "PropositionKind.Plemma",
+      "enum": "PropositionKind",
+      "variant": "Plemma",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "Pty.PTarrow",
+      "enum": "Pty",
+      "variant": "PTarrow",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "Pty.PTparen",
+      "enum": "Pty",
+      "variant": "PTparen",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "Pty.PTpure",
+      "enum": "Pty",
+      "variant": "PTpure",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "Pty.PTref",
+      "enum": "Pty",
+      "variant": "PTref",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "Pty.PTscope",
+      "enum": "Pty",
+      "variant": "PTscope",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "Pty.PTtuple",
+      "enum": "Pty",
+      "variant": "PTtuple",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "Pty.PTtyapp",
+      "enum": "Pty",
+      "variant": "PTtyapp",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "Pty.PTtyvar",
+      "enum": "Pty",
+      "variant": "PTtyvar",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "QualId.Qdot",
+      "enum": "QualId",
+      "variant": "Qdot",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "QualId.Qident",
+      "enum": "QualId",
+      "variant": "Qident",
+      "source": "parser/ast_ident_type.mbt"
+    },
+    {
+      "id": "Quantifier.DTexists",
+      "enum": "Quantifier",
+      "variant": "DTexists",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "Quantifier.DTforall",
+      "enum": "Quantifier",
+      "variant": "DTforall",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "Quantifier.DTlambda",
+      "enum": "Quantifier",
+      "variant": "DTlambda",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "RealLiteralKind.RLitDec",
+      "enum": "RealLiteralKind",
+      "variant": "RLitDec",
+      "source": "literal/constant.mbt"
+    },
+    {
+      "id": "RealLiteralKind.RLitHex",
+      "enum": "RealLiteralKind",
+      "variant": "RLitHex",
+      "source": "literal/constant.mbt"
+    },
+    {
+      "id": "RealLiteralKind.RLitUnk",
+      "enum": "RealLiteralKind",
+      "variant": "RLitUnk",
+      "source": "literal/constant.mbt"
+    },
+    {
+      "id": "RoutineKind.RKfunc",
+      "enum": "RoutineKind",
+      "variant": "RKfunc",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "RoutineKind.RKlemma",
+      "enum": "RoutineKind",
+      "variant": "RKlemma",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "RoutineKind.RKlocal",
+      "enum": "RoutineKind",
+      "variant": "RKlocal",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "RoutineKind.RKnone",
+      "enum": "RoutineKind",
+      "variant": "RKnone",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "RoutineKind.RKpred",
+      "enum": "RoutineKind",
+      "variant": "RKpred",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "TermDesc.Tapply",
+      "enum": "TermDesc",
+      "variant": "Tapply",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tasref",
+      "enum": "TermDesc",
+      "variant": "Tasref",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tat",
+      "enum": "TermDesc",
+      "variant": "Tat",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tattr",
+      "enum": "TermDesc",
+      "variant": "Tattr",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tbinnop",
+      "enum": "TermDesc",
+      "variant": "Tbinnop",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tbinop",
+      "enum": "TermDesc",
+      "variant": "Tbinop",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tcase",
+      "enum": "TermDesc",
+      "variant": "Tcase",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tcast",
+      "enum": "TermDesc",
+      "variant": "Tcast",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tconst",
+      "enum": "TermDesc",
+      "variant": "Tconst",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Teps",
+      "enum": "TermDesc",
+      "variant": "Teps",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tfalse",
+      "enum": "TermDesc",
+      "variant": "Tfalse",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tidapp",
+      "enum": "TermDesc",
+      "variant": "Tidapp",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tident",
+      "enum": "TermDesc",
+      "variant": "Tident",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tif",
+      "enum": "TermDesc",
+      "variant": "Tif",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tinfix",
+      "enum": "TermDesc",
+      "variant": "Tinfix",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tinnfix",
+      "enum": "TermDesc",
+      "variant": "Tinnfix",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tlet",
+      "enum": "TermDesc",
+      "variant": "Tlet",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tnot",
+      "enum": "TermDesc",
+      "variant": "Tnot",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tquant",
+      "enum": "TermDesc",
+      "variant": "Tquant",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Trecord",
+      "enum": "TermDesc",
+      "variant": "Trecord",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tscope",
+      "enum": "TermDesc",
+      "variant": "Tscope",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Ttrue",
+      "enum": "TermDesc",
+      "variant": "Ttrue",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Ttuple",
+      "enum": "TermDesc",
+      "variant": "Ttuple",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TermDesc.Tupdate",
+      "enum": "TermDesc",
+      "variant": "Tupdate",
+      "source": "parser/ast_term.mbt"
+    },
+    {
+      "id": "TypeDef.TDalgebraic",
+      "enum": "TypeDef",
+      "variant": "TDalgebraic",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "TypeDef.TDalias",
+      "enum": "TypeDef",
+      "variant": "TDalias",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "TypeDef.TDfloat",
+      "enum": "TypeDef",
+      "variant": "TDfloat",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "TypeDef.TDrange",
+      "enum": "TypeDef",
+      "variant": "TDrange",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "TypeDef.TDrecord",
+      "enum": "TypeDef",
+      "variant": "TDrecord",
+      "source": "parser/ast_decl.mbt"
+    },
+    {
+      "id": "Visibility.Abstract",
+      "enum": "Visibility",
+      "variant": "Abstract",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "Visibility.Private",
+      "enum": "Visibility",
+      "variant": "Private",
+      "source": "parser/ast_common.mbt"
+    },
+    {
+      "id": "Visibility.Public",
+      "enum": "Visibility",
+      "variant": "Public",
+      "source": "parser/ast_common.mbt"
+    }
+  ],
+  "variantInventorySha256": "43a4586a1e532bae7d9c361831009993b1b647afdf79ff10e8a99068d9f6e38c"
+}

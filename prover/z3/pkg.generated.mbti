@@ -7,6 +7,7 @@ import {
   "moonbit-community/why3/core/theory",
   "moonbit-community/why3/printer/smtv2",
   "moonbit-community/why3/prover",
+  "moonbitlang/core/bigint",
   "moonbitlang/core/debug",
 }
 
@@ -15,11 +16,19 @@ pub fn bind_profile(Z3StaticSpec, DriverSymbolResolver, @identity.CompilationCon
 
 pub fn parse_result(@prover.RawProcessOutcome) -> @prover.ProverResult raise
 
+pub fn parse_smtv2_model(BytesView) -> SmtModel raise ModelParseError
+
+pub fn parse_smtv2_model_for_query(@smtv2.SmtQuery, BytesView) -> Array[SmtModelValue] raise ModelParseError
+
 pub fn z3_static_spec() -> Z3StaticSpec raise BindError
 
 // Errors
 pub(all) suberror BindError {
   BindError(BindDiagnostic)
+} derive(Eq, @debug.Debug)
+
+pub(all) suberror ModelParseError {
+  ModelParseError(ModelParseDiagnostic)
 } derive(Eq, @debug.Debug)
 
 // Types and methods
@@ -44,10 +53,10 @@ pub(all) enum BindErrorKind {
 
 type DriverSymbolResolver
 pub fn DriverSymbolResolver::context_anchor(Self) -> @identity.SemanticId
-pub fn DriverSymbolResolver::new(@identity.SemanticId, ArrayView[(@identity.SnapshotSymbolKey, ResolvedDriverSymbol)]) -> Self raise BindError
-pub fn DriverSymbolResolver::resolve_logic(Self, @identity.SnapshotSymbolKey, path? : String) -> @logic.LSymbol raise BindError
-pub fn DriverSymbolResolver::resolve_proposition(Self, @identity.SnapshotSymbolKey, path? : String) -> @logic.PrSymbol raise BindError
-pub fn DriverSymbolResolver::resolve_type(Self, @identity.SnapshotSymbolKey, path? : String) -> @logic.TypeSymbol raise BindError
+pub fn DriverSymbolResolver::from_source(@identity.SemanticId, ArrayView[(@identity.SourceSymbolKey, ResolvedDriverSymbol)]) -> Self raise BindError
+pub fn DriverSymbolResolver::resolve_logic(Self, @identity.SourceSymbolKey, path? : String) -> @logic.LSymbol raise BindError
+pub fn DriverSymbolResolver::resolve_proposition(Self, @identity.SourceSymbolKey, path? : String) -> @logic.PrSymbol raise BindError
+pub fn DriverSymbolResolver::resolve_type(Self, @identity.SourceSymbolKey, path? : String) -> @logic.TypeSymbol raise BindError
 
 type GoalInfo
 pub fn GoalInfo::new(GoalUnitKind, BytesView, @logic.PrSymbol, Int) -> Self
@@ -66,6 +75,22 @@ pub(all) struct GoalInfoView {
 pub(all) enum GoalUnitKind {
   TheoryUnit
   ModuleUnit
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ModelParseDiagnostic {
+  kind : ModelParseErrorKind
+  byte_offset : Int
+  message : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ModelParseErrorKind {
+  UnexpectedEndOfModel
+  UnexpectedClosingParenthesis
+  UnclosedModelList
+  UnclosedQuotedSymbol
+  UnclosedModelString
+  ExcessiveModelNesting
+  MultipleModels
 } derive(Eq, @debug.Debug)
 
 type PreparedCall
@@ -103,6 +128,122 @@ pub(all) struct ResultRegexpView {
   answer : ProverAnswerRule
 }
 
+pub(all) struct SmtModel {
+  definitions : Array[SmtModelFunctionDefinition]
+} derive(Eq, @debug.Debug)
+pub fn SmtModel::definitions(Self) -> ArrayView[SmtModelFunctionDefinition]
+pub fn SmtModel::is_empty(Self) -> Bool
+
+pub(all) struct SmtModelArrayElements {
+  indices : Array[(SmtModelTerm, SmtModelTerm)]
+  others : SmtModelTerm
+} derive(Eq, @debug.Debug)
+
+pub(all) struct SmtModelBitVector {
+  value : @bigint.BigInt
+  bit_length : Int
+  verbatim : Bytes
+} derive(Eq, @debug.Debug)
+
+pub(all) enum SmtModelConstant {
+  BooleanConstant(Bool)
+  StringConstant(Bytes)
+  IntegerConstant(SmtModelInteger)
+  RealConstant(SmtModelReal)
+  FloatConstant(SmtModelFloat)
+  BitVectorConstant(SmtModelBitVector)
+  FractionConstant(SmtModelFraction)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct SmtModelFloat {
+  exponent_size : Int
+  significand_size : Int
+  value : SmtModelFloatValue
+} derive(Eq, @debug.Debug)
+
+pub(all) enum SmtModelFloatValue {
+  PlusInfinity
+  MinusInfinity
+  PlusZero
+  MinusZero
+  NotANumber
+  FloatBits(SmtModelBitVector, SmtModelBitVector, SmtModelBitVector)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct SmtModelFraction {
+  numerator : SmtModelReal
+  denominator : SmtModelReal
+  verbatim : Bytes
+} derive(Eq, @debug.Debug)
+
+pub(all) struct SmtModelFunctionDefinition {
+  name : Bytes
+  arguments : Array[(SmtModelSymbol, SmtModelSort)]
+  result : SmtModelSort
+  body : SmtModelTerm
+} derive(Eq, @debug.Debug)
+
+pub(all) enum SmtModelIdentifier {
+  SimpleIdentifier(SmtModelSymbol)
+  IndexedIdentifier(SmtModelSymbol, Array[SmtModelIndex])
+} derive(Eq, @debug.Debug)
+
+pub(all) enum SmtModelIndex {
+  NumeralIndex(@bigint.BigInt)
+  SymbolIndex(SmtModelSymbol)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct SmtModelInteger {
+  value : @bigint.BigInt
+  verbatim : Bytes
+} derive(Eq, @debug.Debug)
+
+pub(all) enum SmtModelQualifiedIdentifier {
+  UnannotatedIdentifier(SmtModelIdentifier)
+  AnnotatedIdentifier(SmtModelIdentifier, SmtModelSort)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct SmtModelReal {
+  significand : @bigint.BigInt
+  decimal_scale : Int
+  verbatim : Bytes
+} derive(Eq, @debug.Debug)
+
+pub(all) enum SmtModelSort {
+  StringSort
+  RegLanSort
+  IntegerSort
+  RealSort
+  RoundingModeSort
+  BooleanSort
+  BitVectorSort(Int)
+  FloatingPointSort(Int, Int)
+  ArraySort(SmtModelSort, SmtModelSort)
+  SimpleSort(SmtModelIdentifier)
+  AppliedSort(SmtModelIdentifier, Array[SmtModelSort])
+} derive(Eq, @debug.Debug)
+
+pub(all) enum SmtModelSymbol {
+  UserSymbol(Bytes)
+  ProverSymbol(Bytes)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum SmtModelTerm {
+  ConstantTerm(SmtModelConstant)
+  VariableTerm(SmtModelQualifiedIdentifier)
+  ApplicationTerm(SmtModelQualifiedIdentifier, Array[SmtModelTerm])
+  ConditionalTerm(SmtModelTerm, SmtModelTerm, SmtModelTerm)
+  ArrayTerm(SmtModelSort, SmtModelSort, SmtModelArrayElements)
+  AsArrayTerm(SmtModelTerm)
+  UnparsedTerm(Bytes)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct SmtModelValue {
+  definition : SmtModelFunctionDefinition
+  semantic_id : @identity.SemanticId?
+  origin : @identity.Origin?
+} derive(Eq)
+
 pub(all) enum SyntaxKind {
   TypeSyntax
   LogicSyntax
@@ -138,6 +279,10 @@ pub(all) struct Z3CommandTemplateView {
   step_limit_argument : Bytes
 }
 
+pub(all) enum Z3ModelParser {
+  SmtV2
+} derive(Eq, @debug.Debug)
+
 pub(all) enum Z3Printer {
   SmtV26
 } derive(Eq, @debug.Debug)
@@ -146,7 +291,7 @@ type Z3Profile
 pub fn Z3Profile::builtin_type(Self, @logic.BuiltinTypeKind) -> @logic.TypeSymbol?
 pub fn Z3Profile::checkpoint_sequence(Self, Bool) -> ArrayView[Bytes]
 pub fn Z3Profile::command(Self) -> Z3CommandTemplate
-pub fn Z3Profile::command_spec(Self, solver_seconds? : Int, executable_request? : BytesView?) -> @prover.CommandSpec raise @prover.ConfigError
+pub fn Z3Profile::command_spec(Self, solver_seconds? : Int, steps_limit? : Int, memory_limit_mib? : Int, executable_request? : BytesView?) -> @prover.CommandSpec raise @prover.ConfigError
 pub fn Z3Profile::driver_update(Self, @theory.Task) -> @theory.Task raise BindError
 pub fn Z3Profile::printer_query(Self, @theory.Task) -> @smtv2.SmtV26Query raise BindError
 pub fn Z3Profile::result_exit_code_rules(Self) -> Array[ResultExitCodeView]
@@ -156,10 +301,11 @@ pub fn Z3Profile::view(Self) -> Z3ProfileView
 
 pub(all) struct Z3ProfileView {
   context_anchor : @identity.SemanticId
+  model_parser : Z3ModelParser
   transforms : ArrayView[TransformId]
   driver_meta_group_count : Int
   driver_meta_count : Int
-  validated_snapshot_meta_count : Int
+  theory_meta_count : Int
   syntax_count : Int
   remove_count : Int
   preludes : ArrayView[Bytes]
@@ -170,17 +316,18 @@ pub(all) struct Z3ProfileView {
 }
 
 type Z3StaticSpec
-pub fn Z3StaticSpec::command_spec(Self, solver_seconds? : Int, executable_request? : BytesView?) -> @prover.CommandSpec raise @prover.ConfigError
-pub fn Z3StaticSpec::required_keys(Self) -> Array[@identity.SnapshotSymbolKey]
+pub fn Z3StaticSpec::command_spec(Self, solver_seconds? : Int, steps_limit? : Int, memory_limit_mib? : Int, executable_request? : BytesView?) -> @prover.CommandSpec raise @prover.ConfigError
+pub fn Z3StaticSpec::required_keys(Self) -> Array[@identity.SourceSymbolKey]
 pub fn Z3StaticSpec::view(Self) -> Z3StaticSpecView
 
 pub(all) struct Z3StaticSpecView {
   printer : Z3Printer
+  model_parser : Z3ModelParser
   transforms : ArrayView[TransformId]
   driver_meta_group_count : Int
   driver_meta_count : Int
-  snapshot_meta_group_count : Int
-  snapshot_meta_count : Int
+  theory_meta_group_count : Int
+  theory_meta_count : Int
   syntax_count : Int
   remove_count : Int
   preludes : ArrayView[Bytes]

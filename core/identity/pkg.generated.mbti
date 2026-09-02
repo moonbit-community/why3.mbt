@@ -15,8 +15,19 @@ pub(all) suberror ContextMismatch {
 // Types and methods
 type CompilationContext
 pub fn CompilationContext::contains(Self, SemanticId) -> Bool
+pub fn CompilationContext::fresh_declaration_id(Self) -> DeclarationId
 pub fn CompilationContext::fresh_id(Self) -> SemanticId
+pub fn CompilationContext::fresh_identifier_clone_id(Self, IdentifierId) -> IdentifierId
+pub fn CompilationContext::fresh_identifier_id(Self) -> IdentifierId
+pub fn CompilationContext::identifier_clone_events_since(Self, IdentifierWatermark) -> Array[IdentifierCloneEvent]
+pub fn CompilationContext::identifier_watermark(Self) -> IdentifierWatermark
 pub fn CompilationContext::new() -> Self
+pub fn CompilationContext::register_source_display_path(Self, BytesView, BytesView) -> Unit
+pub fn CompilationContext::source_display_path(Self, BytesView) -> Bytes
+
+type DeclarationId
+pub impl Eq for DeclarationId
+pub impl Hash for DeclarationId
 
 pub(all) enum GeneratedStage {
   DriverUpdate
@@ -45,15 +56,25 @@ pub(all) enum GeneratedStage {
 } derive(Eq, @debug.Debug)
 pub fn GeneratedStage::canonical_name(Self) -> BytesView
 
+type IdentifierCloneEvent
+pub fn IdentifierCloneEvent::clone(Self) -> IdentifierId
+pub fn IdentifierCloneEvent::original(Self) -> IdentifierId
+
+type IdentifierId
+pub impl Eq for IdentifierId
+pub impl Hash for IdentifierId
+
+type IdentifierWatermark
+
 type Origin derive(Eq, @debug.Debug)
 pub fn Origin::allows_generated_name_normalization(Self) -> Bool
 pub fn Origin::attributes(Self) -> ArrayView[Bytes]
 pub fn Origin::display_name(Self) -> BytesView
 pub fn Origin::generated(GeneratedStage, BytesView, SourceSpan?, ArrayView[Bytes]) -> Self
+pub fn Origin::generated_derived(GeneratedStage, BytesView, SourceSpan?, ArrayView[Bytes]) -> Self
+pub fn Origin::generated_with_identifier_source_span(GeneratedStage, BytesView, SourceSpan?, SourceSpan?, ArrayView[Bytes]) -> Self
+pub fn Origin::identifier_source_span(Self) -> SourceSpan?
 pub fn Origin::kind(Self) -> OriginKind
-pub fn Origin::snapshot(BytesView, SnapshotSymbolKey, ArrayView[Bytes]) -> Self
-pub fn Origin::snapshot_key(Self) -> SnapshotSymbolKey?
-pub fn Origin::snapshot_with_span(BytesView, SnapshotSymbolKey, SourceSpan?, ArrayView[Bytes]) -> Self
 pub fn Origin::source_span(Self) -> SourceSpan?
 pub fn Origin::user(BytesView, SourceSpan?, ArrayView[Bytes]) -> Self
 pub fn Origin::view(Self) -> OriginView
@@ -63,13 +84,11 @@ pub fn OriginKind::view(Self) -> OriginKindView
 
 pub(all) enum OriginKindView {
   UserKind
-  SnapshotKind
   GeneratedKind(GeneratedStage)
 } derive(Eq, @debug.Debug)
 
 pub(all) enum OriginView {
   UserOrigin(Bytes, SourceSpan?, ArrayView[Bytes])
-  SnapshotOrigin(Bytes, SnapshotSymbolKey, ArrayView[Bytes])
   GeneratedOrigin(GeneratedStage, Bytes, SourceSpan?, ArrayView[Bytes])
 } derive(Eq, @debug.Debug)
 
@@ -80,33 +99,12 @@ pub fn SemanticAttributes::from_array(ArrayView[Bytes]) -> Self
 pub fn SemanticAttributes::items(Self) -> ArrayView[Bytes]
 
 type SemanticId
+pub fn SemanticId::identifier_id(Self) -> IdentifierId
 pub fn SemanticId::local_id(Self) -> Int64
 pub fn SemanticId::require_same_context(Self, Self, operation? : String) -> Unit raise ContextMismatch
 pub fn SemanticId::same_context(Self, Self) -> Bool
 pub impl Eq for SemanticId
 pub impl Hash for SemanticId
-
-type SnapshotSymbolKey derive(Eq, @debug.Debug)
-pub fn SnapshotSymbolKey::new(BytesView, UInt, UInt, SnapshotSymbolKind, BytesView) -> Self
-pub fn SnapshotSymbolKey::view(Self) -> SnapshotSymbolKeyView
-pub impl Hash for SnapshotSymbolKey
-
-pub(all) struct SnapshotSymbolKeyView {
-  theory_key : Bytes
-  theory_item_ordinal : UInt
-  declaration_inner_ordinal : UInt
-  symbol_kind : SnapshotSymbolKind
-  symbol_digest : Bytes
-} derive(Eq, @debug.Debug)
-
-pub(all) enum SnapshotSymbolKind {
-  Type
-  Logic
-  Proposition
-  Program
-  Region
-} derive(Eq, @debug.Debug)
-pub fn SnapshotSymbolKind::canonical_name(Self) -> BytesView
 
 type SourceSpan derive(Eq, @debug.Debug)
 pub fn SourceSpan::new(BytesView, Int, Int, Int64, Int64, Int64, Int64) -> Self
@@ -121,6 +119,28 @@ pub(all) struct SourceSpanView {
   end_line : Int64
   end_column : Int64
 } derive(Eq, @debug.Debug)
+
+type SourceSymbolKey derive(Eq, @debug.Debug)
+pub fn SourceSymbolKey::new(BytesView, UInt, UInt, SourceSymbolKind, BytesView) -> Self
+pub fn SourceSymbolKey::view(Self) -> SourceSymbolKeyView
+pub impl Hash for SourceSymbolKey
+
+pub(all) struct SourceSymbolKeyView {
+  theory_key : Bytes
+  theory_item_ordinal : UInt
+  declaration_inner_ordinal : UInt
+  symbol_kind : SourceSymbolKind
+  symbol_digest : Bytes
+} derive(Eq, @debug.Debug)
+
+pub(all) enum SourceSymbolKind {
+  Type
+  Logic
+  Proposition
+  Program
+  Region
+} derive(Eq, @debug.Debug)
+pub fn SourceSymbolKind::canonical_name(Self) -> BytesView
 
 // Type aliases
 

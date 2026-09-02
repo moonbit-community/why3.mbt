@@ -1,4 +1,5 @@
 import {
+  "moonbitlang/core/buffer",
   "moonbit-community/why3/core/identity",
   "moonbit-community/why3/core/logic",
   "moonbit-community/why3/core/theory",

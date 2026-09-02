@@ -37,13 +37,7 @@ fn instantiate_variable(
   if ty == view.ty {
     return variable
   }
-  @logic.VSymbol::new(
-    context,
-    view.name,
-    view.origin,
-    ty,
-    view.origin.source_span(),
-  ) catch {
+  variable.clone_with_type(context, ty, view.origin.source_span()) catch {
     _ => fail_transform(InvariantFailure, stage, "cannot instantiate a binder")
   }
 }
@@ -73,19 +67,17 @@ fn instantiate_pattern(
 ) -> @logic.Pattern raise TransformError {
   let ty = instantiate_type(substitution, pattern.ty(), stage)
   match pattern.view() {
-    Pwild(_) => @logic.Pattern::trusted_wild(ty)
+    Pwild(_) => @logic.Pattern::wild(ty)
     Pvar(variable) => {
       let replacement = match variables.get(variable) {
         Some(replacement) => replacement
         None =>
           fail_transform(InvariantFailure, stage, "missing pattern binder")
       }
-      @logic.Pattern::trusted_variable(
-        variable_from_replacement(replacement, stage),
-      )
+      @logic.Pattern::variable(variable_from_replacement(replacement, stage))
     }
     Papp(symbol, arguments, _) =>
-      @logic.Pattern::trusted_app(
+      @logic.Pattern::app(
         symbol,
         [
           for argument in arguments => {
@@ -99,7 +91,7 @@ fn instantiate_pattern(
           fail_transform(InvariantFailure, stage, "cannot instantiate pattern")
       }
     Por(left, right, _) =>
-      @logic.Pattern::trusted_or(
+      @logic.Pattern::or(
         instantiate_pattern(substitution, variables, left, stage),
         instantiate_pattern(substitution, variables, right, stage),
         None,
@@ -117,7 +109,7 @@ fn instantiate_pattern(
         None =>
           fail_transform(InvariantFailure, stage, "missing as-pattern binder")
       }
-      @logic.Pattern::trusted_as(
+      @logic.Pattern::as_pattern(
         instantiate_pattern(substitution, variables, inner, stage),
         variable_from_replacement(replacement, stage),
         None,
@@ -140,9 +132,14 @@ fn instantiate_term(
   values : Map[@logic.VSymbol, @logic.Term],
   term : @logic.Term,
   stage : @identity.GeneratedStage,
+  span : @identity.SourceSpan?,
 ) -> @logic.Term raise TransformError {
+  let substituted_value = match term.view() {
+    Tvar(variable) => values.contains(variable)
+    _ => false
+  }
   let recurse = fn(child) -> @logic.Term raise TransformError {
-    instantiate_term(context, substitution, values, child, stage)
+    instantiate_term(context, substitution, values, child, stage, span)
   }
   let replacement = match term.view() {
     Tvar(variable) =>
@@ -166,21 +163,20 @@ fn instantiate_term(
       @logic.Term::constant(
         constant,
         instantiate_type(substitution, ty, stage),
-        None,
+        span,
       ) catch {
         _ =>
           fail_transform(InvariantFailure, stage, "cannot instantiate constant")
       }
     }
-    Tapp(symbol, _, arguments) =>
-      @logic.Term::elaborated_apply(
-        symbol,
-        [
-          for argument in arguments => recurse(argument)
-        ],
-        instantiate_optional_type(substitution, term.ty(), stage),
-        None,
-      ) catch {
+    Tapp(symbol, _, arguments) => {
+      let mapped_arguments = [ for argument in arguments => recurse(argument) ]
+      let mapped_type = instantiate_optional_type(
+        substitution,
+        term.ty(),
+        stage,
+      )
+      @logic.Term::elaborated_apply(symbol, mapped_arguments, mapped_type, span) catch {
         _ =>
           fail_transform(
             InvariantFailure,
@@ -188,28 +184,29 @@ fn instantiate_term(
             "cannot instantiate application",
           )
       }
-    Tif(condition, then_branch, else_branch) =>
+    }
+    Tif(condition, then_branch, else_branch) => {
+      let mapped_condition = recurse(condition)
+      let mapped_then = recurse(then_branch)
+      let mapped_else = recurse(else_branch)
       @logic.Term::if_then_else(
-        recurse(condition),
-        recurse(then_branch),
-        recurse(else_branch),
-        None,
+        mapped_condition, mapped_then, mapped_else, span,
       ) catch {
         _ =>
           fail_transform(InvariantFailure, stage, "cannot instantiate if term")
       }
+    }
     Tlet(variable, value, body) => {
       let replacement_variable = instantiate_variable(
         context, substitution, variable, stage,
       )
       let nested = values.copy()
       nested[variable] = @logic.Term::variable(replacement_variable)
-      @logic.Term::let_in(
-        replacement_variable,
-        recurse(value),
-        instantiate_term(context, substitution, nested, body, stage),
-        None,
-      ) catch {
+      let mapped_value = recurse(value)
+      let mapped_body = instantiate_term(
+        context, substitution, nested, body, stage, span,
+      )
+      @logic.Term::let_in(replacement_variable, mapped_value, mapped_body, span) catch {
         _ =>
           fail_transform(InvariantFailure, stage, "cannot instantiate let term")
       }
@@ -228,11 +225,19 @@ fn instantiate_term(
         mapped.push(
           (
             instantiate_pattern(substitution, nested, view.pattern, stage),
-            instantiate_term(context, substitution, nested, view.body, stage),
+            instantiate_term(
+              context,
+              substitution,
+              nested,
+              view.body,
+              stage,
+              span,
+            ),
           ),
         )
       }
-      @logic.Term::trusted_case(recurse(scrutinee), mapped, None) catch {
+      let mapped_scrutinee = recurse(scrutinee)
+      @logic.Term::case(mapped_scrutinee, mapped, span) catch {
         _ =>
           fail_transform(
             InvariantFailure,
@@ -247,11 +252,10 @@ fn instantiate_term(
       )
       let nested = values.copy()
       nested[variable] = @logic.Term::variable(replacement_variable)
-      @logic.Term::trusted_epsilon(
-        replacement_variable,
-        instantiate_term(context, substitution, nested, body, stage),
-        None,
-      ) catch {
+      let mapped_body = instantiate_term(
+        context, substitution, nested, body, stage, span,
+      )
+      @logic.Term::epsilon(replacement_variable, mapped_body, span) catch {
         _ =>
           fail_transform(InvariantFailure, stage, "cannot instantiate epsilon")
       }
@@ -270,17 +274,18 @@ fn instantiate_term(
         for group in triggers => {
           [
             for trigger in group => {
-              instantiate_term(context, substitution, nested, trigger, stage)
+              instantiate_term(
+                context, substitution, nested, trigger, stage, span,
+              )
             }
           ]
         }
       ]
+      let mapped_body = instantiate_term(
+        context, substitution, nested, body, stage, span,
+      )
       @logic.Term::quantify(
-        quantifier,
-        mapped_binders,
-        mapped_triggers,
-        instantiate_term(context, substitution, nested, body, stage),
-        None,
+        quantifier, mapped_binders, mapped_triggers, mapped_body, span,
       ) catch {
         _ =>
           fail_transform(
@@ -290,18 +295,30 @@ fn instantiate_term(
           )
       }
     }
-    Tbinop(operator, left, right) =>
-      @logic.Term::binary(operator, recurse(left), recurse(right), None) catch {
+    Tbinop(operator, left, right) => {
+      let mapped_left = recurse(left)
+      let mapped_right = recurse(right)
+      @logic.Term::binary(operator, mapped_left, mapped_right, span) catch {
         _ =>
           fail_transform(InvariantFailure, stage, "cannot instantiate formula")
       }
-    Tnot(inner) =>
-      @logic.Term::not(recurse(inner), None) catch {
+    }
+    Tnot(inner) => {
+      let mapped_inner = recurse(inner)
+      @logic.Term::not(mapped_inner, span) catch {
         _ =>
           fail_transform(InvariantFailure, stage, "cannot instantiate negation")
       }
+    }
     Ttrue => @logic.Term::true_formula()
     Tfalse => @logic.Term::false_formula()
+  }
+  let replacement = match (span, replacement.source_span()) {
+    (Some(span), None) =>
+      replacement.source_decorate(Some(span), replacement.attributes())
+    (Some(span), Some(_)) if !substituted_value =>
+      replacement.source_decorate(Some(span), replacement.attributes())
+    _ => replacement
   }
   copy_term_decoration(term, replacement)
 }

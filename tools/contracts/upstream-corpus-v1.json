@@ -1,0 +1,3564 @@
+{
+  "schemaVersion": 1,
+  "profile": "why3-1.7.2-upstream-type-corpus-v1",
+  "why3": {
+    "version": "1.7.2",
+    "commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
+    "tree": "f5e82693620413d7d8e3ebcba69addcb6a65f877"
+  },
+  "policy": {
+    "roots": [
+      "examples",
+      "tests"
+    ],
+    "excludedRoot": "examples_in_progress",
+    "extensions": [
+      ".mlw",
+      ".why"
+    ],
+    "entryOrder": "root-relative path bytewise ascending",
+    "sourceHash": "SHA-256 of exact source bytes after resolving a symlink",
+    "referenceCommand": "why3 prove --no-load-default-plugins --no-stdlib -L <stdlib> -L <source-directory> --type-only <source>",
+    "targetCommand": "why3mbt prove --no-load-default-plugins --no-stdlib -L <stdlib> -L <source-directory> --type-only <source>",
+    "comparison": "exact accepted/rejected classification and process exit code",
+    "languageFeatureExemptions": 0
+  },
+  "counts": {
+    "examples": 446,
+    "tests": 58,
+    "total": 504,
+    "accepted": 459,
+    "rejected": 45
+  },
+  "entries": [
+    {
+      "path": "examples/WP_revisited/blocking_semantics5.mlw",
+      "kind": "regular",
+      "sourceSha256": "654a52c7e63f0afc415949700e908021d6305938af91514d47f470899028d5ee",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/WP_revisited/formula.why",
+      "kind": "regular",
+      "sourceSha256": "163db434b3194eb44c2a34c7dcc510dfaf67d944fed1775af9fdcc6bc7d6cc63",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/WP_revisited/imp_n.why",
+      "kind": "regular",
+      "sourceSha256": "50bf8c51a2f3bd1eedb0574ffd1171ab8de7904e034028e5eb6da00410f89127",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/WP_revisited/wp2.mlw",
+      "kind": "regular",
+      "sourceSha256": "096fc7aa825a13511bf1d4db143f1da60c4f39719d276e28bc8c4efce6ade602",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/add_list.mlw",
+      "kind": "regular",
+      "sourceSha256": "00925578e3363b0c177efb34df175ec1b2f3947e16bb73e2a5ae8bd692fc3cbb",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/add_list_vc_sp.mlw",
+      "kind": "regular",
+      "sourceSha256": "efa9cf5b48026fd3d90503b82e273d017471afa893e431bce506bc1bdd9f76df",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/algo63.mlw",
+      "kind": "regular",
+      "sourceSha256": "e4bd3ff1a81a13442f3e9ca6fec0aff2a8a8f86df0cf467048510937e9213b47",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/algo64.mlw",
+      "kind": "regular",
+      "sourceSha256": "5b30d9246a5c2707771b21746b7a801df4e599ca4abaad79434c69e41f02189e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/algo65.mlw",
+      "kind": "regular",
+      "sourceSha256": "0db048dbb457010dde59e27fb50fac98950019e0f8ecf8bc32be2773e0dd7c31",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/all_distinct.mlw",
+      "kind": "regular",
+      "sourceSha256": "f045cba05b1c49785831957ce4f23af55bf4f6b9ec9356e1172d22c4074b07ab",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/amortization.mlw",
+      "kind": "regular",
+      "sourceSha256": "df24af80c21cd6244f120093205a378c3ddf5cb0abf562d9e63648f29b07c38b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/arm.mlw",
+      "kind": "regular",
+      "sourceSha256": "6b9df0074d86db4d4beebccfe8050f51a63f5d979c7a0dd9c217365a2ed43c96",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/array_most_frequent.mlw",
+      "kind": "regular",
+      "sourceSha256": "f16e07aaf857e1304d5691d7d11644d72998f8c196c7c2dae2515626bafc46c6",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/assigning_meanings_to_programs.mlw",
+      "kind": "regular",
+      "sourceSha256": "a9eeef86b00fc858dd4644b2c06cae80135f224e3d0e2bccac23df2992ea0732",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/avl/avl.mlw",
+      "kind": "regular",
+      "sourceSha256": "573f8770cac1d13f0d50f5beee422f55b5a4162bf3f0eaad671caac70c3207c6",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/avl/key_type.mlw",
+      "kind": "regular",
+      "sourceSha256": "f3866c254108aa7f315ea7f2961ae5cff7114a25a21616471588e07f2848311a",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/avl/monoid.mlw",
+      "kind": "regular",
+      "sourceSha256": "dea994915d39880de7a9c802c437e1e9e39ef05f1ca4a8b175c00ef064f7d7d0",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/avl/preorder.mlw",
+      "kind": "regular",
+      "sourceSha256": "04daa1453cc8dd1642607106e41e68534f00c189e91abef719dff710692a9ec5",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/avl/priority_queue.mlw",
+      "kind": "regular",
+      "sourceSha256": "dfa1f29a1ca27660006ec4e2a230ca0a3f8e7c18a24d56d87f512b1804524d4b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/avl/ral.mlw",
+      "kind": "regular",
+      "sourceSha256": "f2a978d30ffa5b3f435d70eb0ad2bed3707b2c047e7ef5e819d201ac1eba5279",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/avl/tables.mlw",
+      "kind": "regular",
+      "sourceSha256": "ed3c242bbc096e80882e4dbfd157ee9d3ec0c51c1292ad1f7085d109b7a35063",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bag.mlw",
+      "kind": "regular",
+      "sourceSha256": "a4258ee96bc37bcf3027da1803b62a48f8f623416cc0279e0779d8cedc1c24b0",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/balance.mlw",
+      "kind": "regular",
+      "sourceSha256": "c57c97d89508abe79e293312dc07ce5df0c172ee4d31b860bde1276235b408dd",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bellman_ford.mlw",
+      "kind": "regular",
+      "sourceSha256": "e23d8b47f7b9ab2f9b83b3a168c1bd01209e3f83f98fbfa6a78e615f8354d7fc",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bignum.mlw",
+      "kind": "regular",
+      "sourceSha256": "fd560bcea6c6e7a3e82e38bd37c20811cba49cd66ee0593200d15178b0ba9aaf",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/binary_multiplication.mlw",
+      "kind": "regular",
+      "sourceSha256": "e31e22142489ee406b9ce656646f4aeb04498b24a9e7cd7d4a646076c16acade",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/binary_search.mlw",
+      "kind": "regular",
+      "sourceSha256": "9df90e2e97ef35af8817ce5a34bd29cbfebb214ceb88a93c72c40f7ffc6f61ae",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/binary_search_vc_sp.mlw",
+      "kind": "regular",
+      "sourceSha256": "5ba61006667878bca1ab4c9f5d1b68064890ccb88ca7a992797f4d40632cecbf",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/binary_sort.mlw",
+      "kind": "regular",
+      "sourceSha256": "6dec33acb2740a6201ee32b615a4d63404ff5dbb0bb323bd5baf3d6046092d1f",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/binary_sqrt.mlw",
+      "kind": "regular",
+      "sourceSha256": "c51f465e4603da8ee38a1cf032b63cc14129f33b2393e96b778b3969eb891f8b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/binomial.mlw",
+      "kind": "regular",
+      "sourceSha256": "eb1803f8afb81c243cab2c695d5943cf65f1b78e9428f6ac2487be1c4d7d3af7",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/binomial_heap.mlw",
+      "kind": "regular",
+      "sourceSha256": "9295cd088cb4b35b1e2b114315cd7933aef7bbe8a9af41fa9df5f13155706181",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bitcount.mlw",
+      "kind": "regular",
+      "sourceSha256": "b0ca9cce4a0a58218b94484ef7f98123f888e7047c8e3af1ca159e480d862628",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bitvector_examples.mlw",
+      "kind": "regular",
+      "sourceSha256": "b84ae98bc7d752a039bcd51756cd631f1f57fbd701a5d26625828d7dd45f8c71",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bitvectors/bitvector.why",
+      "kind": "regular",
+      "sourceSha256": "176afb6dbf3fa7075f6e1ebfd9903420e83fe171a8a468b61a16993d05795e9e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bitvectors/double.why",
+      "kind": "regular",
+      "sourceSha256": "31986d1a7aae35ab59b9625dfd695b46cfdb5c25217a151573753be4d5e7973a",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bitvectors/double_of_int.why",
+      "kind": "regular",
+      "sourceSha256": "2b90139443ad80cdd76ed7aae76eba6b7d71e2d6937a3ce4f3d5884b9404a443",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bitvectors/neg_as_xor.why",
+      "kind": "regular",
+      "sourceSha256": "76fc9a48b3ececd476a1f6f839c39f04b9020e857c5ddd3b6122883728a4dcf7",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bitvectors/power2.why",
+      "kind": "regular",
+      "sourceSha256": "0a95b88e9f1ef520cf1f8fe5edde59a1dd51ef970d5369ac719694a1b2d1b750",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bitwalker.mlw",
+      "kind": "regular",
+      "sourceSha256": "35f00646d72ee0d3883e65647317a9db536cb7c7390997981b2115ca0ebd413e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/braun_trees.mlw",
+      "kind": "regular",
+      "sourceSha256": "6f8674d92526fc805d4d22826c503f39d862811845ba48c356456c041598c554",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bresenham.mlw",
+      "kind": "regular",
+      "sourceSha256": "4dde69761c91b8e51bcc5009a10826eb7846160b8f6c67a4cc41e9fa905f8837",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/101_eprover_eliminate_range_literal.mlw",
+      "kind": "regular",
+      "sourceSha256": "78842464a74c0f6e97ee9ddc588bd7d4cb50bdc81a8667670182ba019d43919c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/114_infix.mlw",
+      "kind": "regular",
+      "sourceSha256": "6ad79bbf9f5e0d5e4a0dd5a9a54cb3b76711196b516e0ffe79e1b6f2b260bb4e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/116_array_access.mlw",
+      "kind": "regular",
+      "sourceSha256": "ab1bd97363e35c977146c7bd11a14931e1586627761c18e9641a5f657d2cd9ec",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/12445.mlw",
+      "kind": "regular",
+      "sourceSha256": "ee4e194b8548048e678dfd2dec2e6dd94ad8c6ac72638a5cca8870b49b7c8237",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/12475.why",
+      "kind": "regular",
+      "sourceSha256": "25cc967eace83abdd0bfff402b415f181e2567e80bf2deb3bb8023157bbf23f7",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/126_apply.mlw",
+      "kind": "regular",
+      "sourceSha256": "6c730504ca83d953bbce002154efa0c074bebd9a7d6acfcdf1f7fba56acd9b58",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/12934.why",
+      "kind": "regular",
+      "sourceSha256": "6ae7eb22f88883aa381fae05e1ea04c52e40bf4b7357b4755fa38a3423578556",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/13002.why",
+      "kind": "regular",
+      "sourceSha256": "7e21db3ecffefb291bf9da299aa63ab11d01685e52b17eb36f16756171962ab9",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/130_extraction.mlw",
+      "kind": "regular",
+      "sourceSha256": "f6681b7e2be3aed1f5ed5204ec0ad001abb3d2c71f3afeff8616611a6ea96964",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/13375.mlw",
+      "kind": "regular",
+      "sourceSha256": "8cd6ef3d2dd4f7719a5b785a0c9f4c77f9173240f6f6f92be545f30c8942a1e0",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/13515.mlw",
+      "kind": "regular",
+      "sourceSha256": "fafd79e64894cb55ad56bbdbdd0ebd1a8eb60be412859086f639c8c8f763d0bf",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/138.mlw",
+      "kind": "regular",
+      "sourceSha256": "5ce351fdcf9eb4ae99b04e870df9154ad196d8f2350efb44373c970abe667143",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/13849.why",
+      "kind": "regular",
+      "sourceSha256": "b6c3b8a6c95711b8e9151ae838945acf94a9f6cee113ba8a6df941b15d9f3815",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/13853.mlw",
+      "kind": "regular",
+      "sourceSha256": "c7ad7a4fcbee34236bd78e2fd46e5a58120c02d51deb9b558394f9653ae3b752",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/13853a.mlw",
+      "kind": "regular",
+      "sourceSha256": "b0f8f46f44c52f2aebeb994ad635d0a77d7966c76e7be613a59e4c8cafcc1aae",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/13853b.mlw",
+      "kind": "regular",
+      "sourceSha256": "491a6ae904e77679ca44d31d564c97a01d9aef2213d4166357dda8a38917f575",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/13854.why",
+      "kind": "regular",
+      "sourceSha256": "52ff272c7dcdbb5c7a5a62e37eb511643db07b3371be543fd84443bb1cf52374",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/14097.mlw",
+      "kind": "regular",
+      "sourceSha256": "b85aff5ca61bb7b39820598bbd0daaac889f7bf989730a2ddc223af6167e8e2b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/16972.mlw",
+      "kind": "regular",
+      "sourceSha256": "778daf99c51d651df46f3df104cb51179bd18878c8e0e35bf28bfc1acd844ea3",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/16_subst.mlw",
+      "kind": "regular",
+      "sourceSha256": "f4ab9dc9b52826ff317169dac5f18801dc45056504d8dfba7cddafaf823dc83d",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/17137.mlw",
+      "kind": "regular",
+      "sourceSha256": "f1b1764f0032181d9cfd2a48cc1e34365198d82073428cdaf8f8eac3a872805c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/17184.mlw",
+      "kind": "regular",
+      "sourceSha256": "a1d74f276f3ee2188cf7d5ec17bba1f9b297cf0621ecb1c20b82192ec62cc4fa",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/185_apply.mlw",
+      "kind": "regular",
+      "sourceSha256": "63c03acab26d4a50477674dd890e964a590c6b23063e24b60176092bc001e76c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/185_apply_let.mlw",
+      "kind": "regular",
+      "sourceSha256": "06a32b1ac5e57a7e2b60a59fb71c4f263f57bf21197acc9ee55ef4df3c888a91",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/18953.why",
+      "kind": "regular",
+      "sourceSha256": "d072acbc618cdd72d66c26e8abaae91f2f044efcfc29fa32a2d9fd5c306b7a89",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/19_apply_with.mlw",
+      "kind": "regular",
+      "sourceSha256": "8d1be84e8de24eec8f399bc7b84d91b1e63c52d6caae9001649d5c62f306c1af",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/20445.mlw",
+      "kind": "regular",
+      "sourceSha256": "7999292f06c473e4171a0866ce294f3d332210ddd9fd5cb877a03fa436fe8f5c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/20618.mlw",
+      "kind": "regular",
+      "sourceSha256": "67b2ce314b4b86c6ea585a6bc1d87b1d13f469c21f32e3e90123cc6e818d8c16",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/20619.mlw",
+      "kind": "regular",
+      "sourceSha256": "629d8815658420d5617b17ba82332e2e38b5170f8cc75568ea1336c98671be85",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/20881.why",
+      "kind": "regular",
+      "sourceSha256": "98972cb3b096cad97b5c72c69a2e1b77d1fa590c782925922a81754e84af47be",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/231_destruct.mlw",
+      "kind": "regular",
+      "sourceSha256": "885070483cca2cc4f63bd7a38ca60de96f597216feb462bac9e459afcad5a382",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/244_destruct_rec.mlw",
+      "kind": "regular",
+      "sourceSha256": "55c94e2da9d7ecfbaf00f5bb7c8910c6410e9f0384be7cc4e661365288c14588",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/264_destruct_if.mlw",
+      "kind": "regular",
+      "sourceSha256": "64367825e85a73c9ed890e1522f2250cf9608ced5c8a2b554a63c3640558fe3a",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/265_apply.mlw",
+      "kind": "regular",
+      "sourceSha256": "75d7896f090c3eb523289d65866518e1556b769f387637ef09b1dd7d73bae60a",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/269_replace_under_if.mlw",
+      "kind": "regular",
+      "sourceSha256": "a994880ef62d1aac0db837d5b3983b39e4f499ce4a95a479930ac0f42f645400",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/276_shape.mlw",
+      "kind": "regular",
+      "sourceSha256": "60685bb7c679d89aa808e906c9c73284b860c39398c5735dc8d731999c57cb68",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/311_destruct.mlw",
+      "kind": "regular",
+      "sourceSha256": "42dee655aee9c11ced1fa2d37c04f883fbf1bad7042e3a3057c1fdb21fcab36c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/353.mlw",
+      "kind": "regular",
+      "sourceSha256": "8dc17d631bc821fda4dad20a63eff52cf752ca1525bd925a13ea639729c390a6",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/374_eliminate_if_explodes.mlw",
+      "kind": "regular",
+      "sourceSha256": "06783bd820f983197d5490c9bfc8652ccd71446bdb0836640d9ecb66da8513e7",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/380_doc_trans.mlw",
+      "kind": "regular",
+      "sourceSha256": "b46791856189795e342d8042d409db0829e03eb926ca493cc32bc9b243dc19d8",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/380_trans_space_args.mlw",
+      "kind": "regular",
+      "sourceSha256": "f3ecc9beec2cf92121dc1d65bd767b2a59e9d88b24ef21ca470f09fa74647444",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/438.mlw",
+      "kind": "regular",
+      "sourceSha256": "e8da2f0bf6d5430f7cdb53ee2c1c0642f18d7861ae268957739b87712ae71f39",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/450_abs.mlw",
+      "kind": "regular",
+      "sourceSha256": "12df48f043d8526dac21a47fb2245e1cb0fcfeb9c2cd33b93c17d6955e8f9538",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/548-neg-float-lit.mlw",
+      "kind": "regular",
+      "sourceSha256": "01462c7062274df8f716353bd47712fe621b43c6f7445fd621d68e5833fe639b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/559.mlw",
+      "kind": "regular",
+      "sourceSha256": "68d4618305024a3c9b03aa39f3632a32218cf799a439962078e07772cbc1c3e6",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/587.mlw",
+      "kind": "regular",
+      "sourceSha256": "d67c42709d637fe0cf8aae493e4d034edf020d96940c384de6e0be94aa4bb2e6",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/612.mlw",
+      "kind": "regular",
+      "sourceSha256": "8887e55eb0f1b0473ad280309a35cc8aa89062431b1aca4655deed544913468a",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/626.mlw",
+      "kind": "regular",
+      "sourceSha256": "7ea8a138388ba77a0b315452c9bff213af615457b0d47671f5ebadd4d2a39f59",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/656.mlw",
+      "kind": "regular",
+      "sourceSha256": "34ef5044823f3940a74d0bc6b46447da0cd1228355b336800138ccca0b528574",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/690_reserved_keywords.mlw",
+      "kind": "regular",
+      "sourceSha256": "a4b12460a6eb9ff326813033a26310792cedac57e90e9d9f7adfbebac60e80f0",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/695_remove_unused.mlw",
+      "kind": "regular",
+      "sourceSha256": "d6dbee567c752390fc4f990251b7c3bf0250f40dec6343f1c4c19adb7dbaeeba",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/71_disambiguation.mlw",
+      "kind": "regular",
+      "sourceSha256": "18a0ae00c072778a22f5d07c78705d1928d85e2c455a53e5a31405592663548b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/742.mlw",
+      "kind": "regular",
+      "sourceSha256": "608a012b2133497a30b9d73042207b25c25b4c95f71e08575b3140b735e11e48",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/746.mlw",
+      "kind": "regular",
+      "sourceSha256": "b21f69846e3aa59a07666a854cfbbb111507d74e51d4578c5d61bb122a6946a6",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/753.mlw",
+      "kind": "regular",
+      "sourceSha256": "6a6f738a36a96a108042a94a7d7630b77face009747f5ff0049738eba5e151ae",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/760.mlw",
+      "kind": "regular",
+      "sourceSha256": "484081a699e6e1457d4694004dbce6ca6eaae2a09e9c507e6daaaabdfcf040e4",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/773.mlw",
+      "kind": "regular",
+      "sourceSha256": "673502cca9f85b035c186bb66539496f450201a741c885894d56a6874b89c15f",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/788.mlw",
+      "kind": "regular",
+      "sourceSha256": "bb59932135af79a534d7764d08c75a5f8df6898b01d313d7a15ab72a8cfaa020",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/79_compute_unsound.mlw",
+      "kind": "regular",
+      "sourceSha256": "f09e0f8de0c0191af64a710e3da6d021ce677a34a4f596b12d34e0c54fc16858",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/95_char_encoding_latin1.mlw",
+      "kind": "regular",
+      "sourceSha256": "3ac693510dc7d126065bcb77a704b42f45722aa5ccb2a590e18fed16245660df",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/ce_symbols.mlw",
+      "kind": "regular",
+      "sourceSha256": "98231c108f6fa74b11c8f141db2e0792f4d54fc4581111be8142ab68fe6f8a5a",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/destruct_term.mlw",
+      "kind": "regular",
+      "sourceSha256": "56cf78e19c8e1577eaba78915f6680782e554ae1dde5cad50c5856977faa42ca",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/execute.mlw",
+      "kind": "regular",
+      "sourceSha256": "8df1292c7aed74ca8ee7c47e48c7e25c0cc20418c072e61da9fa4c2778446a23",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/fsetint.why",
+      "kind": "regular",
+      "sourceSha256": "bb6e701388ec4f191c4dce96958556d3a5aa0e9594deef0529baee3331620203",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/remove_unused_remove_cte.mlw",
+      "kind": "regular",
+      "sourceSha256": "36119344d0be70ecb0414b2bcea7949b2b81c0966c6c7b879be94b63b9db8465",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bts/simplify.mlw",
+      "kind": "regular",
+      "sourceSha256": "ed7b658c06e6d503ceb46e7df6c34e7ddb809f4b123cf26f738f0bca41d466d6",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/bubble_sort.mlw",
+      "kind": "regular",
+      "sourceSha256": "24e7aa96fe4fe3f4c106f3433ab4a136dd27ece5a5c2f1d0ccb15f5857dd7ea2",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/c_cursor/ccursor.mlw",
+      "kind": "regular",
+      "sourceSha256": "143ebd3c6152d2d82e322c7bc21bb72ae29af14c7450b744b586781a4f6acf00",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/check-builtin/ac.why",
+      "kind": "regular",
+      "sourceSha256": "d7a4b18878ccabe88837426308217a8c4b85c8c9149dee013533542133f5a547",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/check-builtin/array.why",
+      "kind": "regular",
+      "sourceSha256": "eba63800ef2589cce58dd22097f2e4ef261833f87f7661c7b9f403e7c7fd708b",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/check-builtin/bool.why",
+      "kind": "regular",
+      "sourceSha256": "e251df61a259b4e00d3428750c1d01321b372d9e57e9c7966d572e76216d0385",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/check-builtin/euclideandivision.why",
+      "kind": "regular",
+      "sourceSha256": "3746dab4aeabe4b572a3e038340757cf2f31436c3e674da862ac462b0574ca82",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/check-builtin/floats.why",
+      "kind": "regular",
+      "sourceSha256": "6268ccfe06c68838b65b87858adb33dc25cf1cd25d4e60b6eef1fcbff009d0fa",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/check-builtin/int.why",
+      "kind": "regular",
+      "sourceSha256": "006c0b856da1a123c79fe948c01ca73d7a15ec3354af514b3b094de917c71827",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/check-builtin/intreal.why",
+      "kind": "regular",
+      "sourceSha256": "257059ba0a64b0d2fa860cb5a393c03aa5e3441d3620b45a30306c24b5089ac8",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/check-builtin/minmax.why",
+      "kind": "regular",
+      "sourceSha256": "8d660f9b574c9da8c781ae344103996d481f602ce1f894d75d55a24b9062694a",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/check-builtin/propositional.why",
+      "kind": "regular",
+      "sourceSha256": "67290f3363ed11bebcb3761aadf45fb80a2c2813686fad681da0faea7cd0725b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/check-builtin/real.why",
+      "kind": "regular",
+      "sourceSha256": "2c8bfe96f8a32598cdcc4d6e622f288e561d4baea45eec2cca2637abb7ed019b",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/checking_a_large_routine.mlw",
+      "kind": "regular",
+      "sourceSha256": "266105d2e3d0c6b53c45283cfe37d3e66e256ee59d2ea6a5db0db04b9f1a4dea",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/coincidence_count.mlw",
+      "kind": "regular",
+      "sourceSha256": "6bd5a726ff18cc83daffdc5a88aa4853ae55611061c1fd8074a7b10aa769c238",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/coincidence_count_list.mlw",
+      "kind": "regular",
+      "sourceSha256": "062990d6f09b52100e119ac823deacf75fd4ea63f82571f32442a05c3e125a8c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/conjugate.mlw",
+      "kind": "regular",
+      "sourceSha256": "075910b8e27b3646933584f1111012e28f96dd9d4fbe0840bf0b45ccbfd1720e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/counting_sort.mlw",
+      "kind": "regular",
+      "sourceSha256": "c8664d239e5733d6b761fe54d61688c2a138e63a187271dfe6571c4b9490d1a5",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/cubic_root.mlw",
+      "kind": "regular",
+      "sourceSha256": "79e925e07396b0462c29d8c351e6788ebade366ba546d79497bd17e121049d87",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/cursor_examples.mlw",
+      "kind": "regular",
+      "sourceSha256": "36608ca4ef791e6030d54c93c82f3763a61653487a1e0039dd8b19fb4d350653",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/decrease1.mlw",
+      "kind": "regular",
+      "sourceSha256": "1fa130d880a1ff38de8c32c0d1e6ab037f9b855ddf1a8ce00758060083661f14",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/defunctionalization.mlw",
+      "kind": "regular",
+      "sourceSha256": "d9b8107e282a8cc6a74ee00ed7710dd5c9266fca95d48b3df1ab2267778d2dde",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/dfa_example.mlw",
+      "kind": "regular",
+      "sourceSha256": "60cd9cac77b03c683d1b6062a1f828ef79cc99bade8ebb40528a08efde93100d",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/dfs.mlw",
+      "kind": "regular",
+      "sourceSha256": "f2e0f86ef4f6e67ecfcc50143d68a6e387837db76c467d3ba17c1086ab06e1ef",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/dijkstra.mlw",
+      "kind": "regular",
+      "sourceSha256": "85bc242b84d963c4278d635d7b92da49b546f94d661be874f2d2edf411530634",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/disamb.mlw",
+      "kind": "regular",
+      "sourceSha256": "078ecbe009755a0c4915db8a6e62f1968484529a1b3ce76b7781e4a4511d3305",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/division.mlw",
+      "kind": "regular",
+      "sourceSha256": "bdb0cacb9edca79e984c207f0921ef9cdc6be731c83bfa789325b2dc1ad2b4ac",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/double_wp/compiler.mlw",
+      "kind": "regular",
+      "sourceSha256": "5cfb7c20e26bfc10a8fbac61d83a0bcfa44dd97bf1c36c6cbf92f6269c9a6d68",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/double_wp/imp.why",
+      "kind": "regular",
+      "sourceSha256": "a2844aa4beb339048734bf04d11a4f01e1e3871f6889268609598b84d427c4f8",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/double_wp/logic.mlw",
+      "kind": "regular",
+      "sourceSha256": "596e0c3acb43ae2a3b0f3d4cf919886538a2c47e14a2335eae675adba7af6cf7",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/double_wp/specs.mlw",
+      "kind": "regular",
+      "sourceSha256": "110fef42ea77a43972cd706ebe693965a960686f0eee18f3dfdf7a908a26d800",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/double_wp/state.why",
+      "kind": "regular",
+      "sourceSha256": "0562790760a6db24c02a0ebc45bfa48584b7412ae9a9e6500666a5d5643ed507",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/double_wp/vm.mlw",
+      "kind": "regular",
+      "sourceSha256": "c5b87b4b98c845f3215b296a308014791514802256ea7587e90fbcee73c71cb8",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/dyck.mlw",
+      "kind": "regular",
+      "sourceSha256": "97de1957878a88d7f7b5508bb67439679fdfb5a46758184d9c1af69a71c0837e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/edit_distance.mlw",
+      "kind": "regular",
+      "sourceSha256": "36418c56e580b0ea136d92b920f0e613de57b7b182646efb6f493a3f0b3100dd",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/equality_up_to_spaces.mlw",
+      "kind": "regular",
+      "sourceSha256": "8f6d9d5483b483ab587b28a8ab186e17a684c0db6bc6ddc078332d7624f98f27",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/esterel.mlw",
+      "kind": "regular",
+      "sourceSha256": "5895d8de81a6e899fb24f3b67df8327cf8b49f171e8159822edc0a2d4608f8e2",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/euler001.mlw",
+      "kind": "regular",
+      "sourceSha256": "4517937cdbb93e6956b719543c247f87552fdc33853a98c73867b697df9d7ef1",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/euler002.mlw",
+      "kind": "regular",
+      "sourceSha256": "85547075c50c75d871c4a812c1ec029b5dda6c0a07e485f8dd9ecde2bd89eaeb",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/euler011.mlw",
+      "kind": "regular",
+      "sourceSha256": "db7f37498638cfec47567637d9b921f4b464a18d4fa560009085c4b7d6b6908a",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/euler_sieve.mlw",
+      "kind": "regular",
+      "sourceSha256": "a8658036132afe7ac7bdca750978bfe742282aabad0b25a7fe25c5ab156648b0",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/ewd673.mlw",
+      "kind": "regular",
+      "sourceSha256": "7f39f602eec7eb75513dc40f0a8da816f47b590a691f5d1f31351197323961c5",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/f_puzzle.mlw",
+      "kind": "regular",
+      "sourceSha256": "dc5373ddaeb21b6154cfd8f6088e378430d40f4653b2f57956369de4fdc7540c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/fact.mlw",
+      "kind": "regular",
+      "sourceSha256": "ab3dc5a1847bacb775b95e6928f3366cc0decee82013a4674b3ec4081e14916b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/fact_vc_sp.mlw",
+      "kind": "regular",
+      "sourceSha256": "f04a4e6468f5f4c38feb0ab336e84376466f980c109b5f7cc18e47593f02a0c4",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/fenwick.mlw",
+      "kind": "regular",
+      "sourceSha256": "d28886fada74ad7333eb8dd84823a2c081bee9509fb85de496c694e9aae787e6",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/fib_memo.mlw",
+      "kind": "regular",
+      "sourceSha256": "703f5391a978fe5e63f21a927c9c6edde7145739ffda20421214a40316160809",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/fibonacci.mlw",
+      "kind": "regular",
+      "sourceSha256": "7b20890d5d900f850c79d1f5f9606ab11eb1cebafad63c6f4777b8ccc894f41f",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/fill.mlw",
+      "kind": "regular",
+      "sourceSha256": "9175fb2843f1b0f2542e6db131dea3a1fab484038ff14a1d8fe7eb40be7fc21b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/find.mlw",
+      "kind": "regular",
+      "sourceSha256": "61a8f9f4f17fd449a9f9e7658b8d3e283e2623f737a992de97a59ee87f3bb101",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/finger_trees.mlw",
+      "kind": "regular",
+      "sourceSha256": "a75f75cfeb4bbccc282cfdf21a48b894813c2fedbaa4f20251f025c7efe41406",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/finite_tarski.mlw",
+      "kind": "regular",
+      "sourceSha256": "6d8f48ab00539ca8a1e93880384488cc80b33fadc734d083b0361f98eef8b6b8",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/flag.mlw",
+      "kind": "regular",
+      "sourceSha256": "aeb6875753238edfe272593d0c03ba7709d8f87baccf77c08de7e25b0729a7c7",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/flag2.mlw",
+      "kind": "regular",
+      "sourceSha256": "e7746d8ff04b424e4ef12d0cb4d3ed6aa83d0af3841f95516e564cb5e794b539",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/flexible_arrays.mlw",
+      "kind": "regular",
+      "sourceSha256": "67951c6d683ef9115a6c60e6730736aa949cfccb2e3e85f083af771ae24dff06",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/foveoos11-cm/array_max.mlw",
+      "kind": "regular",
+      "sourceSha256": "a6a8db169074d90598256a8f64ca09449ec5f9ff999d6e7f67f4bc123e22f6e7",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/foveoos11-cm/duplets.mlw",
+      "kind": "regular",
+      "sourceSha256": "b971f0e6cbc2d8f237eeedb34baa937ec4f4e527265602e5b33e935867ac1ffb",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/foveoos11-cm/tree_max.mlw",
+      "kind": "regular",
+      "sourceSha256": "0c00ac16cc1e9f7d6928a31fc399880b0ee2d5d66bd6518118f6735b81125a14",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/foveoos11_challenge1.mlw",
+      "kind": "regular",
+      "sourceSha256": "5063b2d741d0601072f35978756b40985fb138715ed36343861b5dceee57481e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/foveoos11_challenge2.mlw",
+      "kind": "regular",
+      "sourceSha256": "eef3a76de15353a052fd1af6b6f9a02fae837fa5412b8571a7b9b0b0d651d390",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/foveoos11_challenge3.mlw",
+      "kind": "regular",
+      "sourceSha256": "fbc75b14c71c7a26e196443100b0ae1a84c79bd603df519d26fdf0601d630113",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/gcd.mlw",
+      "kind": "regular",
+      "sourceSha256": "a098f1d71f145ee90b0496c35b1f2088099f7c9c63f5f05cb21573031a287d85",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/gcd_bezout.mlw",
+      "kind": "regular",
+      "sourceSha256": "8cb9e6941f8b49965cea3a9259202b4345edc892b90f20f8393fa02b885d5904",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/gcd_bezout_vc_sp.mlw",
+      "kind": "regular",
+      "sourceSha256": "f6a1fd814e7d4388985d7f6ea64444283b5f01491d9a1300f2d0dbd2831481eb",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/gcd_vc_sp.mlw",
+      "kind": "regular",
+      "sourceSha256": "65871d5fbbdf032f9d03bc17517a2b7f8fc7cdda7ea054712979a27f4d06bd64",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/generate_all_trees.mlw",
+      "kind": "regular",
+      "sourceSha256": "de3d5158927e8e8849d3221d593e89a213fb0a3d648a7cdff49c2b1cf45d84c5",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/gnome_sort.mlw",
+      "kind": "regular",
+      "sourceSha256": "03977a733c98bd71e1b68d7d4cd8ead10e6fb3ce47af4d22f9eeb80ab9b8e716",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/hackers-delight.mlw",
+      "kind": "regular",
+      "sourceSha256": "b0b46c5316b50c583b2d27a6e2e82d47bfaf1747d40a1cb4d5efb66da9776892",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/hashtbl_impl.mlw",
+      "kind": "regular",
+      "sourceSha256": "6f5f28508e471e2a793a62d022265012f99ef98c7f9f666000cb35e4edc1bee0",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/hello-world.mlw",
+      "kind": "regular",
+      "sourceSha256": "26ddc0484f42149b77c05d51302a58136415ffc6ed98c28a3fcca97bd9cb732c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/hillel_challenge.mlw",
+      "kind": "regular",
+      "sourceSha256": "e0f0512d6344fceaf6d351970363f29b67d9e682b0f05f902b03a643f6844e2a",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/huffman_with_two_queues.mlw",
+      "kind": "regular",
+      "sourceSha256": "4bebc20c25efb1565bdc9844063d59f433b6599628fb68e3798839b53d661098",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/i_cant_believe_it_can_sort.mlw",
+      "kind": "regular",
+      "sourceSha256": "a6dbe81b8fb832fc58e1da9db8c21cadcac25236dbadbc03a4c82877fb7c04ab",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/incremental.mlw",
+      "kind": "regular",
+      "sourceSha256": "829c50371d34d587eb0abe5c1ac16c90ccd7f0f094321b41d7ff4beb73e24b44",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/induction.mlw",
+      "kind": "regular",
+      "sourceSha256": "a295e55bd0f2c52a9b268ed9b0760b991b073ec805d0a3511eafbd0682acda30",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/infinity_of_primes.mlw",
+      "kind": "regular",
+      "sourceSha256": "8e0d6732e672e6547dea9062125f21f8e73343913795756a7b8ed66ec7823c47",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/insertion_sort.mlw",
+      "kind": "regular",
+      "sourceSha256": "bc72451ddce2d43e1266bae32f2d885f6ac8a28764510a304f915a8113b33c28",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/insertion_sort_list.mlw",
+      "kind": "regular",
+      "sourceSha256": "d46d023db3b0f4f8754bb8a51394ef269b5f03c0959391c9f774d8a1d9757ccf",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/insertion_sort_naive.mlw",
+      "kind": "regular",
+      "sourceSha256": "4d2921944bb4a4a48546928425a33390db44e1dac281800b8c6eaa7a0bb9826b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/inverse_in_place.mlw",
+      "kind": "regular",
+      "sourceSha256": "f4f4b61bde089ce1219bd8a74d96ea52ca4aa025080f8e9bcc3a206792a5c9f9",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/isqrt.mlw",
+      "kind": "regular",
+      "sourceSha256": "a4148961df63aed1facec6e754fc0a851da7b3f4a642f9e6083b878cb7592b16",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/isqrt_von_neumann.mlw",
+      "kind": "regular",
+      "sourceSha256": "d6024680bda891e04b186b422749e5585c075895e4b43417a5e7b4ca44bdc222",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/just_join.mlw",
+      "kind": "regular",
+      "sourceSha256": "ddc3d8749cbaaf62a605ab9d627eb1d4b2dbccccfa5c0f2100ee9f49c94e8ec8",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/kleene_algebra.mlw",
+      "kind": "regular",
+      "sourceSha256": "ab973a5c28cbf2ec272fedf88d9ea257f320af3fbb11b14cdf02a9babba0ebd3",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/kmp.mlw",
+      "kind": "regular",
+      "sourceSha256": "7e4c9e99ff813aed0b6b527e72edd5d39cf91047b928d0b3986f348c5c3ffe54",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/knuth_prime_numbers.mlw",
+      "kind": "regular",
+      "sourceSha256": "8b0ada35fd6f3fa9ded8470c5c6fe4db02730a54fc02c5fe79fe761513cb8ba6",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/koda_ruskey.mlw",
+      "kind": "regular",
+      "sourceSha256": "185f7cbe15a44e846ad03079d7e2a5ed7671bb8e9ab9e509a8f817bc14261440",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/largest_prime_factor.mlw",
+      "kind": "regular",
+      "sourceSha256": "ad47c7b29fcb2518abb1787ed260816d0c242b29467f1816a51deb9bd62e7f49",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/lcp.mlw",
+      "kind": "regular",
+      "sourceSha256": "d34ddda77ea70baccc8222c632a039c62d0f46280552842093ead0e4dcd1b39b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/leftist_heap.mlw",
+      "kind": "regular",
+      "sourceSha256": "6c88de3b250237ddf76cff338635f9921add6767151ad7a10149307c9e283cfc",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/linear_probing.mlw",
+      "kind": "regular",
+      "sourceSha256": "15020bd55414e5f24c04c4a3c93f5e1fbf1add75056380965af5fa785f06e34d",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/linked_list_rev.mlw",
+      "kind": "regular",
+      "sourceSha256": "1a7fc54d9552fc0b4f8887cf74d32758a6c79640ff7e6c7d828d096f85fa1ea9",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/list_removal.mlw",
+      "kind": "regular",
+      "sourceSha256": "594d714d2cbad4d03cba2677e59a59b26e7e11d5e1f797f9eafa628f2e6efd75",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/locate_max.mlw",
+      "kind": "regular",
+      "sourceSha256": "e086b9592a6eb06e9a6aaf70b8e018e24277f17c7cdaff9842aecd8923604e41",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/logic/First.why",
+      "kind": "regular",
+      "sourceSha256": "324c6ee73f550348c4b22728f887ec3f6f6c3f2e5832ff94e7137f62dc10095b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/logic/agatha.why",
+      "kind": "regular",
+      "sourceSha256": "b38405de9908b0d3c7ac0a0219c96d72147408f68ae51b5700d1579ca8a7f09f",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/logic/bitvectors.why",
+      "kind": "regular",
+      "sourceSha256": "5306a4e3dca119fbab009dbd93c46d26dc1c4b7eabe65576843fc1bcf8305b5b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/logic/bvsum.mlw",
+      "kind": "regular",
+      "sourceSha256": "080a5cf0bd2983b07bd035721f48069d027b9aef8e87dea9bf5982a1bda4c9ba",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/logic/distr.why",
+      "kind": "regular",
+      "sourceSha256": "5a7dffb8a5ea56b181ff14b447056f61a80355473981598b4ff9227a538c43a3",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/logic/drinker.mlw",
+      "kind": "regular",
+      "sourceSha256": "8cb65559717dcfc1346fe92754ab8e83ed34b85912c0e943a2d64d17d61e2fef",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/logic/einstein.why",
+      "kind": "regular",
+      "sourceSha256": "742a49e9224c8802596821c04d84f504202bbfcdf5eb0eb6240317eeaf5bb162",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/logic/explicit_subst.why",
+      "kind": "regular",
+      "sourceSha256": "6262f02b6b32e6ba3ad4a2304c525ff82ec6d0824af39e9777819ff609b1a163",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/logic/ffx.why",
+      "kind": "regular",
+      "sourceSha256": "209856bf840cfba6ed39b31be861e9d77e704387857cf17e8aa2311006feb650",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/logic/genealogy.why",
+      "kind": "regular",
+      "sourceSha256": "f38e9cea1b52a206400ba2d52e13c61bedfda2851bb769a90608372547c090c8",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/logic/hello_proof.why",
+      "kind": "regular",
+      "sourceSha256": "d52270a73f430a60e295595074f931be0facfd7c0129b38a5d2f854620716b23",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/logic/isa_planner.why",
+      "kind": "regular",
+      "sourceSha256": "62455b38addbc9da80b25bb819fb7833b095a62a505790fec769e4c3336aa8de",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/logic/lagrange_inequality.why",
+      "kind": "regular",
+      "sourceSha256": "caf4d6cef071755e4909e6d5f84cffe01d5d1034e4b4abc651e0e93a5081521b",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/logic/los_problem.why",
+      "kind": "regular",
+      "sourceSha256": "781183f24c93ddccf3c8abf62cfeaa14bd8184bba2476d7770fae38ebeda33e6",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/logic/my_cosine.why",
+      "kind": "regular",
+      "sourceSha256": "5eeb97519fc3994ec9d2221d248f03011e7c6400a26170bffa391662a89cb4e5",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/logic/real.why",
+      "kind": "regular",
+      "sourceSha256": "df3039901a76136440c50b1d4a284e985d890ba70b4ff679c8a91b3d764b0947",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/logic/scottish-private-club.why",
+      "kind": "regular",
+      "sourceSha256": "7c86af6b04e2cb972b1a20a0b09af5a1764a74890c10e55689818ab37d8ed710",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/logic/simple.why",
+      "kind": "regular",
+      "sourceSha256": "1583a70f113c8b81fae63883dbe1d29855d4482e8e2cc5b912603ba29b9bb2f7",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/logic/sorted_list.why",
+      "kind": "regular",
+      "sourceSha256": "9d751235219ffd97ccafd5e836e4d41f6632307e33336592e19621db6b55915c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/logic/triangle_inequality.why",
+      "kind": "regular",
+      "sourceSha256": "63b8859f09394f069bb9a79be0685425edb3e44076b08f9bd398ec194acbd828",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/max_matrix.mlw",
+      "kind": "regular",
+      "sourceSha256": "538224c6cd5a9e5694b0946a4342c159c4affec56349636fcb3e39146487ef1f",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/maximum_subarray.mlw",
+      "kind": "regular",
+      "sourceSha256": "72ff7590174afcd77ba2566ac3ce0d468dea60d16480bd134dc10f7a1b1c4827",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/mccarthy.mlw",
+      "kind": "regular",
+      "sourceSha256": "d65ab2f602bf242ef73a13dc1bc85b87c70b3212ce62c21650e9d8266d30ee7b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/mccarthy_vc_sp.mlw",
+      "kind": "regular",
+      "sourceSha256": "de39d66c5113f4cf1b24a7a11bd8e6fd3f20f4070a069dcdfb6c2cd15620c76a",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/mergesort_array.mlw",
+      "kind": "regular",
+      "sourceSha256": "b0b79d91aaf6ca678212798e4417e0e134022ee80b8b9ba38dcbeef9deb8c2f3",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/mergesort_list.mlw",
+      "kind": "regular",
+      "sourceSha256": "9de394c6eec8953d9213ac78781c83b5e8d49243aeacf2606ac0c6314f12cd70",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/mergesort_queue.mlw",
+      "kind": "regular",
+      "sourceSha256": "bba4c0782006b64b290e45bd7cd4f7f239a765c9ed5140f8f50ff85eefc0f5f9",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/mex.mlw",
+      "kind": "regular",
+      "sourceSha256": "7cadf0d4d93c07d0678de4f55686ac9d11de17e1a3581a1617a4ae691329fcad",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/min_max.mlw",
+      "kind": "regular",
+      "sourceSha256": "08d926c24d5150e3406107a36d18450a153e93348f841745e7f47af14dacb02e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/mjrty.mlw",
+      "kind": "regular",
+      "sourceSha256": "b3824344acdcb5f1671f5939cdd79cb1b1b952871b3f558208cc9e5be854d358",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/muller.mlw",
+      "kind": "regular",
+      "sourceSha256": "1cf7c0f4b5ab0e50a4525093ac84a12260f333811fc349926ff2cedce8954a27",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/add.mlw",
+      "kind": "regular",
+      "sourceSha256": "0a1243288171b1264c3c1d53a7971a4b8c6a65cc600a1bf2538195d434aa7c1d",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/add_1.mlw",
+      "kind": "regular",
+      "sourceSha256": "37eca6e25d27762f2999ecc9f5c3ff82507dff192f70774915116f00d382b6a4",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/base_info.mlw",
+      "kind": "regular",
+      "sourceSha256": "5c3c9cd8a70cd6b2e795179e27baf946a4e58d6945f91a3b5455b579174625d5",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/compare.mlw",
+      "kind": "regular",
+      "sourceSha256": "bfc05064eed387e3574e58441e649c9cc5623287c4376f78a8e8552d0f3cd113",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/div.mlw",
+      "kind": "regular",
+      "sourceSha256": "91ea19c146ac4b06ef8b85aa16ced88b3ac8fd82c1b7f3c04318bf5e5f12648c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/get_str.mlw",
+      "kind": "regular",
+      "sourceSha256": "d7554863dd0ba279667c7cdae2ae741b720e35e7807c3f9465c21a10683da93b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/lemmas.mlw",
+      "kind": "regular",
+      "sourceSha256": "bb899e43cfb4331de808957d9efbd7e6746c3798dccc2478bab015150273dce9",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/lineardecision.mlw",
+      "kind": "regular",
+      "sourceSha256": "d4f779029f811aaaa20f30f5cfb180feea37a04c00b8e091494c95397766321d",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/logical.mlw",
+      "kind": "regular",
+      "sourceSha256": "381feb88f46f9d18e2e95ffdd74598e5b07fb3a8287bc79fb0b7b3fea1441046",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/mpz.mlw",
+      "kind": "regular",
+      "sourceSha256": "b37b202fb5c766a920ef6471888459e62fd0cea6d66b3c1f8c2e461c8c215ac7",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/mpz_abs.mlw",
+      "kind": "regular",
+      "sourceSha256": "56a83ae639536b6ecbf3212b6cfd08d8e8dc71bb72d9e5d4fccb96676aac31c4",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/mpz_add.mlw",
+      "kind": "regular",
+      "sourceSha256": "14085a4c7df80fc9f0953585bedbda71781b1cb6b6773e8a1c0a7b7c9135ec7b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/mpz_cmp.mlw",
+      "kind": "regular",
+      "sourceSha256": "720e68570e24397f604dad92fc0199d32ecc4c454f89432f995ff53a2ffc65a0",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/mpz_cmpabs.mlw",
+      "kind": "regular",
+      "sourceSha256": "ba4a8abe15793c5573e9167622d8df2928efeec6021a4b46f4ab1a7ccebb8050",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/mpz_div.mlw",
+      "kind": "regular",
+      "sourceSha256": "c0c88688915af97c8f0f6141e4194114b057c431cddcf75ba96bd8dc35ce93b7",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/mpz_div2exp.mlw",
+      "kind": "regular",
+      "sourceSha256": "a207aa3b258498db08bab9c842cc67ee77d0a3873c564d79c205ceef13218480",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/mpz_get_str.mlw",
+      "kind": "regular",
+      "sourceSha256": "d4c3fce31d4ff8c8cc46ecd962b40695930359a4bf5533c3c092d08fe45db7dc",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/mpz_getset.mlw",
+      "kind": "regular",
+      "sourceSha256": "0e8c7a9662db4c42256b92df4cbc80565cfb777beaa038f1a6a6970ae05623aa",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/mpz_mul.mlw",
+      "kind": "regular",
+      "sourceSha256": "01ef07532f6004b237c5f44753090a0f4f764bc5b026f53ec98fcc5eedb27346",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/mpz_mul2exp.mlw",
+      "kind": "regular",
+      "sourceSha256": "c19819b76b569c8dc05303a48f12a2717029615c0598a81f9ea45f287fb714a8",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/mpz_neg.mlw",
+      "kind": "regular",
+      "sourceSha256": "7bb763474688ac4450e94b44f59dd67a11e6aed1c958ab14ac29ef4a8f5cd180",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/mpz_realloc2.mlw",
+      "kind": "regular",
+      "sourceSha256": "1261312128ffb1bd106f445bd49449e4e76ea0889cd07e1f10296ef722ee5142",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/mpz_set_str.mlw",
+      "kind": "regular",
+      "sourceSha256": "cfa5ec4166c6238298985afd6535149377ead84ca36a00b317d3c6998accd889",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/mpz_sub.mlw",
+      "kind": "regular",
+      "sourceSha256": "7dc2d510e042312a723ceb8745d1fbd2c5c0efd76418f1826ad7d529a32d5bad",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/mul.mlw",
+      "kind": "regular",
+      "sourceSha256": "ebf963e25574abf36bad51ef8c8d92177746c583288f48d74a6e6871865c5276",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/powm.mlw",
+      "kind": "regular",
+      "sourceSha256": "fdcdb5e145451c67563debde4e4d801c105229f58011460af77df4599370aac8",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/ptralias.mlw",
+      "kind": "regular",
+      "sourceSha256": "f14265176d3930940237b3fd18e36abc41a0035d02ebdac82e014fe395d0253c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/set_str.mlw",
+      "kind": "regular",
+      "sourceSha256": "7c86c9435a974baedd4043f0363b2dcb2993fe52b8082b4620e6620e110fa128",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/sqrt.mlw",
+      "kind": "regular",
+      "sourceSha256": "33e634f27e226d5aba5b875c4a62a72262f92af7289511faf495c1c2bfe2a438",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/sqrtrem.mlw",
+      "kind": "regular",
+      "sourceSha256": "68e8af61a2d3c7a224885134644ad2385c3960bd1ff456878ed23a7eb5fada5f",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/stringlemmas.mlw",
+      "kind": "regular",
+      "sourceSha256": "761eb89951db8793d06bf26985ff8e230b9b44e6b36c604be8f55919b1f4c991",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/sub.mlw",
+      "kind": "regular",
+      "sourceSha256": "0879eac614f246a06758132ce3ceddb2017cf111edbccecdfda24c428b80c763",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/sub_1.mlw",
+      "kind": "regular",
+      "sourceSha256": "9a2bdd99334b637edfbf64a4819fbae6d92fe65115b26e788378665ce82d9b14",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/toom.mlw",
+      "kind": "regular",
+      "sourceSha256": "da3f5f5cc6a4851738a493b1e1762baaafd91d015b4da891d66b5845e387439e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/types.mlw",
+      "kind": "regular",
+      "sourceSha256": "567d2d2edc7018f90da899411add7c2e8cc109ec3ac6123381af77b56106e756",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/util.mlw",
+      "kind": "regular",
+      "sourceSha256": "0e78b06071bc6934133d76fe75703390535f8bc778778d9fd0df0f81e99f301e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/valuation.mlw",
+      "kind": "regular",
+      "sourceSha256": "4463877d3a110db63e8d27106594292bb38d37e5ef1734f35e7c5ac78024c8bf",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/multiprecision/wmpn.mlw",
+      "kind": "regular",
+      "sourceSha256": "d630ebd7f18a3486583ecaed910fb84e0daefa609c288d6f4672c88c558a2a1d",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/mutual_recursion.mlw",
+      "kind": "regular",
+      "sourceSha256": "28108a9d693ac59a1abe7a80ccfefe89d69efc15cd669491ad53cd869015effa",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/my_cosine.mlw",
+      "kind": "regular",
+      "sourceSha256": "bc4045c1a223a5b1eeeb99a8db8c1192f2bad6f7fbdd4d6a601b8af2a08e0ef4",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/nistonacci.mlw",
+      "kind": "regular",
+      "sourceSha256": "ad52bd6ee1000bd6e50d76228b960d3f5fc33c93a503f52971ed279c39442acc",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/optimal_replay.mlw",
+      "kind": "regular",
+      "sourceSha256": "3052536e8470e63a8c49d0174dd0756aef770dc9537a1a774beb5048cd7c6b90",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/pairing_heap.mlw",
+      "kind": "regular",
+      "sourceSha256": "637e7dd6583a63a2d8faf79431b53ab9984a149fe95d5504e027607d1236d3e0",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/pairing_heap_bin.mlw",
+      "kind": "regular",
+      "sourceSha256": "8bc9767851b4162a6683962f1946a24e6ee77ef4d375e3951b6ce8938365eea1",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/pancake_sorting.mlw",
+      "kind": "regular",
+      "sourceSha256": "5e257a023041dbc1d608fe8b416ce973e01577b8cadb6cd0aeca94a786de2abe",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/patience.mlw",
+      "kind": "regular",
+      "sourceSha256": "fc878a774340cfc5f86fe71af4b2936b65924c6049f7e1e61a69a336cd8c955d",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/pigeonhole.mlw",
+      "kind": "regular",
+      "sourceSha256": "99e024040df6f081794c4c3a15f7753c73bfbeee3f9a88621d13554cc6aa880c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/power.mlw",
+      "kind": "regular",
+      "sourceSha256": "298c29ecfee56068044515f85e2825e4ba8e43016f08498daa29bf81401b59bc",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/power_vc_sp.mlw",
+      "kind": "regular",
+      "sourceSha256": "04823ef0028ea24366318066688498426620b8635153602ac926ab322e77566e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/BacktrackArray.mlw",
+      "kind": "regular",
+      "sourceSha256": "e8ef0bfc730aee782d02d30424f20a3c8818ca5e2aad5afc9bd2a66f53cc131e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Choice.mlw",
+      "kind": "regular",
+      "sourceSha256": "8e163afefffae6edb66d52eae610d6efa28717332b1df34c9143ff8e2707690e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Firstorder_formula_impl.mlw",
+      "kind": "regular",
+      "sourceSha256": "989b32eb0477e86e36d17a2abb335a1ab037f904168bb6d14e9c2b4ea46fc4cd",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Firstorder_formula_list_impl.mlw",
+      "kind": "regular",
+      "sourceSha256": "8236d339b918edfbe6696d94454b641a38cfe6082c8e73b0e4658ff32b3c5f5e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Firstorder_formula_list_spec.mlw",
+      "kind": "regular",
+      "sourceSha256": "f5d5cf018a0755ac53e4b3ddf7d0d08514189d50c698bfd1ba54011064253906",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Firstorder_formula_spec.mlw",
+      "kind": "regular",
+      "sourceSha256": "0adfcab481667a7146f0e8e16291421df55274c5b7f9785cbf8176d188bf73b3",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Firstorder_semantics.mlw",
+      "kind": "regular",
+      "sourceSha256": "8e5a2d2f6f7d4b6331970d7c00988c4f4652559747e09d786cdbc6d246c3a9c0",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Firstorder_symbol_impl.mlw",
+      "kind": "regular",
+      "sourceSha256": "02848c7bfd8f696d26a54ca4a5677c4d292bb7460b1c6c5aff5b1efdfc2b29ef",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Firstorder_symbol_spec.mlw",
+      "kind": "regular",
+      "sourceSha256": "2991d192ea287891b934790b103c3f724b941c89a6610d85b664aeabf872cb0d",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Firstorder_tableau_impl.mlw",
+      "kind": "regular",
+      "sourceSha256": "2194e9829c5763bf623b1168242edc562a0d31e631c903bee00c9e5dd358bc3e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Firstorder_tableau_spec.mlw",
+      "kind": "regular",
+      "sourceSha256": "399bbc3cdc2e52de73ad5a398fe1653c9fba7e5c64181db2a312554b30c8f8de",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Firstorder_term_impl.mlw",
+      "kind": "regular",
+      "sourceSha256": "7d5699c03ee129fec0c6bf2a9fe717c8d1691b652d63f66550480a725e2d5c3b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Firstorder_term_spec.mlw",
+      "kind": "regular",
+      "sourceSha256": "fec56920e345da123a339e3864a8ec73924e09ffeba3cddb79564730c607fd8f",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/FormulaTransformations.mlw",
+      "kind": "regular",
+      "sourceSha256": "cb459660721e6f28ce4fca3dec788ac68b25986b123fbcd8533b7d3ad1bd8110",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Functions.mlw",
+      "kind": "regular",
+      "sourceSha256": "fa2fb86d57e9056258fdab9382c51f901dcd2c58c3511d270473f53fdb9b600f",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/ISet.mlw",
+      "kind": "regular",
+      "sourceSha256": "29a1817cdb295a1ebd6e88fd7c738cc4514d6a3205601b8858c3e9176b2bdfce",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Nat.mlw",
+      "kind": "regular",
+      "sourceSha256": "359327e918f24113c15606dcd61fe9b587281c6443493dbcec5faeef79853a45",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/OptionFuncs.mlw",
+      "kind": "regular",
+      "sourceSha256": "820a27791f99e45723154fbe3c40d7ee33a5609380cfed50ac39b3cacbc0d35b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Predicates.mlw",
+      "kind": "regular",
+      "sourceSha256": "b1d8239efdebc1bd7acfb1069cce09f126237be1cab3192550a108e997ce199a",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Prover.mlw",
+      "kind": "regular",
+      "sourceSha256": "6a5d689a612e529c7098c4b0dc7af0375e601585bf572ff1b8658f96327b0668",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/ProverMain.mlw",
+      "kind": "regular",
+      "sourceSha256": "a64ca758a77104ba45aa48d0cbc5aea31c9a1d396f8b804ad249b6eb33cb4882",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/ProverTest.mlw",
+      "kind": "regular",
+      "sourceSha256": "2f70f27168f55c3d2c36e70cfc91c59748efc95603df59ef37e267e0de28dd61",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Sum.mlw",
+      "kind": "regular",
+      "sourceSha256": "4eafab85896615ab0ebe56aa27f0f21acf1155bc7ee99f09813dfad543a1cb46",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/prover/Unification.mlw",
+      "kind": "regular",
+      "sourceSha256": "546712868f1e2e3a89960e821d3ccf1116ff4afeb5e9fd0ccbc5849a26bbf387",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/queens.mlw",
+      "kind": "regular",
+      "sourceSha256": "564272e80b669a5fceb00f2ed589cfebe0224e172e4403f7203b9a06200fc7a7",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/queens_bv.mlw",
+      "kind": "regular",
+      "sourceSha256": "a53e0929d236f615c2864199fb624d9b12739f068b05d84bc5f37ffe552f96f9",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/queue_two_lists.mlw",
+      "kind": "regular",
+      "sourceSha256": "80c24fe8beb590befd0a3ac31c2ed9a3a37ebe089512ebdccaedd9b96f829f66",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/quicksort.mlw",
+      "kind": "regular",
+      "sourceSha256": "a37a580039f74a7227d9c90233e78cac68799b8c06c46a985fc2a3306fb41775",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/random_access_list.mlw",
+      "kind": "regular",
+      "sourceSha256": "860cc4820ef39027883f52349fbc17611778af1d1f4f93bc26fa31f820b1e24c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/register_allocation.mlw",
+      "kind": "regular",
+      "sourceSha256": "34ae3dfe50cbc31b018e1b1f3829ca73d39ee56feb6fbc1aec70517659f86114",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/relabel.mlw",
+      "kind": "regular",
+      "sourceSha256": "05ff2b231ba4d402ecab545112c7e6d02793f2d8867485908bfa19290ed606d8",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/remove_duplicate.mlw",
+      "kind": "regular",
+      "sourceSha256": "250baf9e0e2ccb4e77ae5296b53b2014b03a37c7846703ab11d59fbbab48e79c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/remove_duplicate_hash.mlw",
+      "kind": "regular",
+      "sourceSha256": "9a8800769b93656c6215b2cc7736a5087168f5cce349c5a2b89ca60ba1b37c79",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/residual.mlw",
+      "kind": "regular",
+      "sourceSha256": "dddecdf318221fad6fe41bb6d7d19e77a9075ddcd02f3ce656dde3378269382c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/resizable_array.mlw",
+      "kind": "regular",
+      "sourceSha256": "09b7e50d52f142af6963a47688c22afa47f97f0f4d73cb44f2af09892c9bfff3",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/rightmostbittrick.mlw",
+      "kind": "regular",
+      "sourceSha256": "a6c8424f94cc41fe5a790dd2ce2eb0a54f9d46e4234c1f2ece1c881691d18616",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/ring_buffer.mlw",
+      "kind": "regular",
+      "sourceSha256": "746c2e6cb9a92a7c371546768a5dfcd18afcf5c4c5511d093d4e1f130a4a1ce4",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/ring_decision/ringdecision.mlw",
+      "kind": "regular",
+      "sourceSha256": "8a1c5885e96655f3f80b4de3d4d7d2f9abb676dc725270601e8f3953d6063761",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/ring_decision/strassen.mlw",
+      "kind": "regular",
+      "sourceSha256": "b7016349c1ce6c03b1cb5ac4f8c98eb365fe0f7405f2df7a6f813f283b181219",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/ropes.mlw",
+      "kind": "regular",
+      "sourceSha256": "90c95f1425cfe5c846002767c7b747de5880b6f90c9cc233b22babe6b2c93372",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/same_fringe.mlw",
+      "kind": "regular",
+      "sourceSha256": "144cd7e168b7364c532234e94be3f3e221ad4bc72b059ec3d732e9cfb7148768",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/schorr_waite.mlw",
+      "kind": "regular",
+      "sourceSha256": "14e691b29752a804afcab431374d0539523efd327a13017c1c3b466860b4af71",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/schorr_waite_via_recursion.mlw",
+      "kind": "regular",
+      "sourceSha256": "9dd4b81cfd447980e8728c3b6990060501e61fac7483f013481855a394d0eddd",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/schorr_waite_with_ghost_monitor.mlw",
+      "kind": "regular",
+      "sourceSha256": "2a64134eda00cb85b52b8d848ce238f8ce2ad4111db76d70863c6bf025b7ebae",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/selection_sort.mlw",
+      "kind": "regular",
+      "sourceSha256": "52ef9ad57a2f2938fc5307adb0a11469b5717c1a53f600f59a5a7f86e3ade713",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/sf.mlw",
+      "kind": "regular",
+      "sourceSha256": "e46558bf7725b2d991ef018b8316d2d87ef14784da3967ece0b61fe06f35a12c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/sieve.mlw",
+      "kind": "regular",
+      "sourceSha256": "c2711c769110563e7d4a15aebdbe31b5546d647461159f20df43132178f3cb7a",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/skew_heaps.mlw",
+      "kind": "regular",
+      "sourceSha256": "e1b3aa30d7d6565dfe7a101b4a273cf5c336f7187d4ce2d576627c24e578a5a0",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/snapshotable_trees.mlw",
+      "kind": "regular",
+      "sourceSha256": "d6366a03f529a182c11c2be241f12e0adc80ee7b74ad33521c324caf8fdf43de",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/sorted_list.mlw",
+      "kind": "regular",
+      "sourceSha256": "13e2d782bf1031d1815ac1af7e1cc64cb2c9be5220e1fc9bc0fffe22d2b9fc2b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/space_saving.mlw",
+      "kind": "regular",
+      "sourceSha256": "92a50d2bc5ebbb5ff23d0cc4dd46d4cc934831cf308ca65882c05e838691e655",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/stdlib/stringCheck.mlw",
+      "kind": "regular",
+      "sourceSha256": "493fdbf13ebde2d46d30f9250ff8f0b73c5e785bfdb9bf4d99fd0b626f2ac43b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/string_base64_encoding.mlw",
+      "kind": "regular",
+      "sourceSha256": "507fdca10237ac66415fa9d73a47ac6a3a980993c536e2a007329fb7adf38a1d",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/string_hex_encoding.mlw",
+      "kind": "regular",
+      "sourceSha256": "fed2b76bbd0a460b7e329ca035ad2fac0b718225f6cca139deb9e2d1a03ab58f",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/string_search.mlw",
+      "kind": "regular",
+      "sourceSha256": "16cba7e31301ba6aea09c98369a1cd7b5d8ef07087dc64a57459a1463381930b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/subsequence.mlw",
+      "kind": "regular",
+      "sourceSha256": "22d9216f66268b10d615bb466c8b037e958ca9d994d5f634ca2a6a2d56d69766",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/sudoku.mlw",
+      "kind": "regular",
+      "sourceSha256": "b8399a7d8fc45439eeb73b29ba052e83f002a8c401844c612993775d3162a8cd",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/sumrange.mlw",
+      "kind": "regular",
+      "sourceSha256": "4bd2f5505222c8474fa370edce124fece696a41e5535002fac202933d4ea22c9",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/swap.mlw",
+      "kind": "regular",
+      "sourceSha256": "4b6592e673085a2b60d136ce77c516772a2001d8b25b230577eefe9dac710d95",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests-provers/bitvec.mlw",
+      "kind": "regular",
+      "sourceSha256": "314b56070a94ba6f7fb42396fb532c14906fa9a9530349ef3d06bb41de03ca11",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/tests-provers/bv.why",
+      "kind": "regular",
+      "sourceSha256": "26ca5a4efe37b1b1040c542074c52eb1fd84add5fc8c7e14eb34030a0c36687a",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/tests-provers/ceil.why",
+      "kind": "regular",
+      "sourceSha256": "030f1c23b21b73ffd8890e875697fcf7fdca83e123c004c3a997f56dc77d5ba5",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests-provers/coq-interval.why",
+      "kind": "regular",
+      "sourceSha256": "5824f8af8eddf8e681b5d4388aa80dcc36279854b0e7b9c39186918cb97e0c26",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests-provers/coq.why",
+      "kind": "regular",
+      "sourceSha256": "ea0dffad1450861e855f8264c38100dd45613292a59fb522ceab9561e40c0d98",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests-provers/cvc3.why",
+      "kind": "regular",
+      "sourceSha256": "c5dca854ddf72fec7bb10940d043df94289122fdb1ddcd63481df7f637f8c6d8",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests-provers/div.why",
+      "kind": "regular",
+      "sourceSha256": "180ffcad1162a235bbdc55db79d75690c6af3e47e772f1f41ea73b622adc69e1",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests-provers/div_real.why",
+      "kind": "regular",
+      "sourceSha256": "9fb1b72ff633b3140748a62fd5695aec2ce5fc09e52b5dbf239de61793ab7a42",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests-provers/dreal.mlw",
+      "kind": "regular",
+      "sourceSha256": "92c9ded3aa9038b679813386f6bd9155e2be1d3901da97d23fe5ca8adea5823d",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/tests-provers/gappa.why",
+      "kind": "regular",
+      "sourceSha256": "8bf0bb51a08f07a0f1ce9c0f40b22643621646974968f59309c005794963b034",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests-provers/ieee_float.mlw",
+      "kind": "regular",
+      "sourceSha256": "b44722211fb94009828f12feca87365147df8f07afe38668ee42973e3b04efa2",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/tests-provers/metitarski.why",
+      "kind": "regular",
+      "sourceSha256": "4caba4e72f83b03a3427cb0215696111cdefe5cc6a6ab83c2dfe9929a7b41591",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests-provers/polypaver.why",
+      "kind": "regular",
+      "sourceSha256": "7c3b21af46bfe3b31924b846401e1d6f0763b2ec9d39250019dbcec109095215",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests-provers/signed_bv.mlw",
+      "kind": "regular",
+      "sourceSha256": "00a1ce85d34bdb6b047cf3935234936fbe273baefc3ee0c0496f34630bd05fa9",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/tests-provers/strings.mlw",
+      "kind": "regular",
+      "sourceSha256": "4d6bacde2e23d14a2a5dce39f45cc5b7879b9ad2ec619346fe0eaa3679bc3b72",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/tests-provers/zeros.mlw",
+      "kind": "regular",
+      "sourceSha256": "f7c32f44c579a240d9dc8e0f624870555c052ab80ff86b81f95300b724438db5",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/alt-ergo-models.mlw",
+      "kind": "regular",
+      "sourceSha256": "071da87d352dfc14b4526f8b95f4530d4807e275e3af3766bed87fbfa220703c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/alt-ergo-models.why",
+      "kind": "regular",
+      "sourceSha256": "e57a579e0fd937512b4b924adbc683147dd7439398d858bb9b6ecf4d35f5b095",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/array-test.mlw",
+      "kind": "regular",
+      "sourceSha256": "fe062d13ad49cf60bda4302ea5e4654607d3fdc28e7d88e2144bf69cb5ece507",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/bitvector-test.why",
+      "kind": "regular",
+      "sourceSha256": "39a5d6d80d7589026b2b3f64c0b2a317e14fc448e6741c6e344c86e193fe962e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/bv-smtlib-realization.why",
+      "kind": "regular",
+      "sourceSha256": "01ccd7263107a2b75cfb53919ec3c34f60e512b867a67252bbf916112da073b1",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/execute-tests.mlw",
+      "kind": "regular",
+      "sourceSha256": "2a174e28f6cb4467608fc0d0dea5b6da433cdde1f291d54f79b598f9608a87c5",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/func_literals.mlw",
+      "kind": "regular",
+      "sourceSha256": "b5cea617c4537b3a46c8342095a5e8e67dca50e029fa112afaa16120d1f71259",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/hashtbl-test.mlw",
+      "kind": "regular",
+      "sourceSha256": "abd48f68f10121722093236df3bbaa6d4f124e68842b26070fd407aec3eeb6c3",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/ignore.mlw",
+      "kind": "regular",
+      "sourceSha256": "a25b790f0ac9ef8b692852c643e752b3f85de5fb46a63a45c9251fd71d47db2d",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/int32-test.mlw",
+      "kind": "regular",
+      "sourceSha256": "2195f64cfebcf6bee8ca3b60bd912898e0cdadad9723fc3c04c8a6eb561b297d",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/lemma_functions.mlw",
+      "kind": "regular",
+      "sourceSha256": "4ff37efe23bf05ac91cea3619102c8766557970e738c80d6b86c75efb433848f",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/matrix-test.mlw",
+      "kind": "regular",
+      "sourceSha256": "3ee243a4ca1554cba47861006e6da1f65a5345fad66dde2ae0f38e5d1d6d2f1c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/pqueue-test.mlw",
+      "kind": "regular",
+      "sourceSha256": "ee3ae354533f21c5ec16e9dd3ac3fb75c0fbcb6b9cef506b8b07e8eec27c7a72",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/queue-test.mlw",
+      "kind": "regular",
+      "sourceSha256": "98ba0138c66166eb80a11c66cb11ccbf41cd2b9f2089b616a4fb4e01a89058a8",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/rac.mlw",
+      "kind": "regular",
+      "sourceSha256": "5b0e1c82a426280faf3de055ab67fd97c68fe27dc79cc0285558d3ca85540936",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/random-test.mlw",
+      "kind": "regular",
+      "sourceSha256": "c338e931e2bef5c38eae5794a6e6b4ccd092e64a792743607cbd59ff7793bed3",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/regexp-test.why",
+      "kind": "regular",
+      "sourceSha256": "1a771181d93b714580e604757b4496a7633789c4a8e5e14dc9a8e4794f0658e2",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/replay.mlw",
+      "kind": "regular",
+      "sourceSha256": "e58513145c3b293db9683475ac456f8325f655c7fdeca7571bb6cfefe567db4e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/stack-test.mlw",
+      "kind": "regular",
+      "sourceSha256": "699bb969bae5e3105ac69ee7c77a1a30eb1f5f793515f87751eb354b27e70777",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/test_elim.mlw",
+      "kind": "regular",
+      "sourceSha256": "0723fdb89d92aa6dca55b73b9a9844ffcc7f70506368ce3aee97ff3679dc5098",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/test_projections.mlw",
+      "kind": "regular",
+      "sourceSha256": "84a7e57dbd194b7bbac5dd0aa424e0ad494573cac1fdb470d9955c185e053153",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tests/times2float.mlw",
+      "kind": "regular",
+      "sourceSha256": "8bcba4b19846cf2479c1b926ecea91ad0ebeb26996a41d00df11f35a7ba76cab",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/there_and_back_again.mlw",
+      "kind": "regular",
+      "sourceSha256": "c3a2e634e9b255c4c75dcdb183cc001d031683fac9ff173c872ecf11b5b34a6c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/three_idem_ring.mlw",
+      "kind": "regular",
+      "sourceSha256": "9b0e272efb3ecd2def8be52c469533cb214b027fb9180ca132c7eeb236930f48",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/topological_sorting.mlw",
+      "kind": "regular",
+      "sourceSha256": "f415eac311da461f7332ed2a642f2cabfeed52a0a64fce8cb2348e6ae7b3d369",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tortoise_and_hare.mlw",
+      "kind": "regular",
+      "sourceSha256": "f74ca6d77544c00ce8a7ae9e97074cf60446c45b44bbac045a33c8f3d86e387d",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tower_of_hanoi.mlw",
+      "kind": "regular",
+      "sourceSha256": "2ca628505f722c751415d1ea7cfc012cfcc736c3c1fd8a4a255f1891f963b464",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/toy_compiler.mlw",
+      "kind": "regular",
+      "sourceSha256": "22a71671ecd4d6cd4c4acdefa37da3a3eb8557395d3bb74c65354a9ad9d207f7",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tree_height.mlw",
+      "kind": "regular",
+      "sourceSha256": "51d5d3a4fd27f4d47d04192078068d36ecbb75a970086dfe1746fc5757067821",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tree_of_array.mlw",
+      "kind": "regular",
+      "sourceSha256": "e0db5a1a21f8bf9ebcd89b3e926f1755ea679e57ef0f60d936ff757324846b2f",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/tree_of_list.mlw",
+      "kind": "regular",
+      "sourceSha256": "c5387950270b8d53ace920fd91175a9d462b1722c7e18e852146eba80fc844fa",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/unraveling_a_card_trick.mlw",
+      "kind": "regular",
+      "sourceSha256": "5e789262aa3aadf3ac795e208c8ec7a588645c89191becba279b27e296cefb45",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/use_api/epsilon.mlw",
+      "kind": "regular",
+      "sourceSha256": "815a3d48a75d9cfedf39d2330b37955901346079232667e8b57e69a13ca2fa88",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "examples/vacid_0_binary_heaps/abstract_heap.mlw",
+      "kind": "regular",
+      "sourceSha256": "2dc07043d35a6ef9a86b01cd06a8895a286c1cf804b06373aa9938974b2d0ec7",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vacid_0_binary_heaps/bag_of_integers.why",
+      "kind": "regular",
+      "sourceSha256": "196d6991b1f0402a8c046bc048f61abf3b59fdafa660512c1062c239912e84a4",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vacid_0_binary_heaps/elements.why",
+      "kind": "regular",
+      "sourceSha256": "dfb5648da36fda65766c4f721440657d11fa8e26eb14d99dadde6d7be424713c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vacid_0_binary_heaps/heap.why",
+      "kind": "regular",
+      "sourceSha256": "add3cc4f78e718418ea30c7eebb3fbab7c3201b1b25ee8ef562c1b9cb7faa3a4",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vacid_0_binary_heaps/heap_implem.mlw",
+      "kind": "regular",
+      "sourceSha256": "0b2823da4deff5bdee4426b3670ad58c6206a9f9b2f48cc68280773df734ecde",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vacid_0_binary_heaps/heap_model.why",
+      "kind": "regular",
+      "sourceSha256": "b57988a99e6bd4dad5ca3bd1e8a1f7dac9e2bcb0a75fb72cb3ce2faa16ddb8b2",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vacid_0_binary_heaps/heapsort.mlw",
+      "kind": "regular",
+      "sourceSha256": "7db6be8b21c9c37eb28bebf9f927a8851bb3ad88e9cf37e2fc9cfc818558fce6",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vacid_0_binary_heaps/test_harness.mlw",
+      "kind": "regular",
+      "sourceSha256": "233bff16309ea9591e62b9fc73a1bb6e019cc5206533f0ac94cc67ef394fcfff",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vacid_0_build_maze.mlw",
+      "kind": "regular",
+      "sourceSha256": "d905b2d3fa594c0e2df96965bd01aa482666a30d0a62c388ff772a735fc035d2",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vacid_0_red_black_trees.mlw",
+      "kind": "regular",
+      "sourceSha256": "c933b0155db21d27e82610e10705c75f02341a077122b56df39ec701214b56c8",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vacid_0_sparse_array.mlw",
+      "kind": "regular",
+      "sourceSha256": "fc0a0acd6c2c38c78380bddd612da17417faa55982b741d1585e3a267758f3d8",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2015_dancing_links.mlw",
+      "kind": "regular",
+      "sourceSha256": "a74d5e797e29487b8262449987db392d657b02a33fc08afded7d1bcb7f195b22",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2015_parallel_gcd.mlw",
+      "kind": "regular",
+      "sourceSha256": "01b787d4ae22bcc082ddefec50435d8361b943cb20b03b7087ea764179dfba90",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2015_relaxed_prefix.mlw",
+      "kind": "regular",
+      "sourceSha256": "9b9c7a6a2d38a31460bc7353c626f659fd9b7b84223320e0f7179c0717fdb67f",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2016_matrix_multiplication/matrices.mlw",
+      "kind": "regular",
+      "sourceSha256": "00506be82d460b621ad3298486925dfffba72adee98ae427c077f381610b085f",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2016_matrix_multiplication/matrices_ring_simp.mlw",
+      "kind": "regular",
+      "sourceSha256": "140ef1aaddeedd0668be490fd03a2ba39dd2c47c0cb4de54573b0f7e03576b49",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2016_matrix_multiplication/naive.mlw",
+      "kind": "regular",
+      "sourceSha256": "9fd552537eb49fbbe50dc6811955723f9b32828b7bd7a2b29e611493d332631b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2016_matrix_multiplication/strassen.mlw",
+      "kind": "regular",
+      "sourceSha256": "f21487472a6b191944351dfce6df8742eb3a4f9f8452b2119c4b27af861e5bcb",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2016_matrix_multiplication/sum_extended.mlw",
+      "kind": "regular",
+      "sourceSha256": "bf8be7c51c44bc48ca9da57413b53d8c1b5a96f31259981fbefffafeac2384de",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2016_tree_traversal.mlw",
+      "kind": "regular",
+      "sourceSha256": "75037ca4af6ae02b4b7b7083f62ad52cdc0bf3b291dcf9c57a06eaacd0f2586f",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2017_maximum_sum_submatrix.mlw",
+      "kind": "regular",
+      "sourceSha256": "b4846b908ed408a58bdfee2c72cb8531f16225215247c3c1593de472f4532a2e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2017_odd_even_sort_rearranging.mlw",
+      "kind": "regular",
+      "sourceSha256": "84b4436ec94540c2e70ccad1be3cc5981e9eba346e8cf6c89cf2f52d41e1543f",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2017_odd_even_transposition_sort.mlw",
+      "kind": "regular",
+      "sourceSha256": "72e57f9e33f6595c75caade44eb1858346789d6b6770724733beff5639892723",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2017_pair_insertion_sort.mlw",
+      "kind": "regular",
+      "sourceSha256": "cb47b6751be915437f9a5e840b0d78bfb6faf53695c6dd5739afcc2ff9aa0d05",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2017_tree_buffer.mlw",
+      "kind": "regular",
+      "sourceSha256": "352e292f0f364192cc0c60c0fcd1caab49bd08fce4d125380da4ac4d6fd30141",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2018_array_based_queuing_lock_1.mlw",
+      "kind": "regular",
+      "sourceSha256": "7220be80ad0927425c43db66bbe39c8991d8559ae5aa80d7066c0a653964d53e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2018_array_based_queuing_lock_2.mlw",
+      "kind": "regular",
+      "sourceSha256": "7d89a3b983673ce564ac24034bb2120bbe8be81f5223f8ce23fe710db8b29264",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2018_le_rouge_et_le_noir_1.mlw",
+      "kind": "regular",
+      "sourceSha256": "8676ccecdefe7af6675ed39bf51045a5456521cf58570bc6fedd04bffc017303",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2018_le_rouge_et_le_noir_2.mlw",
+      "kind": "regular",
+      "sourceSha256": "542b3705d217ff2fb48007f7dfc71587a373fe8d10ddc4a813783c2bd8bab345",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2018_mind_the_gap_1.mlw",
+      "kind": "regular",
+      "sourceSha256": "c52edaa94a3b82728f84cbef2ed71ee92ebf0160f52d7945a4556d8cf4469f37",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2018_mind_the_gap_2.mlw",
+      "kind": "regular",
+      "sourceSha256": "d0f0d4ce185e5fb0ce6d2778e1d0913729b4f594e9e0e77d08d1604e4ff091f0",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2018_register_allocation.mlw",
+      "kind": "regular",
+      "sourceSha256": "185cab92d5d76f9bdecdac263e75fa94d5bf6e8035a33b2638ad709b0866d1ac",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2019_cartesian_trees.mlw",
+      "kind": "regular",
+      "sourceSha256": "620335696b6377037b90711a163789fd0731408a69d6d6bc6ed670134b4ecdbf",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2019_ghc_sort.mlw",
+      "kind": "regular",
+      "sourceSha256": "d8f4f18300c75c55c29bd032bab53aa42a5f216c07b1ea312b2063313263c66d",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2021_dll_to_bst.mlw",
+      "kind": "regular",
+      "sourceSha256": "68125c13696ddfa91df254b31167f15524973d7c1ba3622a31561e2631d01bd9",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2021_lexicographic_permutations_1.mlw",
+      "kind": "regular",
+      "sourceSha256": "440535f075207662549ab17590fbcaecbf85e1b95c47b4fe316b2839c13bc385",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2021_lexicographic_permutations_2.mlw",
+      "kind": "regular",
+      "sourceSha256": "63c2d7334b249d8fa2bbc4a1552a7fd636d5b2f31bcd642bb8198039ac413ff8",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2021_shearsort.mlw",
+      "kind": "regular",
+      "sourceSha256": "17c085598cbc3dc674ca65839d0d84eca50efd2c78e494328c9db6cae99ec3d9",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_2021_shearsort_modified.mlw",
+      "kind": "regular",
+      "sourceSha256": "e3b0a30a6bb22318133988bbd24c46ae5f8ea3362bb5c7497de37d39e35ed090",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_PrefixSumRec.mlw",
+      "kind": "regular",
+      "sourceSha256": "3f5961dac104bcdda388bd6afcc0f956b3ff24391adf88fec51eb58f6f6c3e15",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_fm2012_LRS.mlw",
+      "kind": "regular",
+      "sourceSha256": "ee3665b5e245771f3f552c88b94618cd31223ae3c568db9817d005b1e6643e40",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/verifythis_fm2012_treedel.mlw",
+      "kind": "regular",
+      "sourceSha256": "4e28014b659b6dafa1d8c710bf74dee8b93d0a182387504c88d069a6395500ad",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vstte10_aqueue.mlw",
+      "kind": "regular",
+      "sourceSha256": "d32df350a37b9d227fd252e68666726cf67f85a2003926daffb95b54e54b1f5a",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vstte10_inverting.mlw",
+      "kind": "regular",
+      "sourceSha256": "3321f47e52b5475ea0fa2074820e83c3f8c88a51843d09293f96130779b2e1c2",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vstte10_max_sum.mlw",
+      "kind": "regular",
+      "sourceSha256": "30f756dfcf86770dad25c8dca2d52cc93f7d62af4c41915207919073e88b8b83",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vstte10_queens.mlw",
+      "kind": "regular",
+      "sourceSha256": "535fd384e01e02183e0d481a07dc617c4c4504a05d76404555f14c05b4e954a0",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vstte10_search_list.mlw",
+      "kind": "regular",
+      "sourceSha256": "f5e981d2e4770eee0f1bc44e51ac3f941b9c4238e745bb4e835b8034fedb727b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vstte12_bfs.mlw",
+      "kind": "regular",
+      "sourceSha256": "efa63cd4378e46c544d5621a1b83e1599ffeae3a2a12107b019fa16ff229f5ac",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vstte12_combinators.mlw",
+      "kind": "regular",
+      "sourceSha256": "ae31201339e26bc232d1e4a988db6d42bff788528894ede9d382e63fa41ded73",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vstte12_ring_buffer.mlw",
+      "kind": "regular",
+      "sourceSha256": "8135830eb7f7b6549f3aff89ea832f963420230084f98c00720c9c4019381d79",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vstte12_tree_reconstruction.mlw",
+      "kind": "regular",
+      "sourceSha256": "bee2ad27dcab93dce6507d74be1772d85c6244aac82ce12a2ff105a9aadc7900",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/vstte12_two_way_sort.mlw",
+      "kind": "regular",
+      "sourceSha256": "cc236c9b3eeba31c68a6f33b822f4d0e47fff46170f8f5cca78e24c615fef943",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/warshall_algorithm.mlw",
+      "kind": "regular",
+      "sourceSha256": "237044569f37c677ceec66fb703851aeb563526d914d41a305062b5386d7e5d8",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/white_and_black_balls.mlw",
+      "kind": "regular",
+      "sourceSha256": "2c942f77d081f4972cfe13f384c1603c3845ad6236347c7003da498e443b9686",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/word_common_factor.mlw",
+      "kind": "regular",
+      "sourceSha256": "be8d1631faebb18574756041e4c0454d62cf9a0dbecba8593474997fdaa197eb",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/wrap_lines.mlw",
+      "kind": "regular",
+      "sourceSha256": "7a1aa7fab26bc7882a1d5b08e4581557a31d2d21e040400d940014eb253ed598",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "examples/zeros.mlw",
+      "kind": "regular",
+      "sourceSha256": "403272f8c52d6f817af2f650e1dfdbf1694d52a5278bf9fd78a832ea89a50588",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/PGCD.mlw",
+      "kind": "regular",
+      "sourceSha256": "ef1e863ea72102a7b13b4ff229cf93479645447a24a1eef52747f1484e5d551b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/SimpleDBPath.why",
+      "kind": "regular",
+      "sourceSha256": "0b5f575136fc016703c48a3b8a6a58d7c4510fc022b17bc0ea71367af0b2af65",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/SimpleDBPathSansListes.why",
+      "kind": "regular",
+      "sourceSha256": "b506c1c246fd332c572451f14f2576dcb3da4ac7d905ad0a11279ee3011e37fe",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/add_list.mlw",
+      "kind": "regular",
+      "sourceSha256": "84d7220aa831e36c2f5e62d75f9bf40f1e09b82acad49520ba5480eacb7dbf5f",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/array_eq.mlw",
+      "kind": "regular",
+      "sourceSha256": "31eabf3a326674652b209755cbad53e0702821e8f77334bf1d8adf09a191181d",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/bug-transf.why",
+      "kind": "regular",
+      "sourceSha256": "9991815a31716d0db60959629b1655a3284a3294b73519c587e8bd4189c0c038",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/computation.why",
+      "kind": "regular",
+      "sourceSha256": "c6b8a631b37f4e1dd1398666009f7b916adb17dc69a449f84683a0fcc2061c54",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/course2.mlw",
+      "kind": "regular",
+      "sourceSha256": "c691efec58a776d849d986592727709ac03bd5f2c103bd0bb618c4fea07b2317",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/demo-itp.mlw",
+      "kind": "regular",
+      "sourceSha256": "bff788b126c10490c4aafab48cc5d3f81b9666726fd79cea6274c2d6958a52dd",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/dubious_axioms.mlw",
+      "kind": "regular",
+      "sourceSha256": "3d4875b109038eb0c9828e2c6b27657a3c24ac268f9e6961dff8d0272cac8b30",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/example-add.mlw",
+      "kind": "regular",
+      "sourceSha256": "f2e599e0ae3c0223b57fff2f7f2b55b243f810f9e7c6a298de371d4ecd4d8362",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/extract_ghost.mlw",
+      "kind": "regular",
+      "sourceSha256": "06f70946e3540f2694430c1a28b6042f542704000d0353d6717e43c102ca3a72",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/infer/test.mlw",
+      "kind": "regular",
+      "sourceSha256": "b772ceb0adcd6cf526831e6f405a19fa5adca77c80dd0a9f63419ca61a6bd671",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/infer/test_bool.mlw",
+      "kind": "regular",
+      "sourceSha256": "b26a1b7e45c0cce8b8fdc507cc7c4d9472a49779d90a212df01bfabdfc6bc3e8",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/infer/test_exn.mlw",
+      "kind": "regular",
+      "sourceSha256": "b4581064d68cee5eafb052eeaf1673b7899fbb97c186460812af592a0891b151",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/infer/test_if.mlw",
+      "kind": "regular",
+      "sourceSha256": "b51e8d82cef8f1156d03072da4c1e27064e5d0ff1cd6e1f4eb706303999d668e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/infer/test_int_as_bool.mlw",
+      "kind": "regular",
+      "sourceSha256": "1efa3cf09874179c14b9c8857ceb3e3afc26a4a7745fbbf6be8a16c96fdee48c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/infer/test_match.mlw",
+      "kind": "regular",
+      "sourceSha256": "f23916ba972ddd382f995059d7d0ab0a0d75b8f9064c0d9015d6d8d2be81c51b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/infer/test_while.mlw",
+      "kind": "regular",
+      "sourceSha256": "eb9a86b5aa7635be6655888bdb368484c00ba3bb775ad11345408ffcf8b724af",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/jessie/notin.jessie_frame_why3.why",
+      "kind": "regular",
+      "sourceSha256": "062ca986ea684b75adfabe1fc7cb515ac3aa924bad8e72053a06fd687224fd04",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/label.mlw",
+      "kind": "regular",
+      "sourceSha256": "2372a1ea2cd905fdb302208b45ea39efd669db157537daeee7da82bd45ca945c",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/multiassign.mlw",
+      "kind": "regular",
+      "sourceSha256": "4d285c6f07159e9badfb62d6006624dfca3b12951e46a7399ee69c64040038d3",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/my_cosine.mlw",
+      "kind": "regular",
+      "sourceSha256": "2ac667dd1c64143982132660c4f489112084e98cd535400458efc192490480b5",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/old.mlw",
+      "kind": "regular",
+      "sourceSha256": "95d905ca23b274afbb68ac272cfb932214ac5531af9ad704d519de3d0269f468",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/sum_list00.mlw",
+      "kind": "regular",
+      "sourceSha256": "a857417d6580201836963da331b425c47786f0f21a3ba420ba09f7ad263cbb6d",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/test-and.why",
+      "kind": "regular",
+      "sourceSha256": "cb6add588579b8e8ea2dd3930d069ac8c771a0be9ec6098ad5b23013a2887397",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/test-bobot.why",
+      "kind": "regular",
+      "sourceSha256": "1def2e7b63de540463cb559c5a33dbe0d81f9ddab7459287958bb2f82f3cd65c",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/test-claude.mlw",
+      "kind": "regular",
+      "sourceSha256": "c3a0784a5b831277a0b7e97e5307de9d152b7f085dff8d0a885b85ab3c7c39bf",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/test-claude.why",
+      "kind": "regular",
+      "sourceSha256": "7145e02a4511371dfad102674616836ef73ac7bc8fc67b55e5ae4c72f570cd46",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/test-div-cvc3.why",
+      "kind": "regular",
+      "sourceSha256": "d836a75bf04a778e7164cbfb212ffbc4f2f43494bb8baec92e087a4d612f2536",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/test-eval.why",
+      "kind": "regular",
+      "sourceSha256": "78ff43f1ee08a2599499873b82d2640dcc4f789f7447e955e3988372180b2b0a",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/test-gappa2.why",
+      "kind": "regular",
+      "sourceSha256": "8f02917732d18640eb7888492d164d3843a443ae7a9b51439f1da8de8b3e8d31",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/test-ghost.mlw",
+      "kind": "regular",
+      "sourceSha256": "6ef60fdf37ca83f29a40de27a1268582b3c8e2df514a0ca66783e6a1167ccf7c",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/test-ind.why",
+      "kind": "regular",
+      "sourceSha256": "a2415042a81fa761cb7c9289f4f39628066f88d0ba25c97d651bbd16dc577c07",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/test-literals.mlw",
+      "kind": "regular",
+      "sourceSha256": "3bcd58ab7400c428583f20408ed51abe96d083646f303fb74f5a8622a23ddfba",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/test-match.why",
+      "kind": "regular",
+      "sourceSha256": "c2a52c51da84e6fc02a810d8fef1fbf30946464e47288c21e4f7ef625a101313",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/test-poly.why",
+      "kind": "regular",
+      "sourceSha256": "b5aed473ef23a0bde682df0b547282d02197675b039e801d935552752765ebd3",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/test-polyrec.why",
+      "kind": "regular",
+      "sourceSha256": "b1cf5a8ebb38e092a3b028637c5f871bd23b0cd31451318402671c45f87e0c6b",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/test-settheory.why",
+      "kind": "regular",
+      "sourceSha256": "cda783f370db18d26e689c9cf093a6361b924ed7804f82bba21d965bf0b222b6",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/test-shape.why",
+      "kind": "regular",
+      "sourceSha256": "4bc11d046314fa4384c48c5df0b4c70fad3c4ce4c9ce889db36593fe9f71cd69",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/test-smoke-detector.why",
+      "kind": "regular",
+      "sourceSha256": "256d77f20868e516828f00389398d35d000bc763cc37c201e749a872de2e5f74",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/test-zenon.why",
+      "kind": "regular",
+      "sourceSha256": "787cdac6657445f55a3fcebf215e150ab04521b6e53bf898c8a8f05578c30733",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/test_args_parsing.mlw",
+      "kind": "regular",
+      "sourceSha256": "01161c086a543a09994edc91b2a58c8bec14871507f1578d8e04c9e74422078e",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/test_argument.why",
+      "kind": "regular",
+      "sourceSha256": "38e5acfd1381b9bcc2862d4d85c24f58bb4e546bdbcca9115a1ce2aa8ff22cd1",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/test_compute.why",
+      "kind": "regular",
+      "sourceSha256": "e20ca470bc188419846cfedd16016e8d01b7ae8221ecdfd3a1eedb7159193af5",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/test_exec.mlw",
+      "kind": "regular",
+      "sourceSha256": "461adb19246594771619adc6b8b6e8915aa6fd1b774f6be2cdcd8b275e9d72de",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/test_foreach.mlw",
+      "kind": "regular",
+      "sourceSha256": "1bf18e77d289e1692efca9c12e9b9f77c711ff44e605978efa9de0ebacfd667d",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/test_ghost.mlw",
+      "kind": "regular",
+      "sourceSha256": "afb005279bb5253fe7fa06f6196e52b7960dfd237e2f9d683306df8994e4c2f6",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/test_itp.mlw",
+      "kind": "regular",
+      "sourceSha256": "01c67e29629bde05389e95f1999fc65f31ca43d4e6250a1687d31a555f698c52",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/test_loc.why",
+      "kind": "regular",
+      "sourceSha256": "132f50a63a71a41a70091c68932895edebf3321274cebf87b50cbacbd56269f7",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/test_merge.mlw",
+      "kind": "regular",
+      "sourceSha256": "dfe383b95d686c1d690fea4f4b02b880ea84c21de4a9d341b9c4241ed00b2e20",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/test_ne.mlw",
+      "kind": "regular",
+      "sourceSha256": "8887f14acf642a876e1cde6e3148b7805e99cb912d82d7ba68ff24d0c2ad591a",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/test_range.mlw",
+      "kind": "regular",
+      "sourceSha256": "ecabdf6769e1c6ecc00b2b2bc303a6c5c2ad238d1d57eb83b2488f361dce8089",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/test_rewrite.mlw",
+      "kind": "regular",
+      "sourceSha256": "e5f843d6fb7b028623e475d46e19b3d3ff08405b09ee7aad00d120182630c749",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/test_smoke.mlw",
+      "kind": "regular",
+      "sourceSha256": "a1a70d36837637554e7de2b76667276afddabfeef9055da24b9abcd9d0945dec",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/test_theory_expl.why",
+      "kind": "regular",
+      "sourceSha256": "4e0712c126a617ff39e3a0026aae299ea3ad1ff48f1cca2a8ef388c7fb327d7f",
+      "accepted": false,
+      "officialExitCode": 1
+    },
+    {
+      "path": "tests/tests-boolean.mlw",
+      "kind": "regular",
+      "sourceSha256": "75d7d911c98a6a2a06259bf3338975e9b00da469edfd37a79cb5b0baa13eaae9",
+      "accepted": true,
+      "officialExitCode": 0
+    },
+    {
+      "path": "tests/tests-uint32.mlw",
+      "kind": "regular",
+      "sourceSha256": "16a026d814c3b30c2be88f00254fb067b6d91a77307f46f3b67ab7dfb18d04bc",
+      "accepted": false,
+      "officialExitCode": 1
+    }
+  ],
+  "entriesSha256": "866c50a6a92c9b14eb1c2dacee9d29e79b5bc628cf69bd499c97aed8c897b1fd"
+}

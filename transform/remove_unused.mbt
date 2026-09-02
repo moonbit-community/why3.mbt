@@ -129,12 +129,14 @@ fn collect_remove_unused_metas(
       {
         name: b"remove_unused:dependency",
         arguments: [MetaPropositionSymbol(proposition), MetaLogicSymbol(symbol)],
+        ..,
       } => add_dependency_meta(state, proposition, symbol)
       {
         name: b"remove_unused:remove_constant",
         arguments: [MetaLogicSymbol(symbol)],
+        ..,
       } => state.constants_to_remove[symbol.semantic_id()] = ()
-      { name: b"remove_unused:keep", arguments: [MetaLogicSymbol(symbol)] } =>
+      { name: b"remove_unused:keep", arguments: [MetaLogicSymbol(symbol)], .. } =>
         state.symbols_to_keep[symbol.semantic_id()] = ()
       _ => ()
     }
@@ -182,7 +184,7 @@ fn declaration_keeps_constant(
       definitions.any(definition => {
         keep_logic_symbol(state, definition.view().symbol)
       })
-    Dtype(_) | Ddata(_) | Dind(_) | Dprop(_, _, _) => false
+    Dtype(_) | Ddata(_) | Dind(_, _) | Dprop(_, _, _) => false
   }
 }
 
@@ -209,7 +211,7 @@ fn compute_used_ids(state : UsedSymbols, task : @theory.Task) -> Unit {
             add_used_ids(state, [proposition.semantic_id()])
           }
         }
-      Dtype(_) | Ddata(_) | Dparam(_) | Dlogic(_) | Dind(_) => {
+      Dtype(_) | Ddata(_) | Dparam(_) | Dlogic(_) | Dind(_, _) => {
         let needed = declaration_keeps_constant(state, declaration) ||
           any_dependency_used(state, declaration.introduced_symbols())
         if needed {
@@ -266,6 +268,7 @@ fn meta_kept(state : UsedSymbols, meta : @theory.Meta) -> Bool {
     {
       name: b"remove_unused:dependency",
       arguments: [MetaPropositionSymbol(proposition), MetaLogicSymbol(_)],
+      ..,
     } => state.used.contains(proposition.semantic_id())
     _ => {
       let at_least_one = view.name == b"range_type" ||
@@ -287,7 +290,7 @@ fn meta_kept(state : UsedSymbols, meta : @theory.Meta) -> Bool {
 fn declaration_kept(state : UsedSymbols, declaration : @logic.Decl) -> Bool {
   match declaration.view() {
     Dprop(_, proposition, _) => state.used.contains(proposition.semantic_id())
-    Dtype(_) | Ddata(_) | Dparam(_) | Dlogic(_) | Dind(_) =>
+    Dtype(_) | Ddata(_) | Dparam(_) | Dlogic(_) | Dind(_, _) =>
       declaration
       .introduced_symbols()
       .any(dependency => state.used.contains(dependency.semantic_id()))
@@ -322,5 +325,5 @@ pub fn remove_unused_keep_constants(
       TheoryUse(_) | TheoryClone(_) => result.push(item)
     }
   }
-  checked_task(task.context_anchor(), result, stage)
+  checked_task(task, result, stage)
 }

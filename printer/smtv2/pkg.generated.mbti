@@ -12,6 +12,8 @@ pub fn lex_smt_tokens(BytesView) -> Array[SmtToken] raise PrinterError
 
 pub fn normalize_smt_query(SmtQuery) -> NormalizedSmtTokens raise PrinterError
 
+pub fn normalize_smt_query_with_provenance(SmtQuery, SmtProvenance) -> NormalizedSmtTokens raise PrinterError
+
 pub fn print_task(SmtV26Query, @theory.Task) -> SmtQuery raise PrinterError
 
 // Errors
@@ -27,6 +29,7 @@ pub(all) struct PrintedIdentifier {
   start : Int
   end : Int
   semantic_id : @identity.SemanticId
+  identifier_id : @identity.IdentifierId
   origin : @identity.Origin
 }
 
@@ -49,6 +52,10 @@ pub(all) enum PrinterErrorKind {
   InvalidIdentifierOccurrence
   InvalidSmtToken
 } derive(Eq, @debug.Debug)
+
+type SmtProvenance
+pub fn SmtProvenance::new(@identity.CompilationContext) -> Self
+pub fn SmtProvenance::observe_task(Self, @theory.Task, @identity.GeneratedStage?) -> Unit
 
 type SmtQuery
 pub fn SmtQuery::bytes(Self) -> BytesView

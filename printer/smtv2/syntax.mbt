@@ -107,6 +107,7 @@ fn syntax_maps(task : @theory.Task) -> SyntaxMaps raise PrinterError {
       is {
         name: b"encoding:lsinst",
         arguments: [MetaLogicSymbol(original), MetaLogicSymbol(generated)],
+        ..,
       } else {
       continue
     }

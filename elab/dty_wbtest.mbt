@@ -57,6 +57,37 @@ test "delayed unification rejects constructor mismatch with stable position" {
 }
 
 ///|
+test "delayed semantic inference variables reconcile with rigid context" {
+  let semantic_context = @identity.CompilationContext::new()
+  let delayed_context = DtyContext::new(semantic_context)
+  let inference = @logic.TyVarSymbol::new(
+    semantic_context,
+    b"xi",
+    @identity.Origin::user(b"xi", Some(dty_test_span()), [
+      b"mlw:inference_type_variable",
+    ]),
+  )
+  let rigid = @logic.TyVarSymbol::new(
+    semantic_context,
+    b"ls",
+    dty_user_origin(b"ls"),
+  )
+  let inferred = delayed_context.known(
+    @logic.Ty::variable(inference),
+    Some(dty_test_span()),
+  )
+  let contextual = delayed_context.known(
+    @logic.Ty::variable(rigid),
+    Some(dty_test_span()),
+  )
+  delayed_context.unify(inferred, contextual, Some(dty_test_span()))
+  assert_true(
+    delayed_context.finalize_pure(inferred, Some(dty_test_span())) ==
+    @logic.Ty::variable(rigid),
+  )
+}
+
+///|
 test "occurs check rejects an infinite delayed type" {
   let semantic_context = @identity.CompilationContext::new()
   let delayed_context = DtyContext::new(semantic_context)
@@ -95,6 +126,40 @@ test "higher-order delayed application reports an occurs check" {
   } noraise {
     _ => fail("expected an occurs-check failure for x x")
   }
+}
+
+///|
+test "diagnostic formatting renders semantic function types as arrows" {
+  let semantic_context = @identity.CompilationContext::new()
+  let parameter = @logic.TyVarSymbol::new(
+    semantic_context,
+    b"a",
+    dty_user_origin(b"a"),
+  )
+  let result = @logic.TyVarSymbol::new(
+    semantic_context,
+    b"b",
+    dty_user_origin(b"b"),
+  )
+  let function_type = @logic.TypeSymbol::new_abstract(
+    semantic_context,
+    b"infix ->",
+    dty_user_origin(b"infix ->"),
+    [parameter, result],
+    Some(dty_test_span()),
+  )
+  let arrow = @logic.Ty::app(
+    function_type,
+    [@logic.Ty::variable(parameter), @logic.Ty::variable(result)],
+    Some(dty_test_span()),
+  )
+  assert_eq(semantic_ty_diagnostic_bytes(arrow), b"'a -> 'b")
+  let higher_order = @logic.Ty::app(
+    function_type,
+    [arrow, @logic.Ty::variable(result)],
+    Some(dty_test_span()),
+  )
+  assert_eq(semantic_ty_diagnostic_bytes(higher_order), b"('a -> 'b) -> 'b")
 }
 
 ///|

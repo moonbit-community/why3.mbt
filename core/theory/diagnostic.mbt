@@ -13,6 +13,28 @@ pub(all) enum TheoryErrorKind {
   GoalNotLast
   MissingGoal
   MultipleGoals
+  NotACoercion
+  CoercionCycle
+  CoercionAlreadyDefined
+  CoercionNotFound
+  BadMetaArity
+  MetaTypeMismatch
+  UnboundMetaArgument
+  RangeConflict
+  FloatConflict
+  NonLocalCloneSymbol
+  DuplicateCloneInstantiation
+  CannotInstantiate
+  MissingCloneSymbol
+  CloneTypeVariableMismatch
+  CloneTypeArityMismatch
+  CloneLogicKindMismatch
+  CloneLogicArityMismatch
+  CloneLogicTypeMismatch
+  NotTaggingMeta
+  NotExclusiveMeta
+  IllFormedProvedWf
+  ProvedWfConflict
 } derive(Eq, Debug)
 
 ///|

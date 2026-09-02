@@ -23,6 +23,27 @@ test "semantic ids are fresh locally and isolated across contexts" {
 }
 
 ///|
+test "identifier watermarks delimit compilation-local clone events" {
+  let context = @identity.CompilationContext::new()
+  let other = @identity.CompilationContext::new()
+  let before = context.identifier_watermark()
+  let initial = context.fresh_id().identifier_id()
+  let first_clone = context.fresh_identifier_clone_id(initial)
+  let after_first = context.identifier_watermark()
+  let second_clone = context.fresh_identifier_clone_id(first_clone)
+  let first_events = context.identifier_clone_events_since(before)
+  assert_eq(first_events.length(), 2)
+  assert_true(first_events[0].original() == initial)
+  assert_true(first_events[0].clone() == first_clone)
+  assert_true(first_events[1].original() == first_clone)
+  assert_true(first_events[1].clone() == second_clone)
+  let second_events = context.identifier_clone_events_since(after_first)
+  assert_eq(second_events.length(), 1)
+  assert_true(second_events[0].clone() == second_clone)
+  assert_true(other.identifier_clone_events_since(before).is_empty())
+}
+
+///|
 test "same spelling never substitutes for semantic identity" {
   let context = @identity.CompilationContext::new()
   let first = context.fresh_id()
@@ -45,26 +66,27 @@ test "cross-context operations fail with ContextMismatch" {
 }
 
 ///|
-test "snapshot key excludes export spelling and includes every stable field" {
+test "source symbol locator includes every stable field" {
   let digest = Bytes::make(32, b'\x11')
-  let key = @identity.SnapshotSymbolKey::new(b"int.Int", 7U, 2U, Logic, digest)
-  let renamed = @identity.Origin::snapshot(b"plus", key, [])
-  let aliased = @identity.Origin::snapshot(b"infix +", key, [])
-  assert_eq(renamed.snapshot_key(), aliased.snapshot_key())
-  assert_true(
-    key != @identity.SnapshotSymbolKey::new(b"int.Int", 8U, 2U, Logic, digest),
+  let key = @identity.SourceSymbolKey::new(b"int.Int", 7U, 2U, Logic, digest)
+  assert_eq(
+    key,
+    @identity.SourceSymbolKey::new(b"int.Int", 7U, 2U, Logic, digest),
   )
   assert_true(
-    key != @identity.SnapshotSymbolKey::new(b"int.Int", 7U, 3U, Logic, digest),
+    key != @identity.SourceSymbolKey::new(b"int.Int", 8U, 2U, Logic, digest),
+  )
+  assert_true(
+    key != @identity.SourceSymbolKey::new(b"int.Int", 7U, 3U, Logic, digest),
   )
   assert_true(
     key !=
-    @identity.SnapshotSymbolKey::new(b"int.Int", 7U, 2U, Proposition, digest),
+    @identity.SourceSymbolKey::new(b"int.Int", 7U, 2U, Proposition, digest),
   )
   let changed_digest = Bytes::make(32, b'\x12')
   assert_true(
     key !=
-    @identity.SnapshotSymbolKey::new(b"int.Int", 7U, 2U, Logic, changed_digest),
+    @identity.SourceSymbolKey::new(b"int.Int", 7U, 2U, Logic, changed_digest),
   )
 }
 
@@ -76,18 +98,19 @@ test "origins preserve byte metadata and separate normalization eligibility" {
   let user = @identity.Origin::user(b"\xe4\xb8\xad", Some(span), [
     b"z", b"\xff", b"a", b"z",
   ])
-  let digest = Bytes::make(32, b'\x00')
-  let snapshot = @identity.Origin::snapshot(
-    b"snapshot",
-    @identity.SnapshotSymbolKey::new(b"why3.Unit", 0U, 0U, Type, digest),
+  let generated = @identity.Origin::generated(Wp, b"vc", None, [])
+  let derived = @identity.Origin::generated_derived(
+    EliminateDefinitionConditionally,
+    b"const'def",
+    Some(span),
     [],
   )
-  let generated = @identity.Origin::generated(Wp, b"vc", None, [])
   assert_false(user.allows_generated_name_normalization())
-  assert_false(snapshot.allows_generated_name_normalization())
   assert_true(generated.allows_generated_name_normalization())
   assert_eq(user.display_name(), b"\xe4\xb8\xad")
   assert_eq(user.attributes(), [b"a", b"z", b"\xff"])
+  assert_eq(derived.source_span(), None)
+  assert_eq(derived.identifier_source_span(), Some(span))
   guard user.source_span() is Some(stored_span) else {
     fail("expected source span")
   }

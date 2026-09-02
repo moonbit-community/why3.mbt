@@ -7,11 +7,23 @@ priv struct PrinterState {
   writer : QueryWriter
   names : NameAllocator
   syntax : SyntaxMaps
+  request_model : Bool
+  model_needs_push : Bool
 }
 
 ///|
-fn PrinterState::new(syntax : SyntaxMaps) -> PrinterState {
-  { writer: QueryWriter::new(), names: NameAllocator::new(), syntax }
+fn PrinterState::new(
+  syntax : SyntaxMaps,
+  request_model : Bool,
+  model_needs_push : Bool,
+) -> PrinterState {
+  {
+    writer: QueryWriter::new(),
+    names: NameAllocator::new(),
+    syntax,
+    request_model,
+    model_needs_push,
+  }
 }
 
 ///|
@@ -23,6 +35,7 @@ fn print_type_identifier(
   state.writer.identifier(
     state.names.unique(view.id, view.name),
     view.id,
+    view.id.identifier_id(),
     view.origin,
   )
 }
@@ -36,7 +49,21 @@ fn print_logic_identifier(
   state.writer.identifier(
     state.names.unique(view.id, view.name),
     view.id,
+    view.id.identifier_id(),
     view.origin,
+  )
+}
+
+///|
+fn print_type_variable_identifier(
+  state : PrinterState,
+  symbol : @logic.TyVarSymbol,
+) -> Unit {
+  state.writer.identifier(
+    state.names.unique(symbol.semantic_id(), symbol.name()),
+    symbol.semantic_id(),
+    symbol.semantic_id().identifier_id(),
+    symbol.origin(),
   )
 }
 
@@ -49,6 +76,7 @@ fn print_variable_identifier(
   state.writer.identifier(
     state.names.unique(view.id, view.name),
     view.id,
+    symbol.identifier_id(),
     view.origin,
   )
 }
@@ -106,11 +134,7 @@ fn print_type_template(
 ///|
 fn print_type(state : PrinterState, ty : @logic.Ty) -> Unit raise PrinterError {
   match ty.view() {
-    TyVar(_) =>
-      fail_printer(
-        ResidualTypeVariable,
-        "SMT printer received a residual type variable",
-      )
+    TyVar(variable) => print_type_variable_identifier(state, variable)
     TyApp(symbol, arguments) =>
       match state.syntax.type_template(symbol) {
         Some(template) => print_type_template(state, template, arguments)

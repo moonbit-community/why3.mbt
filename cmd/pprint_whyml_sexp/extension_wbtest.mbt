@@ -1,7 +1,8 @@
-// Structural checks for WhyML extensions accepted by pprint_whyml_sexp.
+// Structural checks for official WhyML module-interface files that the
+// simplified `why3 pp --output=sexp` Ptree entry cannot represent.
 
 ///|
-async fn read_extension_fixture(path : String) -> @parser.MlwFile {
+async fn read_module_interface_fixture(path : String) -> @parser.MlwFile {
   let source = @fs.read_file(path).binary() catch {
     _ => abort("cannot read extension fixture")
   }
@@ -23,8 +24,8 @@ fn assert_module_span(
 }
 
 ///|
-async test "module interface extension: extraction implementation structure" {
-  guard read_extension_fixture(
+async test "module interface exact: extraction implementation structure" {
+  guard read_module_interface_fixture(
       "fixtures/why3-1.7.2/bench/extraction/interface1/interface1.mlw",
     )
     is Modules([set, list_set, main]) else {
@@ -50,8 +51,8 @@ async test "module interface extension: extraction implementation structure" {
 }
 
 ///|
-async test "module interface extension: cursor implementation structure" {
-  guard read_extension_fixture(
+async test "module interface exact: cursor implementation structure" {
+  guard read_module_interface_fixture(
       "fixtures/why3-1.7.2/examples/cursor_examples.mlw",
     )
     is Modules([test_cursor, list_cursor, test_list, array_cursor, test_array]) else {

@@ -37,9 +37,10 @@ const PPRINT_WHYML_SEXP_PATH = join(
 const EXPECTED_REGULAR = 976;
 const EXPECTED_SYMLINK = 13;
 const EXPECTED_TOTAL = 989;
-const EXPECTED_DIFF = 929;
+const EXPECTED_PTREE_EXACT = 929;
+const EXPECTED_MAIN_EXACT = 2;
+const EXPECTED_EXACT = EXPECTED_PTREE_EXACT + EXPECTED_MAIN_EXACT;
 const EXPECTED_REJECT = 58;
-const EXPECTED_EXTENSION = 2;
 
 function fail(message) {
   throw new Error(message);
@@ -111,12 +112,21 @@ export function validateManifest(manifest, fixturePaths) {
   if (manifest.why3Version !== '1.7.2') {
     fail(`manifest Why3 version must be 1.7.2, got ${manifest.why3Version}`);
   }
+  const mainContract = manifest.mainEntryRejectContract;
+  if (JSON.stringify(mainContract) !== JSON.stringify({
+    command: 'why3 prove --parse-only',
+    stage: 'parsing',
+    category: 'Rejected',
+    compareMessage: false,
+  })) {
+    fail('manifest main-entry reject contract is invalid');
+  }
   if (!manifest.entries || Array.isArray(manifest.entries) ||
     typeof manifest.entries !== 'object') {
     fail('manifest entries must be an object');
   }
   const paths = Object.keys(manifest.entries);
-  if (paths.length !== EXPECTED_REJECT + EXPECTED_EXTENSION) {
+  if (paths.length !== EXPECTED_REJECT + EXPECTED_MAIN_EXACT) {
     fail(`manifest must contain 60 entries, got ${paths.length}`);
   }
   const sortedPaths = [...paths].sort();
@@ -126,7 +136,7 @@ export function validateManifest(manifest, fixturePaths) {
 
   const knownFixtures = new Set(fixturePaths);
   let reject = 0;
-  let extension = 0;
+  let mainExact = 0;
   for (const path of paths) {
     if (path.startsWith('/') || path.includes('\\') ||
       path.split('/').includes('..')) {
@@ -149,21 +159,23 @@ export function validateManifest(manifest, fixturePaths) {
       } else if (!isIntegerArray(entry.why3Position, 3)) {
         fail(`invalid Why3 position for ${path}`);
       }
-    } else if (entry.lane === 'extension') {
-      extension += 1;
-      if (!isIntegerArray(entry.why3Position, 3) ||
-        entry.moonbitKind !== 'AcceptExtension' ||
+    } else if (entry.lane === 'exact-main') {
+      mainExact += 1;
+      if (!isIntegerArray(entry.why3PpPosition, 3) ||
         typeof entry.structureTest !== 'string') {
-        fail(`invalid extension manifest entry for ${path}`);
+        fail(`invalid exact-main manifest entry for ${path}`);
       }
     } else {
       fail(`unknown manifest lane for ${path}: ${entry.lane}`);
     }
   }
-  if (reject !== EXPECTED_REJECT || extension !== EXPECTED_EXTENSION) {
-    fail(`manifest lanes must be 58 reject / 2 extension, got ${reject} / ${extension}`);
+  if (reject !== EXPECTED_REJECT || mainExact !== EXPECTED_MAIN_EXACT) {
+    fail(
+      `manifest lanes must be 58 reject / 2 exact-main, got ` +
+      `${reject} / ${mainExact}`,
+    );
   }
-  return { reject, extension };
+  return { reject, mainExact };
 }
 
 function runCapture(command, argv, options = {}) {
@@ -206,7 +218,7 @@ function verifyWhy3Version() {
     shell: false,
     env: { ...process.env, LC_ALL: 'C' },
   });
-  if (result.error) throw result.error;
+  if (result.error && result.error.code !== 'EPERM') throw result.error;
   if (result.status !== 0) fail(`why3 --version failed: ${result.stderr}`);
   if (!/^Why3 platform, version 1\.7\.2\s*$/u.test(result.stdout)) {
     fail(`expected Why3 1.7.2, got ${result.stdout.trim()}`);
@@ -227,7 +239,7 @@ async function buildPprintWhymlSexp() {
   }
 }
 
-async function checkExtensionStructure(entries) {
+async function checkMainExactStructure(entries) {
   for (const [path, entry] of entries) {
     const result = await runCapture(
       'moon',
@@ -243,12 +255,12 @@ async function checkExtensionStructure(entries) {
     );
     if (result.code !== 0) {
       fail(
-        `extension structure assertion failed for ${path}:\n` +
+        `exact-main structure assertion failed for ${path}:\n` +
         result.stdout + result.stderr,
       );
     }
     if (!/Total tests: 1, passed: 1, failed: 0\./u.test(result.stdout)) {
-      fail(`extension structure test did not run exactly once for ${path}`);
+      fail(`exact-main structure test did not run exactly once for ${path}`);
     }
   }
 }
@@ -311,13 +323,19 @@ async function runFixture(fixture, manifestEntry, directory, ordinal) {
 
   if (manifestEntry) {
     if (why3.code === 0) {
-      fail(`manifest fixture unexpectedly passed Why3: ${fixture.relativePath}`);
+      fail(
+        `manifest fixture unexpectedly passed the parsing-only Why3 pp entry: ` +
+        fixture.relativePath,
+      );
     }
     const why3Position = parseWhy3Position(why3.stderr);
-    if (!sameNumbers(why3Position, manifestEntry.why3Position)) {
+    const expectedPpPosition = manifestEntry.lane === 'exact-main'
+      ? manifestEntry.why3PpPosition
+      : manifestEntry.why3Position;
+    if (!sameNumbers(why3Position, expectedPpPosition)) {
       fail(
-        `Why3 position drift for ${fixture.relativePath}: expected ` +
-        `${JSON.stringify(manifestEntry.why3Position)}, got ` +
+        `Why3 pp position drift for ${fixture.relativePath}: expected ` +
+        `${JSON.stringify(expectedPpPosition)}, got ` +
         `${JSON.stringify(why3Position)}\n${why3.stderr}`,
       );
     }
@@ -327,15 +345,60 @@ async function runFixture(fixture, manifestEntry, directory, ordinal) {
       moonRaw,
       { cwd: PROJECT_ROOT, env: process.env },
     );
-    if (manifestEntry.lane === 'extension') {
+    if (manifestEntry.lane === 'exact-main') {
+      const mainEntry = await runCapture(
+        'why3',
+        ['prove', '--type-only', fixture.absolutePath],
+        {
+          cwd: PROJECT_ROOT,
+          env: { ...process.env, LC_ALL: 'C' },
+        },
+      );
+      if (mainEntry.code !== 0) {
+        fail(
+          `official WhyML main entry rejected ${fixture.relativePath}:\n` +
+          mainEntry.stdout + mainEntry.stderr,
+        );
+      }
       if (moon.code !== 0 || moon.stderr !== '') {
-        fail(`MoonBit rejected extension ${fixture.relativePath}:\n${moon.stderr}`);
+        fail(
+          `MoonBit rejected official exact fixture ${fixture.relativePath}:\n` +
+          moon.stderr,
+        );
       }
       const output = await readFile(moonRaw, 'utf8');
       if (output.length === 0) {
-        fail(`MoonBit extension projection is empty: ${fixture.relativePath}`);
+        fail(`MoonBit exact-main projection is empty: ${fixture.relativePath}`);
       }
-      return 'extension';
+      return 'mainExact';
+    }
+    const mainEntry = await runCapture(
+      'why3',
+      ['prove', '--parse-only', fixture.absolutePath],
+      {
+        cwd: PROJECT_ROOT,
+        env: { ...process.env, LC_ALL: 'C' },
+      },
+    );
+    if (mainEntry.code === 0 || mainEntry.signal !== null) {
+      fail(
+        `official WhyML main entry unexpectedly accepted reject fixture ` +
+        `${fixture.relativePath}`,
+      );
+    }
+    if (mainEntry.stdout !== '') {
+      fail(
+        `official WhyML main-entry rejection polluted stdout for ` +
+        `${fixture.relativePath}`,
+      );
+    }
+    const mainPosition = parseWhy3Position(mainEntry.stderr);
+    if (!sameNumbers(mainPosition, manifestEntry.why3Position)) {
+      fail(
+        `Why3 main-entry position drift for ${fixture.relativePath}: expected ` +
+        `${JSON.stringify(manifestEntry.why3Position)}, got ` +
+        `${JSON.stringify(mainPosition)}\n${mainEntry.stderr}`,
+      );
     }
     if (moon.code === 0) {
       fail(`MoonBit unexpectedly accepted reject fixture: ${fixture.relativePath}`);
@@ -385,7 +448,7 @@ async function runFixture(fixture, manifestEntry, directory, ordinal) {
     fail(`MoonBit polluted stderr for ${fixture.relativePath}:\n${moon.stderr}`);
   }
   await compareRaw(why3Raw, moonRaw, fixture.relativePath);
-  return 'diff';
+  return 'ptreeExact';
 }
 
 function workerCount() {
@@ -398,7 +461,7 @@ function workerCount() {
 }
 
 async function runPool(fixtures, manifest, directory) {
-  const counts = { diff: 0, reject: 0, extension: 0 };
+  const counts = { ptreeExact: 0, mainExact: 0, reject: 0 };
   let next = 0;
   let firstError = null;
   let completed = 0;
@@ -451,27 +514,29 @@ export async function checkWhy3Fixtures() {
   const manifest = JSON.parse(readFileSync(MANIFEST_PATH, 'utf8'));
   validateManifest(manifest, inventory.fixtures.map(item => item.relativePath));
   await buildPprintWhymlSexp();
-  await checkExtensionStructure(
+  await checkMainExactStructure(
     Object.entries(manifest.entries).filter(([, entry]) =>
-      entry.lane === 'extension'),
+      entry.lane === 'exact-main'),
   );
 
   const directory = await mkdtemp(join(tmpdir(), 'why3-parser-corpus-'));
   try {
     const counts = await runPool(inventory.fixtures, manifest, directory);
-    if (counts.diff !== EXPECTED_DIFF ||
+    if (counts.ptreeExact !== EXPECTED_PTREE_EXACT ||
+      counts.mainExact !== EXPECTED_MAIN_EXACT ||
       counts.reject !== EXPECTED_REJECT ||
-      counts.extension !== EXPECTED_EXTENSION) {
+      counts.ptreeExact + counts.mainExact !== EXPECTED_EXACT) {
       fail(
-        `corpus lane drift: ${counts.diff} diff / ${counts.reject} reject / ` +
-        `${counts.extension} extension`,
+        `corpus lane drift: ${counts.ptreeExact} Ptree exact / ` +
+        `${counts.mainExact} main-entry exact / ${counts.reject} reject`,
       );
     }
     process.stdout.write(
-      `corpus: ${counts.diff} diff / ${counts.reject} reject / ` +
-      `${counts.extension} extension\n`,
+      `corpus: ${EXPECTED_EXACT} exact ` +
+      `(${counts.ptreeExact} Ptree + ${counts.mainExact} main-entry) / ` +
+      `${counts.reject} reject\n`,
     );
-    return counts;
+    return { exact: EXPECTED_EXACT, ...counts };
   } finally {
     await rm(directory, { recursive: true, force: true });
   }

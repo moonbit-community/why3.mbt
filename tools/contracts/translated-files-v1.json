@@ -37,6 +37,175 @@
       "lastSemanticModificationDate": "2026-07-21"
     },
     {
+      "path": "core/env/cache.mbt",
+      "upstreamSources": [
+        "src/core/env.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/env/diagnostic.mbt",
+      "upstreamSources": [
+        "src/core/env.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/env/environment.mbt",
+      "upstreamSources": [
+        "src/core/env.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/env/source_provider.mbt",
+      "upstreamSources": [
+        "src/core/env.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/logic/decl.mbt",
+      "upstreamSources": [
+        "src/core/decl.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/logic/decl_invariants.mbt",
+      "upstreamSources": [
+        "src/core/decl.ml",
+        "src/core/pattern.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/logic/known.mbt",
+      "upstreamSources": [
+        "src/core/decl.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/logic/pattern.mbt",
+      "upstreamSources": [
+        "src/core/term.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/logic/record.mbt",
+      "upstreamSources": [
+        "src/core/decl.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/logic/symbol.mbt",
+      "upstreamSources": [
+        "src/core/term.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/logic/term_make.mbt",
+      "upstreamSources": [
+        "src/core/term.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/logic/termination.mbt",
+      "upstreamSources": [
+        "src/core/decl.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/logic/type.mbt",
+      "upstreamSources": [
+        "src/core/ty.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/theory/clone.mbt",
+      "upstreamSources": [
+        "src/core/theory.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/theory/coercion.mbt",
+      "upstreamSources": [
+        "src/core/coercion.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/theory/meta.mbt",
+      "upstreamSources": [
+        "src/core/theory.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/theory/namespace.mbt",
+      "upstreamSources": [
+        "src/core/theory.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/theory/proved_wf.mbt",
+      "upstreamSources": [
+        "src/core/theory.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/theory/task.mbt",
+      "upstreamSources": [
+        "src/core/task.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/theory/tdecl.mbt",
+      "upstreamSources": [
+        "src/core/theory.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "core/theory/theory.mbt",
+      "upstreamSources": [
+        "src/core/theory.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
       "path": "elab/dterm.mbt",
       "upstreamSources": [
         "src/core/dterm.ml",
@@ -44,6 +213,15 @@
       ],
       "translationDate": "2026-07-21",
       "lastSemanticModificationDate": "2026-07-21"
+    },
+    {
+      "path": "elab/library_loader.mbt",
+      "upstreamSources": [
+        "src/core/env.ml",
+        "src/parser/typing.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
     },
     {
       "path": "elab/program.mbt",
@@ -56,7 +234,7 @@
         "src/parser/typing.ml"
       ],
       "translationDate": "2026-07-21",
-      "lastSemanticModificationDate": "2026-07-22"
+      "lastSemanticModificationDate": "2026-07-24"
     },
     {
       "path": "elab/type_theory.mbt",
@@ -64,7 +242,132 @@
         "src/parser/typing.ml"
       ],
       "translationDate": "2026-07-21",
-      "lastSemanticModificationDate": "2026-07-22"
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "environment/environment.mbt",
+      "upstreamSources": [
+        "src/core/env.ml",
+        "src/mlw/pmodule.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "environment/typed_library.mbt",
+      "upstreamSources": [
+        "src/core/env.ml",
+        "src/mlw/pmodule.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "literal/constant.mbt",
+      "upstreamSources": [
+        "src/util/constant.ml",
+        "src/util/number.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "mlw/cty.mbt",
+      "upstreamSources": [
+        "src/mlw/ity.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "mlw/cty_instantiate.mbt",
+      "upstreamSources": [
+        "src/mlw/ity.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "mlw/effect.mbt",
+      "upstreamSources": [
+        "src/mlw/ity.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "mlw/expr.mbt",
+      "upstreamSources": [
+        "src/mlw/expr.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "mlw/expr_advanced.mbt",
+      "upstreamSources": [
+        "src/mlw/expr.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "mlw/expr_types.mbt",
+      "upstreamSources": [
+        "src/mlw/expr.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "mlw/interface.mbt",
+      "upstreamSources": [
+        "src/mlw/pmodule.ml",
+        "src/parser/typing.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "mlw/ity.mbt",
+      "upstreamSources": [
+        "src/mlw/ity.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "mlw/namespace.mbt",
+      "upstreamSources": [
+        "src/mlw/pmodule.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "mlw/pdecl_dependencies.mbt",
+      "upstreamSources": [
+        "src/mlw/pdecl.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "mlw/pmodule.mbt",
+      "upstreamSources": [
+        "src/mlw/pdecl.ml",
+        "src/mlw/pmodule.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "mlw/symbol.mbt",
+      "upstreamSources": [
+        "src/mlw/expr.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
     },
     {
       "path": "parser/api.mbt",
@@ -167,7 +470,7 @@
         "src/util/number.ml"
       ],
       "translationDate": "2026-07-20",
-      "lastSemanticModificationDate": "2026-07-21"
+      "lastSemanticModificationDate": "2026-07-24"
     },
     {
       "path": "parser/location.mbt",
@@ -562,19 +865,24 @@
       "lastSemanticModificationDate": "2026-07-21"
     },
     {
-      "path": "tools/why3_reference/export_semantic_inventory.ml",
+      "path": "tools/why3_reference/canonical_v3.ml",
       "upstreamSources": [
-        "src/core/decl.ml",
+        "src/core/ident.ml",
+        "src/core/ty.ml",
         "src/core/term.ml",
+        "src/core/decl.ml",
         "src/core/theory.ml",
+        "src/core/task.ml",
+        "src/mlw/expr.ml",
         "src/mlw/ity.ml",
+        "src/mlw/pdecl.ml",
         "src/mlw/pmodule.ml"
       ],
-      "translationDate": "2026-07-21",
-      "lastSemanticModificationDate": "2026-07-21"
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
     },
     {
-      "path": "tools/why3_reference/canonical_v2.ml",
+      "path": "tools/why3_reference/canonical_graph_v3.ml",
       "upstreamSources": [
         "src/core/ident.ml",
         "src/core/ty.ml",
@@ -588,8 +896,18 @@
         "src/mlw/pmodule.ml",
         "src/printer/smtv2.ml"
       ],
-      "translationDate": "2026-07-21",
-      "lastSemanticModificationDate": "2026-07-22"
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
+    },
+    {
+      "path": "tools/why3_reference/source_catalog.ml",
+      "upstreamSources": [
+        "src/core/theory.ml",
+        "src/driver/driver.ml",
+        "src/mlw/pmodule.ml"
+      ],
+      "translationDate": "2026-07-24",
+      "lastSemanticModificationDate": "2026-07-24"
     },
     {
       "path": "tools/why3_reference/export_elab_typed.ml",

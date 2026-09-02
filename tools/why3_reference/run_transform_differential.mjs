@@ -1,14 +1,19 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
 
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   EXPECTED_WHY3_COMMIT,
   EXPECTED_WHY3_TREE,
-  PROGRAM_ROOTS,
   canonicalSha,
   runChecked,
   sha256,
@@ -20,17 +25,17 @@ import {
 
 const SCRIPT_DIRECTORY = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = resolve(SCRIPT_DIRECTORY, '..', '..');
-const DRIVER_CONTRACT = join(
-  PROJECT_ROOT,
-  'tools',
-  'contracts',
-  'driver-closure-v1.json',
-);
 const SEMANTIC_PROFILE = join(
   PROJECT_ROOT,
   'tools',
   'contracts',
-  'semantic-profile-v1.json',
+  'semantic-profile-v3.json',
+);
+const DIAGNOSTIC_CONTRACT = join(
+  PROJECT_ROOT,
+  'tools',
+  'contracts',
+  'diagnostics-v1.json',
 );
 const Z3_PROFILE = join(
   PROJECT_ROOT,
@@ -168,32 +173,31 @@ function copyReferenceSource(buildDirectory, name) {
 function compileReferences(buildDirectory, runtime) {
   const env = referenceRuntimeEnvironment(runtime);
   for (const name of [
-    'export_snapshot.ml',
-    'canonical_v2.ml',
+    'source_catalog.ml',
+    'canonical_v3_profile.ml',
+    'canonical_v3.ml',
+    'canonical_graph_v3.ml',
     'export_z3_profile.ml',
     'export_transform_trace.ml',
   ]) {
     copyReferenceSource(buildDirectory, name);
   }
-  const snapshot = join(buildDirectory, 'export-snapshot');
   const z3Profile = join(buildDirectory, 'export-z3-profile');
   const trace = join(buildDirectory, 'export-transform-trace');
-  runChecked('ocamlfind', [
-    'ocamlopt',
-    '-linkpkg',
-    '-package',
-    'why3,yojson,unix',
-    '-o',
-    snapshot,
-    'export_snapshot.ml',
-  ], { cwd: buildDirectory, env });
-  runChecked('ocamlfind', [
-    'ocamlopt',
-    '-package',
-    'why3,yojson,digestif.ocaml,unix',
-    '-c',
-    'canonical_v2.ml',
-  ], { cwd: buildDirectory, env });
+  for (const source of [
+    'source_catalog.ml',
+    'canonical_v3_profile.ml',
+    'canonical_v3.ml',
+    'canonical_graph_v3.ml',
+  ]) {
+    runChecked('ocamlfind', [
+      'ocamlopt',
+      '-package',
+      'why3,yojson,digestif.ocaml,unix',
+      '-c',
+      source,
+    ], { cwd: buildDirectory, env });
+  }
   runChecked('ocamlfind', [
     'ocamlopt',
     '-linkpkg',
@@ -201,7 +205,7 @@ function compileReferences(buildDirectory, runtime) {
     'why3,yojson,digestif.ocaml,unix',
     '-o',
     z3Profile,
-    'canonical_v2.cmx',
+    'source_catalog.cmx',
     'export_z3_profile.ml',
   ], { cwd: buildDirectory, env });
   runChecked('ocamlfind', [
@@ -211,33 +215,18 @@ function compileReferences(buildDirectory, runtime) {
     'why3,yojson,digestif.ocaml,unix',
     '-o',
     trace,
-    'canonical_v2.cmx',
+    'canonical_v3_profile.cmx',
+    'canonical_v3.cmx',
+    'canonical_graph_v3.cmx',
     'export_transform_trace.ml',
   ], { cwd: buildDirectory, env });
-  return { snapshot, z3Profile, trace };
+  return { z3Profile, trace };
 }
 
-function exportSnapshot(executable, outputPath, why3Root, driver) {
-  const argv = ['--stdlib', join(why3Root, 'stdlib')];
-  for (const theory of driver.driver.theoryRoots) {
-    argv.push('--theory', theory);
-  }
-  for (const pmodule of PROGRAM_ROOTS) argv.push('--module', pmodule);
-  const output = runChecked(executable, argv, {
-    cwd: PROJECT_ROOT,
-    env: { ...process.env, LC_ALL: 'C' },
-    maxBuffer: 128 * 1024 * 1024,
-  });
-  if (!output.endsWith('\n')) fail('snapshot exporter output has no final LF');
-  writeFileSync(outputPath, output);
-}
-
-function runTrace(executable, why3Root, snapshot, fixture) {
+function runTrace(executable, why3Root, fixture) {
   const argv = [
     '--why3-root',
     why3Root,
-    '--snapshot',
-    snapshot,
     '--fixture',
     fixture.label,
     '--file',
@@ -251,12 +240,10 @@ function runTrace(executable, why3Root, snapshot, fixture) {
   });
 }
 
-function validateRawZ3Profile(executable, why3Root, snapshot, expected) {
+function validateRawZ3Profile(executable, why3Root, expected) {
   const output = runChecked(executable, [
     '--stdlib',
     join(why3Root, 'stdlib'),
-    '--snapshot',
-    snapshot,
   ], {
     cwd: PROJECT_ROOT,
     env: { ...process.env, LC_ALL: 'C' },
@@ -289,7 +276,13 @@ function runMoon(stage, fixture) {
   });
 }
 
-function parseRecords(output, label, fixture, semanticProfileSha256) {
+function parseRecords(
+  output,
+  label,
+  fixture,
+  semanticProfileSha256,
+  diagnosticContractSha256,
+) {
   if (!output.endsWith('\n')) fail(`${label} output has no final LF`);
   const lines = output.slice(0, -1).split('\n');
   const sourceSha256 = sha256(readFileSync(join(PROJECT_ROOT, fixture.label)));
@@ -303,12 +296,14 @@ function parseRecords(output, label, fixture, semanticProfileSha256) {
     if (JSON.stringify(record) !== line) {
       fail(`${label} record ${index} is not compact canonical JSON`);
     }
-    if (record.schema !== 2 ||
+    if (record.schema !== 3 ||
         record.semantic_profile_sha256 !== semanticProfileSha256 ||
+        record.diagnostic_contract_sha256 !== diagnosticContractSha256 ||
         record.fixture !== fixture.label ||
         record.source_sha256 !== sourceSha256 ||
         record.scope !== 'goal' ||
         record.unit_kind !== 'theory' ||
+        record.canonical?.[0] !== 'GraphV3' ||
         record.canonical_sha256 !== canonicalSha(record.canonical)) {
       fail(`${label} record ${index} has invalid portable metadata or hash`);
     }
@@ -399,23 +394,22 @@ function assertSameOutput(actual, expected, label) {
 
 function main(argv = process.argv.slice(2)) {
   const options = parseArguments(argv);
-  const driver = readJson(DRIVER_CONTRACT);
   const semanticProfile = readJson(SEMANTIC_PROFILE);
+  const diagnostics = readJson(DIAGNOSTIC_CONTRACT);
   const z3Profile = readJson(Z3_PROFILE);
-  if (semanticProfile.semanticProfileSha256 === undefined) {
-    fail('semantic-profile-v1.json has no semantic profile hash');
+  if (semanticProfile.canonicalSchemaVersion !== 3 ||
+      semanticProfile.semanticProfileSha256 === undefined ||
+      diagnostics.diagnosticContractSha256 === undefined) {
+    fail('canonical v3 contracts are incomplete');
   }
   const buildDirectory = mkdtempSync(join(tmpdir(), 'why3-transform-differential-'));
   try {
     const runtime = verifyWhy3(options, z3Profile);
     const why3Root = runtime.sourceRoot;
     const executables = compileReferences(buildDirectory, runtime);
-    const snapshot = join(buildDirectory, 'snapshot.json');
-    exportSnapshot(executables.snapshot, snapshot, why3Root, driver);
     validateRawZ3Profile(
       executables.z3Profile,
       why3Root,
-      snapshot,
       z3Profile,
     );
     let checkpointRecords = 0;
@@ -424,10 +418,11 @@ function main(argv = process.argv.slice(2)) {
         ? z3Profile.tracePatch.checkpointSequences.polymorphic
         : z3Profile.tracePatch.checkpointSequences.monomorphic;
       const reference = parseRecords(
-        runTrace(executables.trace, why3Root, snapshot, fixture),
+        runTrace(executables.trace, why3Root, fixture),
         `Why3 ${fixture.label}`,
         fixture,
         semanticProfile.semanticProfileSha256,
+        diagnostics.diagnosticContractSha256,
       );
       const expected = validateTrace(reference, fixture, checkpointSequence);
       assertSameOutput(

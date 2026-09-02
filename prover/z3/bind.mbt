@@ -42,9 +42,10 @@ pub(all) struct Z3SyntaxEntry {
 ///|
 struct Z3Profile {
   anchor : @identity.SemanticId
+  model_parser : Z3ModelParser
   transforms : Array[TransformId]
   meta_groups : Array[TypedMetaGroup]
-  snapshot_meta_groups : Array[TypedMetaGroup]
+  theory_meta_groups : Array[TypedMetaGroup]
   syntax : Array[TypedSyntaxEntry]
   remove : Array[@logic.PrSymbol]
   preludes : Array[Bytes]
@@ -59,10 +60,11 @@ struct Z3Profile {
 ///|
 pub(all) struct Z3ProfileView {
   context_anchor : @identity.SemanticId
+  model_parser : Z3ModelParser
   transforms : ArrayView[TransformId]
   driver_meta_group_count : Int
   driver_meta_count : Int
-  validated_snapshot_meta_count : Int
+  theory_meta_count : Int
   syntax_count : Int
   remove_count : Int
   preludes : ArrayView[Bytes]
@@ -85,10 +87,11 @@ fn typed_meta_count(groups : ArrayView[TypedMetaGroup]) -> Int {
 pub fn Z3Profile::view(self : Z3Profile) -> Z3ProfileView {
   {
     context_anchor: self.anchor,
+    model_parser: self.model_parser,
     transforms: self.transforms[:],
     driver_meta_group_count: self.meta_groups.length(),
     driver_meta_count: typed_meta_count(self.meta_groups),
-    validated_snapshot_meta_count: typed_meta_count(self.snapshot_meta_groups),
+    theory_meta_count: typed_meta_count(self.theory_meta_groups),
     syntax_count: self.syntax.length(),
     remove_count: self.remove.length(),
     preludes: self.preludes[:],
@@ -243,7 +246,16 @@ fn bind_meta_groups(
           ),
         )
       }
-      let meta = @theory.Meta::new(entry.name, arguments)
+      let meta = match entry.name {
+        b"counterexample_need_smtlib_push"
+        | b"select_alginst_default"
+        | b"select_inst_default"
+        | b"select_kept_default"
+        | b"select_lsinst_default"
+        | b"select_lskept_default" =>
+          @theory.Meta::exclusive(entry.name, arguments)
+        _ => @theory.Meta::new(entry.name, arguments)
+      }
       meta.validate_context(resolver.context_anchor(), None) catch {
         _ =>
           fail_bind(
@@ -278,11 +290,11 @@ pub fn bind_profile(
     context,
     "$.driverMetaGroups",
   )
-  let snapshot_meta_groups = bind_meta_groups(
-    spec.snapshot_meta_groups,
+  let theory_meta_groups = bind_meta_groups(
+    spec.theory_meta_groups,
     resolver,
     context,
-    "$.snapshotMetaClosure",
+    "$.theoryMetaClosure",
   )
   let syntax : Array[TypedSyntaxEntry] = []
   for index, entry in spec.syntax {
@@ -311,9 +323,10 @@ pub fn bind_profile(
   }
   {
     anchor: resolver.context_anchor(),
+    model_parser: spec.model_parser,
     transforms: spec.transforms.copy(),
     meta_groups,
-    snapshot_meta_groups,
+    theory_meta_groups,
     syntax,
     remove,
     preludes: spec.preludes.copy(),

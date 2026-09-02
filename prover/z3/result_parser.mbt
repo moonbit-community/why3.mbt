@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
-// Result precedence follows Why3 1.7.2 driver/call_provers.ml for the frozen
+// Result precedence follows Why3 1.7.2 driver/call_provers.ml for the pinned
 // z3_487 answer rules. Runtime-limit heuristics are intentionally excluded.
 
 ///|

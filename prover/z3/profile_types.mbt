@@ -6,6 +6,11 @@ pub(all) enum Z3Printer {
 } derive(Eq, Debug)
 
 ///|
+pub(all) enum Z3ModelParser {
+  SmtV2
+} derive(Eq, Debug)
+
+///|
 pub(all) enum TransformId {
   CounterexamplesDependentIntros
   InlineTrivial
@@ -48,15 +53,15 @@ pub fn TransformId::canonical_name(self : TransformId) -> BytesView {
 ///|
 priv enum UnboundTy {
   UnboundTyVariable(Bytes)
-  UnboundTyApplication(@identity.SnapshotSymbolKey, Array[UnboundTy])
+  UnboundTyApplication(@identity.SourceSymbolKey, Array[UnboundTy])
 }
 
 ///|
 priv enum UnboundMetaArgument {
   UnboundMetaType(UnboundTy)
-  UnboundMetaTypeSymbol(@identity.SnapshotSymbolKey)
-  UnboundMetaLogicSymbol(@identity.SnapshotSymbolKey)
-  UnboundMetaPropositionSymbol(@identity.SnapshotSymbolKey)
+  UnboundMetaTypeSymbol(@identity.SourceSymbolKey)
+  UnboundMetaLogicSymbol(@identity.SourceSymbolKey)
+  UnboundMetaPropositionSymbol(@identity.SourceSymbolKey)
   UnboundMetaString(Bytes)
   UnboundMetaInteger(Int64)
   UnboundMetaIdentifier(Bytes)
@@ -90,7 +95,7 @@ pub(all) enum SyntaxKind {
 ///|
 priv struct UnboundSyntaxEntry {
   kind : SyntaxKind
-  symbol : @identity.SnapshotSymbolKey
+  symbol : @identity.SourceSymbolKey
   template : Bytes
   overriding : Bool
 }
@@ -162,11 +167,12 @@ pub fn Z3CommandTemplate::view(
 ///|
 struct Z3StaticSpec {
   printer : Z3Printer
+  model_parser : Z3ModelParser
   transforms : Array[TransformId]
   meta_groups : Array[UnboundMetaGroup]
-  snapshot_meta_groups : Array[UnboundMetaGroup]
+  theory_meta_groups : Array[UnboundMetaGroup]
   syntax : Array[UnboundSyntaxEntry]
-  remove : Array[@identity.SnapshotSymbolKey]
+  remove : Array[@identity.SourceSymbolKey]
   preludes : Array[Bytes]
   theory_preludes : Array[TheoryPrelude]
   result_regexps : Array[ResultRegexp]
@@ -179,11 +185,12 @@ struct Z3StaticSpec {
 ///|
 pub(all) struct Z3StaticSpecView {
   printer : Z3Printer
+  model_parser : Z3ModelParser
   transforms : ArrayView[TransformId]
   driver_meta_group_count : Int
   driver_meta_count : Int
-  snapshot_meta_group_count : Int
-  snapshot_meta_count : Int
+  theory_meta_group_count : Int
+  theory_meta_count : Int
   syntax_count : Int
   remove_count : Int
   preludes : ArrayView[Bytes]
@@ -218,11 +225,12 @@ fn meta_count(groups : ArrayView[UnboundMetaGroup]) -> Int {
 pub fn Z3StaticSpec::view(self : Z3StaticSpec) -> Z3StaticSpecView {
   {
     printer: self.printer,
+    model_parser: self.model_parser,
     transforms: self.transforms[:],
     driver_meta_group_count: self.meta_groups.length(),
     driver_meta_count: meta_count(self.meta_groups),
-    snapshot_meta_group_count: self.snapshot_meta_groups.length(),
-    snapshot_meta_count: meta_count(self.snapshot_meta_groups),
+    theory_meta_group_count: self.theory_meta_groups.length(),
+    theory_meta_count: meta_count(self.theory_meta_groups),
     syntax_count: self.syntax.length(),
     remove_count: self.remove.length(),
     preludes: self.preludes[:],

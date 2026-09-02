@@ -9,15 +9,32 @@ fn int_theory_key() -> @theory.TheoryKey raise {
 test "one static Z3 spec binds independently to two contexts" {
   let left_context = @identity.CompilationContext::new()
   let right_context = @identity.CompilationContext::new()
-  let left_environment = @stdlib.minimal_env(left_context)
-  let right_environment = @stdlib.minimal_env(right_context)
-  let left = bind_z3_profile(left_environment, left_context)
-  let right = bind_z3_profile(right_environment, right_context)
+  let left_environment = @environment.Environment::with_source_in_context(
+    left_context,
+    @stdlib.embedded_source_provider(),
+  )
+  let right_environment = @environment.Environment::with_source_in_context(
+    right_context,
+    @stdlib.embedded_source_provider(),
+  )
+  let left = bind_z3_profile(left_environment, left_context) catch {
+    @z3.BindError(diagnostic) => {
+      debug_inspect(diagnostic)
+      fail("left source profile binding failed")
+    }
+  }
+  let right = bind_z3_profile(right_environment, right_context) catch {
+    @z3.BindError(diagnostic) => {
+      debug_inspect(diagnostic)
+      fail("right source profile binding failed")
+    }
+  }
   let left_view = left.view()
   let right_view = right.view()
   assert_eq(left_view.driver_meta_group_count, 48)
   assert_eq(left_view.driver_meta_count, 992)
-  assert_eq(left_view.validated_snapshot_meta_count, 491)
+  assert_eq(left_view.model_parser, @z3.SmtV2)
+  assert_eq(left_view.theory_meta_count, 491)
   assert_eq(left_view.syntax_count, 284)
   assert_eq(left_view.remove_count, 680)
   assert_eq(left_view.theory_prelude_count, 5)
@@ -52,7 +69,10 @@ test "one static Z3 spec binds independently to two contexts" {
 ///|
 test "prepared SMT query bytes are target-independent" {
   let context = @identity.CompilationContext::new()
-  let environment = @stdlib.minimal_env(context)
+  let environment = @environment.Environment::with_source_in_context(
+    context,
+    @stdlib.embedded_source_provider(),
+  )
   let profile = bind_z3_profile(environment, context)
   let user_type = @logic.TypeSymbol::new_abstract(
     context,

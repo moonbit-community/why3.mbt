@@ -14,10 +14,10 @@ fn literal_term_is_passthrough(term : @logic.Term) -> Bool {
         arguments.is_empty() else {
         return false
       }
-      match constant.view() {
-        IntegerConstant(_, _) => symbol.builtin_kind() == Some(BuiltinInteger)
-        RealConstant(_, _) => symbol.builtin_kind() == Some(BuiltinReal)
-        StringConstant(_) => false
+      match constant {
+        ConstInt(_) => symbol.builtin_kind() == Some(BuiltinInteger)
+        ConstReal(_) => symbol.builtin_kind() == Some(BuiltinReal)
+        ConstStr(_) => false
       }
     }
     Tvar(_) | Ttrue | Tfalse => true
@@ -54,7 +54,7 @@ fn literal_declaration_is_passthrough(declaration : @logic.Decl) -> Bool {
       definitions.all(definition => {
         literal_term_is_passthrough(definition.view().body)
       })
-    Dind(_) => false
+    Dind(_, _) => false
     Dprop(_, _, formula) => literal_term_is_passthrough(formula)
   }
 }

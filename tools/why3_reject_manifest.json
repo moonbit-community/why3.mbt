@@ -1,8 +1,9 @@
 {
   "why3Version": "1.7.2",
-  "positionFormat": "why3Position = [line, startColumn, endColumn]; moonbitPosition = [startLine, startColumn, endLine, endColumn]",
+  "positionFormat": "why3Position/why3PpPosition = [line, startColumn, endColumn]; moonbitPosition = [startLine, startColumn, endLine, endColumn]",
+  "mainEntryRejectContract": {"command":"why3 prove --parse-only","stage":"parsing","category":"Rejected","compareMessage":false},
   "entries": {
-    "bench/extraction/interface1/interface1.mlw": {"lane":"extension","why3Position":[22,15,16],"moonbitKind":"AcceptExtension","structureTest":"module interface extension: extraction implementation structure"},
+    "bench/extraction/interface1/interface1.mlw": {"lane":"exact-main","why3PpPosition":[22,15,16],"structureTest":"module interface exact: extraction implementation structure"},
     "bench/parsing/bad/498.mlw": {"lane":"reject","why3Position":[1,4,7],"moonbitKind":"UnexpectedToken"},
     "bench/parsing/bad/498_function.mlw": {"lane":"reject","why3Position":[1,9,12],"moonbitKind":"UnexpectedToken"},
     "bench/parsing/bad/decl_after_module.mlw": {"lane":"reject","why3Position":[5,0,9],"moonbitKind":"NestedModule"},
@@ -15,7 +16,7 @@
     "bench/parsing/bad/module_name.mlw": {"lane":"reject","why3Position":[1,7,11],"moonbitKind":"UnexpectedToken"},
     "bench/parsing/bad/ref_while.mlw": {"lane":"reject","why3Position":[1,12,17],"moonbitKind":"UnexpectedToken"},
     "bench/programs/bad-to-keep/old3.mlw": {"lane":"reject","why3Position":[8,12,15],"moonbitKind":"UnexpectedToken"},
-    "examples/cursor_examples.mlw": {"lane":"extension","why3Position":[39,22,23],"moonbitKind":"AcceptExtension","structureTest":"module interface extension: cursor implementation structure"},
+    "examples/cursor_examples.mlw": {"lane":"exact-main","why3PpPosition":[39,22,23],"structureTest":"module interface exact: cursor implementation structure"},
     "examples/use_api/epsilon.mlw": {"lane":"reject","why3Position":null,"moonbitKind":"UnsupportedEpsilon","moonbitPosition":[3,12,3,19]},
     "examples_in_progress/2wp_gen/base.mlw": {"lane":"reject","why3Position":[26,14,46],"moonbitKind":"UnexpectedToken"},
     "examples_in_progress/2wp_gen/game.mlw": {"lane":"reject","why3Position":[102,19,51],"moonbitKind":"UnexpectedToken"},

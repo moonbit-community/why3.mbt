@@ -15,7 +15,7 @@ fn rewrite_definition_symbols(task : @theory.Task) -> Map[@logic.LSymbol, Unit] 
   for item in task.view().items {
     if item is TheoryMeta(meta) &&
       meta.view()
-      is { name: b"rewrite_def", arguments: [MetaLogicSymbol(symbol)] } {
+      is { name: b"rewrite_def", arguments: [MetaLogicSymbol(symbol)], .. } {
       result[symbol] = ()
     }
   }
@@ -36,14 +36,55 @@ fn task_equality_symbol(task : @theory.Task) -> @logic.LSymbol? {
 }
 
 ///|
+fn open_definition_pattern(
+  context : @identity.CompilationContext,
+  pattern : @logic.Pattern,
+  body : @logic.Term,
+) -> (@logic.Pattern, @logic.Term) raise TransformError {
+  let stage = @identity.EliminateDefinitionConditionally
+  let values : Map[@logic.VSymbol, @logic.Term] = Map([])
+  for variable in pattern.bound_variables() {
+    let replacement = open_definition_binder(
+      context, variable, "cannot open case-pattern binder",
+    )
+    values[variable] = @logic.Term::variable(replacement)
+  }
+  let substitution = @logic.TySubstitution::new()
+  (
+    instantiate_pattern(substitution, values, pattern, stage),
+    instantiate_term(context, substitution, values, body, stage, None),
+  )
+}
+
+///|
+fn open_definition_binder(
+  context : @identity.CompilationContext,
+  variable : @logic.VSymbol,
+  failure_message : String,
+) -> @logic.VSymbol raise TransformError {
+  let stage = @identity.EliminateDefinitionConditionally
+  let view = variable.view()
+  let origin = derived_generated_origin(
+    stage,
+    view.name,
+    view.origin,
+    derived_generated_attributes(view.origin),
+  )
+  variable.clone_identifier_with_origin(context, origin, None) catch {
+    _ => fail_transform(InvariantFailure, stage, failure_message)
+  }
+}
+
+///|
 fn definition_relation(
+  context : @identity.CompilationContext,
   head : @logic.Term,
   body : @logic.Term,
   equality : @logic.LSymbol?,
 ) -> @logic.Term raise TransformError {
   let stage = @identity.EliminateDefinitionConditionally
   let recurse = fn(child) -> @logic.Term raise TransformError {
-    definition_relation(head, child, equality)
+    definition_relation(context, head, child, equality)
   }
   match body.view() {
     Tif(condition, then_branch, else_branch) =>
@@ -55,18 +96,37 @@ fn definition_relation(
       ) catch {
         _ => fail_transform(InvariantFailure, stage, "invalid definition if")
       }
-    Tlet(variable, value, inner) =>
-      @logic.Term::let_in(variable, value, recurse(inner), None) catch {
+    Tlet(variable, value, inner) => {
+      let opened = open_definition_binder(
+        context, variable, "cannot open definition let binder",
+      )
+      let values : Map[@logic.VSymbol, @logic.Term] = Map([])
+      values[variable] = @logic.Term::variable(opened)
+      let opened_inner = instantiate_term(
+        context,
+        @logic.TySubstitution::new(),
+        values,
+        inner,
+        stage,
+        None,
+      )
+      @logic.Term::let_in(opened, value, recurse(opened_inner), None) catch {
         _ => fail_transform(InvariantFailure, stage, "invalid definition let")
       }
+    }
     Tcase(scrutinee, branches) => {
       let mapped = [
         for branch in branches => {
           let view = branch.view()
-          (view.pattern, recurse(view.body))
+          let (pattern, branch_body) = open_definition_pattern(
+            context,
+            view.pattern,
+            view.body,
+          )
+          (pattern, recurse(branch_body))
         }
       ]
-      @logic.Term::trusted_case(scrutinee, mapped, None) catch {
+      @logic.Term::case(scrutinee, mapped, None) catch {
         _ => fail_transform(InvariantFailure, stage, "invalid definition case")
       }
     }
@@ -106,8 +166,25 @@ fn definition_axiom(
   let stage = @identity.EliminateDefinitionConditionally
   let view = definition.view()
   let symbol_view = view.symbol.view()
+  let parameters : Array[@logic.VSymbol] = []
+  let values : Map[@logic.VSymbol, @logic.Term] = Map([])
+  for parameter in view.parameters {
+    let opened = open_definition_binder(
+      context, parameter, "cannot open definition parameters",
+    )
+    parameters.push(opened)
+    values[parameter] = @logic.Term::variable(opened)
+  }
+  let body = instantiate_term(
+    context,
+    @logic.TySubstitution::new(),
+    values,
+    view.body,
+    stage,
+    None,
+  )
   let arguments = [
-    for parameter in view.parameters => @logic.Term::variable(parameter)
+    for parameter in parameters => @logic.Term::variable(parameter)
   ]
   let head = @logic.Term::elaborated_apply(
     view.symbol,
@@ -117,10 +194,10 @@ fn definition_axiom(
   ) catch {
     _ => fail_transform(InvariantFailure, stage, "invalid definition head")
   }
-  let relation = definition_relation(head, view.body, equality)
+  let relation = definition_relation(context, head, body, equality)
   let formula = @logic.Term::quantify(
     ForallQuantifier,
-    view.parameters,
+    parameters,
     [],
     relation,
     None,
@@ -128,11 +205,11 @@ fn definition_axiom(
     _ => fail_transform(InvariantFailure, stage, "invalid definition axiom")
   }
   let name = symbol_view.name + b"'def"
-  let origin = @identity.Origin::generated(
+  let origin = derived_generated_origin(
     stage,
     name,
-    derived_generated_span(symbol_view.origin),
-    symbol_view.origin.attributes(),
+    symbol_view.origin,
+    derived_generated_attributes(symbol_view.origin),
   )
   let proposition = @logic.PrSymbol::new(context, name, origin)
   let declaration = @logic.Decl::proposition(
@@ -177,20 +254,8 @@ fn retained_definition_group(
   definitions : ArrayView[@logic.LogicDefinition],
 ) -> @theory.TheoryItem raise TransformError {
   let stage = @identity.EliminateDefinitionConditionally
-  let declaration = match origin.kind().view() {
-    SnapshotKind =>
-      @logic.Decl::trusted_logic(context, origin, definitions, None) catch {
-        _ =>
-          fail_transform(
-            InvariantFailure,
-            stage,
-            "invalid trusted definition group",
-          )
-      }
-    UserKind | GeneratedKind(_) =>
-      @logic.Decl::logic(context, origin, definitions, None) catch {
-        _ => fail_transform(InvariantFailure, stage, "invalid definition group")
-      }
+  let declaration = @logic.Decl::logic(context, origin, definitions, None) catch {
+    _ => fail_transform(InvariantFailure, stage, "invalid definition group")
   }
   TheoryDecl(declaration)
 }
@@ -261,6 +326,108 @@ fn eliminate_definition_group(
 }
 
 ///|
+/// Why3's declaration transformers memoize their result by declaration. The
+/// same source declaration is shared by every split goal, so retaining the
+/// transformed declaration also retains the exact identifier-clone observer
+/// behavior across goals.
+priv struct EliminateDefinitionCacheEntry {
+  generation : Int64
+  persistent : Bool
+  eliminate_all : Bool
+  eliminate_constants : Bool
+  eliminate_recursion : Bool
+  rewrite_signature : Array[Bool]
+  equality : @logic.LSymbol?
+  output : Array[@theory.TheoryItem]
+}
+
+///|
+let eliminate_definition_cache : Ref[
+  Map[@identity.DeclarationId, Array[EliminateDefinitionCacheEntry]],
+] = Ref(Map([]))
+
+///|
+fn eliminate_definition_rewrite_signature(
+  definitions : ArrayView[@logic.LogicDefinition],
+  rewrite : Map[@logic.LSymbol, Unit],
+) -> Array[Bool] {
+  [
+    for definition in definitions => rewrite.contains(definition.view().symbol)
+  ]
+}
+
+///|
+fn eliminate_definition_group_cached(
+  context : @identity.CompilationContext,
+  declaration : @logic.Decl,
+  definitions : ArrayView[@logic.LogicDefinition],
+  eliminate_all : Bool,
+  eliminate_constants : Bool,
+  eliminate_recursion : Bool,
+  rewrite : Map[@logic.LSymbol, Unit],
+  equality : @logic.LSymbol?,
+) -> Array[@theory.TheoryItem] raise TransformError {
+  guard !definitions.is_empty() else {
+    return eliminate_definition_group(
+      context, declaration, definitions, eliminate_all, eliminate_constants, eliminate_recursion,
+      rewrite, equality,
+    )
+  }
+  let key = declaration.declaration_id()
+  let signature = eliminate_definition_rewrite_signature(definitions, rewrite)
+  let generation = current_declaration_cache_generation()
+  let persistent = declaration_cache_is_persistent(declaration)
+  let cache = eliminate_definition_cache.val
+  match cache.get(key) {
+    Some(entries) =>
+      for entry in entries {
+        let live = if entry.persistent {
+          persistent
+        } else {
+          !persistent && entry.generation == generation
+        }
+        if live &&
+          entry.eliminate_all == eliminate_all &&
+          entry.eliminate_constants == eliminate_constants &&
+          entry.eliminate_recursion == eliminate_recursion &&
+          entry.rewrite_signature == signature &&
+          entry.equality == equality {
+          return entry.output
+        }
+      }
+    None => ()
+  }
+  let output = eliminate_definition_group(
+    context, declaration, definitions, eliminate_all, eliminate_constants, eliminate_recursion,
+    rewrite, equality,
+  )
+  if persistent {
+    for item in output {
+      if item is TheoryDecl(output_declaration) {
+        declaration_cache_retain(output_declaration)
+      }
+    }
+  }
+  let entries = match cache.get(key) {
+    Some(entries) => entries.copy()
+    None => []
+  }
+  entries.push({
+    generation,
+    persistent,
+    eliminate_all,
+    eliminate_constants,
+    eliminate_recursion,
+    rewrite_signature: signature,
+    equality,
+    output,
+  })
+  cache[key] = entries
+  eliminate_definition_cache.val = cache
+  output
+}
+
+///|
 pub fn eliminate_definition_conditionally(
   context : @identity.CompilationContext,
   task : @theory.Task,
@@ -278,7 +445,7 @@ pub fn eliminate_definition_conditionally(
         match declaration.view() {
           Dlogic(definitions) =>
             for
-              mapped in eliminate_definition_group(
+              mapped in eliminate_definition_group_cached(
                 context,
                 declaration,
                 definitions,
@@ -295,5 +462,5 @@ pub fn eliminate_definition_conditionally(
       TheoryUse(_) | TheoryClone(_) | TheoryMeta(_) => result.push(item)
     }
   }
-  checked_task(task.context_anchor(), result, stage)
+  checked_task(task, result, stage)
 }

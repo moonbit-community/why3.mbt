@@ -4,10 +4,10 @@
 
 ///|
 /// `eliminate_projections_sums` only rewrites projections belonging to an
-/// algebraic datatype with more than one constructor.  The frozen MVP closure
-/// contains Bool/Unit datatypes but no such projection.  Keep this slot as an
-/// asserted identity transform so an expanded snapshot cannot silently skip
-/// the upstream rewrite implemented by `eliminate_algebraic.ml`.
+/// algebraic datatype with more than one constructor. The fixed Z3 closure
+/// contains Bool/Unit datatypes but no such projection. Keep this slot as an
+/// asserted identity transform so a future driver expansion cannot silently
+/// skip the upstream rewrite implemented by `eliminate_algebraic.ml`.
 pub fn eliminate_projections_sums(
   context : @identity.CompilationContext,
   task : @theory.Task,

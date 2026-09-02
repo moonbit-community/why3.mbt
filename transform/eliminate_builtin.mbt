@@ -21,15 +21,15 @@ fn builtin_removal(task : @theory.Task) -> BuiltinRemoval {
   for item in task.view().items {
     guard item is TheoryMeta(meta) else { continue }
     match meta.view() {
-      { name: b"syntax_logic", arguments: [MetaLogicSymbol(symbol), ..] } =>
+      { name: b"syntax_logic", arguments: [MetaLogicSymbol(symbol), ..], .. } =>
         abstract_logic[symbol] = ()
-      { name: b"remove_prop", arguments: [MetaPropositionSymbol(symbol)] } =>
+      { name: b"remove_prop", arguments: [MetaPropositionSymbol(symbol)], .. } =>
         remove_propositions[symbol] = ()
-      { name: b"remove_logic", arguments: [MetaLogicSymbol(symbol)] } =>
+      { name: b"remove_logic", arguments: [MetaLogicSymbol(symbol)], .. } =>
         remove_logic[symbol] = ()
-      { name: b"remove_def", arguments: [MetaLogicSymbol(symbol)] } =>
+      { name: b"remove_def", arguments: [MetaLogicSymbol(symbol)], .. } =>
         remove_definitions[symbol] = ()
-      { name: b"remove_type", arguments: [MetaTypeSymbol(symbol)] } =>
+      { name: b"remove_type", arguments: [MetaTypeSymbol(symbol)], .. } =>
         remove_types[symbol] = ()
       _ => ()
     }
@@ -73,25 +73,13 @@ fn logic_item(
     )
   }
   let origin = definitions[0].view().symbol.view().origin
-  let declaration = match origin.kind().view() {
-    SnapshotKind =>
-      @logic.Decl::trusted_logic(context, origin, definitions, None) catch {
-        _ =>
-          fail_transform(
-            InvariantFailure,
-            @identity.EliminateBuiltin,
-            "cannot retain trusted logic definitions",
-          )
-      }
-    UserKind | GeneratedKind(_) =>
-      @logic.Decl::logic(context, origin, definitions, None) catch {
-        _ =>
-          fail_transform(
-            InvariantFailure,
-            @identity.EliminateBuiltin,
-            "cannot retain logic definitions",
-          )
-      }
+  let declaration = @logic.Decl::logic(context, origin, definitions, None) catch {
+    _ =>
+      fail_transform(
+        InvariantFailure,
+        @identity.EliminateBuiltin,
+        "cannot retain logic definitions",
+      )
   }
   TheoryDecl(declaration)
 }
@@ -109,25 +97,18 @@ fn type_item(
     )
   }
   let origin = symbols[0].view().origin
-  let declaration = match origin.kind().view() {
-    SnapshotKind =>
-      @logic.Decl::trusted_type_declaration(context, origin, symbols, None) catch {
-        _ =>
-          fail_transform(
-            InvariantFailure,
-            @identity.EliminateBuiltin,
-            "cannot retain trusted type declaration",
-          )
-      }
-    UserKind | GeneratedKind(_) =>
-      @logic.Decl::type_declaration(context, origin, symbols, None) catch {
-        _ =>
-          fail_transform(
-            InvariantFailure,
-            @identity.EliminateBuiltin,
-            "cannot retain type declaration",
-          )
-      }
+  let declaration = @logic.Decl::type_declaration(
+    context,
+    origin,
+    symbols,
+    None,
+  ) catch {
+    _ =>
+      fail_transform(
+        InvariantFailure,
+        @identity.EliminateBuiltin,
+        "cannot retain type declaration",
+      )
   }
   TheoryDecl(declaration)
 }
@@ -145,19 +126,21 @@ fn data_item(
     )
   }
   let origin = declarations[0].view().type_symbol.view().origin
-  TheoryDecl(@logic.Decl::trusted_data(context, origin, declarations, None)) catch {
+  let declaration = @logic.Decl::data(context, origin, declarations, None) catch {
     _ =>
       fail_transform(
         InvariantFailure,
         @identity.EliminateBuiltin,
-        "cannot retain trusted data declaration",
+        "cannot retain data declaration",
       )
   }
+  TheoryDecl(declaration)
 }
 
 ///|
 fn inductive_item(
   context : @identity.CompilationContext,
+  sign : @logic.InductiveSign,
   declarations : ArrayView[@logic.InductiveDeclaration],
 ) -> @theory.TheoryItem raise TransformError {
   guard !declarations.is_empty() else {
@@ -168,14 +151,12 @@ fn inductive_item(
     )
   }
   let origin = declarations[0].view().predicate.view().origin
-  TheoryDecl(
-    @logic.Decl::trusted_inductive(context, origin, declarations, None),
-  ) catch {
+  TheoryDecl(@logic.Decl::inductive(context, origin, sign, declarations, None)) catch {
     _ =>
       fail_transform(
         InvariantFailure,
         @identity.EliminateBuiltin,
-        "cannot retain trusted inductive declaration",
+        "cannot retain inductive declaration",
       )
   }
 }
@@ -202,6 +183,9 @@ fn eliminate_builtin_declaration(
           retained.push(definition)
         }
       }
+      if abstracted.is_empty() && retained.length() == definitions.length() {
+        return [TheoryDecl(declaration)]
+      }
       let result : Array[@theory.TheoryItem] = []
       for symbol in abstracted {
         result.push(parameter_item(context, symbol))
@@ -211,7 +195,7 @@ fn eliminate_builtin_declaration(
       }
       result
     }
-    Dind(declarations) => {
+    Dind(sign, declarations) => {
       let abstracted : Array[@logic.LSymbol] = []
       let retained : Array[@logic.InductiveDeclaration] = []
       for declaration in declarations {
@@ -226,12 +210,15 @@ fn eliminate_builtin_declaration(
           retained.push(declaration)
         }
       }
+      if abstracted.is_empty() && retained.length() == declarations.length() {
+        return [TheoryDecl(declaration)]
+      }
       let result : Array[@theory.TheoryItem] = []
       for symbol in abstracted {
         result.push(parameter_item(context, symbol))
       }
       if !retained.is_empty() {
-        result.push(inductive_item(context, retained))
+        result.push(inductive_item(context, sign, retained))
       }
       result
     }
@@ -247,6 +234,8 @@ fn eliminate_builtin_declaration(
       }
       if retained.is_empty() {
         []
+      } else if retained.length() == symbols.length() {
+        [TheoryDecl(declaration)]
       } else {
         [type_item(context, retained)]
       }
@@ -260,6 +249,8 @@ fn eliminate_builtin_declaration(
       }
       if retained.is_empty() {
         []
+      } else if retained.length() == declarations.length() {
+        [TheoryDecl(declaration)]
       } else {
         [data_item(context, retained)]
       }
@@ -287,5 +278,5 @@ pub fn eliminate_builtin(
       TheoryUse(_) | TheoryClone(_) | TheoryMeta(_) => result.push(item)
     }
   }
-  checked_task(task.context_anchor(), result, stage)
+  checked_task(task, result, stage)
 }

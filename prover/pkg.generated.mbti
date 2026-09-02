@@ -56,6 +56,7 @@ pub(all) struct ConfigDiagnostic {
 
 pub(all) enum ConfigErrorKind {
   InvalidTimeout
+  InvalidResourceLimit
   InvalidCommand
   NonUtf8Path
 } derive(Eq, @debug.Debug)

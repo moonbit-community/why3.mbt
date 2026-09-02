@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://moonbitlang.github.io/why3.mbt/contracts/diagnostic-record-v1.schema.json",
+  "title": "Why3 1.7.2 structured diagnostic record v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "accepted"
+      ],
+      "properties": {
+        "schema": {
+          "const": 1
+        },
+        "accepted": {
+          "const": true
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "accepted",
+        "stage",
+        "severity",
+        "category",
+        "warning_code",
+        "relative_path_hex",
+        "start_byte",
+        "end_byte",
+        "start_line",
+        "start_column",
+        "end_line",
+        "end_column"
+      ],
+      "properties": {
+        "schema": {
+          "const": 1
+        },
+        "accepted": {
+          "const": false
+        },
+        "stage": {
+          "enum": [
+            "lexing",
+            "parsing",
+            "typing",
+            "program-typing",
+            "module-interface",
+            "vc-generation",
+            "transformation",
+            "driver",
+            "prover"
+          ]
+        },
+        "severity": {
+          "enum": [
+            "error",
+            "warning"
+          ]
+        },
+        "category": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Za-z0-9]*(?:\\.[A-Z][A-Za-z0-9]*)*$"
+        },
+        "warning_code": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[a-z][a-z0-9_-]*$"
+        },
+        "relative_path_hex": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{2})+$"
+        },
+        "start_byte": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "end_byte": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "start_line": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "start_column": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "end_line": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "end_column": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "start_byte": {
+              "type": "integer"
+            },
+            "end_byte": {
+              "type": "integer"
+            },
+            "start_line": {
+              "type": "integer"
+            },
+            "start_column": {
+              "type": "integer"
+            },
+            "end_line": {
+              "type": "integer"
+            },
+            "end_column": {
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "properties": {
+            "start_byte": {
+              "type": "null"
+            },
+            "end_byte": {
+              "type": "null"
+            },
+            "start_line": {
+              "type": "null"
+            },
+            "start_column": {
+              "type": "null"
+            },
+            "end_line": {
+              "type": "null"
+            },
+            "end_column": {
+              "type": "null"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

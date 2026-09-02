@@ -1,0 +1,5096 @@
+{
+  "schemaVersion": 3,
+  "recordVersion": 3,
+  "profile": "why3-1.7.2-complete-graph-v3",
+  "status": "active",
+  "why3Commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
+  "inputs": {
+    "targetFeatures": {
+      "path": "tools/contracts/features-v2.json",
+      "sha256": "bc50ca1d7ab0e067381d5e59ee947c41d5fdf1458f434a0687b576eef8777a42",
+      "variantInventorySha256": "38eadf6a51fd01b64a3cb81f627ca4e9fb66d8bc3155b071a5b0a5c8d88a007c",
+      "recordInventorySha256": "832329f610a40fc4190ccb3f11b1bba2d2548c98454c784ca2f703e6191878aa",
+      "opaqueProjectionInventorySha256": "90a8b6b7ee85ce3088d753580cf3c99bdbd7f402345645b9e21bbaeee13c6ac8"
+    },
+    "structuredDiagnostics": {
+      "path": "tools/contracts/diagnostics-v1.json",
+      "sha256": "73a30bc4db95741f13c2aaf326b23e235ef57dae547e28b4ab303c11f1302716",
+      "diagnosticContractSha256": "79075b594bc75d904188d4ac0bc7ccbbc56e939df3ee52d783e6c33620726bf0"
+    },
+    "recordSchema": {
+      "path": "tools/contracts/schema/canonical-record-v3.schema.json",
+      "sha256": "0442fa142858d8f9ab5933d98cab6bb5cdf15aea5ec542088a68edb96f45cddb"
+    }
+  },
+  "encoding": {
+    "json": "UTF-8 compact JSON, node arrays, object fields in record order, exactly one LF terminator",
+    "bytes": "lowercase hexadecimal without prefix",
+    "integers": "canonical base-10 string with optional leading minus and no redundant leading zeroes",
+    "sourceSequences": "preserve semantic source/history order",
+    "product": "constructor tuple payload in OCaml source order; never rely on OCaml evaluation order",
+    "option": "Option.None or Option.Some",
+    "maps": "Map entries are [key,value] pairs sorted by canonical key bytes then canonical value bytes",
+    "sets": "Set values sorted by canonical bytes",
+    "paths": "fixture-root-relative POSIX path encoded as lowercase byte hex",
+    "locations": "one-based lines, zero-based byte columns, zero-based half-open byte offsets"
+  },
+  "identity": {
+    "definitionKinds": [
+      "attribute",
+      "identifier",
+      "type-variable",
+      "type-symbol",
+      "type",
+      "logic-variable",
+      "logic-symbol",
+      "proposition-symbol",
+      "pattern",
+      "term",
+      "declaration",
+      "theory",
+      "theory-declaration",
+      "task",
+      "program-type-symbol",
+      "region",
+      "program-variable",
+      "exception-symbol",
+      "computation-type",
+      "routine-symbol",
+      "program-pattern",
+      "expression",
+      "computation-expression",
+      "program-declaration",
+      "module"
+    ],
+    "allocation": "assign [kind,index] on first deterministic preorder encounter from roots",
+    "references": "every shared graph object is emitted once as Definition and subsequently as Reference",
+    "boundVariables": "DeBruijn with zero denoting the innermost binder",
+    "sourceNames": "preserved as Bytes even when not valid UTF-8",
+    "origin": "user/generated provenance is semantic and serialized without runtime tags",
+    "physicalIdentitySerialized": false,
+    "runtimeTagsSerialized": false,
+    "cachesSerialized": false,
+    "localizedMessagesSerialized": false
+  },
+  "constructorPayloadEncoding": {
+    "nullary": [
+      "Unit"
+    ],
+    "unary": "<canonical value>",
+    "tuple": [
+      "Product",
+      "<values in OCaml source tuple order>"
+    ],
+    "record": "record tag followed by canonicalV3Fields in upstream declaration order",
+    "recursiveReference": "Reference when the object already has a Definition; otherwise allocate before descending"
+  },
+  "recordFieldOrder": {
+    "CanonicalRecordV3": [
+      "schema",
+      "semantic_profile_sha256",
+      "diagnostic_contract_sha256",
+      "fixture",
+      "source_sha256",
+      "scope",
+      "unit_kind",
+      "unit_name_hex",
+      "goal_name_hex",
+      "goal_ordinal",
+      "stage",
+      "canonical_sha256",
+      "canonical"
+    ]
+  },
+  "nodeEncoding": "Each node is a JSON array whose first element is its exact tag and whose remaining elements follow nodeFieldOrder.",
+  "nodeFieldOrder": {
+    "Boolean": [
+      "value"
+    ],
+    "Bytes": [
+      "lowercase_hex"
+    ],
+    "Constant.constant.ConstInt": [
+      "payload"
+    ],
+    "Constant.constant.ConstReal": [
+      "payload"
+    ],
+    "Constant.constant.ConstStr": [
+      "payload"
+    ],
+    "DeBruijn": [
+      "zero_based_index"
+    ],
+    "Decl.decl": [
+      "d_node"
+    ],
+    "Decl.decl_node.Ddata": [
+      "payload"
+    ],
+    "Decl.decl_node.Dind": [
+      "payload"
+    ],
+    "Decl.decl_node.Dlogic": [
+      "payload"
+    ],
+    "Decl.decl_node.Dparam": [
+      "payload"
+    ],
+    "Decl.decl_node.Dprop": [
+      "payload"
+    ],
+    "Decl.decl_node.Dtype": [
+      "payload"
+    ],
+    "Decl.ind_sign.Coind": [
+      "payload"
+    ],
+    "Decl.ind_sign.Ind": [
+      "payload"
+    ],
+    "Decl.prop_kind.Paxiom": [
+      "payload"
+    ],
+    "Decl.prop_kind.Pgoal": [
+      "payload"
+    ],
+    "Decl.prop_kind.Plemma": [
+      "payload"
+    ],
+    "Decl.prsymbol": [
+      "pr_name"
+    ],
+    "Definition": [
+      "kind",
+      "zero_based_index",
+      "value"
+    ],
+    "Dexpr.dexpr": [
+      "de_node",
+      "de_dvty",
+      "de_loc"
+    ],
+    "Dexpr.dexpr_node.DEabsurd": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEand": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEany": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEapp": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEassert": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEassign": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEattr": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEcast": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEconst": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEexn": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEfalse": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEfor": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEfun": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEghost": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEif": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DElabel": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DElet": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEls_pure": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEmatch": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEnot": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEoptexn": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEor": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEpure": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEpv_pure": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEraise": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DErec": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEsym": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEtrue": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEuloc": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEvar": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEvar_pure": [
+      "payload"
+    ],
+    "Dexpr.dexpr_node.DEwhile": [
+      "payload"
+    ],
+    "Dexpr.dpattern": [
+      "dp_pat",
+      "dp_dity",
+      "dp_vars",
+      "dp_loc"
+    ],
+    "Dexpr.dpattern_node.DPapp": [
+      "payload"
+    ],
+    "Dexpr.dpattern_node.DPas": [
+      "payload"
+    ],
+    "Dexpr.dpattern_node.DPcast": [
+      "payload"
+    ],
+    "Dexpr.dpattern_node.DPor": [
+      "payload"
+    ],
+    "Dexpr.dpattern_node.DPvar": [
+      "payload"
+    ],
+    "Dexpr.dpattern_node.DPwild": [
+      "payload"
+    ],
+    "Dexpr.drec_defn": [
+      "fds"
+    ],
+    "Dexpr.dspec_final": [
+      "ds_pre",
+      "ds_post",
+      "ds_xpost",
+      "ds_reads",
+      "ds_writes",
+      "ds_diverge",
+      "ds_partial",
+      "ds_checkrw"
+    ],
+    "Dexpr.dxsymbol.DEgexn": [
+      "payload"
+    ],
+    "Dexpr.dxsymbol.DElexn": [
+      "payload"
+    ],
+    "Dterm.dbinop.DTand": [
+      "payload"
+    ],
+    "Dterm.dbinop.DTand_asym": [
+      "payload"
+    ],
+    "Dterm.dbinop.DTby": [
+      "payload"
+    ],
+    "Dterm.dbinop.DTiff": [
+      "payload"
+    ],
+    "Dterm.dbinop.DTimplies": [
+      "payload"
+    ],
+    "Dterm.dbinop.DTor": [
+      "payload"
+    ],
+    "Dterm.dbinop.DTor_asym": [
+      "payload"
+    ],
+    "Dterm.dbinop.DTso": [
+      "payload"
+    ],
+    "Dterm.dpattern": [
+      "dp_node",
+      "dp_dty",
+      "dp_vars",
+      "dp_loc"
+    ],
+    "Dterm.dpattern_node.DPapp": [
+      "payload"
+    ],
+    "Dterm.dpattern_node.DPas": [
+      "payload"
+    ],
+    "Dterm.dpattern_node.DPcast": [
+      "payload"
+    ],
+    "Dterm.dpattern_node.DPor": [
+      "payload"
+    ],
+    "Dterm.dpattern_node.DPvar": [
+      "payload"
+    ],
+    "Dterm.dpattern_node.DPwild": [
+      "payload"
+    ],
+    "Dterm.dquant.DTexists": [
+      "payload"
+    ],
+    "Dterm.dquant.DTforall": [
+      "payload"
+    ],
+    "Dterm.dquant.DTlambda": [
+      "payload"
+    ],
+    "Dterm.dterm": [
+      "dt_node",
+      "dt_dty",
+      "dt_loc"
+    ],
+    "Dterm.dterm_node.DTapp": [
+      "payload"
+    ],
+    "Dterm.dterm_node.DTattr": [
+      "payload"
+    ],
+    "Dterm.dterm_node.DTbinop": [
+      "payload"
+    ],
+    "Dterm.dterm_node.DTcase": [
+      "payload"
+    ],
+    "Dterm.dterm_node.DTcast": [
+      "payload"
+    ],
+    "Dterm.dterm_node.DTconst": [
+      "payload"
+    ],
+    "Dterm.dterm_node.DTeps": [
+      "payload"
+    ],
+    "Dterm.dterm_node.DTfalse": [
+      "payload"
+    ],
+    "Dterm.dterm_node.DTfapp": [
+      "payload"
+    ],
+    "Dterm.dterm_node.DTgvar": [
+      "payload"
+    ],
+    "Dterm.dterm_node.DTif": [
+      "payload"
+    ],
+    "Dterm.dterm_node.DTlet": [
+      "payload"
+    ],
+    "Dterm.dterm_node.DTnot": [
+      "payload"
+    ],
+    "Dterm.dterm_node.DTquant": [
+      "payload"
+    ],
+    "Dterm.dterm_node.DTtrue": [
+      "payload"
+    ],
+    "Dterm.dterm_node.DTuloc": [
+      "payload"
+    ],
+    "Dterm.dterm_node.DTvar": [
+      "payload"
+    ],
+    "Expr.assertion_kind.Assert": [
+      "payload"
+    ],
+    "Expr.assertion_kind.Assume": [
+      "payload"
+    ],
+    "Expr.assertion_kind.Check": [
+      "payload"
+    ],
+    "Expr.cexp": [
+      "c_node",
+      "c_cty"
+    ],
+    "Expr.cexp_node.Cany": [
+      "payload"
+    ],
+    "Expr.cexp_node.Capp": [
+      "payload"
+    ],
+    "Expr.cexp_node.Cfun": [
+      "payload"
+    ],
+    "Expr.cexp_node.Cpur": [
+      "payload"
+    ],
+    "Expr.expr": [
+      "e_node",
+      "e_ity",
+      "e_mask",
+      "e_effect",
+      "e_attrs",
+      "e_loc"
+    ],
+    "Expr.expr_node.Eabsurd": [
+      "payload"
+    ],
+    "Expr.expr_node.Eassert": [
+      "payload"
+    ],
+    "Expr.expr_node.Eassign": [
+      "payload"
+    ],
+    "Expr.expr_node.Econst": [
+      "payload"
+    ],
+    "Expr.expr_node.Eexec": [
+      "payload"
+    ],
+    "Expr.expr_node.Eexn": [
+      "payload"
+    ],
+    "Expr.expr_node.Efor": [
+      "payload"
+    ],
+    "Expr.expr_node.Eghost": [
+      "payload"
+    ],
+    "Expr.expr_node.Eif": [
+      "payload"
+    ],
+    "Expr.expr_node.Elet": [
+      "payload"
+    ],
+    "Expr.expr_node.Ematch": [
+      "payload"
+    ],
+    "Expr.expr_node.Epure": [
+      "payload"
+    ],
+    "Expr.expr_node.Eraise": [
+      "payload"
+    ],
+    "Expr.expr_node.Evar": [
+      "payload"
+    ],
+    "Expr.expr_node.Ewhile": [
+      "payload"
+    ],
+    "Expr.for_direction.DownTo": [
+      "payload"
+    ],
+    "Expr.for_direction.To": [
+      "payload"
+    ],
+    "Expr.let_defn.LDrec": [
+      "payload"
+    ],
+    "Expr.let_defn.LDsym": [
+      "payload"
+    ],
+    "Expr.let_defn.LDvar": [
+      "payload"
+    ],
+    "Expr.pat_ghost.PGfail": [
+      "payload"
+    ],
+    "Expr.pat_ghost.PGlast": [
+      "payload"
+    ],
+    "Expr.pat_ghost.PGnone": [
+      "payload"
+    ],
+    "Expr.pre_pattern.PPapp": [
+      "payload"
+    ],
+    "Expr.pre_pattern.PPas": [
+      "payload"
+    ],
+    "Expr.pre_pattern.PPor": [
+      "payload"
+    ],
+    "Expr.pre_pattern.PPvar": [
+      "payload"
+    ],
+    "Expr.pre_pattern.PPwild": [
+      "payload"
+    ],
+    "Expr.prog_pattern": [
+      "pp_pat",
+      "pp_ity",
+      "pp_mask",
+      "pp_fail"
+    ],
+    "Expr.rec_defn": [
+      "rec_sym",
+      "rec_rsym",
+      "rec_fun",
+      "rec_varl"
+    ],
+    "Expr.rs_kind.RKfunc": [
+      "payload"
+    ],
+    "Expr.rs_kind.RKlemma": [
+      "payload"
+    ],
+    "Expr.rs_kind.RKlocal": [
+      "payload"
+    ],
+    "Expr.rs_kind.RKnone": [
+      "payload"
+    ],
+    "Expr.rs_kind.RKpred": [
+      "payload"
+    ],
+    "Expr.rs_logic.RLlemma": [
+      "payload"
+    ],
+    "Expr.rs_logic.RLls": [
+      "payload"
+    ],
+    "Expr.rs_logic.RLnone": [
+      "payload"
+    ],
+    "Expr.rs_logic.RLpv": [
+      "payload"
+    ],
+    "Expr.rsymbol": [
+      "rs_name",
+      "rs_cty",
+      "rs_logic",
+      "rs_field"
+    ],
+    "GraphV3": [
+      "roots",
+      "definitions"
+    ],
+    "Ident.attribute": [
+      "attr_string"
+    ],
+    "Ident.ident": [
+      "id_string",
+      "id_attrs",
+      "id_loc"
+    ],
+    "Ident.notation.SNcut": [
+      "payload"
+    ],
+    "Ident.notation.SNget": [
+      "payload"
+    ],
+    "Ident.notation.SNinfix": [
+      "payload"
+    ],
+    "Ident.notation.SNlcut": [
+      "payload"
+    ],
+    "Ident.notation.SNprefix": [
+      "payload"
+    ],
+    "Ident.notation.SNrcut": [
+      "payload"
+    ],
+    "Ident.notation.SNset": [
+      "payload"
+    ],
+    "Ident.notation.SNtight": [
+      "payload"
+    ],
+    "Ident.notation.SNupdate": [
+      "payload"
+    ],
+    "Ident.notation.SNword": [
+      "payload"
+    ],
+    "Ident.preid": [
+      "pre_name",
+      "pre_attrs",
+      "pre_loc"
+    ],
+    "Integer": [
+      "canonical_decimal"
+    ],
+    "Ity.cty": [
+      "cty_args",
+      "cty_pre",
+      "cty_post",
+      "cty_xpost",
+      "cty_oldies",
+      "cty_effect",
+      "cty_result",
+      "cty_mask",
+      "cty_freeze"
+    ],
+    "Ity.effect": [
+      "eff_reads",
+      "eff_writes",
+      "eff_taints",
+      "eff_covers",
+      "eff_resets",
+      "eff_raises",
+      "eff_spoils",
+      "eff_oneway",
+      "eff_ghost"
+    ],
+    "Ity.its_flag": [
+      "its_frozen",
+      "its_exposed",
+      "its_liable",
+      "its_fixed",
+      "its_visible"
+    ],
+    "Ity.ity": [
+      "ity_node"
+    ],
+    "Ity.ity_node.Ityapp": [
+      "payload"
+    ],
+    "Ity.ity_node.Ityreg": [
+      "payload"
+    ],
+    "Ity.ity_node.Ityvar": [
+      "payload"
+    ],
+    "Ity.ity_subst": [
+      "isb_var",
+      "isb_reg"
+    ],
+    "Ity.itysymbol": [
+      "its_ts",
+      "its_nonfree",
+      "its_private",
+      "its_mutable",
+      "its_fragile",
+      "its_mfields",
+      "its_ofields",
+      "its_regions",
+      "its_arg_flg",
+      "its_reg_flg",
+      "its_def"
+    ],
+    "Ity.mask.MaskGhost": [
+      "payload"
+    ],
+    "Ity.mask.MaskTuple": [
+      "payload"
+    ],
+    "Ity.mask.MaskVisible": [
+      "payload"
+    ],
+    "Ity.oneway.Diverges": [
+      "payload"
+    ],
+    "Ity.oneway.Partial": [
+      "payload"
+    ],
+    "Ity.oneway.Total": [
+      "payload"
+    ],
+    "Ity.pvsymbol": [
+      "pv_vs",
+      "pv_ity",
+      "pv_ghost"
+    ],
+    "Ity.region": [
+      "reg_name",
+      "reg_its",
+      "reg_args",
+      "reg_regs"
+    ],
+    "Ity.xsymbol": [
+      "xs_name",
+      "xs_ity",
+      "xs_mask"
+    ],
+    "Map": [
+      "entries_sorted_by_canonical_key_then_value"
+    ],
+    "Number.int_constant": [
+      "il_kind",
+      "il_int"
+    ],
+    "Number.int_literal_kind.ILitBin": [
+      "payload"
+    ],
+    "Number.int_literal_kind.ILitDec": [
+      "payload"
+    ],
+    "Number.int_literal_kind.ILitHex": [
+      "payload"
+    ],
+    "Number.int_literal_kind.ILitOct": [
+      "payload"
+    ],
+    "Number.int_literal_kind.ILitUnk": [
+      "payload"
+    ],
+    "Number.real_constant": [
+      "rl_kind",
+      "rl_real"
+    ],
+    "Number.real_literal_kind.RLitDec": [
+      "payload"
+    ],
+    "Number.real_literal_kind.RLitHex": [
+      "payload"
+    ],
+    "Number.real_literal_kind.RLitUnk": [
+      "payload"
+    ],
+    "Number.real_value": [
+      "rv_sig",
+      "rv_pow2",
+      "rv_pow5"
+    ],
+    "Option.None": [],
+    "Option.Some": [
+      "value"
+    ],
+    "Origin.Generated": [
+      "stage",
+      "name",
+      "source_span",
+      "attributes"
+    ],
+    "Origin.User": [
+      "name",
+      "source_span",
+      "attributes"
+    ],
+    "Pdecl.its_defn": [
+      "itd_its",
+      "itd_fields",
+      "itd_constructors",
+      "itd_invariant",
+      "itd_witness"
+    ],
+    "Pdecl.pdecl": [
+      "pd_node",
+      "pd_pure",
+      "pd_meta"
+    ],
+    "Pdecl.pdecl_node.PDexn": [
+      "payload"
+    ],
+    "Pdecl.pdecl_node.PDlet": [
+      "payload"
+    ],
+    "Pdecl.pdecl_node.PDpure": [
+      "payload"
+    ],
+    "Pdecl.pdecl_node.PDtype": [
+      "payload"
+    ],
+    "Pmodule.mod_inst": [
+      "mi_mod",
+      "mi_ty",
+      "mi_ts",
+      "mi_ls",
+      "mi_pr",
+      "mi_pk",
+      "mi_pv",
+      "mi_rs",
+      "mi_xs",
+      "mi_df"
+    ],
+    "Pmodule.mod_unit.Uclone": [
+      "payload"
+    ],
+    "Pmodule.mod_unit.Udecl": [
+      "payload"
+    ],
+    "Pmodule.mod_unit.Umeta": [
+      "payload"
+    ],
+    "Pmodule.mod_unit.Uscope": [
+      "payload"
+    ],
+    "Pmodule.mod_unit.Uuse": [
+      "payload"
+    ],
+    "Pmodule.namespace": [
+      "ns_ts",
+      "ns_ps",
+      "ns_xs",
+      "ns_ns"
+    ],
+    "Pmodule.overload.FixedRes": [
+      "payload"
+    ],
+    "Pmodule.overload.NoOver": [
+      "payload"
+    ],
+    "Pmodule.overload.SameType": [
+      "payload"
+    ],
+    "Pmodule.pmodule": [
+      "mod_theory",
+      "mod_units",
+      "mod_export"
+    ],
+    "Pmodule.prog_symbol.OO": [
+      "payload"
+    ],
+    "Pmodule.prog_symbol.PV": [
+      "payload"
+    ],
+    "Pmodule.prog_symbol.RS": [
+      "payload"
+    ],
+    "Product": [
+      "values_in_source_tuple_order"
+    ],
+    "Ptree.attr.ATpos": [
+      "payload"
+    ],
+    "Ptree.attr.ATstr": [
+      "payload"
+    ],
+    "Ptree.clone_subst.CSaxiom": [
+      "payload"
+    ],
+    "Ptree.clone_subst.CSfsym": [
+      "payload"
+    ],
+    "Ptree.clone_subst.CSgoal": [
+      "payload"
+    ],
+    "Ptree.clone_subst.CSlemma": [
+      "payload"
+    ],
+    "Ptree.clone_subst.CSprop": [
+      "payload"
+    ],
+    "Ptree.clone_subst.CSpsym": [
+      "payload"
+    ],
+    "Ptree.clone_subst.CStsym": [
+      "payload"
+    ],
+    "Ptree.clone_subst.CSvsym": [
+      "payload"
+    ],
+    "Ptree.clone_subst.CSxsym": [
+      "payload"
+    ],
+    "Ptree.decl.Dcloneexport": [
+      "payload"
+    ],
+    "Ptree.decl.Dcloneimport": [
+      "payload"
+    ],
+    "Ptree.decl.Dexn": [
+      "payload"
+    ],
+    "Ptree.decl.Dimport": [
+      "payload"
+    ],
+    "Ptree.decl.Dind": [
+      "payload"
+    ],
+    "Ptree.decl.Dlet": [
+      "payload"
+    ],
+    "Ptree.decl.Dlogic": [
+      "payload"
+    ],
+    "Ptree.decl.Dmeta": [
+      "payload"
+    ],
+    "Ptree.decl.Dprop": [
+      "payload"
+    ],
+    "Ptree.decl.Drec": [
+      "payload"
+    ],
+    "Ptree.decl.Dscope": [
+      "payload"
+    ],
+    "Ptree.decl.Dtype": [
+      "payload"
+    ],
+    "Ptree.decl.Duseexport": [
+      "payload"
+    ],
+    "Ptree.decl.Duseimport": [
+      "payload"
+    ],
+    "Ptree.expr": [
+      "expr_desc",
+      "expr_loc"
+    ],
+    "Ptree.expr_desc.Eabsurd": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Eand": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Eany": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Eapply": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Easref": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Eassert": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Eassign": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Eattr": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Ecast": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Econst": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Eexn": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Efalse": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Efor": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Efun": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Eghost": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Eidapp": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Eident": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Eidpur": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Eif": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Einfix": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Einnfix": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Elabel": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Elet": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Ematch": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Enot": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Eoptexn": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Eor": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Epure": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Eraise": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Erec": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Erecord": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Eref": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Escope": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Esequence": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Etrue": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Etuple": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Eupdate": [
+      "payload"
+    ],
+    "Ptree.expr_desc.Ewhile": [
+      "payload"
+    ],
+    "Ptree.field": [
+      "f_loc",
+      "f_ident",
+      "f_pty",
+      "f_mutable",
+      "f_ghost"
+    ],
+    "Ptree.ident": [
+      "id_str",
+      "id_ats",
+      "id_loc"
+    ],
+    "Ptree.ind_decl": [
+      "in_loc",
+      "in_ident",
+      "in_params",
+      "in_def"
+    ],
+    "Ptree.logic_decl": [
+      "ld_loc",
+      "ld_ident",
+      "ld_params",
+      "ld_type",
+      "ld_def"
+    ],
+    "Ptree.metarg.Max": [
+      "payload"
+    ],
+    "Ptree.metarg.Mfs": [
+      "payload"
+    ],
+    "Ptree.metarg.Mgl": [
+      "payload"
+    ],
+    "Ptree.metarg.Mint": [
+      "payload"
+    ],
+    "Ptree.metarg.Mlm": [
+      "payload"
+    ],
+    "Ptree.metarg.Mps": [
+      "payload"
+    ],
+    "Ptree.metarg.Mstr": [
+      "payload"
+    ],
+    "Ptree.metarg.Mty": [
+      "payload"
+    ],
+    "Ptree.metarg.Mval": [
+      "payload"
+    ],
+    "Ptree.mlw_file.Decls": [
+      "payload"
+    ],
+    "Ptree.mlw_file.Modules": [
+      "payload"
+    ],
+    "Ptree.pat_desc.Papp": [
+      "payload"
+    ],
+    "Ptree.pat_desc.Pas": [
+      "payload"
+    ],
+    "Ptree.pat_desc.Pcast": [
+      "payload"
+    ],
+    "Ptree.pat_desc.Pghost": [
+      "payload"
+    ],
+    "Ptree.pat_desc.Por": [
+      "payload"
+    ],
+    "Ptree.pat_desc.Pparen": [
+      "payload"
+    ],
+    "Ptree.pat_desc.Prec": [
+      "payload"
+    ],
+    "Ptree.pat_desc.Pscope": [
+      "payload"
+    ],
+    "Ptree.pat_desc.Ptuple": [
+      "payload"
+    ],
+    "Ptree.pat_desc.Pvar": [
+      "payload"
+    ],
+    "Ptree.pat_desc.Pwild": [
+      "payload"
+    ],
+    "Ptree.pattern": [
+      "pat_desc",
+      "pat_loc"
+    ],
+    "Ptree.pty.PTarrow": [
+      "payload"
+    ],
+    "Ptree.pty.PTparen": [
+      "payload"
+    ],
+    "Ptree.pty.PTpure": [
+      "payload"
+    ],
+    "Ptree.pty.PTref": [
+      "payload"
+    ],
+    "Ptree.pty.PTscope": [
+      "payload"
+    ],
+    "Ptree.pty.PTtuple": [
+      "payload"
+    ],
+    "Ptree.pty.PTtyapp": [
+      "payload"
+    ],
+    "Ptree.pty.PTtyvar": [
+      "payload"
+    ],
+    "Ptree.qualid.Qdot": [
+      "payload"
+    ],
+    "Ptree.qualid.Qident": [
+      "payload"
+    ],
+    "Ptree.spec": [
+      "sp_pre",
+      "sp_post",
+      "sp_xpost",
+      "sp_reads",
+      "sp_writes",
+      "sp_alias",
+      "sp_variant",
+      "sp_checkrw",
+      "sp_diverge",
+      "sp_partial"
+    ],
+    "Ptree.term": [
+      "term_desc",
+      "term_loc"
+    ],
+    "Ptree.term_desc.Tapply": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tasref": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tat": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tattr": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tbinnop": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tbinop": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tcase": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tcast": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tconst": [
+      "payload"
+    ],
+    "Ptree.term_desc.Teps": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tfalse": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tidapp": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tident": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tif": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tinfix": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tinnfix": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tlet": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tnot": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tquant": [
+      "payload"
+    ],
+    "Ptree.term_desc.Trecord": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tscope": [
+      "payload"
+    ],
+    "Ptree.term_desc.Ttrue": [
+      "payload"
+    ],
+    "Ptree.term_desc.Ttuple": [
+      "payload"
+    ],
+    "Ptree.term_desc.Tupdate": [
+      "payload"
+    ],
+    "Ptree.type_decl": [
+      "td_loc",
+      "td_ident",
+      "td_params",
+      "td_vis",
+      "td_mut",
+      "td_inv",
+      "td_wit",
+      "td_def"
+    ],
+    "Ptree.type_def.TDalgebraic": [
+      "payload"
+    ],
+    "Ptree.type_def.TDalias": [
+      "payload"
+    ],
+    "Ptree.type_def.TDfloat": [
+      "payload"
+    ],
+    "Ptree.type_def.TDrange": [
+      "payload"
+    ],
+    "Ptree.type_def.TDrecord": [
+      "payload"
+    ],
+    "Ptree.visibility.Abstract": [
+      "payload"
+    ],
+    "Ptree.visibility.Private": [
+      "payload"
+    ],
+    "Ptree.visibility.Public": [
+      "payload"
+    ],
+    "PtreeFull.full_mlw_file.FullDecls": [
+      "payload"
+    ],
+    "PtreeFull.full_mlw_file.FullModules": [
+      "payload"
+    ],
+    "PtreeFull.full_unit": [
+      "full_kind",
+      "full_name",
+      "full_decls",
+      "full_loc"
+    ],
+    "PtreeFull.full_unit_kind.FullModule": [
+      "payload"
+    ],
+    "PtreeFull.full_unit_kind.FullTheory": [
+      "payload"
+    ],
+    "Reference": [
+      "kind",
+      "zero_based_index"
+    ],
+    "Sequence": [
+      "values_in_semantic_order"
+    ],
+    "Set": [
+      "values_sorted_by_canonical_key"
+    ],
+    "SourceSpan": [
+      "relative_path_hex",
+      "start_byte",
+      "end_byte",
+      "start_line",
+      "start_column",
+      "end_line",
+      "end_column"
+    ],
+    "Task.task_hd": [
+      "task_decl",
+      "task_prev"
+    ],
+    "Task.tdecl_set": [],
+    "Term.binop.Tand": [
+      "payload"
+    ],
+    "Term.binop.Tiff": [
+      "payload"
+    ],
+    "Term.binop.Timplies": [
+      "payload"
+    ],
+    "Term.binop.Tor": [
+      "payload"
+    ],
+    "Term.lsymbol": [
+      "ls_name",
+      "ls_args",
+      "ls_value",
+      "ls_constr",
+      "ls_proj"
+    ],
+    "Term.pattern": [
+      "pat_node",
+      "pat_ty"
+    ],
+    "Term.pattern_node.Papp": [
+      "payload"
+    ],
+    "Term.pattern_node.Pas": [
+      "payload"
+    ],
+    "Term.pattern_node.Por": [
+      "payload"
+    ],
+    "Term.pattern_node.Pvar": [
+      "payload"
+    ],
+    "Term.pattern_node.Pwild": [
+      "payload"
+    ],
+    "Term.quant.Texists": [
+      "payload"
+    ],
+    "Term.quant.Tforall": [
+      "payload"
+    ],
+    "Term.term": [
+      "t_node",
+      "t_ty",
+      "t_attrs",
+      "t_loc"
+    ],
+    "Term.term_node.Tapp": [
+      "payload"
+    ],
+    "Term.term_node.Tbinop": [
+      "payload"
+    ],
+    "Term.term_node.Tcase": [
+      "payload"
+    ],
+    "Term.term_node.Tconst": [
+      "payload"
+    ],
+    "Term.term_node.Teps": [
+      "payload"
+    ],
+    "Term.term_node.Tfalse": [
+      "payload"
+    ],
+    "Term.term_node.Tif": [
+      "payload"
+    ],
+    "Term.term_node.Tlet": [
+      "payload"
+    ],
+    "Term.term_node.Tnot": [
+      "payload"
+    ],
+    "Term.term_node.Tquant": [
+      "payload"
+    ],
+    "Term.term_node.Ttrue": [
+      "payload"
+    ],
+    "Term.term_node.Tvar": [
+      "payload"
+    ],
+    "Term.vsymbol": [
+      "vs_name",
+      "vs_ty"
+    ],
+    "Theory.meta": [
+      "meta_name",
+      "meta_type",
+      "meta_excl"
+    ],
+    "Theory.meta_arg.MAid": [
+      "payload"
+    ],
+    "Theory.meta_arg.MAint": [
+      "payload"
+    ],
+    "Theory.meta_arg.MAls": [
+      "payload"
+    ],
+    "Theory.meta_arg.MApr": [
+      "payload"
+    ],
+    "Theory.meta_arg.MAstr": [
+      "payload"
+    ],
+    "Theory.meta_arg.MAts": [
+      "payload"
+    ],
+    "Theory.meta_arg.MAty": [
+      "payload"
+    ],
+    "Theory.meta_arg_type.MTid": [
+      "payload"
+    ],
+    "Theory.meta_arg_type.MTint": [
+      "payload"
+    ],
+    "Theory.meta_arg_type.MTlsymbol": [
+      "payload"
+    ],
+    "Theory.meta_arg_type.MTprsymbol": [
+      "payload"
+    ],
+    "Theory.meta_arg_type.MTstring": [
+      "payload"
+    ],
+    "Theory.meta_arg_type.MTty": [
+      "payload"
+    ],
+    "Theory.meta_arg_type.MTtysymbol": [
+      "payload"
+    ],
+    "Theory.namespace": [
+      "ns_ts",
+      "ns_ls",
+      "ns_pr",
+      "ns_ns"
+    ],
+    "Theory.symbol_map": [
+      "sm_ty",
+      "sm_ts",
+      "sm_ls",
+      "sm_pr"
+    ],
+    "Theory.tdecl": [
+      "td_node"
+    ],
+    "Theory.tdecl_node.Clone": [
+      "payload"
+    ],
+    "Theory.tdecl_node.Decl": [
+      "payload"
+    ],
+    "Theory.tdecl_node.Meta": [
+      "payload"
+    ],
+    "Theory.tdecl_node.Use": [
+      "payload"
+    ],
+    "Theory.theory": [
+      "th_name",
+      "th_path",
+      "th_decls",
+      "th_export"
+    ],
+    "Ty.tvsymbol": [
+      "tv_name"
+    ],
+    "Ty.ty": [
+      "ty_node"
+    ],
+    "Ty.ty_node.Tyapp": [
+      "payload"
+    ],
+    "Ty.ty_node.Tyvar": [
+      "payload"
+    ],
+    "Ty.type_def.Alias": [
+      "payload"
+    ],
+    "Ty.type_def.Float": [
+      "payload"
+    ],
+    "Ty.type_def.NoDef": [
+      "payload"
+    ],
+    "Ty.type_def.Range": [
+      "payload"
+    ],
+    "Ty.tysymbol": [
+      "ts_name",
+      "ts_args",
+      "ts_def"
+    ],
+    "Unit": []
+  },
+  "featureCoverage": {
+    "variants": [
+      {
+        "featureId": "Constant.constant.ConstInt",
+        "canonicalTag": "Constant.constant.ConstInt",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Constant.constant.ConstReal",
+        "canonicalTag": "Constant.constant.ConstReal",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Constant.constant.ConstStr",
+        "canonicalTag": "Constant.constant.ConstStr",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Decl.decl_node.Ddata",
+        "canonicalTag": "Decl.decl_node.Ddata",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Decl.decl_node.Dind",
+        "canonicalTag": "Decl.decl_node.Dind",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Decl.decl_node.Dlogic",
+        "canonicalTag": "Decl.decl_node.Dlogic",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Decl.decl_node.Dparam",
+        "canonicalTag": "Decl.decl_node.Dparam",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Decl.decl_node.Dprop",
+        "canonicalTag": "Decl.decl_node.Dprop",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Decl.decl_node.Dtype",
+        "canonicalTag": "Decl.decl_node.Dtype",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Decl.ind_sign.Coind",
+        "canonicalTag": "Decl.ind_sign.Coind",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Decl.ind_sign.Ind",
+        "canonicalTag": "Decl.ind_sign.Ind",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Decl.prop_kind.Paxiom",
+        "canonicalTag": "Decl.prop_kind.Paxiom",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Decl.prop_kind.Pgoal",
+        "canonicalTag": "Decl.prop_kind.Pgoal",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Decl.prop_kind.Plemma",
+        "canonicalTag": "Decl.prop_kind.Plemma",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEabsurd",
+        "canonicalTag": "Dexpr.dexpr_node.DEabsurd",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEand",
+        "canonicalTag": "Dexpr.dexpr_node.DEand",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEany",
+        "canonicalTag": "Dexpr.dexpr_node.DEany",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEapp",
+        "canonicalTag": "Dexpr.dexpr_node.DEapp",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEassert",
+        "canonicalTag": "Dexpr.dexpr_node.DEassert",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEassign",
+        "canonicalTag": "Dexpr.dexpr_node.DEassign",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEattr",
+        "canonicalTag": "Dexpr.dexpr_node.DEattr",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEcast",
+        "canonicalTag": "Dexpr.dexpr_node.DEcast",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEconst",
+        "canonicalTag": "Dexpr.dexpr_node.DEconst",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEexn",
+        "canonicalTag": "Dexpr.dexpr_node.DEexn",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEfalse",
+        "canonicalTag": "Dexpr.dexpr_node.DEfalse",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEfor",
+        "canonicalTag": "Dexpr.dexpr_node.DEfor",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEfun",
+        "canonicalTag": "Dexpr.dexpr_node.DEfun",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEghost",
+        "canonicalTag": "Dexpr.dexpr_node.DEghost",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEif",
+        "canonicalTag": "Dexpr.dexpr_node.DEif",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DElabel",
+        "canonicalTag": "Dexpr.dexpr_node.DElabel",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DElet",
+        "canonicalTag": "Dexpr.dexpr_node.DElet",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEls_pure",
+        "canonicalTag": "Dexpr.dexpr_node.DEls_pure",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEmatch",
+        "canonicalTag": "Dexpr.dexpr_node.DEmatch",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEnot",
+        "canonicalTag": "Dexpr.dexpr_node.DEnot",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEoptexn",
+        "canonicalTag": "Dexpr.dexpr_node.DEoptexn",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEor",
+        "canonicalTag": "Dexpr.dexpr_node.DEor",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEpure",
+        "canonicalTag": "Dexpr.dexpr_node.DEpure",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEpv_pure",
+        "canonicalTag": "Dexpr.dexpr_node.DEpv_pure",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEraise",
+        "canonicalTag": "Dexpr.dexpr_node.DEraise",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DErec",
+        "canonicalTag": "Dexpr.dexpr_node.DErec",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEsym",
+        "canonicalTag": "Dexpr.dexpr_node.DEsym",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEtrue",
+        "canonicalTag": "Dexpr.dexpr_node.DEtrue",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEuloc",
+        "canonicalTag": "Dexpr.dexpr_node.DEuloc",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEvar",
+        "canonicalTag": "Dexpr.dexpr_node.DEvar",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEvar_pure",
+        "canonicalTag": "Dexpr.dexpr_node.DEvar_pure",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dexpr_node.DEwhile",
+        "canonicalTag": "Dexpr.dexpr_node.DEwhile",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dpattern_node.DPapp",
+        "canonicalTag": "Dexpr.dpattern_node.DPapp",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dpattern_node.DPas",
+        "canonicalTag": "Dexpr.dpattern_node.DPas",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dpattern_node.DPcast",
+        "canonicalTag": "Dexpr.dpattern_node.DPcast",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dpattern_node.DPor",
+        "canonicalTag": "Dexpr.dpattern_node.DPor",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dpattern_node.DPvar",
+        "canonicalTag": "Dexpr.dpattern_node.DPvar",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dpattern_node.DPwild",
+        "canonicalTag": "Dexpr.dpattern_node.DPwild",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dxsymbol.DEgexn",
+        "canonicalTag": "Dexpr.dxsymbol.DEgexn",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dexpr.dxsymbol.DElexn",
+        "canonicalTag": "Dexpr.dxsymbol.DElexn",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dbinop.DTand",
+        "canonicalTag": "Dterm.dbinop.DTand",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dbinop.DTand_asym",
+        "canonicalTag": "Dterm.dbinop.DTand_asym",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dbinop.DTby",
+        "canonicalTag": "Dterm.dbinop.DTby",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dbinop.DTiff",
+        "canonicalTag": "Dterm.dbinop.DTiff",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dbinop.DTimplies",
+        "canonicalTag": "Dterm.dbinop.DTimplies",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dbinop.DTor",
+        "canonicalTag": "Dterm.dbinop.DTor",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dbinop.DTor_asym",
+        "canonicalTag": "Dterm.dbinop.DTor_asym",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dbinop.DTso",
+        "canonicalTag": "Dterm.dbinop.DTso",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dpattern_node.DPapp",
+        "canonicalTag": "Dterm.dpattern_node.DPapp",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dpattern_node.DPas",
+        "canonicalTag": "Dterm.dpattern_node.DPas",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dpattern_node.DPcast",
+        "canonicalTag": "Dterm.dpattern_node.DPcast",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dpattern_node.DPor",
+        "canonicalTag": "Dterm.dpattern_node.DPor",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dpattern_node.DPvar",
+        "canonicalTag": "Dterm.dpattern_node.DPvar",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dpattern_node.DPwild",
+        "canonicalTag": "Dterm.dpattern_node.DPwild",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dquant.DTexists",
+        "canonicalTag": "Dterm.dquant.DTexists",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dquant.DTforall",
+        "canonicalTag": "Dterm.dquant.DTforall",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dquant.DTlambda",
+        "canonicalTag": "Dterm.dquant.DTlambda",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dterm_node.DTapp",
+        "canonicalTag": "Dterm.dterm_node.DTapp",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dterm_node.DTattr",
+        "canonicalTag": "Dterm.dterm_node.DTattr",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dterm_node.DTbinop",
+        "canonicalTag": "Dterm.dterm_node.DTbinop",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dterm_node.DTcase",
+        "canonicalTag": "Dterm.dterm_node.DTcase",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dterm_node.DTcast",
+        "canonicalTag": "Dterm.dterm_node.DTcast",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dterm_node.DTconst",
+        "canonicalTag": "Dterm.dterm_node.DTconst",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dterm_node.DTeps",
+        "canonicalTag": "Dterm.dterm_node.DTeps",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dterm_node.DTfalse",
+        "canonicalTag": "Dterm.dterm_node.DTfalse",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dterm_node.DTfapp",
+        "canonicalTag": "Dterm.dterm_node.DTfapp",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dterm_node.DTgvar",
+        "canonicalTag": "Dterm.dterm_node.DTgvar",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dterm_node.DTif",
+        "canonicalTag": "Dterm.dterm_node.DTif",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dterm_node.DTlet",
+        "canonicalTag": "Dterm.dterm_node.DTlet",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dterm_node.DTnot",
+        "canonicalTag": "Dterm.dterm_node.DTnot",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dterm_node.DTquant",
+        "canonicalTag": "Dterm.dterm_node.DTquant",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dterm_node.DTtrue",
+        "canonicalTag": "Dterm.dterm_node.DTtrue",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dterm_node.DTuloc",
+        "canonicalTag": "Dterm.dterm_node.DTuloc",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Dterm.dterm_node.DTvar",
+        "canonicalTag": "Dterm.dterm_node.DTvar",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.assertion_kind.Assert",
+        "canonicalTag": "Expr.assertion_kind.Assert",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.assertion_kind.Assume",
+        "canonicalTag": "Expr.assertion_kind.Assume",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.assertion_kind.Check",
+        "canonicalTag": "Expr.assertion_kind.Check",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.cexp_node.Cany",
+        "canonicalTag": "Expr.cexp_node.Cany",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.cexp_node.Capp",
+        "canonicalTag": "Expr.cexp_node.Capp",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.cexp_node.Cfun",
+        "canonicalTag": "Expr.cexp_node.Cfun",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.cexp_node.Cpur",
+        "canonicalTag": "Expr.cexp_node.Cpur",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.expr_node.Eabsurd",
+        "canonicalTag": "Expr.expr_node.Eabsurd",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.expr_node.Eassert",
+        "canonicalTag": "Expr.expr_node.Eassert",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.expr_node.Eassign",
+        "canonicalTag": "Expr.expr_node.Eassign",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.expr_node.Econst",
+        "canonicalTag": "Expr.expr_node.Econst",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.expr_node.Eexec",
+        "canonicalTag": "Expr.expr_node.Eexec",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.expr_node.Eexn",
+        "canonicalTag": "Expr.expr_node.Eexn",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.expr_node.Efor",
+        "canonicalTag": "Expr.expr_node.Efor",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.expr_node.Eghost",
+        "canonicalTag": "Expr.expr_node.Eghost",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.expr_node.Eif",
+        "canonicalTag": "Expr.expr_node.Eif",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.expr_node.Elet",
+        "canonicalTag": "Expr.expr_node.Elet",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.expr_node.Ematch",
+        "canonicalTag": "Expr.expr_node.Ematch",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.expr_node.Epure",
+        "canonicalTag": "Expr.expr_node.Epure",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.expr_node.Eraise",
+        "canonicalTag": "Expr.expr_node.Eraise",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.expr_node.Evar",
+        "canonicalTag": "Expr.expr_node.Evar",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.expr_node.Ewhile",
+        "canonicalTag": "Expr.expr_node.Ewhile",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.for_direction.DownTo",
+        "canonicalTag": "Expr.for_direction.DownTo",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.for_direction.To",
+        "canonicalTag": "Expr.for_direction.To",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.let_defn.LDrec",
+        "canonicalTag": "Expr.let_defn.LDrec",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.let_defn.LDsym",
+        "canonicalTag": "Expr.let_defn.LDsym",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.let_defn.LDvar",
+        "canonicalTag": "Expr.let_defn.LDvar",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.pat_ghost.PGfail",
+        "canonicalTag": "Expr.pat_ghost.PGfail",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.pat_ghost.PGlast",
+        "canonicalTag": "Expr.pat_ghost.PGlast",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.pat_ghost.PGnone",
+        "canonicalTag": "Expr.pat_ghost.PGnone",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.pre_pattern.PPapp",
+        "canonicalTag": "Expr.pre_pattern.PPapp",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.pre_pattern.PPas",
+        "canonicalTag": "Expr.pre_pattern.PPas",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.pre_pattern.PPor",
+        "canonicalTag": "Expr.pre_pattern.PPor",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.pre_pattern.PPvar",
+        "canonicalTag": "Expr.pre_pattern.PPvar",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.pre_pattern.PPwild",
+        "canonicalTag": "Expr.pre_pattern.PPwild",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.rs_kind.RKfunc",
+        "canonicalTag": "Expr.rs_kind.RKfunc",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.rs_kind.RKlemma",
+        "canonicalTag": "Expr.rs_kind.RKlemma",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.rs_kind.RKlocal",
+        "canonicalTag": "Expr.rs_kind.RKlocal",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.rs_kind.RKnone",
+        "canonicalTag": "Expr.rs_kind.RKnone",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.rs_kind.RKpred",
+        "canonicalTag": "Expr.rs_kind.RKpred",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.rs_logic.RLlemma",
+        "canonicalTag": "Expr.rs_logic.RLlemma",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.rs_logic.RLls",
+        "canonicalTag": "Expr.rs_logic.RLls",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.rs_logic.RLnone",
+        "canonicalTag": "Expr.rs_logic.RLnone",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Expr.rs_logic.RLpv",
+        "canonicalTag": "Expr.rs_logic.RLpv",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ident.notation.SNcut",
+        "canonicalTag": "Ident.notation.SNcut",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ident.notation.SNget",
+        "canonicalTag": "Ident.notation.SNget",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ident.notation.SNinfix",
+        "canonicalTag": "Ident.notation.SNinfix",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ident.notation.SNlcut",
+        "canonicalTag": "Ident.notation.SNlcut",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ident.notation.SNprefix",
+        "canonicalTag": "Ident.notation.SNprefix",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ident.notation.SNrcut",
+        "canonicalTag": "Ident.notation.SNrcut",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ident.notation.SNset",
+        "canonicalTag": "Ident.notation.SNset",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ident.notation.SNtight",
+        "canonicalTag": "Ident.notation.SNtight",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ident.notation.SNupdate",
+        "canonicalTag": "Ident.notation.SNupdate",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ident.notation.SNword",
+        "canonicalTag": "Ident.notation.SNword",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ity.ity_node.Ityapp",
+        "canonicalTag": "Ity.ity_node.Ityapp",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ity.ity_node.Ityreg",
+        "canonicalTag": "Ity.ity_node.Ityreg",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ity.ity_node.Ityvar",
+        "canonicalTag": "Ity.ity_node.Ityvar",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ity.mask.MaskGhost",
+        "canonicalTag": "Ity.mask.MaskGhost",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ity.mask.MaskTuple",
+        "canonicalTag": "Ity.mask.MaskTuple",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ity.mask.MaskVisible",
+        "canonicalTag": "Ity.mask.MaskVisible",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ity.oneway.Diverges",
+        "canonicalTag": "Ity.oneway.Diverges",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ity.oneway.Partial",
+        "canonicalTag": "Ity.oneway.Partial",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ity.oneway.Total",
+        "canonicalTag": "Ity.oneway.Total",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Number.int_literal_kind.ILitBin",
+        "canonicalTag": "Number.int_literal_kind.ILitBin",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Number.int_literal_kind.ILitDec",
+        "canonicalTag": "Number.int_literal_kind.ILitDec",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Number.int_literal_kind.ILitHex",
+        "canonicalTag": "Number.int_literal_kind.ILitHex",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Number.int_literal_kind.ILitOct",
+        "canonicalTag": "Number.int_literal_kind.ILitOct",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Number.int_literal_kind.ILitUnk",
+        "canonicalTag": "Number.int_literal_kind.ILitUnk",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Number.real_literal_kind.RLitDec",
+        "canonicalTag": "Number.real_literal_kind.RLitDec",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Number.real_literal_kind.RLitHex",
+        "canonicalTag": "Number.real_literal_kind.RLitHex",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Number.real_literal_kind.RLitUnk",
+        "canonicalTag": "Number.real_literal_kind.RLitUnk",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Pdecl.pdecl_node.PDexn",
+        "canonicalTag": "Pdecl.pdecl_node.PDexn",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Pdecl.pdecl_node.PDlet",
+        "canonicalTag": "Pdecl.pdecl_node.PDlet",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Pdecl.pdecl_node.PDpure",
+        "canonicalTag": "Pdecl.pdecl_node.PDpure",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Pdecl.pdecl_node.PDtype",
+        "canonicalTag": "Pdecl.pdecl_node.PDtype",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Pmodule.mod_unit.Uclone",
+        "canonicalTag": "Pmodule.mod_unit.Uclone",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Pmodule.mod_unit.Udecl",
+        "canonicalTag": "Pmodule.mod_unit.Udecl",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Pmodule.mod_unit.Umeta",
+        "canonicalTag": "Pmodule.mod_unit.Umeta",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Pmodule.mod_unit.Uscope",
+        "canonicalTag": "Pmodule.mod_unit.Uscope",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Pmodule.mod_unit.Uuse",
+        "canonicalTag": "Pmodule.mod_unit.Uuse",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Pmodule.overload.FixedRes",
+        "canonicalTag": "Pmodule.overload.FixedRes",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Pmodule.overload.NoOver",
+        "canonicalTag": "Pmodule.overload.NoOver",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Pmodule.overload.SameType",
+        "canonicalTag": "Pmodule.overload.SameType",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Pmodule.prog_symbol.OO",
+        "canonicalTag": "Pmodule.prog_symbol.OO",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Pmodule.prog_symbol.PV",
+        "canonicalTag": "Pmodule.prog_symbol.PV",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Pmodule.prog_symbol.RS",
+        "canonicalTag": "Pmodule.prog_symbol.RS",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.attr.ATpos",
+        "canonicalTag": "Ptree.attr.ATpos",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.attr.ATstr",
+        "canonicalTag": "Ptree.attr.ATstr",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.clone_subst.CSaxiom",
+        "canonicalTag": "Ptree.clone_subst.CSaxiom",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.clone_subst.CSfsym",
+        "canonicalTag": "Ptree.clone_subst.CSfsym",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.clone_subst.CSgoal",
+        "canonicalTag": "Ptree.clone_subst.CSgoal",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.clone_subst.CSlemma",
+        "canonicalTag": "Ptree.clone_subst.CSlemma",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.clone_subst.CSprop",
+        "canonicalTag": "Ptree.clone_subst.CSprop",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.clone_subst.CSpsym",
+        "canonicalTag": "Ptree.clone_subst.CSpsym",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.clone_subst.CStsym",
+        "canonicalTag": "Ptree.clone_subst.CStsym",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.clone_subst.CSvsym",
+        "canonicalTag": "Ptree.clone_subst.CSvsym",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.clone_subst.CSxsym",
+        "canonicalTag": "Ptree.clone_subst.CSxsym",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.decl.Dcloneexport",
+        "canonicalTag": "Ptree.decl.Dcloneexport",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.decl.Dcloneimport",
+        "canonicalTag": "Ptree.decl.Dcloneimport",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.decl.Dexn",
+        "canonicalTag": "Ptree.decl.Dexn",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.decl.Dimport",
+        "canonicalTag": "Ptree.decl.Dimport",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.decl.Dind",
+        "canonicalTag": "Ptree.decl.Dind",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.decl.Dlet",
+        "canonicalTag": "Ptree.decl.Dlet",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.decl.Dlogic",
+        "canonicalTag": "Ptree.decl.Dlogic",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.decl.Dmeta",
+        "canonicalTag": "Ptree.decl.Dmeta",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.decl.Dprop",
+        "canonicalTag": "Ptree.decl.Dprop",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.decl.Drec",
+        "canonicalTag": "Ptree.decl.Drec",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.decl.Dscope",
+        "canonicalTag": "Ptree.decl.Dscope",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.decl.Dtype",
+        "canonicalTag": "Ptree.decl.Dtype",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.decl.Duseexport",
+        "canonicalTag": "Ptree.decl.Duseexport",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.decl.Duseimport",
+        "canonicalTag": "Ptree.decl.Duseimport",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eabsurd",
+        "canonicalTag": "Ptree.expr_desc.Eabsurd",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eand",
+        "canonicalTag": "Ptree.expr_desc.Eand",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eany",
+        "canonicalTag": "Ptree.expr_desc.Eany",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eapply",
+        "canonicalTag": "Ptree.expr_desc.Eapply",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Easref",
+        "canonicalTag": "Ptree.expr_desc.Easref",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eassert",
+        "canonicalTag": "Ptree.expr_desc.Eassert",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eassign",
+        "canonicalTag": "Ptree.expr_desc.Eassign",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eattr",
+        "canonicalTag": "Ptree.expr_desc.Eattr",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Ecast",
+        "canonicalTag": "Ptree.expr_desc.Ecast",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Econst",
+        "canonicalTag": "Ptree.expr_desc.Econst",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eexn",
+        "canonicalTag": "Ptree.expr_desc.Eexn",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Efalse",
+        "canonicalTag": "Ptree.expr_desc.Efalse",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Efor",
+        "canonicalTag": "Ptree.expr_desc.Efor",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Efun",
+        "canonicalTag": "Ptree.expr_desc.Efun",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eghost",
+        "canonicalTag": "Ptree.expr_desc.Eghost",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eidapp",
+        "canonicalTag": "Ptree.expr_desc.Eidapp",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eident",
+        "canonicalTag": "Ptree.expr_desc.Eident",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eidpur",
+        "canonicalTag": "Ptree.expr_desc.Eidpur",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eif",
+        "canonicalTag": "Ptree.expr_desc.Eif",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Einfix",
+        "canonicalTag": "Ptree.expr_desc.Einfix",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Einnfix",
+        "canonicalTag": "Ptree.expr_desc.Einnfix",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Elabel",
+        "canonicalTag": "Ptree.expr_desc.Elabel",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Elet",
+        "canonicalTag": "Ptree.expr_desc.Elet",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Ematch",
+        "canonicalTag": "Ptree.expr_desc.Ematch",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Enot",
+        "canonicalTag": "Ptree.expr_desc.Enot",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eoptexn",
+        "canonicalTag": "Ptree.expr_desc.Eoptexn",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eor",
+        "canonicalTag": "Ptree.expr_desc.Eor",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Epure",
+        "canonicalTag": "Ptree.expr_desc.Epure",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eraise",
+        "canonicalTag": "Ptree.expr_desc.Eraise",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Erec",
+        "canonicalTag": "Ptree.expr_desc.Erec",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Erecord",
+        "canonicalTag": "Ptree.expr_desc.Erecord",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eref",
+        "canonicalTag": "Ptree.expr_desc.Eref",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Escope",
+        "canonicalTag": "Ptree.expr_desc.Escope",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Esequence",
+        "canonicalTag": "Ptree.expr_desc.Esequence",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Etrue",
+        "canonicalTag": "Ptree.expr_desc.Etrue",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Etuple",
+        "canonicalTag": "Ptree.expr_desc.Etuple",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Eupdate",
+        "canonicalTag": "Ptree.expr_desc.Eupdate",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.expr_desc.Ewhile",
+        "canonicalTag": "Ptree.expr_desc.Ewhile",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.metarg.Max",
+        "canonicalTag": "Ptree.metarg.Max",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.metarg.Mfs",
+        "canonicalTag": "Ptree.metarg.Mfs",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.metarg.Mgl",
+        "canonicalTag": "Ptree.metarg.Mgl",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.metarg.Mint",
+        "canonicalTag": "Ptree.metarg.Mint",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.metarg.Mlm",
+        "canonicalTag": "Ptree.metarg.Mlm",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.metarg.Mps",
+        "canonicalTag": "Ptree.metarg.Mps",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.metarg.Mstr",
+        "canonicalTag": "Ptree.metarg.Mstr",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.metarg.Mty",
+        "canonicalTag": "Ptree.metarg.Mty",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.metarg.Mval",
+        "canonicalTag": "Ptree.metarg.Mval",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.mlw_file.Decls",
+        "canonicalTag": "Ptree.mlw_file.Decls",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.mlw_file.Modules",
+        "canonicalTag": "Ptree.mlw_file.Modules",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pat_desc.Papp",
+        "canonicalTag": "Ptree.pat_desc.Papp",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pat_desc.Pas",
+        "canonicalTag": "Ptree.pat_desc.Pas",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pat_desc.Pcast",
+        "canonicalTag": "Ptree.pat_desc.Pcast",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pat_desc.Pghost",
+        "canonicalTag": "Ptree.pat_desc.Pghost",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pat_desc.Por",
+        "canonicalTag": "Ptree.pat_desc.Por",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pat_desc.Pparen",
+        "canonicalTag": "Ptree.pat_desc.Pparen",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pat_desc.Prec",
+        "canonicalTag": "Ptree.pat_desc.Prec",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pat_desc.Pscope",
+        "canonicalTag": "Ptree.pat_desc.Pscope",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pat_desc.Ptuple",
+        "canonicalTag": "Ptree.pat_desc.Ptuple",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pat_desc.Pvar",
+        "canonicalTag": "Ptree.pat_desc.Pvar",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pat_desc.Pwild",
+        "canonicalTag": "Ptree.pat_desc.Pwild",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pty.PTarrow",
+        "canonicalTag": "Ptree.pty.PTarrow",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pty.PTparen",
+        "canonicalTag": "Ptree.pty.PTparen",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pty.PTpure",
+        "canonicalTag": "Ptree.pty.PTpure",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pty.PTref",
+        "canonicalTag": "Ptree.pty.PTref",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pty.PTscope",
+        "canonicalTag": "Ptree.pty.PTscope",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pty.PTtuple",
+        "canonicalTag": "Ptree.pty.PTtuple",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pty.PTtyapp",
+        "canonicalTag": "Ptree.pty.PTtyapp",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.pty.PTtyvar",
+        "canonicalTag": "Ptree.pty.PTtyvar",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.qualid.Qdot",
+        "canonicalTag": "Ptree.qualid.Qdot",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.qualid.Qident",
+        "canonicalTag": "Ptree.qualid.Qident",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tapply",
+        "canonicalTag": "Ptree.term_desc.Tapply",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tasref",
+        "canonicalTag": "Ptree.term_desc.Tasref",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tat",
+        "canonicalTag": "Ptree.term_desc.Tat",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tattr",
+        "canonicalTag": "Ptree.term_desc.Tattr",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tbinnop",
+        "canonicalTag": "Ptree.term_desc.Tbinnop",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tbinop",
+        "canonicalTag": "Ptree.term_desc.Tbinop",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tcase",
+        "canonicalTag": "Ptree.term_desc.Tcase",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tcast",
+        "canonicalTag": "Ptree.term_desc.Tcast",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tconst",
+        "canonicalTag": "Ptree.term_desc.Tconst",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Teps",
+        "canonicalTag": "Ptree.term_desc.Teps",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tfalse",
+        "canonicalTag": "Ptree.term_desc.Tfalse",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tidapp",
+        "canonicalTag": "Ptree.term_desc.Tidapp",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tident",
+        "canonicalTag": "Ptree.term_desc.Tident",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tif",
+        "canonicalTag": "Ptree.term_desc.Tif",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tinfix",
+        "canonicalTag": "Ptree.term_desc.Tinfix",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tinnfix",
+        "canonicalTag": "Ptree.term_desc.Tinnfix",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tlet",
+        "canonicalTag": "Ptree.term_desc.Tlet",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tnot",
+        "canonicalTag": "Ptree.term_desc.Tnot",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tquant",
+        "canonicalTag": "Ptree.term_desc.Tquant",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Trecord",
+        "canonicalTag": "Ptree.term_desc.Trecord",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tscope",
+        "canonicalTag": "Ptree.term_desc.Tscope",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Ttrue",
+        "canonicalTag": "Ptree.term_desc.Ttrue",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Ttuple",
+        "canonicalTag": "Ptree.term_desc.Ttuple",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.term_desc.Tupdate",
+        "canonicalTag": "Ptree.term_desc.Tupdate",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.type_def.TDalgebraic",
+        "canonicalTag": "Ptree.type_def.TDalgebraic",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.type_def.TDalias",
+        "canonicalTag": "Ptree.type_def.TDalias",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.type_def.TDfloat",
+        "canonicalTag": "Ptree.type_def.TDfloat",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.type_def.TDrange",
+        "canonicalTag": "Ptree.type_def.TDrange",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.type_def.TDrecord",
+        "canonicalTag": "Ptree.type_def.TDrecord",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.visibility.Abstract",
+        "canonicalTag": "Ptree.visibility.Abstract",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.visibility.Private",
+        "canonicalTag": "Ptree.visibility.Private",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ptree.visibility.Public",
+        "canonicalTag": "Ptree.visibility.Public",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "PtreeFull.full_mlw_file.FullDecls",
+        "canonicalTag": "PtreeFull.full_mlw_file.FullDecls",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "PtreeFull.full_mlw_file.FullModules",
+        "canonicalTag": "PtreeFull.full_mlw_file.FullModules",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "PtreeFull.full_unit_kind.FullModule",
+        "canonicalTag": "PtreeFull.full_unit_kind.FullModule",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "PtreeFull.full_unit_kind.FullTheory",
+        "canonicalTag": "PtreeFull.full_unit_kind.FullTheory",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.binop.Tand",
+        "canonicalTag": "Term.binop.Tand",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.binop.Tiff",
+        "canonicalTag": "Term.binop.Tiff",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.binop.Timplies",
+        "canonicalTag": "Term.binop.Timplies",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.binop.Tor",
+        "canonicalTag": "Term.binop.Tor",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.pattern_node.Papp",
+        "canonicalTag": "Term.pattern_node.Papp",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.pattern_node.Pas",
+        "canonicalTag": "Term.pattern_node.Pas",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.pattern_node.Por",
+        "canonicalTag": "Term.pattern_node.Por",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.pattern_node.Pvar",
+        "canonicalTag": "Term.pattern_node.Pvar",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.pattern_node.Pwild",
+        "canonicalTag": "Term.pattern_node.Pwild",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.quant.Texists",
+        "canonicalTag": "Term.quant.Texists",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.quant.Tforall",
+        "canonicalTag": "Term.quant.Tforall",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.term_node.Tapp",
+        "canonicalTag": "Term.term_node.Tapp",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.term_node.Tbinop",
+        "canonicalTag": "Term.term_node.Tbinop",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.term_node.Tcase",
+        "canonicalTag": "Term.term_node.Tcase",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.term_node.Tconst",
+        "canonicalTag": "Term.term_node.Tconst",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.term_node.Teps",
+        "canonicalTag": "Term.term_node.Teps",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.term_node.Tfalse",
+        "canonicalTag": "Term.term_node.Tfalse",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.term_node.Tif",
+        "canonicalTag": "Term.term_node.Tif",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.term_node.Tlet",
+        "canonicalTag": "Term.term_node.Tlet",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.term_node.Tnot",
+        "canonicalTag": "Term.term_node.Tnot",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.term_node.Tquant",
+        "canonicalTag": "Term.term_node.Tquant",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.term_node.Ttrue",
+        "canonicalTag": "Term.term_node.Ttrue",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Term.term_node.Tvar",
+        "canonicalTag": "Term.term_node.Tvar",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.meta_arg.MAid",
+        "canonicalTag": "Theory.meta_arg.MAid",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.meta_arg.MAint",
+        "canonicalTag": "Theory.meta_arg.MAint",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.meta_arg.MAls",
+        "canonicalTag": "Theory.meta_arg.MAls",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.meta_arg.MApr",
+        "canonicalTag": "Theory.meta_arg.MApr",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.meta_arg.MAstr",
+        "canonicalTag": "Theory.meta_arg.MAstr",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.meta_arg.MAts",
+        "canonicalTag": "Theory.meta_arg.MAts",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.meta_arg.MAty",
+        "canonicalTag": "Theory.meta_arg.MAty",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.meta_arg_type.MTid",
+        "canonicalTag": "Theory.meta_arg_type.MTid",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.meta_arg_type.MTint",
+        "canonicalTag": "Theory.meta_arg_type.MTint",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.meta_arg_type.MTlsymbol",
+        "canonicalTag": "Theory.meta_arg_type.MTlsymbol",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.meta_arg_type.MTprsymbol",
+        "canonicalTag": "Theory.meta_arg_type.MTprsymbol",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.meta_arg_type.MTstring",
+        "canonicalTag": "Theory.meta_arg_type.MTstring",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.meta_arg_type.MTty",
+        "canonicalTag": "Theory.meta_arg_type.MTty",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.meta_arg_type.MTtysymbol",
+        "canonicalTag": "Theory.meta_arg_type.MTtysymbol",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.tdecl_node.Clone",
+        "canonicalTag": "Theory.tdecl_node.Clone",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.tdecl_node.Decl",
+        "canonicalTag": "Theory.tdecl_node.Decl",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.tdecl_node.Meta",
+        "canonicalTag": "Theory.tdecl_node.Meta",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Theory.tdecl_node.Use",
+        "canonicalTag": "Theory.tdecl_node.Use",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ty.ty_node.Tyapp",
+        "canonicalTag": "Ty.ty_node.Tyapp",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ty.ty_node.Tyvar",
+        "canonicalTag": "Ty.ty_node.Tyvar",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ty.type_def.Alias",
+        "canonicalTag": "Ty.type_def.Alias",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ty.type_def.Float",
+        "canonicalTag": "Ty.type_def.Float",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ty.type_def.NoDef",
+        "canonicalTag": "Ty.type_def.NoDef",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      },
+      {
+        "featureId": "Ty.type_def.Range",
+        "canonicalTag": "Ty.type_def.Range",
+        "fieldOrder": [
+          "payload"
+        ],
+        "payloadEncoding": "Unit for nullary constructors; otherwise one value or Product in OCaml source tuple order"
+      }
+    ],
+    "records": [
+      {
+        "featureId": "Decl.decl",
+        "canonicalTag": "Decl.decl",
+        "fieldOrder": [
+          "d_node"
+        ],
+        "excluded": {
+          "d_news": "derived introduced-identifier cache",
+          "d_tag": "runtime weak-table tag"
+        }
+      },
+      {
+        "featureId": "Decl.prsymbol",
+        "canonicalTag": "Decl.prsymbol",
+        "fieldOrder": [
+          "pr_name"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Dexpr.dexpr",
+        "canonicalTag": "Dexpr.dexpr",
+        "fieldOrder": [
+          "de_node",
+          "de_dvty",
+          "de_loc"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Dexpr.dpattern",
+        "canonicalTag": "Dexpr.dpattern",
+        "fieldOrder": [
+          "dp_pat",
+          "dp_dity",
+          "dp_vars",
+          "dp_loc"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Dexpr.drec_defn",
+        "canonicalTag": "Dexpr.drec_defn",
+        "fieldOrder": [
+          "fds"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Dexpr.dspec_final",
+        "canonicalTag": "Dexpr.dspec_final",
+        "fieldOrder": [
+          "ds_pre",
+          "ds_post",
+          "ds_xpost",
+          "ds_reads",
+          "ds_writes",
+          "ds_diverge",
+          "ds_partial",
+          "ds_checkrw"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Dterm.dpattern",
+        "canonicalTag": "Dterm.dpattern",
+        "fieldOrder": [
+          "dp_node",
+          "dp_dty",
+          "dp_vars",
+          "dp_loc"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Dterm.dterm",
+        "canonicalTag": "Dterm.dterm",
+        "fieldOrder": [
+          "dt_node",
+          "dt_dty",
+          "dt_loc"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Expr.cexp",
+        "canonicalTag": "Expr.cexp",
+        "fieldOrder": [
+          "c_node",
+          "c_cty"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Expr.expr",
+        "canonicalTag": "Expr.expr",
+        "fieldOrder": [
+          "e_node",
+          "e_ity",
+          "e_mask",
+          "e_effect",
+          "e_attrs",
+          "e_loc"
+        ],
+        "excluded": {
+          "e_id": "runtime expression identifier"
+        }
+      },
+      {
+        "featureId": "Expr.prog_pattern",
+        "canonicalTag": "Expr.prog_pattern",
+        "fieldOrder": [
+          "pp_pat",
+          "pp_ity",
+          "pp_mask",
+          "pp_fail"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Expr.rec_defn",
+        "canonicalTag": "Expr.rec_defn",
+        "fieldOrder": [
+          "rec_sym",
+          "rec_rsym",
+          "rec_fun",
+          "rec_varl"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Expr.rsymbol",
+        "canonicalTag": "Expr.rsymbol",
+        "fieldOrder": [
+          "rs_name",
+          "rs_cty",
+          "rs_logic",
+          "rs_field"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ident.attribute",
+        "canonicalTag": "Ident.attribute",
+        "fieldOrder": [
+          "attr_string"
+        ],
+        "excluded": {
+          "attr_tag": "runtime attribute registration tag"
+        }
+      },
+      {
+        "featureId": "Ident.ident",
+        "canonicalTag": "Ident.ident",
+        "fieldOrder": [
+          "id_string",
+          "id_attrs",
+          "id_loc"
+        ],
+        "excluded": {
+          "id_tag": "runtime weak-table tag"
+        }
+      },
+      {
+        "featureId": "Ident.preid",
+        "canonicalTag": "Ident.preid",
+        "fieldOrder": [
+          "pre_name",
+          "pre_attrs",
+          "pre_loc"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ity.cty",
+        "canonicalTag": "Ity.cty",
+        "fieldOrder": [
+          "cty_args",
+          "cty_pre",
+          "cty_post",
+          "cty_xpost",
+          "cty_oldies",
+          "cty_effect",
+          "cty_result",
+          "cty_mask",
+          "cty_freeze"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ity.effect",
+        "canonicalTag": "Ity.effect",
+        "fieldOrder": [
+          "eff_reads",
+          "eff_writes",
+          "eff_taints",
+          "eff_covers",
+          "eff_resets",
+          "eff_raises",
+          "eff_spoils",
+          "eff_oneway",
+          "eff_ghost"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ity.its_flag",
+        "canonicalTag": "Ity.its_flag",
+        "fieldOrder": [
+          "its_frozen",
+          "its_exposed",
+          "its_liable",
+          "its_fixed",
+          "its_visible"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ity.ity",
+        "canonicalTag": "Ity.ity",
+        "fieldOrder": [
+          "ity_node"
+        ],
+        "excluded": {
+          "ity_pure": "derived purity cache",
+          "ity_tag": "runtime weak-table tag"
+        }
+      },
+      {
+        "featureId": "Ity.ity_subst",
+        "canonicalTag": "Ity.ity_subst",
+        "fieldOrder": [
+          "isb_var",
+          "isb_reg"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ity.itysymbol",
+        "canonicalTag": "Ity.itysymbol",
+        "fieldOrder": [
+          "its_ts",
+          "its_nonfree",
+          "its_private",
+          "its_mutable",
+          "its_fragile",
+          "its_mfields",
+          "its_ofields",
+          "its_regions",
+          "its_arg_flg",
+          "its_reg_flg",
+          "its_def"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ity.pvsymbol",
+        "canonicalTag": "Ity.pvsymbol",
+        "fieldOrder": [
+          "pv_vs",
+          "pv_ity",
+          "pv_ghost"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ity.region",
+        "canonicalTag": "Ity.region",
+        "fieldOrder": [
+          "reg_name",
+          "reg_its",
+          "reg_args",
+          "reg_regs"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ity.xsymbol",
+        "canonicalTag": "Ity.xsymbol",
+        "fieldOrder": [
+          "xs_name",
+          "xs_ity",
+          "xs_mask"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Number.int_constant",
+        "canonicalTag": "Number.int_constant",
+        "fieldOrder": [
+          "il_kind",
+          "il_int"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Number.real_constant",
+        "canonicalTag": "Number.real_constant",
+        "fieldOrder": [
+          "rl_kind",
+          "rl_real"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Number.real_value",
+        "canonicalTag": "Number.real_value",
+        "fieldOrder": [
+          "rv_sig",
+          "rv_pow2",
+          "rv_pow5"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Pdecl.its_defn",
+        "canonicalTag": "Pdecl.its_defn",
+        "fieldOrder": [
+          "itd_its",
+          "itd_fields",
+          "itd_constructors",
+          "itd_invariant",
+          "itd_witness"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Pdecl.pdecl",
+        "canonicalTag": "Pdecl.pdecl",
+        "fieldOrder": [
+          "pd_node",
+          "pd_pure",
+          "pd_meta"
+        ],
+        "excluded": {
+          "pd_syms": "derived used-symbol set",
+          "pd_news": "derived introduced-symbol set",
+          "pd_tag": "runtime declaration tag"
+        }
+      },
+      {
+        "featureId": "Pmodule.mod_inst",
+        "canonicalTag": "Pmodule.mod_inst",
+        "fieldOrder": [
+          "mi_mod",
+          "mi_ty",
+          "mi_ts",
+          "mi_ls",
+          "mi_pr",
+          "mi_pk",
+          "mi_pv",
+          "mi_rs",
+          "mi_xs",
+          "mi_df"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Pmodule.namespace",
+        "canonicalTag": "Pmodule.namespace",
+        "fieldOrder": [
+          "ns_ts",
+          "ns_ps",
+          "ns_xs",
+          "ns_ns"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Pmodule.pmodule",
+        "canonicalTag": "Pmodule.pmodule",
+        "fieldOrder": [
+          "mod_theory",
+          "mod_units",
+          "mod_export"
+        ],
+        "excluded": {
+          "mod_known": "derived known-declaration index",
+          "mod_local": "derived local-identifier set",
+          "mod_used": "derived used-module set"
+        }
+      },
+      {
+        "featureId": "Ptree.expr",
+        "canonicalTag": "Ptree.expr",
+        "fieldOrder": [
+          "expr_desc",
+          "expr_loc"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ptree.field",
+        "canonicalTag": "Ptree.field",
+        "fieldOrder": [
+          "f_loc",
+          "f_ident",
+          "f_pty",
+          "f_mutable",
+          "f_ghost"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ptree.ident",
+        "canonicalTag": "Ptree.ident",
+        "fieldOrder": [
+          "id_str",
+          "id_ats",
+          "id_loc"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ptree.ind_decl",
+        "canonicalTag": "Ptree.ind_decl",
+        "fieldOrder": [
+          "in_loc",
+          "in_ident",
+          "in_params",
+          "in_def"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ptree.logic_decl",
+        "canonicalTag": "Ptree.logic_decl",
+        "fieldOrder": [
+          "ld_loc",
+          "ld_ident",
+          "ld_params",
+          "ld_type",
+          "ld_def"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ptree.pattern",
+        "canonicalTag": "Ptree.pattern",
+        "fieldOrder": [
+          "pat_desc",
+          "pat_loc"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ptree.spec",
+        "canonicalTag": "Ptree.spec",
+        "fieldOrder": [
+          "sp_pre",
+          "sp_post",
+          "sp_xpost",
+          "sp_reads",
+          "sp_writes",
+          "sp_alias",
+          "sp_variant",
+          "sp_checkrw",
+          "sp_diverge",
+          "sp_partial"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ptree.term",
+        "canonicalTag": "Ptree.term",
+        "fieldOrder": [
+          "term_desc",
+          "term_loc"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ptree.type_decl",
+        "canonicalTag": "Ptree.type_decl",
+        "fieldOrder": [
+          "td_loc",
+          "td_ident",
+          "td_params",
+          "td_vis",
+          "td_mut",
+          "td_inv",
+          "td_wit",
+          "td_def"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "PtreeFull.full_unit",
+        "canonicalTag": "PtreeFull.full_unit",
+        "fieldOrder": [
+          "full_kind",
+          "full_name",
+          "full_decls",
+          "full_loc"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Task.task_hd",
+        "canonicalTag": "Task.task_hd",
+        "fieldOrder": [
+          "task_decl",
+          "task_prev"
+        ],
+        "excluded": {
+          "task_known": "derived known-declaration index",
+          "task_clone": "derived use/clone history",
+          "task_meta": "derived meta history",
+          "task_tag": "runtime weak-table tag"
+        }
+      },
+      {
+        "featureId": "Task.tdecl_set",
+        "canonicalTag": "Task.tdecl_set",
+        "fieldOrder": [],
+        "excluded": {
+          "tds_set": "derived task history set",
+          "tds_tag": "runtime weak-table tag"
+        }
+      },
+      {
+        "featureId": "Term.lsymbol",
+        "canonicalTag": "Term.lsymbol",
+        "fieldOrder": [
+          "ls_name",
+          "ls_args",
+          "ls_value",
+          "ls_constr",
+          "ls_proj"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Term.pattern",
+        "canonicalTag": "Term.pattern",
+        "fieldOrder": [
+          "pat_node",
+          "pat_ty"
+        ],
+        "excluded": {
+          "pat_vars": "derived bound-variable cache"
+        }
+      },
+      {
+        "featureId": "Term.term",
+        "canonicalTag": "Term.term",
+        "fieldOrder": [
+          "t_node",
+          "t_ty",
+          "t_attrs",
+          "t_loc"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Term.vsymbol",
+        "canonicalTag": "Term.vsymbol",
+        "fieldOrder": [
+          "vs_name",
+          "vs_ty"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Theory.meta",
+        "canonicalTag": "Theory.meta",
+        "fieldOrder": [
+          "meta_name",
+          "meta_type",
+          "meta_excl"
+        ],
+        "excluded": {
+          "meta_desc": "localized documentation text",
+          "meta_tag": "runtime registration tag"
+        }
+      },
+      {
+        "featureId": "Theory.namespace",
+        "canonicalTag": "Theory.namespace",
+        "fieldOrder": [
+          "ns_ts",
+          "ns_ls",
+          "ns_pr",
+          "ns_ns"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Theory.symbol_map",
+        "canonicalTag": "Theory.symbol_map",
+        "fieldOrder": [
+          "sm_ty",
+          "sm_ts",
+          "sm_ls",
+          "sm_pr"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Theory.tdecl",
+        "canonicalTag": "Theory.tdecl",
+        "fieldOrder": [
+          "td_node"
+        ],
+        "excluded": {
+          "td_tag": "runtime declaration tag"
+        }
+      },
+      {
+        "featureId": "Theory.theory",
+        "canonicalTag": "Theory.theory",
+        "fieldOrder": [
+          "th_name",
+          "th_path",
+          "th_decls",
+          "th_export"
+        ],
+        "excluded": {
+          "th_ranges": "derived range projection index",
+          "th_floats": "derived float projection index",
+          "th_crcmap": "derived coercion closure reconstructed from declaration/meta history",
+          "th_proved_wf": "derived well-foundedness index reconstructed from metas",
+          "th_known": "derived known-declaration index",
+          "th_local": "derived local-identifier set",
+          "th_used": "derived used-theory set"
+        }
+      },
+      {
+        "featureId": "Ty.tvsymbol",
+        "canonicalTag": "Ty.tvsymbol",
+        "fieldOrder": [
+          "tv_name"
+        ],
+        "excluded": {}
+      },
+      {
+        "featureId": "Ty.ty",
+        "canonicalTag": "Ty.ty",
+        "fieldOrder": [
+          "ty_node"
+        ],
+        "excluded": {
+          "ty_tag": "runtime weak-table tag"
+        }
+      },
+      {
+        "featureId": "Ty.tysymbol",
+        "canonicalTag": "Ty.tysymbol",
+        "fieldOrder": [
+          "ts_name",
+          "ts_args",
+          "ts_def"
+        ],
+        "excluded": {}
+      }
+    ],
+    "opaqueProjections": [
+      {
+        "id": "Coercion.t",
+        "source": "src/core/coercion.mli",
+        "canonicalV3Projection": "not serialized as an object; reconstructed from ordered theory declaration/meta history",
+        "layer": "core-graph",
+        "migrationPhase": 2
+      },
+      {
+        "id": "Decl.ls_defn",
+        "source": "src/core/decl.mli",
+        "canonicalV3Projection": "open_ls_defn yields ordered binders and body; decrease indexes are semantic",
+        "layer": "core-graph",
+        "migrationPhase": 2
+      },
+      {
+        "id": "Dexpr.dity",
+        "source": "src/mlw/dexpr.mli",
+        "canonicalV3Projection": "intermediate unification state is compared at the structured diagnostic boundary, not serialized in final typed graphs",
+        "layer": "program-typing-ir",
+        "migrationPhase": 5
+      },
+      {
+        "id": "Dterm.dty",
+        "source": "src/core/dterm.mli",
+        "canonicalV3Projection": "dty_fold projects symbols, variables, and unification variables without physical identity",
+        "layer": "logic-typing-ir",
+        "migrationPhase": 2
+      },
+      {
+        "id": "Task.task",
+        "source": "src/core/task.mli",
+        "canonicalV3Projection": "task_tdecls in semantic history order; task caches are excluded",
+        "layer": "task-graph",
+        "migrationPhase": 2
+      },
+      {
+        "id": "Term.term_bound",
+        "source": "src/core/term.mli",
+        "canonicalV3Projection": "t_open_bound; binder encoded by type and de Bruijn position",
+        "layer": "core-graph",
+        "migrationPhase": 2
+      },
+      {
+        "id": "Term.term_branch",
+        "source": "src/core/term.mli",
+        "canonicalV3Projection": "t_open_branch; pattern binders encoded by de Bruijn position",
+        "layer": "core-graph",
+        "migrationPhase": 2
+      },
+      {
+        "id": "Term.term_quant",
+        "source": "src/core/term.mli",
+        "canonicalV3Projection": "t_open_quant; ordered binders, triggers, and body",
+        "layer": "core-graph",
+        "migrationPhase": 2
+      }
+    ]
+  },
+  "featureCoverageSha256": "b1c62739c30a6094dbc76501dc63523fefb7f1f4716621ed3fb2644c1fc77585",
+  "counts": {
+    "baseNodes": 17,
+    "definitionKinds": 25,
+    "variantTags": 352,
+    "recordTags": 57,
+    "opaqueProjections": 8,
+    "nodeTags": 426,
+    "excludedRawFields": 31
+  },
+  "canonicalSchemaSha256": "390462fbc68a672cdda6e715c21638b4938ffd3bde9950b51b13520f81d4e111"
+}

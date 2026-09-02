@@ -46,37 +46,9 @@ fn simplify_formula_definition(
   } else {
     simplify_value_term(context, view.body)
   }
-  match view.symbol.view().origin.kind().view() {
-    SnapshotKind =>
-      @logic.LogicDefinition::trusted_recursive(
-        context,
-        view.symbol,
-        view.parameters,
-        body,
-        None,
-      ) catch {
-        _ =>
-          fail_transform(
-            InvariantFailure,
-            stage,
-            "invalid trusted simplified definition",
-          )
-      }
-    UserKind | GeneratedKind(_) =>
-      @logic.LogicDefinition::new(
-        context,
-        view.symbol,
-        view.parameters,
-        body,
-        None,
-      ) catch {
-        _ =>
-          fail_transform(
-            InvariantFailure,
-            stage,
-            "invalid simplified definition",
-          )
-      }
+  @logic.LogicDefinition::new(context, view.symbol, view.parameters, body, None) catch {
+    _ =>
+      fail_transform(InvariantFailure, stage, "invalid simplified definition")
   }
 }
 
@@ -88,7 +60,7 @@ fn simplify_formula_declaration(
   let stage = @identity.SimplifyFormula
   match declaration.view() {
     Dtype(_) | Ddata(_) | Dparam(_) => declaration
-    Dind(_) =>
+    Dind(_, _) =>
       fail_transform(
         UnsupportedStructure,
         stage,
@@ -100,30 +72,8 @@ fn simplify_formula_declaration(
           simplify_formula_definition(context, definition)
         }
       ]
-      match declaration.origin().kind().view() {
-        SnapshotKind =>
-          @logic.Decl::trusted_logic(
-            context,
-            declaration.origin(),
-            mapped,
-            None,
-          ) catch {
-            _ =>
-              fail_transform(
-                InvariantFailure,
-                stage,
-                "invalid trusted simplified group",
-              )
-          }
-        UserKind | GeneratedKind(_) =>
-          @logic.Decl::logic(context, declaration.origin(), mapped, None) catch {
-            _ =>
-              fail_transform(
-                InvariantFailure,
-                stage,
-                "invalid simplified group",
-              )
-          }
+      @logic.Decl::logic(context, declaration.origin(), mapped, None) catch {
+        _ => fail_transform(InvariantFailure, stage, "invalid simplified group")
       }
     }
     Dprop(kind, proposition, formula) =>
@@ -146,6 +96,43 @@ fn simplify_formula_declaration(
 }
 
 ///|
+priv struct SimplifyFormulaCacheEntry {
+  output : @logic.Decl
+  generation : Int64
+  persistent : Bool
+}
+
+///|
+let simplify_formula_declaration_cache : Ref[
+  Map[@identity.DeclarationId, SimplifyFormulaCacheEntry],
+] = Ref(Map([]))
+
+///|
+fn simplify_formula_declaration_cached(
+  context : @identity.CompilationContext,
+  declaration : @logic.Decl,
+) -> @logic.Decl raise TransformError {
+  let generation = current_declaration_cache_generation()
+  let persistent = declaration_cache_is_persistent(declaration)
+  let cache = simplify_formula_declaration_cache.val
+  match cache.get(declaration.declaration_id()) {
+    Some(entry) =>
+      if (entry.persistent && persistent) ||
+        (!entry.persistent && !persistent && entry.generation == generation) {
+        return entry.output
+      }
+    None => ()
+  }
+  let output = simplify_formula_declaration(context, declaration)
+  if persistent {
+    declaration_cache_retain(output)
+  }
+  cache[declaration.declaration_id()] = { output, generation, persistent }
+  simplify_formula_declaration_cache.val = cache
+  output
+}
+
+///|
 pub fn simplify_formula(
   context : @identity.CompilationContext,
   task : @theory.Task,
@@ -157,10 +144,10 @@ pub fn simplify_formula(
     match item {
       TheoryDecl(declaration) =>
         items.push(
-          TheoryDecl(simplify_formula_declaration(context, declaration)),
+          TheoryDecl(simplify_formula_declaration_cached(context, declaration)),
         )
       TheoryUse(_) | TheoryClone(_) | TheoryMeta(_) => items.push(item)
     }
   }
-  checked_task(task.context_anchor(), items, stage)
+  checked_task(task, items, stage)
 }

@@ -42,24 +42,26 @@ let json_int value = `Int value
 
 let locator_json locator =
   `Assoc
-    [ ("theoryKey", json_string locator.Canonical_v2.owner);
-      ("theoryItemOrdinal", json_int locator.Canonical_v2.item);
-      ("declarationInnerOrdinal", json_int locator.Canonical_v2.inner);
-      ("symbolKind", json_string locator.Canonical_v2.kind);
-      ("digest", json_string locator.Canonical_v2.digest) ]
+    [ ("theoryKey", json_string locator.Source_catalog.owner);
+      ("theoryItemOrdinal", json_int locator.Source_catalog.item);
+      ("declarationInnerOrdinal", json_int locator.Source_catalog.inner);
+      ("symbolKind", json_string locator.Source_catalog.kind);
+      ("digest", json_string locator.Source_catalog.digest) ]
 
 let type_key catalog symbol =
-  match Ty.Mts.find_opt symbol catalog.Canonical_v2.type_locations with
+  match Ty.Mts.find_opt symbol catalog.Source_catalog.type_locations with
   | Some locator -> locator_json locator
   | None -> fail ("uncatalogued type symbol " ^ symbol.Ty.ts_name.Ident.id_string)
 
 let logic_key catalog symbol =
-  match Term.Mls.find_opt symbol catalog.Canonical_v2.logic_locations with
+  match Term.Mls.find_opt symbol catalog.Source_catalog.logic_locations with
   | Some locator -> locator_json locator
   | None -> fail ("uncatalogued logic symbol " ^ symbol.Term.ls_name.Ident.id_string)
 
 let proposition_key catalog symbol =
-  match Decl.Mpr.find_opt symbol catalog.Canonical_v2.proposition_locations with
+  match
+    Decl.Mpr.find_opt symbol catalog.Source_catalog.proposition_locations
+  with
   | Some locator -> locator_json locator
   | None ->
       fail
@@ -129,20 +131,13 @@ let answer_json = function
           ("message", json_string message) ]
   | Call_provers.HighFailure -> `Assoc [ ("kind", json_string "highFailure") ]
 
-let snapshot_meta_names =
+let theory_meta_names =
   StringSet.of_list
     [ "remove_unused:dependency";
       "remove_unused:remove_constant";
       "remove_unused:keep" ]
 
-let snapshot_theories environment snapshot =
-  let open Canonical_v2 in
-  json_member "theories" snapshot
-  |> json_list
-  |> List.map (fun value -> json_string (json_member "key" value))
-  |> List.map (read_theory environment)
-
-let snapshot_meta_closure catalog theories =
+let theory_meta_closure catalog theories =
   theories
   |> List.fold_left
        (fun result theory ->
@@ -151,7 +146,7 @@ let snapshot_meta_closure catalog theories =
            |> List.filter_map (fun tdecl ->
                   match tdecl.Theory.td_node with
                   | Theory.Meta (meta, _) when
-                      StringSet.mem meta.Theory.meta_name snapshot_meta_names ->
+                      StringSet.mem meta.Theory.meta_name theory_meta_names ->
                       Some tdecl
                   | Theory.Meta _ | Theory.Decl _ | Theory.Use _ | Theory.Clone _ ->
                       None)
@@ -176,20 +171,14 @@ let theory_for_ident theories ident =
 
 let () =
   let stdlib = ref None in
-  let snapshot_path = ref None in
   let root_driver = ref "z3_487.drv" in
   Arg.parse
     [ ("--stdlib", Arg.String (fun value -> stdlib := Some value), "PATH");
-      ("--snapshot", Arg.String (fun value -> snapshot_path := Some value), "PATH");
       ("--driver", Arg.String (fun value -> root_driver := value), "NAME") ]
     (fun value -> fail ("unexpected argument " ^ value))
-    "export_z3_profile --stdlib PATH --snapshot JSON";
+    "export_z3_profile --stdlib PATH [--driver NAME]";
   let stdlib = Unix.realpath (required "--stdlib" !stdlib) in
-  let snapshot_path = Unix.realpath (required "--snapshot" !snapshot_path) in
   let environment = Env.create_env [stdlib] in
-  let catalog = Canonical_v2.load_catalog environment snapshot_path in
-  let snapshot = Yojson.Safe.from_file snapshot_path in
-  let theories = snapshot_theories environment snapshot in
   let config = Whyconf.init_config None in
   let main = Whyconf.get_main config in
   let driver =
@@ -197,6 +186,14 @@ let () =
       !root_driver []
   in
   let profile = Driver.reference_profile_view driver in
+  let roots =
+    List.map fst profile.Driver.reference_metas
+    @ List.concat_map
+        (fun (source, export) -> [source; export])
+        profile.Driver.reference_theory_uses
+  in
+  let catalog = Source_catalog.build ~stdlib roots in
+  let theories = catalog.Source_catalog.theories in
   let meta_groups =
     List.map
       (fun (theory, declarations) ->
@@ -249,13 +246,14 @@ let () =
         ("driverProfile", json_string "z3_487");
         ("rootDriver", json_string !root_driver);
         ("printer", json_string (required "printer" profile.Driver.reference_printer));
+        ("modelParser", json_string "smtv2");
         ("filename", json_string (required "filename" profile.Driver.reference_filename));
         ("transforms", `List (List.map json_string profile.Driver.reference_transforms));
         ("preludes", `List (List.map json_string profile.Driver.reference_preludes));
         ("theoryPreludes", `List prelude_groups);
         ("theoryUses", `List use_groups);
         ("driverMetaGroups", `List meta_groups);
-        ("snapshotMetaClosure", `List (snapshot_meta_closure catalog theories));
+        ("theoryMetaClosure", `List (theory_meta_closure catalog theories));
         ("resultRegexps", `List result_regexps);
         ("resultExitCodes", `List result_exit_codes);
         ("blacklist", `List (List.map json_string profile.Driver.reference_blacklist)) ]

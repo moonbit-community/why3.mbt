@@ -52,7 +52,7 @@ fn write_real_constant(
   state : PrinterState,
   constant : @logic.Constant,
 ) -> Unit {
-  guard constant.view() is RealConstant(_, value) else {
+  guard constant is ConstReal({ value, .. }) else {
     abort("write_real_constant received a non-real constant")
   }
   let negative = value.significand().compare_int(0) < 0
@@ -95,9 +95,9 @@ fn write_real_constant(
 
 ///|
 fn print_constant(state : PrinterState, constant : @logic.Constant) -> Unit {
-  match constant.view() {
-    IntegerConstant(_, value) => write_integer_constant(state, value)
-    RealConstant(_, _) => write_real_constant(state, constant)
-    StringConstant(value) => write_smt_string(state, value)
+  match constant {
+    ConstInt({ value, .. }) => write_integer_constant(state, value)
+    ConstReal(_) => write_real_constant(state, constant)
+    ConstStr(value) => write_smt_string(state, value)
   }
 }

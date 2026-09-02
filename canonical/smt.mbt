@@ -37,7 +37,7 @@ pub fn encode_smt_token_record(
   buffer.write_byte(b',')
   write_record_field_name(buffer, b"goal_ordinal")
   buffer.write_string_utf8(goal_ordinal.to_string())
-  write_record_text_field(buffer, b"stage", b"smt-token-stream", false)
+  write_record_text_field(buffer, b"stage", b"smt-tokens", false)
   write_canonical_field(buffer, encode_smt_token_stream(stream))
   buffer.write_bytes(b"}\n")
   buffer.to_bytes()

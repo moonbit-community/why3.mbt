@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "contract": "why3-1.7.2-structured-diagnostics-v1",
+  "why3Commit": "1343338d3bb1941c0d4f134283bb0790816113c4",
+  "recordSchema": {
+    "path": "tools/contracts/schema/diagnostic-record-v1.schema.json",
+    "sha256": "6272654cc4e288b896ce52aa2d6d866707f43e44c3d026350cb495890419b759"
+  },
+  "targetFeatures": {
+    "path": "tools/contracts/features-v2.json",
+    "sha256": "bc50ca1d7ab0e067381d5e59ee947c41d5fdf1458f434a0687b576eef8777a42"
+  },
+  "referenceInstrumentation": {
+    "path": "tools/why3_reference/patches/full-mlw-export.patch",
+    "sha256": "416af05442e5419cddd6ff8c3b44b07ce15bdf9f125c638bed783207f0c5ab55",
+    "changesSemanticAcceptance": false,
+    "purpose": "replace prose-only parser branches with stable categories while preserving source locations"
+  },
+  "fieldOrder": {
+    "accepted": [
+      "schema",
+      "accepted"
+    ],
+    "rejected": [
+      "schema",
+      "accepted",
+      "stage",
+      "severity",
+      "category",
+      "warning_code",
+      "relative_path_hex",
+      "start_byte",
+      "end_byte",
+      "start_line",
+      "start_column",
+      "end_line",
+      "end_column"
+    ]
+  },
+  "policy": {
+    "compared": [
+      "stage",
+      "severity",
+      "category",
+      "warning_code",
+      "source_span"
+    ],
+    "notCompared": [
+      "localized_message",
+      "formatted_type_message",
+      "backtrace"
+    ],
+    "warningCode": "stable Why3 warning identifier; null for errors",
+    "path": "fixture-root-relative POSIX path encoded as lowercase byte hex",
+    "byteOffsets": "zero-based half-open byte offsets",
+    "lines": "one-based",
+    "columns": "zero-based byte columns",
+    "absentSpan": "all six numeric span fields are null; relative_path_hex remains present"
+  },
+  "stages": [
+    "lexing",
+    "parsing",
+    "typing",
+    "program-typing",
+    "module-interface",
+    "vc-generation",
+    "transformation",
+    "driver",
+    "prover"
+  ],
+  "categoryEncoding": "stable constructor-style identifier, independent of English exception printers",
+  "activeParserMappings": [
+    {
+      "moonbitKind": "NestedModule",
+      "category": "NestedUnit"
+    },
+    {
+      "moonbitKind": "UnexpectedToken",
+      "category": "Syntax"
+    },
+    {
+      "moonbitKind": "UnsupportedEpsilon",
+      "category": "UnsupportedConcreteSyntax"
+    }
+  ],
+  "activeParserMappingsSha256": "a3c36c51bb130ef6146e69da9776695d10519e35f19fded32bde4637ed95aee4",
+  "parserCorpus": {
+    "command": "why3 prove --parse-only",
+    "totalRejects": 58,
+    "locatedRejects": 57,
+    "unlocatedRejects": 1,
+    "categoryCounts": {
+      "NestedUnit": 4,
+      "Syntax": 53,
+      "UnsupportedConcreteSyntax": 1
+    },
+    "entriesSha256": "5579f549dcd2a65bfff5bae75b40a14e5ae7bd1cda7ed136f8bf1f1fd046e8ed"
+  },
+  "diagnosticContractSha256": "79075b594bc75d904188d4ac0bc7ccbbc56e939df3ee52d783e6c33620726bf0"
+}

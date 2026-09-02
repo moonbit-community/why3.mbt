@@ -1,8 +1,14 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
+// Derived from Why3 1.7.2 (Copyright 2010-2023 Inria, CNRS, Paris-Saclay University).
+// MoonBit translation and semantic modifications recorded on 2026-07-24.
 
 ///|
 struct Environment {
+  context : @identity.CompilationContext
+  source_environment : @env.CoreEnvironment
   anchor : @identity.SemanticId
+  typed_libraries : @env.LibraryCache[TypedLibrary]
+  builtins : @env.BuiltinRegistry[TypedLibrary]
   theories : Map[@theory.TheoryKey, @theory.Theory]
   modules : Map[@theory.TheoryKey, @mlw.Pmodule]
   theory_aliases : Map[@theory.TheoryKey, @theory.TheoryKey]
@@ -10,6 +16,10 @@ struct Environment {
   hidden_theories : Map[@theory.TheoryKey, Unit]
   hidden_modules : Map[@theory.TheoryKey, Unit]
   type_variables : Array[(Bytes, @logic.TyVarSymbol)]
+  tuple_modules : Map[Int, @mlw.Pmodule]
+  mut reference_module : @mlw.Pmodule?
+  mut high_order_module : @mlw.Pmodule?
+  mut well_founded_module : @mlw.Pmodule?
 }
 
 ///|
@@ -22,8 +32,46 @@ pub(all) struct EnvironmentView {
 
 ///|
 pub fn Environment::new(context : @identity.CompilationContext) -> Environment {
+  Environment::from_core(@env.CoreEnvironment::empty(context))
+}
+
+///|
+/// Creates an independently-owned typed environment over an all-target source
+/// provider.
+pub fn Environment::with_source(
+  provider : @env.SourceProvider,
+) -> Environment raise {
+  let environment = Environment::from_core(@env.CoreEnvironment::new(provider))
+  environment.install_language_builtins()
+  environment
+}
+
+///|
+/// Creates a typed source environment in an existing compilation context.
+/// This is primarily useful to compose an embedded provider with a pipeline
+/// that owns the context used for every resulting semantic object.
+pub fn Environment::with_source_in_context(
+  context : @identity.CompilationContext,
+  provider : @env.SourceProvider,
+) -> Environment raise {
+  let environment = Environment::from_core(
+    @env.CoreEnvironment::with_context(context, provider),
+  )
+  environment.install_language_builtins()
+  environment
+}
+
+///|
+pub fn Environment::from_core(
+  source_environment : @env.CoreEnvironment,
+) -> Environment {
+  let context = source_environment.compilation_context()
   {
+    context,
+    source_environment,
     anchor: context.fresh_id(),
+    typed_libraries: @env.LibraryCache::new(),
+    builtins: @env.BuiltinRegistry::new(),
     theories: Map([]),
     modules: Map([]),
     theory_aliases: Map([]),
@@ -31,7 +79,25 @@ pub fn Environment::new(context : @identity.CompilationContext) -> Environment {
     hidden_theories: Map([]),
     hidden_modules: Map([]),
     type_variables: [],
+    tuple_modules: Map([]),
+    reference_module: None,
+    high_order_module: None,
+    well_founded_module: None,
   }
+}
+
+///|
+pub fn Environment::compilation_context(
+  self : Environment,
+) -> @identity.CompilationContext {
+  self.context
+}
+
+///|
+pub fn Environment::source_environment(
+  self : Environment,
+) -> @env.CoreEnvironment {
+  self.source_environment
 }
 
 ///|
@@ -55,8 +121,7 @@ fn Environment::index_type_variable(
 ///|
 fn source_type_variable_owner(origin : @identity.Origin) -> Bool {
   match origin.kind().view() {
-    UserKind => true
-    SnapshotKind => origin.source_span() is Some(_)
+    UserKind => origin.source_span() is Some(_)
     GeneratedKind(_) => false
   }
 }
@@ -110,7 +175,7 @@ fn Environment::index_theory_type_variables(
 ///|
 /// Why3 interns source type-variable spellings globally, but its synthetic
 /// builtins and clone machinery allocate distinct variables with the same
-/// spelling. Reuse only variables reached through source-origin symbols.
+/// spelling. Reuse only variables that carry a real source location.
 pub fn Environment::intern_type_variable(
   self : Environment,
   context : @identity.CompilationContext,
@@ -263,7 +328,7 @@ pub fn Environment::resolve_theory(
 }
 
 ///|
-/// Reports whether a key is known only inside the frozen driver closure.
+/// Reports whether a key is known only inside the private driver closure.
 pub fn Environment::is_driver_only_theory(
   self : Environment,
   key : @theory.TheoryKey,

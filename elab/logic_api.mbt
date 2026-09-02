@@ -24,11 +24,11 @@ fn elaborate_pure_file_raw(
   file : @parser.MlwFile,
 ) -> PureFile raise {
   guard file is Modules(units) else {
-    fail_unsupported(
-      ProgramRoutineShape,
-      FeatureClassification,
+    fail_invalid_input(
+      InvalidUnit,
+      FileRegistration,
       None,
-      "anonymous declaration files are outside the MVP",
+      "anonymous declaration files require the mixed WhyML entry point",
     )
   }
   let theories : Array[@theory.Theory] = []

@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
+// Derived from Why3 1.7.2 (Copyright 2010-2023 Inria, CNRS, Paris-Saclay University).
+// MoonBit translation and semantic modifications recorded on 2026-07-24.
 
 ///|
 /// A semantically identified type variable. Its spelling is diagnostic data,
@@ -14,6 +16,7 @@ struct TyVarSymbol {
 /// constructors in this package.
 struct Ty {
   node : TyNode
+  allocation_tag : Int64
 }
 
 ///|
@@ -31,8 +34,28 @@ priv enum TypeDefinition {
 }
 
 ///|
-/// Trusted primitive classes needed to validate exact literals. The marker is
-/// semantic metadata attached only by the snapshot decoder; canonical identity
+let interned_type_tags : Ref[Map[Ty, Int64]] = Ref(Map([]))
+
+///|
+let next_type_allocation_tag : Ref[Int64] = Ref(0L)
+
+///|
+fn make_type(node : TyNode) -> Ty {
+  let candidate = { node, allocation_tag: -1L }
+  match interned_type_tags.val.get(candidate) {
+    Some(allocation_tag) => { node, allocation_tag }
+    None => {
+      let allocation_tag = next_type_allocation_tag.val
+      next_type_allocation_tag.val = allocation_tag + 1L
+      interned_type_tags.val[candidate] = allocation_tag
+      { node, allocation_tag }
+    }
+  }
+}
+
+///|
+/// Primitive classes needed to validate exact literals. The marker is
+/// semantic metadata attached by builtin construction; canonical identity
 /// still comes from the symbol and its origin.
 pub(all) enum BuiltinTypeKind {
   BuiltinInteger
@@ -282,23 +305,11 @@ pub fn TypeSymbol::new_alias(
 }
 
 ///|
-fn require_snapshot_origin(
-  origin : @identity.Origin,
-  span : @identity.SourceSpan?,
-) -> Unit raise TypeError {
-  if !(origin.kind().view() is SnapshotKind) {
-    fail_type(
-      SnapshotOriginRequired,
-      span,
-      "Range and Float types are restricted to trusted snapshots",
-    )
-  }
-}
-
-///|
-/// Internal decoder boundary for a validated snapshot Range type. User type
-/// construction never accepts this definition shape.
-pub fn TypeSymbol::trusted_range(
+/// Creates Why3's exact bounded-integer type constructor.
+///
+/// As in `Ty.create_tysymbol`, Range types are nullary and an empty interval
+/// is rejected at construction time.
+pub fn TypeSymbol::new_range(
   context : @identity.CompilationContext,
   name : BytesView,
   origin : @identity.Origin,
@@ -306,7 +317,6 @@ pub fn TypeSymbol::trusted_range(
   upper : BigInt,
   span : @identity.SourceSpan?,
 ) -> TypeSymbol raise TypeError {
-  require_snapshot_origin(origin, span)
   if lower > upper {
     fail_type(InvalidRange, span, "Range lower bound exceeds upper bound")
   }
@@ -321,9 +331,11 @@ pub fn TypeSymbol::trusted_range(
 }
 
 ///|
-/// Internal decoder boundary for a validated snapshot Float type. User type
-/// construction never accepts this definition shape.
-pub fn TypeSymbol::trusted_float(
+/// Creates Why3's floating-point format type constructor.
+///
+/// Float types are nullary. Both format dimensions must be strictly positive,
+/// matching `Ty.create_tysymbol`.
+pub fn TypeSymbol::new_float(
   context : @identity.CompilationContext,
   name : BytesView,
   origin : @identity.Origin,
@@ -331,7 +343,6 @@ pub fn TypeSymbol::trusted_float(
   significand_digits : Int,
   span : @identity.SourceSpan?,
 ) -> TypeSymbol raise TypeError {
-  require_snapshot_origin(origin, span)
   if exponent_digits < 1 || significand_digits < 1 {
     fail_type(
       InvalidFloat,
@@ -350,27 +361,26 @@ pub fn TypeSymbol::trusted_float(
 }
 
 ///|
-/// Internal decoder boundary for primitive snapshot types such as `int`,
-/// `real`, `bool`, and `string`.
-pub fn TypeSymbol::trusted_builtin(
+/// Creates a primitive symbol owned by a compilation context. Environment
+/// construction uses this for Why3's `int`, `real`, `bool`, and `string`
+/// builtins; the marker participates only in literal validation.
+pub fn TypeSymbol::new_builtin(
   context : @identity.CompilationContext,
   name : BytesView,
   origin : @identity.Origin,
   kind : BuiltinTypeKind,
-  span : @identity.SourceSpan?,
-) -> TypeSymbol raise TypeError {
-  require_snapshot_origin(origin, span)
+) -> TypeSymbol {
   make_type_symbol(context, name, origin, [], DefinitionNone, Some(kind))
 }
 
 ///|
 pub fn Ty::variable(symbol : TyVarSymbol) -> Ty {
-  { node: VariableNode(symbol) }
+  make_type(VariableNode(symbol))
 }
 
 ///|
 fn Ty::application_unchecked(symbol : TypeSymbol, arguments : Array[Ty]) -> Ty {
-  { node: ApplicationNode(symbol, arguments) }
+  make_type(ApplicationNode(symbol, arguments))
 }
 
 ///|
@@ -425,6 +435,15 @@ pub fn Ty::context_anchor(self : Ty) -> @identity.SemanticId {
     VariableNode(symbol) => symbol.semantic_id()
     ApplicationNode(symbol, _) => symbol.semantic_id()
   }
+}
+
+///|
+/// Returns Why3's hash-cons allocation observer for deterministic set folds.
+///
+/// The tag is runtime metadata and is deliberately excluded from equality,
+/// hashing, and canonical serialization.
+pub fn Ty::allocation_order(self : Ty) -> Int64 {
+  self.allocation_tag
 }
 
 ///|

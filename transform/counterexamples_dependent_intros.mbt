@@ -173,8 +173,49 @@ fn counterexample_decl(
           )
       }
     }
-    Dtype(_) | Ddata(_) | Dparam(_) | Dlogic(_) | Dind(_) => Some(declaration)
+    Dtype(_) | Ddata(_) | Dparam(_) | Dlogic(_) | Dind(_, _) =>
+      Some(declaration)
   }
+}
+
+///|
+priv struct CounterexampleDeclarationCacheEntry {
+  output : @logic.Decl?
+  generation : Int64
+  persistent : Bool
+}
+
+///|
+let counterexample_declaration_cache : Ref[
+  Map[@identity.DeclarationId, CounterexampleDeclarationCacheEntry],
+] = Ref(Map([]))
+
+///|
+fn counterexample_decl_cached(
+  context : @identity.CompilationContext,
+  declaration : @logic.Decl,
+) -> @logic.Decl? raise TransformError {
+  if declaration.view() is Dprop(Pgoal, _, _) {
+    return counterexample_decl(context, declaration)
+  }
+  let generation = current_declaration_cache_generation()
+  let persistent = declaration_cache_is_persistent(declaration)
+  let cache = counterexample_declaration_cache.val
+  match cache.get(declaration.declaration_id()) {
+    Some(entry) =>
+      if (entry.persistent && persistent) ||
+        (!entry.persistent && !persistent && entry.generation == generation) {
+        return entry.output
+      }
+    None => ()
+  }
+  let output = counterexample_decl(context, declaration)
+  if persistent && output is Some(output_declaration) {
+    declaration_cache_retain(output_declaration)
+  }
+  cache[declaration.declaration_id()] = { output, generation, persistent }
+  counterexample_declaration_cache.val = cache
+  output
 }
 
 ///|
@@ -184,15 +225,20 @@ pub fn counterexamples_dependent_intros(
 ) -> @theory.Task raise TransformError {
   let stage = @identity.CounterexamplesDependentIntros
   require_task_context(context, task, stage)
+  if task_has_meta(task, b"get_counterexmp") {
+    // Why3's counterexample branch preserves the context and delays the
+    // introduction of model-visible binders to prepare_for_counterexmp.
+    return task
+  }
   let items : Array[@theory.TheoryItem] = []
   for item in task.view().items {
     match item {
       TheoryDecl(declaration) =>
-        if counterexample_decl(context, declaration) is Some(mapped) {
+        if counterexample_decl_cached(context, declaration) is Some(mapped) {
           items.push(TheoryDecl(mapped))
         }
       TheoryUse(_) | TheoryClone(_) | TheoryMeta(_) => items.push(item)
     }
   }
-  checked_task(task.context_anchor(), items, stage)
+  checked_task(task, items, stage)
 }

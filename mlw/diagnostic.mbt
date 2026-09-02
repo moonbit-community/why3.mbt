@@ -3,8 +3,31 @@
 ///|
 pub(all) enum MlwErrorKind {
   MlwContextMismatch
-  SnapshotProgramOriginRequired
   UnsupportedProgramType
+  BadProgramTypeArity
+  BadRegionArity
+  InvalidRegion
+  InvalidProgramTypeInvariant
+  ProgramTypeMismatch
+  UnboundProgramTypeVariable
+  UnboundRegion
+  InvalidExceptionType
+  InvalidProgramMask
+  InvalidOldSnapshot
+  UnboundSpecificationVariable
+  InvalidEffect
+  DuplicateEffectField
+  AssignSnapshot
+  AssignPrivate
+  WriteImmutable
+  IllegalAssignment
+  IllegalUpdate
+  IllegalSnapshot
+  IllegalAlias
+  ImpureVariable
+  StaleVariable
+  BadGhostWrite
+  GhostDivergence
   UnsupportedEffect
   InvalidComputationType
   DuplicateProgramName
@@ -12,6 +35,10 @@ pub(all) enum MlwErrorKind {
   UnboundProgramName
   InvalidProgramDeclaration
   ProgramModuleBuilderSealed
+  NoOpenedProgramNamespace
+  UnsupportedProgramInterfaceUnit
+  ProgramInterfaceSymbolNotFound
+  ProgramInterfaceMismatch
 } derive(Eq, Debug)
 
 ///|
@@ -46,20 +73,6 @@ fn require_mlw_context(
       MlwContextMismatch,
       span,
       "program objects belong to different contexts",
-    )
-  }
-}
-
-///|
-fn require_snapshot_program_origin(
-  origin : @identity.Origin,
-  span : @identity.SourceSpan?,
-) -> Unit raise MlwError {
-  if !(origin.kind().view() is SnapshotKind) {
-    fail_mlw(
-      SnapshotProgramOriginRequired,
-      span,
-      "program symbol requires trusted snapshot provenance",
     )
   }
 }

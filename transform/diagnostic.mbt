@@ -46,11 +46,35 @@ fn require_task_context(
 
 ///|
 fn checked_task(
-  anchor : @identity.SemanticId,
+  original : @theory.Task,
   items : ArrayView[@theory.TheoryItem],
   stage : @identity.GeneratedStage,
 ) -> @theory.Task raise TransformError {
-  @theory.Task::trusted_new(anchor, items, None) catch {
+  // Why3's Task.add_decl silently ignores a declaration when one of its
+  // introduced identifiers is already known.  This matters for transforms
+  // such as eliminate_epsilon: two occurrences of the same cached canonical
+  // closure can yield the same parameter/axiom pair more than once.
+  let normalized : Array[@theory.TheoryItem] = []
+  let introduced : Map[@identity.SemanticId, Unit] = Map([])
+  for item in items {
+    if item is TheoryDecl(declaration) {
+      let symbols = declaration.introduced_symbols()
+      if symbols.any(symbol => introduced.contains(symbol.semantic_id())) {
+        continue
+      }
+      for symbol in symbols {
+        introduced[symbol.semantic_id()] = ()
+      }
+    }
+    normalized.push(item)
+  }
+  propagate_persistent_declarations(original, normalized)
+  @theory.Task::trusted_new_with_dependencies(
+    original.context_anchor(),
+    normalized,
+    original.dependency_theories(),
+    None,
+  ) catch {
     _ =>
       fail_transform(InvalidTask, stage, "transform violated Task invariants")
   }

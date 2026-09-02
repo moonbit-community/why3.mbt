@@ -11,21 +11,6 @@ fn user_origin(name : BytesView) -> @identity.Origin {
 }
 
 ///|
-fn snapshot_type_origin(name : BytesView) -> @identity.Origin {
-  @identity.Origin::snapshot(
-    name,
-    @identity.SnapshotSymbolKey::new(
-      b"why3.Test",
-      0U,
-      0U,
-      Type,
-      Bytes::make(32, b'\x00'),
-    ),
-    [],
-  )
-}
-
-///|
 test "aliases expand and semantic applications enforce arity" {
   let context = @identity.CompilationContext::new()
   let parameter = @logic.TyVarSymbol::new(context, b"a", user_origin(b"a"))
@@ -183,27 +168,101 @@ test "type matching binds variables and rejects inconsistent repetition" {
 }
 
 ///|
-test "snapshot-only Range and Float reject user origins" {
+test "type matching is directional and substitutions remain one-layer" {
   let context = @identity.CompilationContext::new()
-  try
-    @logic.TypeSymbol::trusted_range(
-      context,
-      b"range",
-      user_origin(b"range"),
-      BigInt::from_int(0),
-      BigInt::from_int(10),
-      Some(test_span()),
-    )
-  catch {
-    TypeError(diagnostic) => assert_eq(diagnostic.kind, SnapshotOriginRequired)
+  let a = @logic.TyVarSymbol::new(context, b"a", user_origin(b"a"))
+  let b = @logic.TyVarSymbol::new(context, b"b", user_origin(b"b"))
+  let c = @logic.TyVarSymbol::new(context, b"c", user_origin(b"c"))
+  let integer = @logic.TypeSymbol::new_abstract(
+    context,
+    b"int",
+    user_origin(b"int"),
+    [],
+    Some(test_span()),
+  )
+  let int_type = @logic.Ty::app(integer, [], Some(test_span()))
+  let a_type = @logic.Ty::variable(a)
+  let b_type = @logic.Ty::variable(b)
+  let c_type = @logic.Ty::variable(c)
+  let substitution = @logic.TySubstitution::new().match_type(
+    a_type,
+    b_type,
+    Some(test_span()),
+  )
+  assert_true(substitution.apply(a_type, Some(test_span())) == b_type)
+  try substitution.match_type(a_type, c_type, Some(test_span())) catch {
+    TypeError(diagnostic) => assert_eq(diagnostic.kind, TypeMismatch)
   } noraise {
-    _ => fail("expected snapshot-only rejection")
+    _ => fail("a matched type variable accepted a different subject")
   }
+  let layered = substitution.bind(b, int_type, Some(test_span()))
+  assert_true(
+    layered.apply(a_type, Some(test_span())) == b_type &&
+    layered.apply(b_type, Some(test_span())) == int_type,
+  )
+  let cyclic = @logic.TySubstitution::new()
+    .bind(a, b_type, Some(test_span()))
+    .bind(b, a_type, Some(test_span()))
+  assert_true(
+    cyclic.apply(a_type, Some(test_span())) == b_type &&
+    cyclic.apply(b_type, Some(test_span())) == a_type,
+  )
+  let inference = @logic.TyVarSymbol::new(
+    context,
+    b"xi",
+    @identity.Origin::user(b"xi", Some(test_span()), [
+      b"mlw:inference_type_variable",
+    ]),
+  )
+  let wrapper = @logic.TypeSymbol::new_abstract(
+    context,
+    b"wrapper",
+    user_origin(b"wrapper"),
+    [a],
+    Some(test_span()),
+  )
+  let inferred = @logic.Ty::app(
+    wrapper,
+    [@logic.Ty::variable(inference)],
+    Some(test_span()),
+  )
+  let concrete = @logic.Ty::app(wrapper, [int_type], Some(test_span()))
+  let resolved = @logic.TySubstitution::new()
+    .match_type(a_type, inferred, Some(test_span()))
+    .match_type(a_type, concrete, Some(test_span()))
+  assert_true(resolved.apply(a_type, Some(test_span())) == concrete)
+}
+
+///|
+test "Range and Float are ordinary exact type definitions" {
+  let context = @identity.CompilationContext::new()
+  let range = @logic.TypeSymbol::new_range(
+    context,
+    b"range",
+    user_origin(b"range"),
+    BigInt::from_int(0),
+    BigInt::from_int(10),
+    Some(test_span()),
+  )
+  assert_true(
+    range.view().definition is Range(lower, upper) &&
+    lower == BigInt::from_int(0) &&
+    upper == BigInt::from_int(10),
+  )
+  let float = @logic.TypeSymbol::new_float(
+    context,
+    b"float32",
+    user_origin(b"float32"),
+    8,
+    24,
+    Some(test_span()),
+  )
+  assert_true(float.view().definition is Float(8, 24))
   try
-    @logic.TypeSymbol::trusted_range(
+    @logic.TypeSymbol::new_range(
       context,
       b"empty",
-      snapshot_type_origin(b"empty"),
+      user_origin(b"empty"),
       BigInt::from_int(1),
       BigInt::from_int(0),
       Some(test_span()),
@@ -217,10 +276,10 @@ test "snapshot-only Range and Float reject user origins" {
     _ => fail("expected invalid Range rejection")
   }
   try
-    @logic.TypeSymbol::trusted_float(
+    @logic.TypeSymbol::new_float(
       context,
       b"float",
-      snapshot_type_origin(b"float"),
+      user_origin(b"float"),
       0,
       24,
       Some(test_span()),
@@ -233,4 +292,29 @@ test "snapshot-only Range and Float reject user origins" {
   } noraise {
     _ => fail("expected invalid Float rejection")
   }
+}
+
+///|
+test "type hash-consing exposes stable first-allocation order" {
+  let context = @identity.CompilationContext::new()
+  let first_symbol = @logic.TypeSymbol::new_abstract(
+    context,
+    b"first",
+    user_origin(b"first"),
+    [],
+    Some(test_span()),
+  )
+  let second_symbol = @logic.TypeSymbol::new_abstract(
+    context,
+    b"second",
+    user_origin(b"second"),
+    [],
+    Some(test_span()),
+  )
+  let first = @logic.Ty::app(first_symbol, [], Some(test_span()))
+  let second = @logic.Ty::app(second_symbol, [], Some(test_span()))
+  let first_again = @logic.Ty::app(first_symbol, [], Some(test_span()))
+  assert_true(first.allocation_order() < second.allocation_order())
+  assert_true(first == first_again)
+  assert_eq(first.allocation_order(), first_again.allocation_order())
 }

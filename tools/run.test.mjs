@@ -7,8 +7,8 @@ import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import {
+  changedProjectPaths,
   main,
-  parseBaselinesOptions,
   parseCheckOptions,
   parseReferenceOptions,
   runCheckPipeline,
@@ -76,8 +76,8 @@ test('complete check runs lower-cost work before tests and adapter preflight', (
     fixtures: record('fixtures'),
     preflight: record('preflight'),
     contracts: record('contracts'),
+    upstream: record('upstream'),
     layers: record('layers'),
-    baselines: record('baselines'),
     finalCleanliness: record('finalCleanliness'),
   });
   assert.deepEqual(calls.map(([name]) => name), [
@@ -88,58 +88,33 @@ test('complete check runs lower-cost work before tests and adapter preflight', (
     'fixtures',
     'preflight',
     'contracts',
+    'upstream',
     'layers',
-    'baselines',
     'finalCleanliness',
   ]);
   assert.deepEqual(calls[0][1], { moonDiffOnly: true });
   assert.equal(calls[6][1], options);
   assert.equal(calls[7][1], options);
+  assert.equal(calls[8][1], options);
   assert.deepEqual(calls[9][1], { moonDiffOnly: true });
 });
 
-test('baseline candidate combines only structural and result outputs', () => {
-  const options = parseBaselinesOptions([
-    'candidate',
-    '--records',
-    'records',
-    '--result',
-    'result.json',
-    '--compare',
+test('project mutation checks compare content against the starting worktree', () => {
+  const before = new Map([
+    ['already-dirty.mbt', 'initial-dirty-content'],
+    ['stable.mbti', 'stable-content'],
+    ['removed.mbt', 'present'],
   ]);
-  assert.deepEqual(Object.keys(options).sort(), [
-    'compare', 'mode', 'records', 'result',
+  const after = new Map([
+    ['already-dirty.mbt', 'new-content'],
+    ['stable.mbti', 'stable-content'],
+    ['created.mbt', 'created'],
   ]);
-  assert.equal(options.mode, 'candidate');
-  assert.match(options.records, /records$/u);
-  assert.match(options.result, /result\.json$/u);
-  assert.equal(options.compare, true);
-  assert.throws(
-    () => parseBaselinesOptions([
-      'candidate', '--records', 'records', '--result', 'result.json',
-      '--lock', 'environment.json',
-    ]),
-    /unknown option --lock/u,
-  );
-});
-
-test('baseline modes reject partial or unsafe combinations', () => {
-  assert.deepEqual(parseBaselinesOptions(['check']), {
-    mode: 'check',
-    records: null,
-    result: null,
-    compare: false,
-  });
-  assert.throws(
-    () => parseBaselinesOptions(['candidate', '--records', 'records']),
-    /requires --records and --result/u,
-  );
-  assert.throws(
-    () => parseBaselinesOptions([
-      'promote', '--records', 'records', '--result', 'result.json', '--compare',
-    ]),
-    /valid only for baselines candidate/u,
-  );
+  assert.deepEqual(changedProjectPaths(before, after), [
+    'already-dirty.mbt',
+    'created.mbt',
+    'removed.mbt',
+  ]);
 });
 
 test('removed toolchain command has no compatibility alias', () => {
@@ -149,21 +124,10 @@ test('removed toolchain command has no compatibility alias', () => {
 test('merged aggregate commands have no compatibility aliases', () => {
   assert.throws(() => main(['project']), /unknown command project/u);
   assert.throws(() => main(['reference']), /unknown command reference/u);
+  assert.throws(() => main(['baselines', 'check']), /unknown command baselines/u);
 });
 
-test('baseline bytes contain behavior only and are absent from the environment lock', () => {
-  const result = JSON.parse(readFileSync(join(
-    PROJECT_ROOT,
-    'tools',
-    'why3_reference',
-    'baselines',
-    'pr-v1',
-    'prover-result.json',
-  )));
-  assert.equal(Object.hasOwn(result, 'referenceImageDigest'), false);
-  assert.equal(Object.hasOwn(result, 'z3'), false);
-  assert.deepEqual(Object.keys(result.comparisonTarget), ['why3', 'z3']);
-
+test('the environment lock contains no behavioral baseline state', () => {
   const lockSource = readFileSync(join(
     PROJECT_ROOT,
     'tools',

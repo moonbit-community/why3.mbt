@@ -9,11 +9,49 @@ let asym_split_attribute : Bytes = b"asym_split"
 let unused_attribute : Bytes = b"id:unused"
 
 ///|
+fn bytes_have_prefix(value : BytesView, prefix : BytesView) -> Bool {
+  value.length() >= prefix.length() && value[:prefix.length()] == prefix
+}
+
+///|
 fn derived_generated_span(origin : @identity.Origin) -> @identity.SourceSpan? {
-  match origin.kind().view() {
-    SnapshotKind => None
-    UserKind | GeneratedKind(_) => origin.source_span()
+  guard origin.identifier_source_span() is Some(span) else { return None }
+  if bytes_have_prefix(span.view().relative_path, b"why3-1.7.2/stdlib/") {
+    None
+  } else {
+    Some(span)
   }
+}
+
+///|
+fn derived_generated_attributes(origin : @identity.Origin) -> Array[Bytes] {
+  let attributes = origin.attributes()
+  let has_synthetic_builtin = attributes.any(attribute => {
+    bytes_have_prefix(attribute, b"why3:builtin:")
+  })
+  if !has_synthetic_builtin {
+    return attributes.to_owned()
+  }
+  [
+    for attribute in attributes if attribute != b"builtin" &&
+    !bytes_have_prefix(attribute, b"why3:builtin:") => attribute
+  ]
+}
+
+///|
+fn derived_generated_origin(
+  stage : @identity.GeneratedStage,
+  name : BytesView,
+  parent : @identity.Origin,
+  attributes : ArrayView[Bytes],
+) -> @identity.Origin {
+  @identity.Origin::generated_with_identifier_source_span(
+    stage,
+    name,
+    derived_generated_span(parent),
+    parent.identifier_source_span(),
+    attributes,
+  )
 }
 
 ///|
@@ -295,13 +333,10 @@ fn unused_copy(
 ) -> @logic.VSymbol raise TransformError {
   let view = variable.view()
   let name = view.name + b"'unused"
-  let origin = @identity.Origin::generated(
-    stage,
-    name,
-    derived_generated_span(view.origin),
-    [unused_attribute],
-  )
-  @logic.VSymbol::new(context, name, origin, view.ty, None) catch {
+  let origin = derived_generated_origin(stage, name, view.origin, [
+    unused_attribute,
+  ])
+  variable.clone_as(context, name, origin, view.ty, None) catch {
     _ => fail_transform(InvariantFailure, stage, "cannot copy unused binder")
   }
 }
@@ -342,12 +377,9 @@ fn let_simplified(
 
 ///|
 fn is_builtin_equality(symbol : @logic.LSymbol) -> Bool {
-  guard symbol.view().origin.snapshot_key() is Some(key) else { return false }
-  let view = key.view()
-  view.theory_key == b"why3.BuiltIn.BuiltIn" &&
-  view.theory_item_ordinal == 3U &&
-  view.declaration_inner_ordinal == 0U &&
-  view.symbol_kind == Logic
+  symbol.view().origin
+  .attributes()
+  .any(attribute => attribute == b"why3:builtin:equality")
 }
 
 ///|
@@ -403,6 +435,111 @@ fn quantifier_simplified(
 }
 
 ///|
+/// Replaces the presentation identifiers of opened binders while preserving
+/// their semantic identities. Why3 opens quantified closures with `id_clone`;
+/// when the mapped body changes, those cloned identifiers survive reclosing
+/// and can later become observable through a persistent declaration cache.
+fn substitute_opened_identifier_clones(
+  term : @logic.Term,
+  substitution : Map[@logic.VSymbol, @logic.VSymbol],
+  stage : @identity.GeneratedStage,
+) -> @logic.Term raise TransformError {
+  let recurse = fn(child) -> @logic.Term raise TransformError {
+    substitute_opened_identifier_clones(child, substitution, stage)
+  }
+  match term.view() {
+    Tvar(variable) =>
+      match substitution.get(variable) {
+        Some(replacement) =>
+          copy_term_decoration(term, @logic.Term::variable(replacement))
+        None => term
+      }
+    _ => map_plain(term, recurse, stage)
+  }
+}
+
+///|
+fn strict_term_groups_equal(
+  left : ArrayView[Array[@logic.Term]],
+  right : ArrayView[Array[@logic.Term]],
+) -> Bool {
+  if left.length() != right.length() {
+    return false
+  }
+  for group_index, left_group in left {
+    let right_group = right[group_index]
+    if left_group.length() != right_group.length() {
+      return false
+    }
+    for term_index, left_term in left_group {
+      if !left_term.strict_alpha_equivalent(right_group[term_index]) {
+        return false
+      }
+    }
+  }
+  true
+}
+
+///|
+fn open_simplified_quantifier(
+  context : @identity.CompilationContext,
+  quantifier : @logic.Quantifier,
+  binders : ArrayView[@logic.VSymbol],
+  triggers : ArrayView[Array[@logic.Term]],
+  body : @logic.Term,
+  recurse : (@logic.Term) -> @logic.Term raise TransformError,
+  stage : @identity.GeneratedStage,
+) -> @logic.Term raise TransformError {
+  let opened_binders : Array[@logic.VSymbol] = []
+  let substitution : Map[@logic.VSymbol, @logic.VSymbol] = Map([])
+  for binder in binders {
+    let opened = binder.clone_identifier(context, None) catch {
+      _ =>
+        return fail_transform(
+          InvariantFailure,
+          stage,
+          "cannot open simplified quantified binder",
+        )
+    }
+    opened_binders.push(opened)
+    substitution[binder] = opened
+  }
+  let opened_triggers = [
+    for group in triggers => {
+      [
+        for trigger in group => {
+          substitute_opened_identifier_clones(trigger, substitution, stage)
+        }
+      ]
+    }
+  ]
+  let mapped_triggers = [
+    for group in opened_triggers => [ for trigger in group => recurse(trigger) ]
+  ]
+  let opened_body = substitute_opened_identifier_clones(
+    body, substitution, stage,
+  )
+  let mapped_body = recurse(opened_body)
+  let free = free_variable_set(mapped_body)
+  let removes_binder = binders.any(binder => !free.contains(binder))
+  if !removes_binder &&
+    mapped_body.strict_alpha_equivalent(opened_body) &&
+    strict_term_groups_equal(mapped_triggers, opened_triggers) {
+    return @logic.Term::quantify(quantifier, binders, triggers, body, None) catch {
+      _ =>
+        fail_transform(
+          InvariantFailure,
+          stage,
+          "cannot preserve unchanged quantified term",
+        )
+    }
+  }
+  quantifier_simplified(
+    quantifier, opened_binders, mapped_triggers, mapped_body, stage,
+  )
+}
+
+///|
 fn map_plain(
   term : @logic.Term,
   recurse : (@logic.Term) -> @logic.Term raise TransformError,
@@ -437,12 +574,12 @@ fn map_plain(
           (view.pattern, recurse(view.body))
         }
       ]
-      @logic.Term::trusted_case(recurse(scrutinee), mapped, None) catch {
+      @logic.Term::case(recurse(scrutinee), mapped, None) catch {
         _ => fail_transform(InvariantFailure, stage, "invalid mapped case")
       }
     }
     Teps(variable, body) =>
-      @logic.Term::trusted_epsilon(variable, recurse(body), None) catch {
+      @logic.Term::epsilon(variable, recurse(body), None) catch {
         _ => fail_transform(InvariantFailure, stage, "invalid mapped epsilon")
       }
     Tquant(quantifier, binders, triggers, body) => {
@@ -510,18 +647,10 @@ fn map_simplified(
         keep_let_variable,
         stage,
       )
-    Tquant(quantifier, binders, triggers, body) => {
-      let mapped_triggers = [
-        for group in triggers => [ for trigger in group => recurse(trigger) ]
-      ]
-      quantifier_simplified(
-        quantifier,
-        binders,
-        mapped_triggers,
-        recurse(body),
-        stage,
+    Tquant(quantifier, binders, triggers, body) =>
+      open_simplified_quantifier(
+        context, quantifier, binders, triggers, body, recurse, stage,
       )
-    }
     Tbinop(operator, left, right) =>
       binary_simplified(operator, recurse(left), recurse(right), stage)
     Tnot(inner) => not_simplified(recurse(inner))

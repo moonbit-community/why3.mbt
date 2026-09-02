@@ -117,14 +117,13 @@ pub fn SourceSpan::view(self : SourceSpan) -> SourceSpanView {
 }
 
 ///|
-/// Provenance, display name, location/snapshot identity, and attributes for a
-/// semantic object. Only the generated variant is eligible for SMT alpha
-/// normalization.
+/// Provenance, display name, source location, and attributes for a semantic
+/// object. Only the generated variant is eligible for SMT alpha normalization.
 struct Origin {
   kind : OriginKind
   display_name : Bytes
   source_span : SourceSpan?
-  snapshot_key : SnapshotSymbolKey?
+  identifier_source_span : SourceSpan?
   attributes : SemanticAttributes
 } derive(Eq, Debug)
 
@@ -138,14 +137,12 @@ struct OriginKind {
 ///|
 pub(all) enum OriginKindView {
   UserKind
-  SnapshotKind
   GeneratedKind(GeneratedStage)
 } derive(Eq, Debug)
 
 ///|
 pub(all) enum OriginView {
   UserOrigin(Bytes, SourceSpan?, ArrayView[Bytes])
-  SnapshotOrigin(Bytes, SnapshotSymbolKey, ArrayView[Bytes])
   GeneratedOrigin(GeneratedStage, Bytes, SourceSpan?, ArrayView[Bytes])
 } derive(Eq, Debug)
 
@@ -155,13 +152,8 @@ fn user_origin_kind() -> OriginKind {
 }
 
 ///|
-fn snapshot_origin_kind() -> OriginKind {
-  { tag: 1, generated_stage: None }
-}
-
-///|
 fn generated_origin_kind(stage : GeneratedStage) -> OriginKind {
-  { tag: 2, generated_stage: Some(stage) }
+  { tag: 1, generated_stage: Some(stage) }
 }
 
 ///|
@@ -174,41 +166,7 @@ pub fn Origin::user(
     kind: user_origin_kind(),
     display_name: display_name.to_owned(),
     source_span,
-    snapshot_key: None,
-    attributes: SemanticAttributes::from_array(attributes),
-  }
-}
-
-///|
-pub fn Origin::snapshot(
-  display_name : BytesView,
-  snapshot_key : SnapshotSymbolKey,
-  attributes : ArrayView[Bytes],
-) -> Origin {
-  {
-    kind: snapshot_origin_kind(),
-    display_name: display_name.to_owned(),
-    source_span: None,
-    snapshot_key: Some(snapshot_key),
-    attributes: SemanticAttributes::from_array(attributes),
-  }
-}
-
-///|
-/// Snapshot decoder constructor that also preserves the upstream source span.
-/// The location is metadata and remains outside `SnapshotSymbolKey`, so moving
-/// a source file does not silently change semantic symbol identity.
-pub fn Origin::snapshot_with_span(
-  display_name : BytesView,
-  snapshot_key : SnapshotSymbolKey,
-  source_span : SourceSpan?,
-  attributes : ArrayView[Bytes],
-) -> Origin {
-  {
-    kind: snapshot_origin_kind(),
-    display_name: display_name.to_owned(),
-    source_span,
-    snapshot_key: Some(snapshot_key),
+    identifier_source_span: source_span,
     attributes: SemanticAttributes::from_array(attributes),
   }
 }
@@ -224,9 +182,48 @@ pub fn Origin::generated(
     kind: generated_origin_kind(stage),
     display_name: display_name.to_owned(),
     source_span,
-    snapshot_key: None,
+    identifier_source_span: source_span,
     attributes: SemanticAttributes::from_array(attributes),
   }
+}
+
+///|
+/// Creates generated provenance while keeping the source location stored on
+/// the underlying identifier explicit. This models Why3 identifiers whose
+/// `id_loc` is inherited even when the generated object has no source anchor.
+pub fn Origin::generated_with_identifier_source_span(
+  stage : GeneratedStage,
+  display_name : BytesView,
+  source_span : SourceSpan?,
+  identifier_source_span : SourceSpan?,
+  attributes : ArrayView[Bytes],
+) -> Origin {
+  {
+    kind: generated_origin_kind(stage),
+    display_name: display_name.to_owned(),
+    source_span,
+    identifier_source_span,
+    attributes: SemanticAttributes::from_array(attributes),
+  }
+}
+
+///|
+/// Creates a generated origin for an identifier produced with Why3's
+/// `id_derive`: the identifier inherits the source location of its parent,
+/// while the generated provenance itself has no source anchor.
+pub fn Origin::generated_derived(
+  stage : GeneratedStage,
+  display_name : BytesView,
+  identifier_source_span : SourceSpan?,
+  attributes : ArrayView[Bytes],
+) -> Origin {
+  Origin::generated_with_identifier_source_span(
+    stage,
+    display_name,
+    None,
+    identifier_source_span,
+    attributes,
+  )
 }
 
 ///|
@@ -238,8 +235,7 @@ pub fn Origin::kind(self : Origin) -> OriginKind {
 pub fn OriginKind::view(self : OriginKind) -> OriginKindView {
   match (self.tag, self.generated_stage) {
     (0, None) => UserKind
-    (1, None) => SnapshotKind
-    (2, Some(stage)) => GeneratedKind(stage)
+    (1, Some(stage)) => GeneratedKind(stage)
     _ => abort("invalid opaque OriginKind")
   }
 }
@@ -249,12 +245,6 @@ pub fn Origin::view(self : Origin) -> OriginView {
   match self.kind.view() {
     UserKind =>
       UserOrigin(self.display_name, self.source_span, self.attributes.items())
-    SnapshotKind => {
-      guard self.snapshot_key is Some(key) else {
-        abort("snapshot origin is missing its key")
-      }
-      SnapshotOrigin(self.display_name, key, self.attributes.items())
-    }
     GeneratedKind(stage) =>
       GeneratedOrigin(
         stage,
@@ -281,8 +271,11 @@ pub fn Origin::source_span(self : Origin) -> SourceSpan? {
 }
 
 ///|
-pub fn Origin::snapshot_key(self : Origin) -> SnapshotSymbolKey? {
-  self.snapshot_key
+/// Source location stored on the underlying semantic identifier. This usually
+/// equals `source_span`, but derived identifiers can inherit a location while
+/// their generated provenance remains unanchored.
+pub fn Origin::identifier_source_span(self : Origin) -> SourceSpan? {
+  self.identifier_source_span
 }
 
 ///|

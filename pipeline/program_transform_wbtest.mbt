@@ -59,7 +59,7 @@ fn count_task_attribute(task : @theory.Task, wanted : BytesView) -> Int {
           }
         Dprop(_, _, formula) =>
           count = count + count_term_attribute(formula, wanted)
-        Dtype(_) | Ddata(_) | Dparam(_) | Dind(_) => ()
+        Dtype(_) | Ddata(_) | Dparam(_) | Dind(_, _) => ()
       }
     }
   }
