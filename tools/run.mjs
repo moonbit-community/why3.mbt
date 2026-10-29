@@ -273,8 +273,8 @@ function runQuickTests() {
 }
 
 function runProjectTests() {
-  run('moon', ['test', '--target', 'all', '--serial', '--release']);
-  run('moon', ['test', '--target', 'all', '--serial']);
+  run('moon', ['test', '--target', 'all', '--jobs', '1', '--release']);
+  run('moon', ['test', '--target', 'all', '--jobs', '1']);
 }
 
 function assertProjectClean(options) {
