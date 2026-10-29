@@ -7,9 +7,6 @@ import {
   "moonbit-community/why3/prover",
   "moonbit-community/why3/prover/z3",
   "moonbitlang/core/buffer",
-}
-
-import {
   "moonbitlang/core/debug",
 }
 
