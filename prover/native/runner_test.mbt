@@ -3,7 +3,7 @@
 ///|
 fn test_command(
   script : BytesView,
-  solver_seconds? : Int = 0,
+  solver_seconds~ : Int32 = 0,
 ) -> @prover.CommandSpec raise {
   @prover.CommandSpec::new(
     b"runner-test",

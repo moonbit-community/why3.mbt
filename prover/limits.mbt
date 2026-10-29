@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
 
 ///|
-pub fn default_solver_seconds() -> Int {
+pub fn default_solver_seconds() -> Int32 {
   10
 }
 
 ///|
-pub fn maximum_solver_seconds() -> Int {
+pub fn maximum_solver_seconds() -> Int32 {
   86400
 }
 
 ///|
-pub fn prover_stream_limit_bytes() -> Int {
+pub fn prover_stream_limit_bytes() -> Int32 {
   2 * 1024 * 1024
 }
 
@@ -34,7 +34,7 @@ pub(all) suberror ConfigError {
 } derive(Eq, Debug)
 
 ///|
-pub fn validate_solver_seconds(seconds : Int) -> Int raise ConfigError {
+pub fn validate_solver_seconds(seconds : Int32) -> Int32 raise ConfigError {
   if seconds < 0 || seconds > maximum_solver_seconds() {
     raise ConfigError({
       kind: InvalidTimeout,
@@ -45,7 +45,7 @@ pub fn validate_solver_seconds(seconds : Int) -> Int raise ConfigError {
 }
 
 ///|
-pub fn parent_deadline_seconds(seconds : Int) -> Int? raise ConfigError {
+pub fn parent_deadline_seconds(seconds : Int32) -> Int32? raise ConfigError {
   let seconds = validate_solver_seconds(seconds)
   if seconds == 0 {
     None

@@ -8,7 +8,7 @@ pub(all) enum DeclDependency {
 }
 
 ///|
-fn DeclDependency::kind_tag(self : DeclDependency) -> Int {
+fn DeclDependency::kind_tag(self : DeclDependency) -> Int32 {
   match self {
     TypeDependency(_) => 0
     LogicDependency(_) => 1
@@ -41,13 +41,13 @@ pub impl Hash for DeclDependency with fn hash_combine(self, hasher) {
 
 ///|
 priv struct DependencyCollector {
-  seen : Map[(Int, @identity.SemanticId), Unit]
+  seen : Map[(Int32, @identity.SemanticId), Unit]
   values : Array[DeclDependency]
 }
 
 ///|
 fn DependencyCollector::new() -> DependencyCollector {
-  { seen: Map([]), values: [] }
+  { seen: Map([]), values: [], }
 }
 
 ///|
@@ -266,7 +266,7 @@ fn validate_introduced_symbols(
   introduced : ArrayView[DeclDependency],
   span : @identity.SourceSpan?,
 ) -> Unit raise TypeError {
-  let seen : Map[(Int, @identity.SemanticId), Unit] = Map([])
+  let seen : Map[(Int32, @identity.SemanticId), Unit] = Map([])
   for dependency in introduced {
     require_context_id(
       context,
@@ -295,7 +295,7 @@ fn make_decl(
 ) -> Decl raise TypeError {
   let introduced = introduced_symbols(node)
   validate_introduced_symbols(context, introduced, span)
-  let introduced_keys : Map[(Int, @identity.SemanticId), Unit] = Map([])
+  let introduced_keys : Map[(Int32, @identity.SemanticId), Unit] = Map([])
   for dependency in introduced {
     introduced_keys[(dependency.kind_tag(), dependency.semantic_id())] = ()
   }
@@ -312,18 +312,18 @@ fn make_decl(
       dependencies.push(dependency)
     }
   }
-  { origin, dependencies, introduced, node }
+  { origin, dependencies, introduced, node, }
 }
 
 ///|
 struct KnownMap {
   context : @identity.CompilationContext
-  entries : Map[(Int, @identity.SemanticId), Decl]
+  entries : Map[(Int32, @identity.SemanticId), Decl]
 }
 
 ///|
 pub fn KnownMap::new(context : @identity.CompilationContext) -> KnownMap {
-  { context, entries: Map([]) }
+  { context, entries: Map([]), }
 }
 
 ///|
@@ -372,7 +372,7 @@ pub fn KnownMap::add(
     }
     entries[key] = declaration
   }
-  { context: self.context, entries }
+  { context: self.context, entries, }
 }
 
 ///|
@@ -395,7 +395,7 @@ pub fn KnownMap::merge(
       entries[key] = declaration
     }
   }
-  { context: self.context, entries }
+  { context: self.context, entries, }
 }
 
 ///|
@@ -432,5 +432,5 @@ pub fn KnownMap::trusted_add_snapshot(
     }
     entries[key] = declaration
   }
-  { context: self.context, entries }
+  { context: self.context, entries, }
 }

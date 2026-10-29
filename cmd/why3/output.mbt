@@ -76,7 +76,7 @@ fn prover_result_json(result : @prover.ProverResult) -> String {
 }
 
 ///|
-fn six_digit_ordinal(ordinal : Int) -> String raise CliError {
+fn six_digit_ordinal(ordinal : Int32) -> String raise CliError {
   if ordinal < 0 || ordinal > 999999 {
     fail_cli(OutputError, "SMT output ordinal is outside 000000..999999")
   }

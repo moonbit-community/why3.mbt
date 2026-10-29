@@ -14,7 +14,7 @@ fn term_user_origin(name : BytesView) -> @identity.Origin {
 fn term_snapshot_origin(
   name : BytesView,
   kind : @identity.SnapshotSymbolKind,
-  ordinal : UInt,
+  ordinal : UInt32,
 ) -> @identity.Origin {
   @identity.Origin::snapshot(
     name,
@@ -34,7 +34,7 @@ fn term_builtin(
   context : @identity.CompilationContext,
   name : BytesView,
   kind : @logic.BuiltinTypeKind,
-  ordinal : UInt,
+  ordinal : UInt32,
 ) -> (@logic.TypeSymbol, @logic.Ty) raise @logic.TypeError {
   let symbol = @logic.TypeSymbol::trusted_builtin(
     context,

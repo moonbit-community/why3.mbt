@@ -85,7 +85,7 @@ test "term postfix get/update/cut encodings, suffixes, and operator spans are ex
   assert_eq(operator.span.start.byte_offset, 1)
   assert_eq(operator.span.end.byte_offset, 2)
   assert_eq(get.span.end.byte_offset, 6)
-  let cases : Array[(Bytes, Bytes, Int)] = [
+  let cases : Array[(Bytes, Bytes, Int32)] = [
     (b"a[i <- v]", b"mixfix [<-]", 3),
     (b"a[i..j]", b"mixfix [..]", 3),
     (b"a[i..]", b"mixfix [_..]", 2),
@@ -325,7 +325,7 @@ test "unsupported epsilon and non-associative postfixes report structured errors
           Qident({ name: b"infix +", .. }),
           [{ desc: Tat(_, { name: b"L", .. }), .. }, _]
         ),
-        ..,
+        ..
       },
       { name: b"M", .. }
     ),

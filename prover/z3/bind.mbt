@@ -60,20 +60,20 @@ struct Z3Profile {
 pub(all) struct Z3ProfileView {
   context_anchor : @identity.SemanticId
   transforms : ArrayView[TransformId]
-  driver_meta_group_count : Int
-  driver_meta_count : Int
-  validated_snapshot_meta_count : Int
-  syntax_count : Int
-  remove_count : Int
+  driver_meta_group_count : Int32
+  driver_meta_count : Int32
+  validated_snapshot_meta_count : Int32
+  syntax_count : Int32
+  remove_count : Int32
   preludes : ArrayView[Bytes]
-  theory_prelude_count : Int
-  result_regexp_count : Int
-  result_exit_code_count : Int
+  theory_prelude_count : Int32
+  result_regexp_count : Int32
+  result_exit_code_count : Int32
   command : Z3CommandTemplate
 }
 
 ///|
-fn typed_meta_count(groups : ArrayView[TypedMetaGroup]) -> Int {
+fn typed_meta_count(groups : ArrayView[TypedMetaGroup]) -> Int32 {
   let mut count = 0
   for group in groups {
     count = count + group.entries.length()
@@ -254,7 +254,7 @@ fn bind_meta_groups(
       }
       entries.push({ meta, })
     }
-    result.push({ theory_key: group.theory_key, entries })
+    result.push({ theory_key: group.theory_key, entries, })
   }
   result
 }

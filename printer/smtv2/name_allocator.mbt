@@ -5,7 +5,7 @@
 ///|
 fn encoded_identifier_head(byte : Byte) -> BytesView {
   match byte {
-    b'a'..=b'z' | b'A'..=b'Z' => Bytes::from_array([byte])[:]
+    b'a'..<=b'z' | b'A'..<=b'Z' => Bytes::from_array([byte])[:]
     b' ' => b"sp"
     b'_' => b"us"
     b'#' => b"sh"
@@ -57,7 +57,7 @@ fn encoded_identifier_head(byte : Byte) -> BytesView {
 ///|
 fn encoded_identifier_rest(byte : Byte) -> BytesView {
   match byte {
-    b'0'..=b'9' => Bytes::from_array([byte])[:]
+    b'0'..<=b'9' => Bytes::from_array([byte])[:]
     b'_' | b' ' => b"_"
     _ => encoded_identifier_head(byte)
   }
@@ -83,12 +83,12 @@ fn sanitize_identifier(name : BytesView) -> Bytes {
 
 ///|
 priv struct NameAllocator {
-  indices : Map[Bytes, Int]
+  indices : Map[Bytes, Int32]
   values : Map[@identity.SemanticId, Bytes]
 }
 
 ///|
-fn suffixed_name(name : BytesView, index : Int) -> Bytes {
+fn suffixed_name(name : BytesView, index : Int32) -> Bytes {
   if index <= 0 {
     return name.to_owned()
   }
@@ -120,7 +120,7 @@ fn NameAllocator::find_unique(self : NameAllocator, name : Bytes) -> Bytes {
 
 ///|
 fn NameAllocator::new() -> NameAllocator {
-  let self = { indices: Map([]), values: Map([]) }
+  let self = { indices: Map([]), values: Map([]), }
   for reserved in smt_reserved_identifiers() {
     ignore(self.find_unique(reserved))
   }

@@ -5,14 +5,14 @@ let closure_a_source : Bytes = b"theory T\n  use int.Int\n  constant x : int\n  
 
 ///|
 test "checked file separates checking, raw tasks, and prepared calls" {
-  let checked = check(closure_a_source, filename=b"closure-a.mlw")
+  let checked = @pipeline.check(closure_a_source, filename=b"closure-a.mlw")
   assert_eq(checked.typed_units().length(), 1)
   assert_eq(checked.raw_goals().length(), 0)
   guard checked.typed_units()[0] is Theory(theory)
   assert_eq(theory.view().name.view().name, b"T")
-  let tasked = tasks(checked)
+  let tasked = @pipeline.tasks(checked)
   assert_eq(tasked.raw_goals().length(), 1)
-  let calls = prepare_proof(tasked)
+  let calls = @pipeline.prepare_proof(tasked)
   assert_eq(calls.length(), 1)
   let call = calls[0]
   let goal = call.goal_info().view()
@@ -39,14 +39,14 @@ let closure_b_source : Bytes = b"module ClosureB\n  use int.Int\n  val guarded (
 
 ///|
 test "program modules generate ordered raw VCs before Z3 preparation" {
-  let checked = check(closure_b_source, filename=b"closure-b.mlw")
+  let checked = @pipeline.check(closure_b_source, filename=b"closure-b.mlw")
   assert_eq(checked.typed_units().length(), 1)
   assert_eq(checked.raw_goals().length(), 0)
   guard checked.typed_units()[0] is Module(pmodule) else {
     fail("closure B did not elaborate as a program module")
   }
   assert_eq(pmodule.pure_theory().view().name.view().name, b"ClosureB")
-  let tasked = tasks(checked)
+  let tasked = @pipeline.tasks(checked)
   assert_eq(tasked.raw_goals().length(), 2)
   let infos = tasked.goal_infos()
   assert_eq(infos.length(), 2)
@@ -56,7 +56,7 @@ test "program modules generate ordered raw VCs before Z3 preparation" {
   assert_eq(infos[0].view().ordinal, 0)
   assert_eq(infos[1].view().goal.view().name, b"checked'vc")
   assert_eq(infos[1].view().ordinal, 1)
-  let calls = prepare_proof(tasked)
+  let calls = @pipeline.prepare_proof(tasked)
   assert_eq(calls.length(), 2)
   for call in calls {
     assert_true(!call.query().bytes().is_empty())

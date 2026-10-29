@@ -28,7 +28,7 @@ fn json_string(value : Json, path : String) -> String raise BindError {
 }
 
 ///|
-fn json_int(value : Json, path : String) -> Int raise BindError {
+fn json_int(value : Json, path : String) -> Int32 raise BindError {
   match value {
     Number(number, ..) => {
       let integer = number.to_int()
@@ -244,7 +244,7 @@ fn unbound_meta_argument(
 fn unbound_meta(
   value : Json,
   path : String,
-  ordinal : Int,
+  ordinal : Int32,
 ) -> UnboundDriverMeta raise BindError {
   let object = json_object(value, path)
   if json_int(json_field(object, "ordinal", path), path + ".ordinal") != ordinal {

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
 
 ///|
-fn count_term_attribute(term : @logic.Term, wanted : BytesView) -> Int {
+fn count_term_attribute(term : @logic.Term, wanted : BytesView) -> Int32 {
   let mut count = if term.attributes().any(attribute => attribute[:] == wanted) {
     1
   } else {
@@ -48,7 +48,7 @@ fn count_term_attribute(term : @logic.Term, wanted : BytesView) -> Int {
 }
 
 ///|
-fn count_task_attribute(task : @theory.Task, wanted : BytesView) -> Int {
+fn count_task_attribute(task : @theory.Task, wanted : BytesView) -> Int32 {
   let mut count = 0
   for item in task.view().items {
     if item is TheoryDecl(declaration) {

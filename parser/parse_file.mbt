@@ -125,7 +125,7 @@ fn Parser::parse_mlw_module(self : Parser) -> MlwModule raise {
   }
   ignore(self.expect_keyword(End))
   self.record_list_finalize()
-  { kind, name, interface, declarations, span: self.span_from(module_mark) }
+  { kind, name, interface, declarations, span: self.span_from(module_mark), }
 }
 
 ///|
@@ -199,7 +199,7 @@ fn Parser::parse_mlw_file(self : Parser) -> MlwFile raise {
 ///|
 fn parse_mlw_file_entry(
   input : BytesView,
-  filename? : BytesView = b"<file-test>",
+  filename~ : BytesView = b"<file-test>",
 ) -> MlwFile raise ParseError {
   let parser = Parser::new(input, filename~)
   finish_internal_entry(parser, parser => parser.parse_mlw_file())

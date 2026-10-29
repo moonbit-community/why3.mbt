@@ -37,7 +37,7 @@ fn json_bool(value : Json, path : String) -> Bool raise SnapshotError {
 }
 
 ///|
-fn json_int(value : Json, path : String) -> Int raise SnapshotError {
+fn json_int(value : Json, path : String) -> Int32 raise SnapshotError {
   match value {
     Number(number, ..) => {
       let integer = number.to_int()
@@ -55,7 +55,7 @@ fn json_int(value : Json, path : String) -> Int raise SnapshotError {
 }
 
 ///|
-fn json_uint(value : Json, path : String) -> UInt raise SnapshotError {
+fn json_uint(value : Json, path : String) -> UInt32 raise SnapshotError {
   let integer = json_int(value, path)
   if integer < 0 {
     fail_snapshot(MalformedSnapshot, path, "expected a non-negative integer")
@@ -101,7 +101,7 @@ fn tagged(
 ///|
 fn require_tag_arity(
   fields : ArrayView[Json],
-  arity : Int,
+  arity : Int32,
   path : String,
 ) -> Unit raise SnapshotError {
   if fields.length() != arity + 1 {

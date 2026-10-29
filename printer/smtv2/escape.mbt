@@ -12,7 +12,7 @@ fn write_smt_string(state : PrinterState, value : BytesView) -> Unit {
     match byte {
       b'\\' => state.writer.write(b"\\x5C")
       b'"' => state.writer.write(b"\\x22")
-      b' '..=b'~' => state.writer.write(Bytes::from_array([byte]))
+      b' '..<=b'~' => state.writer.write(Bytes::from_array([byte]))
       _ => {
         state.writer.write(b"\\x")
         state.writer.write(

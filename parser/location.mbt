@@ -8,7 +8,7 @@
 /// `byte_offset` remains monotonic within one parse.
 pub(all) struct SourcePos {
   filename : Bytes
-  byte_offset : Int
+  byte_offset : Int32
   line : Int64
   column : Int64
 } derive(Debug, Eq)
@@ -22,11 +22,11 @@ pub(all) struct Span {
 
 ///|
 fn initial_source_pos(filename : BytesView) -> SourcePos {
-  { filename: filename.to_owned(), byte_offset: 0, line: 1L, column: 0L }
+  { filename: filename.to_owned(), byte_offset: 0, line: 1L, column: 0L, }
 }
 
 ///|
-fn SourcePos::advance_raw(self : SourcePos, byte_count : Int) -> SourcePos {
+fn SourcePos::advance_raw(self : SourcePos, byte_count : Int32) -> SourcePos {
   {
     ..self,
     byte_offset: self.byte_offset + byte_count,
@@ -35,7 +35,7 @@ fn SourcePos::advance_raw(self : SourcePos, byte_count : Int) -> SourcePos {
 }
 
 ///|
-fn utf8_extra_bytes(byte : Byte) -> Int {
+fn utf8_extra_bytes(byte : Byte) -> Int32 {
   let value = byte.to_int()
   if value <= 0x7f {
     0
@@ -51,7 +51,7 @@ fn utf8_extra_bytes(byte : Byte) -> Int {
 }
 
 ///|
-fn lexlib_utf8_adjustment(fragment : BytesView) -> Int {
+fn lexlib_utf8_adjustment(fragment : BytesView) -> Int32 {
   for i = 0, adjustment = 0; i < fragment.length(); {
     let extra = utf8_extra_bytes(fragment[i])
     if extra >= 0 {
@@ -72,7 +72,7 @@ fn SourcePos::adjust_lexlib_fragment(
   self : SourcePos,
   fragment : BytesView,
 ) -> SourcePos {
-  { ..self, column: self.column - lexlib_utf8_adjustment(fragment).to_int64() }
+  { ..self, column: self.column - lexlib_utf8_adjustment(fragment).to_int64(), }
 }
 
 ///|
@@ -80,7 +80,7 @@ fn SourcePos::advance_comment_byte(self : SourcePos, byte : Byte) -> SourcePos {
   let advanced = self.advance_raw(1)
   let extra = utf8_extra_bytes(byte)
   if extra > 0 {
-    { ..advanced, column: advanced.column - extra.to_int64() }
+    { ..advanced, column: advanced.column - extra.to_int64(), }
   } else {
     advanced
   }
@@ -89,7 +89,7 @@ fn SourcePos::advance_comment_byte(self : SourcePos, byte : Byte) -> SourcePos {
 ///|
 fn SourcePos::advance_newline(
   self : SourcePos,
-  consumed_bytes : Int,
+  consumed_bytes : Int32,
 ) -> SourcePos {
   {
     ..self,
@@ -111,12 +111,12 @@ fn SourcePos::switch_logical_location(
   } else {
     self.filename
   }
-  { ..self, filename, line, column }
+  { ..self, filename, line, column, }
 }
 
 ///|
 pub fn Span::empty(at : SourcePos) -> Span {
-  { start: at, end: at }
+  { start: at, end: at, }
 }
 
 ///|
@@ -139,5 +139,5 @@ pub fn Span::join(self : Span, other : Span) -> Span {
   } else {
     other.end
   }
-  { start, end }
+  { start, end, }
 }

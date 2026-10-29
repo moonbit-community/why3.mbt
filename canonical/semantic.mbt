@@ -188,7 +188,7 @@ pub fn encode_constant(constant : @logic.Constant) -> CanonicalJson {
 fn bound_variable_index(
   bound : ArrayView[@logic.VSymbol],
   variable : @logic.VSymbol,
-) -> UInt? {
+) -> UInt32? {
   let mut position = bound.length() - 1
   let mut distance = 0
   while position >= 0 {

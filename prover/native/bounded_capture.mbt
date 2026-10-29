@@ -4,7 +4,7 @@
 async fn bounded_capture(
   reader : @process.ReadFromProcess,
   stream : @prover.ProverStream,
-  limit_bytes : Int,
+  limit_bytes : Int32,
 ) -> Bytes {
   let buffer = @buffer.Buffer(size_hint=limit_bytes)
   let mut captured = 0
@@ -31,7 +31,7 @@ async fn bounded_capture(
       None => return buffer.to_bytes()
       Some(bytes) => {
         if bytes.length() > remaining {
-          raise @prover.OutputLimitExceeded({ stream, limit_bytes })
+          raise @prover.OutputLimitExceeded({ stream, limit_bytes, })
         }
         buffer.write_bytes(bytes)
         captured = captured + bytes.length()

@@ -87,7 +87,7 @@ fn is_operator_byte(byte : Byte) -> Bool {
 }
 
 ///|
-fn scan_decimal_digits(input : BytesView, start : Int) -> Int {
+fn scan_decimal_digits(input : BytesView, start : Int32) -> Int32 {
   let mut index = start
   while index < input.length() && is_decimal_digit(input[index]) {
     index = index + 1
@@ -98,10 +98,10 @@ fn scan_decimal_digits(input : BytesView, start : Int) -> Int {
 ///|
 fn scan_radix_digits(
   input : BytesView,
-  start : Int,
-  radix : Int,
+  start : Int32,
+  radix : Int32,
   underscores : Bool,
-) -> Int {
+) -> Int32 {
   let mut index = start
   while index < input.length() {
     let byte = input[index]
@@ -125,7 +125,7 @@ fn scan_radix_digits(
 /// Returns the longest endpoint of Why3's `suffix` regexp. If the suffix ends
 /// in a quote run followed by an ASCII letter, the last quote can instead
 /// begin a `core_suffix`; that boundary is returned separately.
-fn scan_identifier_suffix(input : BytesView, start : Int) -> (Int, Int?) {
+fn scan_identifier_suffix(input : BytesView, start : Int32) -> (Int32, Int32?) {
   let mut index = start
   while index < input.length() {
     if is_ascii_alpha(input[index]) || is_identifier_digit(input[index]) {
@@ -151,14 +151,17 @@ fn scan_identifier_suffix(input : BytesView, start : Int) -> (Int, Int?) {
 }
 
 ///|
-fn scan_identifier_body(input : BytesView, after_initial : Int) -> (Int, Bool) {
+fn scan_identifier_body(
+  input : BytesView,
+  after_initial : Int32,
+) -> (Int32, Bool) {
   let (ordinary_end, boundary) = scan_identifier_suffix(input, after_initial)
   guard boundary is Some(core_start) else { return (ordinary_end, false) }
   (scan_core_identifier_tail(input, core_start), true)
 }
 
 ///|
-fn scan_core_identifier_tail(input : BytesView, core_start : Int) -> Int {
+fn scan_core_identifier_tail(input : BytesView, core_start : Int32) -> Int32 {
   let mut next_core_start = core_start
   let mut result = core_start + 2
   let mut finished = false
@@ -224,19 +227,19 @@ fn scan_quote_lident(cursor : LexerCursor) -> LocatedToken? {
 
 ///|
 priv enum NumericForm {
-  DecimalInteger(Int, Int)
-  HexInteger(Int, Int)
-  OctalInteger(Int, Int)
-  BinaryInteger(Int, Int)
-  DecimalReal(Int, Int, Int, Int, Int, Int)
-  HexReal(Int, Int, Int, Int, Int, Int)
+  DecimalInteger(Int32, Int32)
+  HexInteger(Int32, Int32)
+  OctalInteger(Int32, Int32)
+  BinaryInteger(Int32, Int32)
+  DecimalReal(Int32, Int32, Int32, Int32, Int32, Int32)
+  HexReal(Int32, Int32, Int32, Int32, Int32, Int32)
 }
 
 ///|
 priv struct NumericCandidate {
-  matched_end : Int
-  consumed_end : Int
-  priority : Int
+  matched_end : Int32
+  consumed_end : Int32
+  priority : Int32
   form : NumericForm
 }
 
@@ -261,7 +264,11 @@ fn choose_numeric_candidate(
 }
 
 ///|
-fn exponent_end(input : BytesView, marker : Int, hexadecimal : Bool) -> Int? {
+fn exponent_end(
+  input : BytesView,
+  marker : Int32,
+  hexadecimal : Bool,
+) -> Int32? {
   if marker >= input.length() ||
     (if hexadecimal {
       input[marker] != b'p' && input[marker] != b'P'
@@ -285,8 +292,8 @@ fn exponent_end(input : BytesView, marker : Int, hexadecimal : Bool) -> Int? {
 ///|
 fn signed_exponent(
   input : BytesView,
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
   span : Span,
 ) -> Int64 raise ParseError {
   if start == end {
@@ -542,9 +549,9 @@ fn scan_number(cursor : LexerCursor) -> LocatedToken? raise ParseError {
 
 ///|
 priv struct TokenCandidate {
-  matched_end : Int
-  consumed_end : Int
-  priority : Int
+  matched_end : Int32
+  consumed_end : Int32
+  priority : Int32
   kind : TokenKind
 }
 
@@ -569,7 +576,7 @@ fn choose_token_candidate(
 }
 
 ///|
-fn bytes_at(input : BytesView, start : Int, text : BytesView) -> Bool {
+fn bytes_at(input : BytesView, start : Int32, text : BytesView) -> Bool {
   if start + text.length() > input.length() {
     return false
   }
@@ -585,10 +592,10 @@ fn bytes_at(input : BytesView, start : Int, text : BytesView) -> Bool {
 fn symbol_candidate(
   current : TokenCandidate?,
   input : BytesView,
-  start : Int,
+  start : Int32,
   text : BytesView,
   symbol : Symbol,
-  priority : Int,
+  priority : Int32,
 ) -> TokenCandidate? {
   if bytes_at(input, start, text) {
     choose_token_candidate(current, {
@@ -795,7 +802,7 @@ fn escaped_ascii(byte : Byte) -> Byte? {
 }
 
 ///|
-fn three_decimal_escape(input : BytesView, start : Int) -> Byte? {
+fn three_decimal_escape(input : BytesView, start : Int32) -> Byte? {
   if start + 3 > input.length() ||
     !is_decimal_digit(input[start]) ||
     !is_decimal_digit(input[start + 1]) ||
@@ -813,7 +820,7 @@ fn three_decimal_escape(input : BytesView, start : Int) -> Byte? {
 }
 
 ///|
-fn two_hex_escape(input : BytesView, start : Int) -> Byte? {
+fn two_hex_escape(input : BytesView, start : Int32) -> Byte? {
   if start + 2 > input.length() {
     return None
   }
@@ -827,7 +834,7 @@ fn two_hex_escape(input : BytesView, start : Int) -> Byte? {
 }
 
 ///|
-fn three_octal_escape(input : BytesView, start : Int) -> Byte? {
+fn three_octal_escape(input : BytesView, start : Int32) -> Byte? {
   if start + 3 > input.length() ||
     input[start] < b'0' ||
     input[start] > b'3' ||
@@ -925,7 +932,7 @@ fn scan_string(cursor : LexerCursor) -> LocatedToken raise ParseError {
     fail_with_diagnostic(
       make_parse_diagnostic(
         IllegalStringByte,
-        { start: illegal_start, end: cursor.position },
+        { start: illegal_start, end: cursor.position, },
         actual="byte {byte.to_int()}",
       ),
     )
@@ -934,7 +941,7 @@ fn scan_string(cursor : LexerCursor) -> LocatedToken raise ParseError {
 }
 
 ///|
-fn skip_spaces_at(input : BytesView, start : Int) -> Int {
+fn skip_spaces_at(input : BytesView, start : Int32) -> Int32 {
   let mut index = start
   while index < input.length() && is_space(input[index]) {
     index = index + 1
@@ -943,7 +950,7 @@ fn skip_spaces_at(input : BytesView, start : Int) -> Int {
 }
 
 ///|
-fn decimal_range(input : BytesView, start : Int) -> (Int, Int)? {
+fn decimal_range(input : BytesView, start : Int32) -> (Int32, Int32)? {
   let end = scan_decimal_digits(input, start)
   if end == start {
     None
@@ -979,7 +986,11 @@ fn[A] fail_invalid_directive(cursor : LexerCursor) -> A raise ParseError {
 }
 
 ///|
-fn directive_number_span(cursor : LexerCursor, start : Int, end : Int) -> Span {
+fn directive_number_span(
+  cursor : LexerCursor,
+  start : Int32,
+  end : Int32,
+) -> Span {
   {
     start: cursor.position.advance_raw(start - cursor.index),
     end: cursor.position.advance_raw(end - cursor.index),
@@ -989,8 +1000,8 @@ fn directive_number_span(cursor : LexerCursor, start : Int, end : Int) -> Span {
 ///|
 fn parse_directive_number(
   cursor : LexerCursor,
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
   line : Bool,
 ) -> Int64 raise ParseError {
   let span = directive_number_span(cursor, start, end)
@@ -1073,7 +1084,7 @@ fn scan_position_directive(
   }
   let filename = input[filename_start:index].to_owned()
   index = skip_spaces_at(input, index + 1)
-  let ranges : Array[(Int, Int)] = []
+  let ranges : Array[(Int32, Int32)] = []
   for _ in 0..<4 {
     guard decimal_range(input, index) is Some(range) else {
       return fail_invalid_directive(cursor)
@@ -1156,7 +1167,7 @@ fn scan_attribute(cursor : LexerCursor) -> DirectiveResult raise ParseError {
 }
 
 ///|
-fn comment_newline_length(cursor : LexerCursor) -> Int? {
+fn comment_newline_length(cursor : LexerCursor) -> Int32? {
   let mut end = cursor.index
   while end < cursor.input.length() && cursor.input[end] == b'\r' {
     end = end + 1
@@ -1269,7 +1280,7 @@ fn scan_next_token(cursor : LexerCursor) -> LocatedToken raise ParseError {
   fail_with_diagnostic(
     make_parse_diagnostic(
       IllegalCharacter,
-      { start, end: cursor.position },
+      { start, end: cursor.position, },
       actual="byte {byte.to_int()}",
     ),
   )
@@ -1280,9 +1291,9 @@ priv struct LazyLexer {
   cursor : LexerCursor
   cache : Array[LexItem]
   mut terminal : Bool
-  mut scan_count : Int
-  mut commit_count : Int
-  mut cache_push_count : Int
+  mut scan_count : Int32
+  mut commit_count : Int32
+  mut cache_push_count : Int32
 }
 
 ///|
@@ -1306,7 +1317,7 @@ fn LazyLexer::scan_one(self : LazyLexer) -> LexItem {
 }
 
 ///|
-fn LazyLexer::ensure(self : LazyLexer, index : Int) -> LexItem {
+fn LazyLexer::ensure(self : LazyLexer, index : Int32) -> LexItem {
   while self.cache.length() <= index && !self.terminal {
     let item = self.scan_one()
     self.cache.push(item)
@@ -1325,7 +1336,7 @@ fn LazyLexer::ensure(self : LazyLexer, index : Int) -> LexItem {
 ///|
 fn LazyLexer::committed(
   self : LazyLexer,
-  index : Int,
+  index : Int32,
 ) -> LocatedToken raise ParseError {
   self.commit_count = self.commit_count + 1
   match self.ensure(index) {

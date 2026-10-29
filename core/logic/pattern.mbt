@@ -48,7 +48,7 @@ pub fn Pattern::view(self : Pattern) -> PatternView {
 
 ///|
 pub fn Pattern::trusted_wild(ty : Ty) -> Pattern {
-  { node: WildPattern, ty, bound_variables: [] }
+  { node: WildPattern, ty, bound_variables: [], }
 }
 
 ///|

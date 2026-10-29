@@ -1,7 +1,7 @@
 ///|
 fn lex_all(
   input : BytesView,
-  filename? : BytesView = b"<lexer-test>",
+  filename~ : BytesView = b"<lexer-test>",
 ) -> Array[LocatedToken] raise ParseError {
   let lexer = LazyLexer::new(input, filename)
   let tokens : Array[LocatedToken] = []
@@ -193,19 +193,20 @@ test "numbers: integer bases, separators, long values, and range backjump" {
   let tokens = lex_kinds(source)
   assert_eq(tokens.length(), 10)
   assert_true(
-    tokens[0] is Integer({ kind: ILitDec, value }) && value.to_string() == "0",
+    tokens[0] is Integer({ kind: ILitDec, value, }) && value.to_string() == "0",
   )
   assert_true(
-    tokens[1] is Integer({ kind: ILitDec, value }) && value.to_string() == "1",
+    tokens[1] is Integer({ kind: ILitDec, value, }) && value.to_string() == "1",
   )
   assert_true(
-    tokens[2] is Integer({ kind: ILitHex, value }) && value.to_string() == "175",
+    tokens[2] is Integer({ kind: ILitHex, value, }) &&
+    value.to_string() == "175",
   )
   assert_true(
-    tokens[3] is Integer({ kind: ILitOct, value }) && value.to_string() == "7",
+    tokens[3] is Integer({ kind: ILitOct, value, }) && value.to_string() == "7",
   )
   assert_true(
-    tokens[4] is Integer({ kind: ILitBin, value }) && value.to_string() == "1",
+    tokens[4] is Integer({ kind: ILitBin, value, }) && value.to_string() == "1",
   )
   assert_true(
     tokens[5] is Integer({ value, .. }) && value.to_string().length() == 120,
@@ -213,7 +214,8 @@ test "numbers: integer bases, separators, long values, and range backjump" {
   assert_true(tokens[6] is Integer({ value, .. }) && value.to_string() == "123")
   assert_eq(tokens[7], Symbol(DotDot))
   assert_true(
-    tokens[8] is Integer({ kind: ILitHex, value }) && value.to_string() == "171",
+    tokens[8] is Integer({ kind: ILitHex, value, }) &&
+    value.to_string() == "171",
   )
   assert_eq(tokens[9], Symbol(DotDot))
 }
@@ -237,15 +239,15 @@ test "numbers: decimal and hexadecimal real forms and underscore splitting" {
   assert_eq(tokens[11], Symbol(Dot))
   assert_eq(tokens[12], Lident(b"p0"))
   assert_eq(lex_kinds(b"0x 0o 0b 1e 0x.p"), [
-    Integer({ kind: ILitDec, value: BigInt::from_int(0) }),
+    Integer({ kind: ILitDec, value: BigInt::from_int(0), }),
     Lident(b"x"),
-    Integer({ kind: ILitDec, value: BigInt::from_int(0) }),
+    Integer({ kind: ILitDec, value: BigInt::from_int(0), }),
     Lident(b"o"),
-    Integer({ kind: ILitDec, value: BigInt::from_int(0) }),
+    Integer({ kind: ILitDec, value: BigInt::from_int(0), }),
     Lident(b"b"),
-    Integer({ kind: ILitDec, value: BigInt::from_int(1) }),
+    Integer({ kind: ILitDec, value: BigInt::from_int(1), }),
     Lident(b"e"),
-    Integer({ kind: ILitDec, value: BigInt::from_int(0) }),
+    Integer({ kind: ILitDec, value: BigInt::from_int(0), }),
     Lident(b"x"),
     Symbol(Dot),
     Lident(b"p"),
@@ -596,7 +598,7 @@ test "errors: lazy cache defers sentinels and never scans beyond a terminal item
   assert_true(complete.ensure(20) is Token({ kind: Eof, .. }))
   assert_eq(complete.scan_count, 3)
   assert_true(
-    complete.ensure(21) is Token({ kind: Eof, span, actual }) &&
+    complete.ensure(21) is Token({ kind: Eof, span, actual, }) &&
     span.is_empty() &&
     actual == "end of input",
   )

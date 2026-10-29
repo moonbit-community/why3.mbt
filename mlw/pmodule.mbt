@@ -249,7 +249,7 @@ pub fn Pmodule::trusted_new(
       Umeta(meta) => meta.validate_context(anchor, None)
     }
   }
-  { anchor, key, pure_theory, items: copied, export_namespace }
+  { anchor, key, pure_theory, items: copied, export_namespace, }
 }
 
 ///|

@@ -32,7 +32,7 @@ fn[A] fail_mlw(
   span : @identity.SourceSpan?,
   message : String,
 ) -> A raise MlwError {
-  raise MlwError({ kind, span, message })
+  raise MlwError({ kind, span, message, })
 }
 
 ///|

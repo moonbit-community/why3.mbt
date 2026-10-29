@@ -217,7 +217,7 @@ test "apply_return rewrites only canonical synthesized ensures branches" {
   let mismatched = {
     ..canonical,
     postconditions: [
-      { ..original_post, span: Span::empty(original_post.span.start) },
+      { ..original_post, span: Span::empty(original_post.span.start), },
     ],
   }
   assert_eq(apply_return(explicit, mismatched), mismatched)
@@ -296,7 +296,7 @@ test "expression postfix operators preserve every mixfix spelling and suffix" {
   let (get_name, get_arguments) = expr_test_direct_call(get)
   assert_eq(get_name, b"mixfix []''")
   assert_eq(get_arguments.length(), 2)
-  let cases : Array[(Bytes, Bytes, Int)] = [
+  let cases : Array[(Bytes, Bytes, Int32)] = [
     (b"a[i <- v]", b"mixfix [<-]", 3),
     (b"a[i..j]", b"mixfix [..]", 3),
     (b"a[i..]", b"mixfix [_..]", 2),
@@ -377,7 +377,7 @@ test "tuples, right-associated sequences, and the two contract wrappers differ" 
   assert_eq(expr_test_ident_name(block_body), b"x")
   let empty_block = parse_expr_entry(b"begin ensures {p} end")
   guard empty_block.desc
-    is Efun([], _, _, _, _, { desc: Etuple([]), span: unit_span }) else {
+    is Efun([], _, _, _, _, { desc: Etuple([]), span: unit_span, }) else {
     fail("expected empty contract block body")
   }
   assert_eq(unit_span, empty_block.span)
@@ -393,7 +393,7 @@ test "ordinary and parallel assignments lower all valid lvalue shapes" {
         {
           target: { desc: Easref(Qident({ name: b"x", .. })), .. },
           field: None,
-          ..,
+          ..
         },
       ]
     ),
@@ -406,7 +406,7 @@ test "ordinary and parallel assignments lower all valid lvalue shapes" {
         {
           target: { desc: Eident(Qident({ name: b"x", .. })), .. },
           field: Some(Qident({ name: b"f", .. })),
-          ..,
+          ..
         },
       ]
     ),
@@ -504,7 +504,7 @@ test "local named, ref, recursive, anonymous, and val forms retain exact nodes" 
           { postconditions: [_], .. },
           { desc: Eoptexn(return_ident, MaskGhost, _), .. }
         ),
-        ..,
+        ..
       },
       _
     ) else {
@@ -599,7 +599,7 @@ test "any applies explicit returns, appends witnesses, and rejects restricted cl
     assert_true(expr_test_error(source).kind is RestrictedAnySpec)
   }
   let defensive = try
-    restricted_any_spec({ ..Spec::empty(), partial: true }, expression.span)
+    restricted_any_spec({ ..Spec::empty(), partial: true, }, expression.span)
   catch {
     ParseError(diagnostic) => diagnostic
   } noraise {
@@ -627,7 +627,7 @@ test "match, try, and local exceptions keep regular and exception branches separ
     exception_only.desc
     is Ematch(
       _,
-      [{ pattern: { desc: Pwild, .. }, body: { desc: Eabsurd, .. } }],
+      [{ pattern: { desc: Pwild, .. }, body: { desc: Eabsurd, .. }, }],
       [_]
     ),
   )
@@ -654,11 +654,11 @@ test "while and counted for inject break/continue optional exceptions" {
       {
         desc: Ewhile(
           _,
-          { terms: [invariant] },
-          { items: [_] },
+          { terms: [invariant], },
+          { items: [_], },
           { desc: Eoptexn(continue_ident, MaskVisible, _), .. }
         ),
-        ..,
+        ..
       }
     ) else {
     fail("expected wrapped while")
@@ -681,7 +681,7 @@ test "while and counted for inject break/continue optional exceptions" {
           _,
           { desc: Eoptexn(_, _, { desc: Etuple([]), .. }), .. }
         ),
-        ..,
+        ..
       }
     ),
   )
@@ -700,7 +700,7 @@ test "while and counted for inject break/continue optional exceptions" {
   let ascending = parse_expr_entry(b"for i = lo to hi do invariant {p} x done")
   assert_true(
     ascending.desc
-    is Eoptexn(_, _, { desc: Efor(_, _, To, _, { terms: [_] }, _), .. }),
+    is Eoptexn(_, _, { desc: Efor(_, _, To, _, { terms: [_], }, _), .. }),
   )
   let descending = parse_expr_entry(b"for i = hi downto lo do done")
   assert_true(
@@ -735,7 +735,7 @@ test "iterator for expands create, next, Done, loop annotations, and default ite
             },
           ]
         ),
-        ..,
+        ..
       }
     ) else {
     fail("expected iterator-for expansion")
@@ -814,7 +814,7 @@ test "expression function literals keep full proxy trees for mappings and sequen
 ///|
 fn parse_spec_entry(
   input : BytesView,
-  filename? : BytesView = b"<spec-test>",
+  filename~ : BytesView = b"<spec-test>",
 ) -> Spec raise ParseError {
   let parser = Parser::new(input, filename~)
   finish_internal_entry(parser, parser => parser.parse_spec())
@@ -823,7 +823,7 @@ fn parse_spec_entry(
 ///|
 fn parse_return_named_entry(
   input : BytesView,
-  filename? : BytesView = b"<return-test>",
+  filename~ : BytesView = b"<return-test>",
 ) -> (Pattern, Pty, Mask) raise ParseError {
   let parser = Parser::new(input, filename~)
   finish_internal_entry(parser, parser => {

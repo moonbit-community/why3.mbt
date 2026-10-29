@@ -314,11 +314,11 @@ fn Parser::parse_expr_arg_atom(self : Parser) -> ExprArgResult raise {
     }
     Keyword(True) => {
       ignore(self.advance())
-      { expression: make_expr(Etrue, token.span), dot_eligible: false }
+      { expression: make_expr(Etrue, token.span), dot_eligible: false, }
     }
     Keyword(False) => {
       ignore(self.advance())
-      { expression: make_expr(Efalse, token.span), dot_eligible: false }
+      { expression: make_expr(Efalse, token.span), dot_eligible: false, }
     }
     OpPref(_) => {
       let operator = self.parse_oppref()
@@ -340,18 +340,18 @@ fn Parser::parse_expr_arg_atom(self : Parser) -> ExprArgResult raise {
       }
     }
     Symbol(LeftSqBar) =>
-      { expression: self.parse_expr_fun_literal(), dot_eligible: false }
+      { expression: self.parse_expr_fun_literal(), dot_eligible: false, }
     Keyword(Pure) =>
-      { expression: self.parse_pure_term_expr(), dot_eligible: true }
+      { expression: self.parse_pure_term_expr(), dot_eligible: true, }
     Keyword(Begin) =>
-      { expression: self.parse_expr_block(), dot_eligible: true }
+      { expression: self.parse_expr_block(), dot_eligible: true, }
     Symbol(LeftBrc) => {
       let expression = parse_alternative(
         self,
         parser => parser.parse_expr_block(),
         parser => parser.parse_expr_pure_symbol(),
       )
-      { expression, dot_eligible: true }
+      { expression, dot_eligible: true, }
     }
     Symbol(LeftPar) => {
       let (expression, dot_eligible) = parse_alternative(
@@ -359,7 +359,7 @@ fn Parser::parse_expr_arg_atom(self : Parser) -> ExprArgResult raise {
         parser => parser.parse_expr_qualid(),
         parser => (parser.parse_expr_block(), true),
       )
-      { expression, dot_eligible }
+      { expression, dot_eligible, }
     }
     Uident(_) | CoreUident(_) => {
       let (expression, dot_eligible) = parse_alternative(
@@ -373,11 +373,11 @@ fn Parser::parse_expr_arg_atom(self : Parser) -> ExprArgResult raise {
           )
         },
       )
-      { expression, dot_eligible }
+      { expression, dot_eligible, }
     }
     _ => {
       let (expression, dot_eligible) = self.parse_expr_qualid()
-      { expression, dot_eligible }
+      { expression, dot_eligible, }
     }
   }
 }
@@ -390,7 +390,7 @@ fn mixfix_expr_call(
   name : Bytes,
   arguments : Array[Expr],
 ) -> Expr {
-  let operator = Ident::{ name, attributes: [], span: opening_span }
+  let operator = Ident::{ name, attributes: [], span: opening_span, }
   make_expr(
     Eidapp(Qident(operator), [base] + arguments),
     base.span.join(closing_span),
@@ -515,7 +515,7 @@ fn Parser::parse_expr_application(self : Parser) -> (Expr, Bool) raise {
 fn break_expr_relation_chain(expression : Expr) -> Expr {
   match expression.desc {
     Einfix(left, operator, right) =>
-      { ..expression, desc: Einnfix(left, operator, right) }
+      { ..expression, desc: Einnfix(left, operator, right), }
     _ => expression
   }
 }
@@ -568,7 +568,7 @@ fn Parser::parse_single_expr_prefix(self : Parser) -> Expr raise {
 ///|
 fn Parser::parse_single_expr_bp(
   self : Parser,
-  minimum_binding : Int,
+  minimum_binding : Int32,
 ) -> Expr raise {
   let mut left = self.parse_single_expr_prefix()
   let mut last_nonassoc = -1
@@ -760,7 +760,7 @@ fn Parser::parse_constant_definition(self : Parser) -> Expr raise {
   ignore(self.expect_symbol(Equal))
   let body = self.parse_seq_expr()
   if return_type is Some(return_type) {
-    { ..body, desc: Ecast(body, return_type) }
+    { ..body, desc: Ecast(body, return_type), }
   } else {
     body
   }
@@ -884,7 +884,7 @@ fn Parser::parse_reference_let_expr(
   let name = self.parse_ref_binder()
   let value = self.parse_constant_definition()
   let reference = make_expr(Eref, reference_token.span)
-  let allocated = { ..value, desc: Eapply(reference, value) }
+  let allocated = { ..value, desc: Eapply(reference, value), }
   ignore(self.expect_keyword(In))
   Elet(
     name,
@@ -1030,7 +1030,7 @@ fn Parser::parse_reference_val_expr(
   let name = self.parse_ref_binder()
   let value = self.parse_constant_declaration()
   let reference = make_expr(Eref, reference_token.span)
-  let allocated = { ..value, desc: Eapply(reference, value) }
+  let allocated = { ..value, desc: Eapply(reference, value), }
   ignore(self.expect_keyword(In))
   Elet(
     name,
@@ -1089,7 +1089,7 @@ fn Parser::parse_val_expr(self : Parser) -> Expr raise {
 fn Parser::parse_regular_expr_branch(self : Parser) -> RegularBranch raise {
   let pattern = self.parse_pattern()
   ignore(self.expect_symbol(Arrow))
-  { pattern, body: self.parse_seq_expr() }
+  { pattern, body: self.parse_seq_expr(), }
 }
 
 ///|
@@ -1101,7 +1101,7 @@ fn Parser::parse_exception_expr_branch(self : Parser) -> ExceptionBranch raise {
     None
   }
   ignore(self.expect_symbol(Arrow))
-  { exception, pattern, body: self.parse_seq_expr() }
+  { exception, pattern, body: self.parse_seq_expr(), }
 }
 
 ///|
@@ -1179,7 +1179,7 @@ fn Parser::parse_local_exception(self : Parser) -> Expr raise {
 ///|
 fn Parser::parse_loop_annotation(self : Parser) -> (Invariant, Variant) raise {
   let terms : Array[Term] = []
-  let mut variant = Variant::{ items: [] }
+  let mut variant = Variant::{ items: [], }
   while self.at_keyword(Invariant) || self.at_keyword(Variant) {
     if self.at_keyword(Invariant) {
       terms.push(self.parse_loop_invariant())
@@ -1264,7 +1264,7 @@ fn Parser::parse_iterator_for_head(self : Parser) -> ForHead raise {
 ///|
 fn Parser::parse_counted_for_tail(
   self : Parser,
-  mark : Int,
+  mark : Int32,
   ident : Ident,
 ) -> Expr raise {
   let from = self.parse_seq_expr()
@@ -1299,7 +1299,7 @@ fn Parser::parse_counted_for_tail(
       from,
       direction,
       to,
-      { terms: invariant_terms },
+      { terms: invariant_terms, },
       optional_exception(continue_ident, MaskVisible, body),
     ),
     span,
@@ -1309,13 +1309,13 @@ fn Parser::parse_counted_for_tail(
 
 ///|
 fn iterator_qualid(path : QualId, name : Bytes) -> QualId {
-  Qdot(path, { name, attributes: [], span: path.full_span() })
+  Qdot(path, { name, attributes: [], span: path.full_span(), })
 }
 
 ///|
 fn Parser::parse_iterator_for_tail(
   self : Parser,
-  mark : Int,
+  mark : Int32,
   pattern : Pattern,
 ) -> Expr raise {
   let collection = self.parse_seq_expr()
@@ -1324,7 +1324,7 @@ fn Parser::parse_iterator_for_tail(
   let iterator = if self.consume_keyword(As) is Some(_) {
     self.parse_lident(false, true)
   } else {
-    { name: b"it", attributes: [], span: self.empty_span_at_cursor() }
+    { name: b"it", attributes: [], span: self.empty_span_at_cursor(), }
   }
   let do_token = self.expect_keyword(Do)
   let (invariant, variant) = self.parse_loop_annotation()
@@ -1467,7 +1467,7 @@ fn Parser::parse_return_expr(self : Parser) -> Expr raise {
   } else {
     None
   }
-  let ident = Ident::{ name: return_label, attributes: [], span: token.span }
+  let ident = Ident::{ name: return_label, attributes: [], span: token.span, }
   make_expr(Eraise(Qident(ident), value), self.span_from(mark))
 }
 
@@ -1482,7 +1482,7 @@ fn Parser::parse_loop_jump_expr(
   let ident = if starts_uident_kind(self.peek_kind_n(0)) {
     append_control_suffix(self.parse_uident(false), suffix)
   } else {
-    { name: suffix, attributes: [], span: token.span }
+    { name: suffix, attributes: [], span: token.span, }
   }
   make_expr(Eraise(Qident(ident), None), self.span_from(mark))
 }
@@ -1543,7 +1543,7 @@ fn Parser::parse_label_expr(self : Parser) -> Expr raise {
     let label = parse_attrs_ident(self, parser => parser.parse_uident(false))
     ignore(self.expect_keyword(In))
     let body = self.parse_seq_expr()
-    { ..label_over_loop(label, body), span: self.span_from(mark) }
+    { ..label_over_loop(label, body), span: self.span_from(mark), }
   } catch {
     error => {
       self.leave_nesting()
@@ -1617,7 +1617,7 @@ fn Parser::parse_control_expr(self : Parser) -> Expr raise {
 ///|
 fn parse_expr_entry(
   input : BytesView,
-  filename? : BytesView = b"<expr-test>",
+  filename~ : BytesView = b"<expr-test>",
 ) -> Expr raise ParseError {
   let parser = Parser::new(input, filename~)
   finish_internal_entry(parser, parser => parser.parse_seq_expr())

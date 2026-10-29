@@ -97,7 +97,7 @@ pub fn Theory::append_declarations(
     )
     items.push(TheoryDecl(declaration))
   }
-  { ..self, items, export_namespace, known }
+  { ..self, items, export_namespace, known, }
 }
 
 ///|

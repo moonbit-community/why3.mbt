@@ -26,7 +26,7 @@ test "literal: integer kinds and bases" {
     make_int_constant(ILitDec, b"42", negative=true, span~).value,
     BigInt::from_int(-42),
   )
-  let unknown = IntConstant::{ kind: ILitUnk, value: BigInt::from_int(0) }
+  let unknown = IntConstant::{ kind: ILitUnk, value: BigInt::from_int(0), }
   assert_true(unknown.kind is ILitUnk)
 }
 
@@ -89,7 +89,7 @@ test "literal: zero and long significand normalization" {
   assert_eq(normalized.significand(), BigInt::from_int(1))
   assert_eq(normalized.pow2(), BigInt::from_int(100))
   assert_eq(normalized.pow5(), BigInt::from_int(100))
-  let unknown = RealConstant::{ kind: RLitUnk, value: zero }
+  let unknown = RealConstant::{ kind: RLitUnk, value: zero, }
   assert_true(unknown.kind is RLitUnk)
 }
 

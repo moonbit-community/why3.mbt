@@ -27,7 +27,7 @@ fn CheckedFile::new(
   environment : @stdlib.FrozenEnvironment,
   typed_units : Array[TypedUnitView],
 ) -> CheckedFile {
-  { context, environment, typed_units, raw_goal_entries: [], raw_goals: [] }
+  { context, environment, typed_units, raw_goal_entries: [], raw_goals: [], }
 }
 
 ///|

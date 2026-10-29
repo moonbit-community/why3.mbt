@@ -33,5 +33,5 @@ fn[A] fail_theory(
   span : @identity.SourceSpan?,
   message : String,
 ) -> A raise TheoryError {
-  raise TheoryError({ kind, span, message })
+  raise TheoryError({ kind, span, message, })
 }

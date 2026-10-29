@@ -33,14 +33,14 @@ struct DtyContext {
 pub fn DtyContext::new(
   semantic_context : @identity.CompilationContext,
 ) -> DtyContext {
-  { semantic_context, session: Ref(()), next_fresh_id: 0L }
+  { semantic_context, session: Ref(()), next_fresh_id: 0L, }
 }
 
 ///|
 pub fn DtyContext::fresh(self : DtyContext) -> Dty {
   let id = self.next_fresh_id
   self.next_fresh_id = id + 1L
-  { session: self.session, cell: Ref(Fresh(id)) }
+  { session: self.session, cell: Ref(Fresh(id)), }
 }
 
 ///|
@@ -71,7 +71,7 @@ pub fn DtyContext::known(
       "known type belongs to another compilation context",
     )
   }
-  { session: self.session, cell: Ref(Known(ty)) }
+  { session: self.session, cell: Ref(Known(ty)), }
 }
 
 ///|
@@ -162,7 +162,7 @@ fn semantic_ty_diagnostic_bytes(ty : @logic.Ty) -> Bytes {
 ///|
 fn application_actual_type(
   symbol : @logic.LSymbol,
-  supplied_arguments : Int,
+  supplied_arguments : Int32,
 ) -> Bytes {
   let output = @buffer.Buffer()
   let view = symbol.view()
@@ -220,7 +220,7 @@ pub fn DtyContext::arrow(
 ) -> Dty raise @logic.TypeError {
   self.require_member(parameter, span)
   self.require_member(result, span)
-  { session: self.session, cell: Ref(Arrow(parameter, result)) }
+  { session: self.session, cell: Ref(Arrow(parameter, result)), }
 }
 
 ///|
@@ -325,7 +325,7 @@ pub fn DtyContext::app(
       instantiate_delayed_alias(self, target, substitutions, span)
     }
     NoDef | Range(_, _) | Float(_, _) =>
-      { session: self.session, cell: Ref(App(symbol, copied)) }
+      { session: self.session, cell: Ref(App(symbol, copied)), }
   }
 }
 

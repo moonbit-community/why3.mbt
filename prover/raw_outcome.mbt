@@ -2,7 +2,7 @@
 
 ///|
 pub(all) enum ProcessExitStatus {
-  Exited(Int)
+  Exited(Int32)
   Signaled(Bytes)
 } derive(Eq, Debug)
 
@@ -26,12 +26,12 @@ pub fn RawProcessOutcome::new(
   stderr : BytesView,
   status : ProcessExitStatus,
 ) -> RawProcessOutcome {
-  { stdout: stdout.to_owned(), stderr: stderr.to_owned(), status }
+  { stdout: stdout.to_owned(), stderr: stderr.to_owned(), status, }
 }
 
 ///|
 pub fn RawProcessOutcome::view(
   self : RawProcessOutcome,
 ) -> RawProcessOutcomeView {
-  { stdout: self.stdout[:], stderr: self.stderr[:], status: self.status }
+  { stdout: self.stdout[:], stderr: self.stderr[:], status: self.status, }
 }

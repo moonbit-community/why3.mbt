@@ -27,6 +27,6 @@ description = ""
 
 import {
   "moonbitlang/async@0.20.2",
-  "moonbit-community/prettyprinter@0.4.10",
+  "moonbit-community/prettyprinter@0.4.11",
   "moonbitlang/x@0.4.46",
 }

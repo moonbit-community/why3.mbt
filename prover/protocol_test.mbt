@@ -2,11 +2,11 @@
 
 ///|
 test "prover limits freeze default, zero, maximum, and rejection" {
-  assert_eq(default_solver_seconds(), 10)
-  assert_eq(parent_deadline_seconds(0), None)
-  assert_eq(parent_deadline_seconds(10), Some(41))
-  assert_eq(parent_deadline_seconds(86400), Some(345601))
-  try validate_solver_seconds(86401) catch {
+  assert_eq(@prover.default_solver_seconds(), 10)
+  assert_eq(@prover.parent_deadline_seconds(0), None)
+  assert_eq(@prover.parent_deadline_seconds(10), Some(41))
+  assert_eq(@prover.parent_deadline_seconds(86400), Some(345601))
+  try @prover.validate_solver_seconds(86401) catch {
     ConfigError(diagnostic) => assert_eq(diagnostic.kind, InvalidTimeout)
   } noraise {
     _ => fail("expected timeout above maximum to fail")
@@ -15,7 +15,7 @@ test "prover limits freeze default, zero, maximum, and rejection" {
 
 ///|
 test "command spec is argv data and rejects NUL" {
-  let command = CommandSpec::new(
+  let command = @prover.CommandSpec::new(
     b"profile",
     StandardInput,
     b"z3",
@@ -29,7 +29,13 @@ test "command spec is argv data and rejects NUL" {
   assert_eq(view.stdout_limit_bytes, 2097152)
   assert_eq(view.stderr_limit_bytes, 2097152)
   try
-    CommandSpec::new(b"profile", StandardInput, b"z3", [b"bad\x00argument"], 10)
+    @prover.CommandSpec::new(
+      b"profile",
+      StandardInput,
+      b"z3",
+      [b"bad\x00argument"],
+      10,
+    )
   catch {
     ConfigError(diagnostic) => assert_eq(diagnostic.kind, InvalidCommand)
   } noraise {

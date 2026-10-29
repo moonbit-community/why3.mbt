@@ -223,7 +223,7 @@ test "parser state: committed first error stops before every unneeded tail byte"
 fn make_repeated_source(
   item : String,
   separator : String,
-  count : Int,
+  count : Int32,
 ) -> Bytes {
   let builder = StringBuilder(
     size_hint=(item.length() + separator.length()) * count,

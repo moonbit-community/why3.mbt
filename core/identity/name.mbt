@@ -9,7 +9,7 @@ struct SemanticAttributes {
 
 ///|
 pub fn SemanticAttributes::empty() -> SemanticAttributes {
-  { items: [] }
+  { items: [], }
 }
 
 ///|

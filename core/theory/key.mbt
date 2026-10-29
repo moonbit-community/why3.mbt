@@ -24,12 +24,12 @@ pub fn TheoryKey::new(
       "theory path segments and name must be non-empty",
     )
   }
-  { path: path.to_owned(), name: name.to_owned() }
+  { path: path.to_owned(), name: name.to_owned(), }
 }
 
 ///|
 pub fn TheoryKey::view(self : TheoryKey) -> TheoryKeyView {
-  { path: self.path[:], name: self.name }
+  { path: self.path[:], name: self.name, }
 }
 
 ///|
@@ -54,7 +54,7 @@ pub impl Hash for TheoryKey with fn hash_combine(self, hasher) {
 }
 
 ///|
-pub fn TheoryKey::lexical_compare(self : TheoryKey, other : TheoryKey) -> Int {
+pub fn TheoryKey::lexical_compare(self : TheoryKey, other : TheoryKey) -> Int32 {
   let shared = self.path.length().min(other.path.length())
   for index = 0; index < shared; index = index + 1 {
     let order = self.path[index].lexical_compare(other.path[index])

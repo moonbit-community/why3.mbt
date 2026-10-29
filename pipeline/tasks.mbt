@@ -32,7 +32,7 @@ pub fn tasks(checked : CheckedFile) -> CheckedFile raise {
     }
     for ordinal, task in @theory.split_theory(checked.context, theory, None) {
       let info = @z3.GoalInfo::new(kind, name, final_goal(task), ordinal)
-      entries.push({ task, info })
+      entries.push({ task, info, })
       raw.push(task)
     }
   }

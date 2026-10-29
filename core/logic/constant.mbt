@@ -39,7 +39,7 @@ pub(all) enum ConstantView {
 
 ///|
 pub fn Constant::integer(kind : IntegerLiteralKind, value : BigInt) -> Constant {
-  { node: IntegerNode(kind, value) }
+  { node: IntegerNode(kind, value), }
 }
 
 ///|
@@ -47,12 +47,12 @@ pub fn Constant::real(
   kind : RealLiteralKind,
   value : @parser.RealValue,
 ) -> Constant {
-  { node: RealNode(kind, value) }
+  { node: RealNode(kind, value), }
 }
 
 ///|
 pub fn Constant::string(value : BytesView) -> Constant {
-  { node: StringNode(value.to_owned()) }
+  { node: StringNode(value.to_owned()), }
 }
 
 ///|
@@ -116,8 +116,8 @@ fn absolute_bigint(value : BigInt) -> BigInt {
 /// Exact representability check corresponding to Why3's `compute_float`.
 fn real_fits_float(
   value : @parser.RealValue,
-  exponent_digits : Int,
-  significand_digits : Int,
+  exponent_digits : Int32,
+  significand_digits : Int32,
 ) -> Bool {
   let zero = BigInt::from_int(0)
   let one = BigInt::from_int(1)

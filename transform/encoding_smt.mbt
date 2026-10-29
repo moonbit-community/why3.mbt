@@ -155,7 +155,7 @@ pub fn encoding_keep_field_types(
   let kept : Array[@logic.Ty] = []
   for item in task.view().items {
     if item is TheoryMeta(meta) &&
-      meta.view() is { name: b"encoding:kept", arguments: [MetaType(ty)] } &&
+      meta.view() is { name: b"encoding:kept", arguments: [MetaType(ty)], } &&
       !kept.contains(ty) {
       kept.push(ty)
     }
@@ -253,7 +253,7 @@ fn kept_type_set(task : @theory.Task) -> Map[@logic.Ty, Unit] {
   let kept : Map[@logic.Ty, Unit] = Map([])
   for item in task.view().items {
     if item is TheoryMeta(meta) &&
-      meta.view() is { name: b"encoding:kept", arguments: [MetaType(ty)] } {
+      meta.view() is { name: b"encoding:kept", arguments: [MetaType(ty)], } {
       kept[ty] = ()
     }
   }
@@ -950,7 +950,7 @@ fn guard_type_representation(
         "cannot create a type representation",
       )
   }
-  { type_symbol: symbol, encoded }
+  { type_symbol: symbol, encoded, }
 }
 
 ///|
@@ -1896,7 +1896,7 @@ pub fn encoding_guards(
   for item in task.view().items {
     if item is TheoryMeta(meta) &&
       meta.view()
-      is { name: b"infinite_type", arguments: [MetaTypeSymbol(symbol)] } {
+      is { name: b"infinite_type", arguments: [MetaTypeSymbol(symbol)], } {
       infinite_types[symbol] = ()
     }
   }

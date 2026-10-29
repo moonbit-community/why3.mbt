@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
 
 ///|
-extern "C" fn exit_process(code : Int) -> Unit = "exit"
+extern "C" fn exit_process(code : Int32) -> Unit = "exit"
 
 ///|
 async fn fail_command(message : String) -> Unit {
@@ -32,7 +32,7 @@ async fn write_checkpoint_record(
   source : BytesView,
   unit_name : BytesView,
   goal_name : BytesView,
-  ordinal : Int,
+  ordinal : Int32,
   stage : BytesView,
   task : @theory.Task,
 ) -> Unit {
@@ -49,7 +49,7 @@ async fn write_smt_record(
   source : BytesView,
   unit_name : BytesView,
   goal_name : BytesView,
-  ordinal : Int,
+  ordinal : Int32,
   stream : @smtv2.NormalizedSmtTokens,
 ) -> Unit {
   write_record(
@@ -63,7 +63,7 @@ async fn write_smt_record(
 async fn write_smt_query(
   unit_name : BytesView,
   goal_name : BytesView,
-  ordinal : Int,
+  ordinal : Int32,
   query : @smtv2.SmtQuery,
 ) -> Unit {
   @stdio.stdout.write(
@@ -209,7 +209,7 @@ async fn write_diagnostic(diagnostic : @elab.ElabDiagnostic) -> Unit {
 }
 
 ///|
-fn transform_stage_rank(stage : String) -> Int {
+fn transform_stage_rank(stage : String) -> Int32 {
   match stage {
     "driver-update" => 0
     "counterexamples_dependent_intros" => 1

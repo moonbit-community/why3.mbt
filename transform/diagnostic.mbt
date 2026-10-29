@@ -26,7 +26,7 @@ fn[A] fail_transform(
   stage : @identity.GeneratedStage,
   message : String,
 ) -> A raise TransformError {
-  raise TransformError({ kind, stage, message })
+  raise TransformError({ kind, stage, message, })
 }
 
 ///|

@@ -6,7 +6,7 @@
 
 ///|
 fn make_term(desc : TermDesc, span : Span) -> Term {
-  { desc, span }
+  { desc, span, }
 }
 
 ///|
@@ -244,11 +244,11 @@ fn Parser::parse_term_arg_atom(self : Parser) -> TermArgResult raise {
     }
     Keyword(True) => {
       ignore(self.advance())
-      { term: make_term(Ttrue, token.span), dot_eligible: false }
+      { term: make_term(Ttrue, token.span), dot_eligible: false, }
     }
     Keyword(False) => {
       ignore(self.advance())
-      { term: make_term(Tfalse, token.span), dot_eligible: false }
+      { term: make_term(Tfalse, token.span), dot_eligible: false, }
     }
     OpPref(_) => {
       let operator = self.parse_oppref()
@@ -270,7 +270,7 @@ fn Parser::parse_term_arg_atom(self : Parser) -> TermArgResult raise {
       }
     }
     Symbol(LeftSqBar) =>
-      { term: self.parse_term_fun_literal(), dot_eligible: false }
+      { term: self.parse_term_fun_literal(), dot_eligible: false, }
     Symbol(LeftPar) => {
       let (term, dot_eligible) = parse_alternative(
         self,
@@ -279,10 +279,10 @@ fn Parser::parse_term_arg_atom(self : Parser) -> TermArgResult raise {
         parser => parser.parse_term_qualid(),
         parser => (parser.parse_term_block(), true),
       )
-      { term, dot_eligible }
+      { term, dot_eligible, }
     }
     Keyword(Begin) | Symbol(LeftBrc) =>
-      { term: self.parse_term_block(), dot_eligible: true }
+      { term: self.parse_term_block(), dot_eligible: true, }
     Uident(_) | CoreUident(_) => {
       let (term, dot_eligible) = parse_alternative(
         self,
@@ -290,11 +290,11 @@ fn Parser::parse_term_arg_atom(self : Parser) -> TermArgResult raise {
         parser => (parser.parse_scoped_term_block(), true),
         parser => parser.parse_term_qualid(),
       )
-      { term, dot_eligible }
+      { term, dot_eligible, }
     }
     _ => {
       let (term, dot_eligible) = self.parse_term_qualid()
-      { term, dot_eligible }
+      { term, dot_eligible, }
     }
   }
 }
@@ -307,7 +307,7 @@ fn mixfix_term_call(
   name : Bytes,
   arguments : Array[Term],
 ) -> Term {
-  let operator = Ident::{ name, attributes: [], span: opening_span }
+  let operator = Ident::{ name, attributes: [], span: opening_span, }
   make_term(
     Tidapp(Qident(operator), [base] + arguments),
     base.span.join(closing_span),
@@ -380,7 +380,7 @@ fn Parser::parse_term_arg_result(self : Parser) -> TermArgResult raise {
       continue
     }
     if self.at_symbol(LeftSq) {
-      result = { term: self.parse_term_index(result.term), dot_eligible: true }
+      result = { term: self.parse_term_index(result.term), dot_eligible: true, }
       continue
     }
     break
@@ -410,9 +410,9 @@ fn Parser::parse_term_application(self : Parser) -> (Term, Bool) raise {
 fn break_term_relation_chain(term : Term) -> Term {
   match term.desc {
     Tinfix(left, operator, right) =>
-      { ..term, desc: Tinnfix(left, operator, right) }
+      { ..term, desc: Tinnfix(left, operator, right), }
     Tbinop(left, operator, right) =>
-      { ..term, desc: Tbinnop(left, operator, right) }
+      { ..term, desc: Tbinnop(left, operator, right), }
     _ => term
   }
 }
@@ -689,7 +689,7 @@ fn Parser::parse_term_prefix(self : Parser) -> Term raise {
     if self.at_keyword(At) {
       self.fail_syntax("parentheses around an `old` term before `at`")
     }
-    let label = Ident::{ name: old_label, attributes: [], span: keyword.span }
+    let label = Ident::{ name: old_label, attributes: [], span: keyword.span, }
     return make_term(Tat(inner, label), self.span_from(mark))
   }
   if self.at_symbol(Minus) && self.peek_kind_n(1) is Some(Integer(_) | Real(_)) {
@@ -749,7 +749,7 @@ fn Parser::parse_term_logic_operator(self : Parser) -> BinaryLogicOp raise {
 ///|
 fn Parser::parse_single_term_bp(
   self : Parser,
-  minimum_binding : Int,
+  minimum_binding : Int32,
 ) -> Term raise {
   let mut left = self.parse_term_prefix()
   let mut last_nonassoc = -1
@@ -852,7 +852,7 @@ fn Parser::parse_term(self : Parser) -> Term raise {
 ///|
 fn parse_term_entry(
   input : BytesView,
-  filename? : BytesView = b"<term-test>",
+  filename~ : BytesView = b"<term-test>",
 ) -> Term raise ParseError {
   let parser = Parser::new(input, filename~)
   finish_internal_entry(parser, parser => parser.parse_term())
@@ -861,7 +861,7 @@ fn parse_term_entry(
 ///|
 fn parse_term_list_entry(
   input : BytesView,
-  filename? : BytesView = b"<term-list-test>",
+  filename~ : BytesView = b"<term-list-test>",
 ) -> Array[Term] raise ParseError {
   let parser = Parser::new(input, filename~)
   finish_internal_entry(parser, parser => {

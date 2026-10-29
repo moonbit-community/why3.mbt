@@ -358,7 +358,7 @@ pub fn Term::trusted_case(
     } else {
       ignore(require_same_result_type(result_type, body.result_type, span))
     }
-    result.push({ pattern, body })
+    result.push({ pattern, body, })
   }
   make_term(CaseTerm(scrutinee, result), result_type)
 }

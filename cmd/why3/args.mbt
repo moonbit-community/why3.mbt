@@ -21,24 +21,24 @@ struct CliOptions {
   file : String
   theory : Bytes?
   goal : Bytes?
-  goal_index : Int?
+  goal_index : Int32?
   output_directory : String?
   prover : String
   z3 : Bytes?
-  solver_seconds : Int
+  solver_seconds : Int32
   output_mode : CliOutputMode
 }
 
 ///|
 fn fail_cli(kind : CliErrorKind, message : String) -> Unit raise CliError {
-  raise CliError({ kind, message })
+  raise CliError({ kind, message, })
 }
 
 ///|
 fn parse_nonnegative_integer(
   text : StringView,
   option : String,
-) -> Int raise CliError {
+) -> Int32 raise CliError {
   let bytes = @utf8.encode(text)
   if bytes.is_empty() {
     fail_cli(InvalidArgument, option + " requires a decimal integer")
@@ -77,7 +77,7 @@ fn command_from_string(value : String) -> CliCommand raise CliError {
 ///|
 fn option_value(
   arguments : ArrayView[String],
-  index : Int,
+  index : Int32,
   option : String,
 ) -> String raise CliError {
   if index + 1 >= arguments.length() {
@@ -101,7 +101,7 @@ fn parse_arguments(arguments : ArrayView[String]) -> CliOptions raise CliError {
   }
   let mut theory : Bytes? = None
   let mut goal : Bytes? = None
-  let mut goal_index : Int? = None
+  let mut goal_index : Int32? = None
   let mut output_directory : String? = None
   let mut prover = "z3"
   let mut z3 : Bytes? = None

@@ -11,7 +11,7 @@ fn map_catalog_error(
     SymbolKindMismatch => @z3.SymbolKindMismatch
     CatalogContextMismatch => @z3.ContextMismatch
   }
-  @z3.BindError({ kind, path, message: diagnostic.message })
+  @z3.BindError({ kind, path, message: diagnostic.message, })
 }
 
 ///|

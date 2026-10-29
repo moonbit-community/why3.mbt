@@ -15,6 +15,9 @@ import {
 pub(all) suberror EnvironmentError {
   EnvironmentError(EnvironmentDiagnostic)
 } derive(Eq, @debug.Debug)
+pub fn EnvironmentError::equal(Self, Self) -> Bool
+pub fn EnvironmentError::not_equal(Self, Self) -> Bool
+pub fn EnvironmentError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
 type Environment
@@ -37,6 +40,9 @@ pub(all) struct EnvironmentDiagnostic {
   span : @identity.SourceSpan?
   message : String
 } derive(Eq, @debug.Debug)
+pub fn EnvironmentDiagnostic::equal(Self, Self) -> Bool
+pub fn EnvironmentDiagnostic::not_equal(Self, Self) -> Bool
+pub fn EnvironmentDiagnostic::to_repr(Self) -> @debug.Repr
 
 pub(all) enum EnvironmentErrorKind {
   DuplicateTheory
@@ -45,6 +51,9 @@ pub(all) enum EnvironmentErrorKind {
   ResolveError
   DriverOnlyTheory
 } derive(Eq, @debug.Debug)
+pub fn EnvironmentErrorKind::equal(Self, Self) -> Bool
+pub fn EnvironmentErrorKind::not_equal(Self, Self) -> Bool
+pub fn EnvironmentErrorKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct EnvironmentView {
   theory_keys : Array[@theory.TheoryKey]
@@ -56,4 +65,3 @@ pub(all) struct EnvironmentView {
 // Type aliases
 
 // Traits
-

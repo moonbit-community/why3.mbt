@@ -152,7 +152,7 @@ pub fn Term::add_attributes(self : Term, attributes : ArrayView[Bytes]) -> Term 
   for attribute in attributes {
     combined.push(attribute)
   }
-  { ..self, attributes: @identity.SemanticAttributes::from_array(combined) }
+  { ..self, attributes: @identity.SemanticAttributes::from_array(combined), }
 }
 
 ///|
@@ -208,5 +208,5 @@ pub fn Term::view(self : Term) -> TermView {
 
 ///|
 pub fn TermBranch::view(self : TermBranch) -> TermBranchView {
-  { pattern: self.pattern, body: self.body }
+  { pattern: self.pattern, body: self.body, }
 }

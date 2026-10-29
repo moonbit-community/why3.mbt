@@ -31,7 +31,7 @@ fn concrete_routines(
 }
 
 ///|
-fn count_kode(kode : @why3vc.Kode, counts : Array[Int]) -> Unit {
+fn count_kode(kode : @why3vc.Kode, counts : Array[Int32]) -> Unit {
   match kode.view() {
     Kseq(first, _, second) => {
       counts[0] = counts[0] + 1

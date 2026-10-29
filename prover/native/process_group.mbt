@@ -4,7 +4,7 @@
 extern "C" fn launch_process_group_from_environment() -> Unit = "why3mbt_launch_process_group_from_environment"
 
 ///|
-extern "C" fn kill_process_group(pid : Int) -> Unit = "why3mbt_kill_process_group"
+extern "C" fn kill_process_group(pid : Int32) -> Unit = "why3mbt_kill_process_group"
 
 ///|
 fn init {

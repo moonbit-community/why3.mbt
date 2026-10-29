@@ -24,6 +24,9 @@ pub fn elaborate_pure_unit(@identity.CompilationContext, @environment.Environmen
 pub(all) suberror ElabError {
   ElabError(ElabDiagnostic)
 } derive(Eq, @debug.Debug)
+pub fn ElabError::equal(Self, Self) -> Bool
+pub fn ElabError::not_equal(Self, Self) -> Bool
+pub fn ElabError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
 type Dty
@@ -48,6 +51,9 @@ pub(all) struct ElabDiagnostic {
   expected_type : Bytes?
   message : String
 } derive(Eq, @debug.Debug)
+pub fn ElabDiagnostic::equal(Self, Self) -> Bool
+pub fn ElabDiagnostic::not_equal(Self, Self) -> Bool
+pub fn ElabDiagnostic::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ElabErrorKind {
   Unsupported(UnsupportedFeature)
@@ -56,6 +62,9 @@ pub(all) enum ElabErrorKind {
   EnvironmentFailure(@environment.EnvironmentErrorKind)
   ProgramFailure(@mlw.MlwErrorKind)
 } derive(Eq, @debug.Debug)
+pub fn ElabErrorKind::equal(Self, Self) -> Bool
+pub fn ElabErrorKind::not_equal(Self, Self) -> Bool
+pub fn ElabErrorKind::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ElabStage {
   FeatureClassification
@@ -64,6 +73,9 @@ pub(all) enum ElabStage {
   ProgramTyping
   FileRegistration
 } derive(Eq, @debug.Debug)
+pub fn ElabStage::equal(Self, Self) -> Bool
+pub fn ElabStage::not_equal(Self, Self) -> Bool
+pub fn ElabStage::to_repr(Self) -> @debug.Repr
 
 type ElaboratedFile
 pub fn ElaboratedFile::units(Self) -> ArrayView[ElaboratedUnitView]
@@ -121,8 +133,10 @@ pub(all) enum UnsupportedFeature {
   TypeVisibilityShape
   UserMeta
 } derive(Eq, @debug.Debug)
+pub fn UnsupportedFeature::equal(Self, Self) -> Bool
+pub fn UnsupportedFeature::not_equal(Self, Self) -> Bool
+pub fn UnsupportedFeature::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 
 // Traits
-

@@ -11,7 +11,7 @@ pub fn SmtV26Query::new(
   anchor : @identity.SemanticId,
   preludes : ArrayView[Bytes],
 ) -> SmtV26Query {
-  { anchor, preludes: preludes.to_owned() }
+  { anchor, preludes: preludes.to_owned(), }
 }
 
 ///|
@@ -26,8 +26,8 @@ pub fn SmtV26Query::preludes(self : SmtV26Query) -> ArrayView[Bytes] {
 
 ///|
 pub(all) struct PrintedIdentifier {
-  start : Int
-  end : Int
+  start : Int32
+  end : Int32
   semantic_id : @identity.SemanticId
   origin : @identity.Origin
 }
@@ -56,7 +56,7 @@ priv struct QueryWriter {
 
 ///|
 fn QueryWriter::new() -> QueryWriter {
-  { buffer: Buffer(), identifiers: [] }
+  { buffer: Buffer(), identifiers: [], }
 }
 
 ///|
@@ -95,5 +95,5 @@ fn QueryWriter::finish(self : QueryWriter) -> SmtQuery {
     self.buffer.view()[self.buffer.length() - 1] != b'\n' {
     self.buffer.write_byte(b'\n')
   }
-  { bytes: self.buffer.to_bytes(), identifiers: self.identifiers }
+  { bytes: self.buffer.to_bytes(), identifiers: self.identifiers, }
 }

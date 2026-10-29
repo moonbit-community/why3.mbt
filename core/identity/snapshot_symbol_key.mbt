@@ -15,8 +15,8 @@ pub(all) enum SnapshotSymbolKind {
 /// alias names are intentionally absent.
 struct SnapshotSymbolKey {
   theory_key : Bytes
-  theory_item_ordinal : UInt
-  declaration_inner_ordinal : UInt
+  theory_item_ordinal : UInt32
+  declaration_inner_ordinal : UInt32
   symbol_kind : SnapshotSymbolKind
   symbol_digest : Bytes
 } derive(Eq, Debug)
@@ -25,8 +25,8 @@ struct SnapshotSymbolKey {
 /// Read-only projection used by snapshot loaders and canonical encoders.
 pub(all) struct SnapshotSymbolKeyView {
   theory_key : Bytes
-  theory_item_ordinal : UInt
-  declaration_inner_ordinal : UInt
+  theory_item_ordinal : UInt32
+  declaration_inner_ordinal : UInt32
   symbol_kind : SnapshotSymbolKind
   symbol_digest : Bytes
 } derive(Eq, Debug)
@@ -34,8 +34,8 @@ pub(all) struct SnapshotSymbolKeyView {
 ///|
 pub fn SnapshotSymbolKey::new(
   theory_key : BytesView,
-  theory_item_ordinal : UInt,
-  declaration_inner_ordinal : UInt,
+  theory_item_ordinal : UInt32,
+  declaration_inner_ordinal : UInt32,
   symbol_kind : SnapshotSymbolKind,
   symbol_digest : BytesView,
 ) -> SnapshotSymbolKey {
@@ -75,7 +75,7 @@ pub fn SnapshotSymbolKind::canonical_name(
 }
 
 ///|
-fn SnapshotSymbolKind::hash_tag(self : SnapshotSymbolKind) -> Int {
+fn SnapshotSymbolKind::hash_tag(self : SnapshotSymbolKind) -> Int32 {
   match self {
     Type => 0
     Logic => 1

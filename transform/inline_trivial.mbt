@@ -269,7 +269,7 @@ fn inline_forbidden_symbols(task : @theory.Task) -> Map[@logic.LSymbol, Unit] {
   for item in task.view().items {
     if item is TheoryMeta(meta) &&
       meta.view()
-      is { name: b"inline:no", arguments: [MetaLogicSymbol(symbol)] } {
+      is { name: b"inline:no", arguments: [MetaLogicSymbol(symbol)], } {
       result[symbol] = ()
     }
   }

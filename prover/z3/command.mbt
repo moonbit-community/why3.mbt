@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
 
 ///|
-fn decimal_bytes(value : Int) -> Bytes {
+fn decimal_bytes(value : Int32) -> Bytes {
   @utf8.encode(value.to_string())
 }
 
 ///|
-fn z3_time_argument(seconds : Int) -> Bytes {
+fn z3_time_argument(seconds : Int32) -> Bytes {
   let buffer = @buffer.Buffer(size_hint=12)
   buffer.write_bytes(b"-T:")
   buffer.write_bytes(decimal_bytes(seconds))
@@ -16,8 +16,8 @@ fn z3_time_argument(seconds : Int) -> Bytes {
 ///|
 fn command_spec_from_template(
   template : Z3CommandTemplate,
-  solver_seconds? : Int = @prover.default_solver_seconds(),
-  executable_request? : BytesView? = None,
+  solver_seconds~ : Int32 = @prover.default_solver_seconds(),
+  executable_request~ : BytesView? = None,
 ) -> @prover.CommandSpec raise @prover.ConfigError {
   let seconds = @prover.validate_solver_seconds(solver_seconds)
   let template = template.view()
@@ -42,8 +42,8 @@ fn command_spec_from_template(
 ///|
 pub fn Z3StaticSpec::command_spec(
   self : Z3StaticSpec,
-  solver_seconds? : Int = @prover.default_solver_seconds(),
-  executable_request? : BytesView? = None,
+  solver_seconds~ : Int32 = @prover.default_solver_seconds(),
+  executable_request~ : BytesView? = None,
 ) -> @prover.CommandSpec raise @prover.ConfigError {
   command_spec_from_template(
     self.view().command,
@@ -55,8 +55,8 @@ pub fn Z3StaticSpec::command_spec(
 ///|
 pub fn Z3Profile::command_spec(
   self : Z3Profile,
-  solver_seconds? : Int = @prover.default_solver_seconds(),
-  executable_request? : BytesView? = None,
+  solver_seconds~ : Int32 = @prover.default_solver_seconds(),
+  executable_request~ : BytesView? = None,
 ) -> @prover.CommandSpec raise @prover.ConfigError {
   command_spec_from_template(
     self.command(),

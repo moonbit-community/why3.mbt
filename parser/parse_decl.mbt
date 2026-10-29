@@ -167,7 +167,7 @@ fn Parser::parse_algebraic_case(self : Parser) -> AlgebraicCase raise {
   let mark = self.mark()
   let ident = parse_attrs_ident(self, parser => parser.parse_uident(true))
   let params = self.parse_params(false)
-  { span: self.span_from(mark), ident, params }
+  { span: self.span_from(mark), ident, params, }
 }
 
 ///|
@@ -259,7 +259,7 @@ fn Parser::parse_type_decl(self : Parser) -> TypeDecl raise {
     params,
     visibility,
     mutable,
-    invariant: { terms: invariants },
+    invariant: { terms: invariants, },
     witness,
     definition,
   }
@@ -306,7 +306,7 @@ fn Parser::parse_logic_decl(
     self.fail_syntax("return type")
   }
   let definition = self.parse_optional_term_definition()
-  { span: self.span_from(mark), ident, params, return_type, definition }
+  { span: self.span_from(mark), ident, params, return_type, definition, }
 }
 
 ///|
@@ -325,7 +325,7 @@ fn Parser::parse_logic_declaration(
       let with_mark = self.mark()
       ignore(self.advance())
       let declaration = self.parse_logic_decl(true, false, true)
-      declarations.push({ ..declaration, span: self.span_from(with_mark) })
+      declarations.push({ ..declaration, span: self.span_from(with_mark), })
     }
   }
   Dlogic(declarations)
@@ -337,7 +337,7 @@ fn Parser::parse_inductive_case(self : Parser) -> InductiveCase raise {
   let ident = parse_attrs_ident(self, parser => parser.parse_ident_nq())
   ignore(self.expect_symbol(Colon))
   let body = self.parse_term()
-  { span: self.span_from(mark), ident, body }
+  { span: self.span_from(mark), ident, body, }
 }
 
 ///|
@@ -355,7 +355,7 @@ fn Parser::parse_inductive_decl(self : Parser) -> InductiveDecl raise {
   } else {
     []
   }
-  { span: self.span_from(mark), ident, params, cases }
+  { span: self.span_from(mark), ident, params, cases, }
 }
 
 ///|
@@ -384,7 +384,7 @@ fn Parser::parse_proposition_declaration(
   ignore(self.advance())
   let ident = parse_attrs_ident(self, parser => parser.parse_ident_nq())
   let ident = if kind is Paxiom {
-    { ..ident, attributes: [Text(user_axiom_attribute)] + ident.attributes }
+    { ..ident, attributes: [Text(user_axiom_attribute)] + ident.attributes, }
   } else {
     ident
   }
@@ -432,7 +432,7 @@ fn Parser::parse_prog_val_decl(self : Parser) -> Decl raise {
     let name = self.parse_ref_binder()
     let value = self.parse_constant_declaration()
     let reference = make_expr(Eref, reference_token.span)
-    let allocated = { ..value, desc: Eapply(reference, value) }
+    let allocated = { ..value, desc: Eapply(reference, value), }
     return Dlet(
       name,
       partiality.is_ghost(),
@@ -480,7 +480,7 @@ fn Parser::parse_prog_let_decl(self : Parser) -> Decl raise {
     let name = self.parse_ref_binder()
     let value = self.parse_constant_definition()
     let reference = make_expr(Eref, reference_token.span)
-    let allocated = { ..value, desc: Eapply(reference, value) }
+    let allocated = { ..value, desc: Eapply(reference, value), }
     return Dlet(
       name,
       partiality.is_ghost(),
@@ -768,7 +768,7 @@ fn Parser::parse_decl(self : Parser) -> Decl raise {
 ///|
 fn parse_decl_entry(
   input : BytesView,
-  filename? : BytesView = b"<decl-test>",
+  filename~ : BytesView = b"<decl-test>",
 ) -> Decl raise ParseError {
   let parser = Parser::new(input, filename~)
   finish_internal_entry(parser, parser => parser.parse_decl())

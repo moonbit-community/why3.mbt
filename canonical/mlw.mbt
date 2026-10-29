@@ -260,7 +260,7 @@ fn canonical_routine_symbol(
 fn bound_program_variable_index(
   bound : ArrayView[@mlw.PVariable],
   variable : @mlw.PVariable,
-) -> UInt? {
+) -> UInt32? {
   for index = bound.length() - 1; index >= 0; index = index - 1 {
     if bound[index] == variable {
       return Some((bound.length() - 1 - index).reinterpret_as_uint())

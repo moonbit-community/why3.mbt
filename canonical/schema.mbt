@@ -2,7 +2,7 @@
 
 ///|
 /// The frozen portable canonical semantic schema version.
-pub fn canonical_schema_version() -> Int {
+pub fn canonical_schema_version() -> Int32 {
   2
 }
 
@@ -34,7 +34,7 @@ priv enum CanonicalValue {
   Hex(Bytes)
   Boolean(Bool)
   Signed(Int64)
-  Unsigned(UInt)
+  Unsigned(UInt32)
   Decimal(BigInt)
   Array(Array[CanonicalValue])
 }
@@ -71,13 +71,13 @@ fn write_json_string(buffer : @buffer.Buffer, text : BytesView) -> Unit {
       b'\n' => buffer.write_bytes(b"\\n")
       b'\r' => buffer.write_bytes(b"\\r")
       b'\t' => buffer.write_bytes(b"\\t")
-      b'\x00'..=b'\x1f' => {
+      b'\x00'..<=b'\x1f' => {
         let value = byte.to_int()
         buffer.write_bytes(b"\\u00")
         buffer.write_byte(lowercase_hex_digits[value >> 4])
         buffer.write_byte(lowercase_hex_digits[value & 0x0f])
       }
-      b'\x20'..=b'\x7e' => buffer.write_byte(byte)
+      b'\x20'..<=b'\x7e' => buffer.write_byte(byte)
       b'\x7f' => buffer.write_bytes(b"\\u007f")
       _ =>
         abort(
@@ -149,7 +149,7 @@ fn encode_canonical_value(value : CanonicalValue) -> CanonicalJson {
   let buffer = @buffer.Buffer()
   value.write_json(buffer)
   buffer.write_byte(b'\n')
-  { encoded: buffer.to_bytes() }
+  { encoded: buffer.to_bytes(), }
 }
 
 ///|

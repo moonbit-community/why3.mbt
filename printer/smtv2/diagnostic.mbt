@@ -32,5 +32,5 @@ fn[A] fail_printer(
   kind : PrinterErrorKind,
   message : String,
 ) -> A raise PrinterError {
-  raise PrinterError({ kind, message })
+  raise PrinterError({ kind, message, })
 }

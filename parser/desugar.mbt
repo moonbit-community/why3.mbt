@@ -6,17 +6,17 @@
 
 ///|
 fn make_expr(desc : ExprDesc, span : Span) -> Expr {
-  { desc, span }
+  { desc, span, }
 }
 
 ///|
 fn anonymous_ident(span : Span) -> Ident {
-  { name: b"_", attributes: [], span }
+  { name: b"_", attributes: [], span, }
 }
 
 ///|
 fn term_with_cast(term : Term, ty : Pty) -> Term {
-  { desc: Tcast(term, ty), span: term.span }
+  { desc: Tcast(term, ty), span: term.span, }
 }
 
 ///|
@@ -39,7 +39,7 @@ fn unfold_term_pattern_let(
         unfold(
           original,
           term_with_cast(value, PTtuple([])),
-          { ..current, desc: Pwild },
+          { ..current, desc: Pwild, },
           body,
         )
       Pvar(ident) => Tlet(ident, value, body)
@@ -52,9 +52,9 @@ fn unfold_term_pattern_let(
 }
 
 ///|
-fn decimal_index_term(index : Int, span : Span) -> Term {
+fn decimal_index_term(index : Int32, span : Span) -> Term {
   {
-    desc: Tconst(ConstInt({ kind: ILitDec, value: BigInt::from_int(index) })),
+    desc: Tconst(ConstInt({ kind: ILitDec, value: BigInt::from_int(index), })),
     span,
   }
 }
@@ -70,8 +70,12 @@ fn indexed_term_values(values : Array[Term]) -> Array[(Term, Term)] {
 
 ///|
 fn function_literal_condition(variable : Term, key : Term) -> Term {
-  let equality = Ident::{ name: op_infix(b"="), attributes: [], span: key.span }
-  { desc: Tinfix(variable, equality, key), span: key.span }
+  let equality = Ident::{
+    name: op_infix(b"="),
+    attributes: [],
+    span: key.span,
+  }
+  { desc: Tinfix(variable, equality, key), span: key.span, }
 }
 
 ///|
@@ -122,8 +126,8 @@ fn desugar_term_function_literal(
   default : Term?,
 ) -> Term {
   let name = if mappings.is_empty() { b"_" } else { b"x'x" }
-  let ident = Ident::{ name, attributes: [], span: opening_span }
-  let variable = Term::{ desc: Tident(Qident(ident)), span: opening_span }
+  let ident = Ident::{ name, attributes: [], span: opening_span, }
+  let variable = Term::{ desc: Tident(Qident(ident)), span: opening_span, }
   let body = reduce_term_function_literal(variable, mappings, default)
   let binder = make_binder(opening_span, Some(ident), false, None)
   let full_span = opening_span.join(closing_span)
@@ -131,7 +135,7 @@ fn desugar_term_function_literal(
     desc: Tquant(DTlambda, [binder], [], body),
     span: full_span,
   }
-  { desc: Tattr(Text(function_literal_attribute), lambda), span: full_span }
+  { desc: Tattr(Text(function_literal_attribute), lambda), span: full_span, }
 }
 
 ///|
@@ -149,7 +153,7 @@ fn Partiality::is_ghost(self : Partiality) -> Bool {
 ///|
 fn apply_partial_spec(partiality : Partiality, spec : Spec) -> Spec {
   if partiality is PartialModifier {
-    { ..spec, partial: true }
+    { ..spec, partial: true, }
   } else {
     spec
   }
@@ -190,7 +194,7 @@ fn apply_partial_expr(
 
 ///|
 fn expr_with_cast(expression : Expr, ty : Pty) -> Expr {
-  { desc: Ecast(expression, ty), span: expression.span }
+  { desc: Ecast(expression, ty), span: expression.span, }
 }
 
 ///|
@@ -248,7 +252,7 @@ fn simplify_expr_pattern_let(
           original,
           kind,
           expr_with_cast(value, PTtuple([])),
-          { ..current, desc: Pwild },
+          { ..current, desc: Pwild, },
           body,
           ghost,
           kind_span,
@@ -257,7 +261,7 @@ fn simplify_expr_pattern_let(
       Pwild => Elet(anonymous_ident(current.span), ghost, kind, value, body)
       _ =>
         if kind is RKnone {
-          Ematch(value, [{ pattern: original, body }], [])
+          Ematch(value, [{ pattern: original, body, }], [])
         } else {
           fail_with_diagnostic(
             make_parse_diagnostic(IllegalKindQualifier, kind_span),
@@ -271,7 +275,7 @@ fn simplify_expr_pattern_let(
 
 ///|
 fn any_result_term(span : Span) -> Term {
-  let ident = Ident::{ name: b"result", attributes: [], span }
+  let ident = Ident::{ name: b"result", attributes: [], span, }
   make_term(Tident(Qident(ident)), span)
 }
 
@@ -297,7 +301,7 @@ fn any_postcondition_term(post : PostCondition) -> Term {
         unfold(
           branches,
           term_with_cast(value, PTtuple([])),
-          { ..pattern, desc: Pwild },
+          { ..pattern, desc: Pwild, },
           formula,
           span,
         )
@@ -375,10 +379,10 @@ fn assignment_item(
   }
   match target.desc {
     Eident(path) => {
-      let reference = { ..target, desc: Easref(path) }
-      { target: reference, field: None, value: right }
+      let reference = { ..target, desc: Easref(path), }
+      { target: reference, field: None, value: right, }
     }
-    Eidapp(path, [base]) => { target: base, field: Some(path), value: right }
+    Eidapp(path, [base]) => { target: base, field: Some(path), value: right, }
     Eidapp(Qident(ident), [_, _]) =>
       if notation_decode(ident.name) is SNget(_) {
         fail_with_diagnostic(
@@ -408,7 +412,7 @@ fn desugar_assignment(
         SNget(suffix) => suffix
         _ => abort("assignment_get_parts returned a non-getter")
       }
-      let set_ident = { ..ident, name: op_set(suffix) }
+      let set_ident = { ..ident, name: op_set(suffix), }
       return Eidapp(Qident(set_ident), [base, index, right])
     }
     None => ()
@@ -441,9 +445,9 @@ fn desugar_assignment(
 }
 
 ///|
-fn decimal_index_expr(index : Int, span : Span) -> Expr {
+fn decimal_index_expr(index : Int32, span : Span) -> Expr {
   make_expr(
-    Econst(ConstInt({ kind: ILitDec, value: BigInt::from_int(index) })),
+    Econst(ConstInt({ kind: ILitDec, value: BigInt::from_int(index), })),
     span,
   )
 }
@@ -459,7 +463,7 @@ fn indexed_expr_values(values : Array[Expr]) -> Array[(Expr, Expr)] {
 
 ///|
 fn proxy_expr(name : Bytes, span : Span) -> Expr {
-  let ident = Ident::{ name, attributes: [Text(proxy_attribute)], span }
+  let ident = Ident::{ name, attributes: [Text(proxy_attribute)], span, }
   make_expr(Eident(Qident(ident)), span)
 }
 
@@ -483,7 +487,11 @@ fn function_literal_expr_branch(
   otherwise : Expr,
 ) -> Expr {
   let (key, value) = mapping
-  let equality = Ident::{ name: op_infix(b"="), attributes: [], span: key.span }
+  let equality = Ident::{
+    name: op_infix(b"="),
+    attributes: [],
+    span: key.span,
+  }
   let condition = make_expr(Einfix(variable, equality, key), key.span)
   make_expr(Eif(condition, value, otherwise), key.span.join(otherwise.span))
 }
@@ -582,12 +590,12 @@ fn desugar_expr_function_literal(
 
 ///|
 fn optional_exception(ident : Ident, mask : Mask, expression : Expr) -> Expr {
-  { ..expression, desc: Eoptexn(ident, mask, expression) }
+  { ..expression, desc: Eoptexn(ident, mask, expression), }
 }
 
 ///|
 fn append_control_suffix(ident : Ident, suffix : Bytes) -> Ident {
-  { ..ident, name: ident.name + suffix }
+  { ..ident, name: ident.name + suffix, }
 }
 
 ///|

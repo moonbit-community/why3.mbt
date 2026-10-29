@@ -56,7 +56,7 @@ pub fn prepare_and_print_z3_task(@z3.Z3Profile, @identity.CompilationContext, @t
 
 pub fn prepare_for_counterexmp(@identity.CompilationContext, @theory.Task) -> @theory.Task raise @transform.TransformError
 
-pub fn prepare_proof(CheckedFile, solver_seconds? : Int, executable_request? : BytesView?) -> Array[@z3.PreparedCall] raise
+pub fn prepare_proof(CheckedFile, solver_seconds? : Int32, executable_request? : BytesView?) -> Array[@z3.PreparedCall] raise
 
 pub fn prepare_z3_task(@z3.Z3Profile, @identity.CompilationContext, @theory.Task) -> @theory.Task raise
 
@@ -86,4 +86,3 @@ pub(all) enum TypedUnitView {
 // Type aliases
 
 // Traits
-

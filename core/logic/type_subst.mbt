@@ -11,7 +11,7 @@ struct TySubstitution {
 
 ///|
 pub fn TySubstitution::new() -> TySubstitution {
-  { entries: Map([]), order: [] }
+  { entries: Map([]), order: [], }
 }
 
 ///|
@@ -49,7 +49,7 @@ pub fn TySubstitution::bind(
     order.push(variable)
   }
   entries[variable] = replacement
-  { entries, order }
+  { entries, order, }
 }
 
 ///|

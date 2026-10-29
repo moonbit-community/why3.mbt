@@ -11,7 +11,7 @@ priv struct PrinterState {
 
 ///|
 fn PrinterState::new(syntax : SyntaxMaps) -> PrinterState {
-  { writer: QueryWriter::new(), names: NameAllocator::new(), syntax }
+  { writer: QueryWriter::new(), names: NameAllocator::new(), syntax, }
 }
 
 ///|
@@ -56,8 +56,8 @@ fn print_variable_identifier(
 ///|
 fn parse_template_index(
   template : BytesView,
-  start : Int,
-) -> (Int, Int) raise PrinterError {
+  start : Int32,
+) -> (Int32, Int32) raise PrinterError {
   let mut index = start
   let mut value = 0
   while index < template.length() &&

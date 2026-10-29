@@ -99,29 +99,29 @@ pub(all) enum DeclView {
 
 ///|
 pub fn LogicDefinition::view(self : LogicDefinition) -> LogicDefinitionView {
-  { symbol: self.symbol, parameters: self.parameters[:], body: self.body }
+  { symbol: self.symbol, parameters: self.parameters[:], body: self.body, }
 }
 
 ///|
 pub fn DataConstructor::view(self : DataConstructor) -> DataConstructorView {
-  { symbol: self.symbol, projections: self.projections[:] }
+  { symbol: self.symbol, projections: self.projections[:], }
 }
 
 ///|
 pub fn DataDeclaration::view(self : DataDeclaration) -> DataDeclarationView {
-  { type_symbol: self.type_symbol, constructors: self.constructors[:] }
+  { type_symbol: self.type_symbol, constructors: self.constructors[:], }
 }
 
 ///|
 pub fn InductiveCase::view(self : InductiveCase) -> InductiveCaseView {
-  { proposition: self.proposition, formula: self.formula }
+  { proposition: self.proposition, formula: self.formula, }
 }
 
 ///|
 pub fn InductiveDeclaration::view(
   self : InductiveDeclaration,
 ) -> InductiveDeclarationView {
-  { predicate: self.predicate, cases: self.cases[:] }
+  { predicate: self.predicate, cases: self.cases[:], }
 }
 
 ///|
@@ -372,7 +372,7 @@ fn validate_logic_definition(
       "user logic definitions must be non-recursive",
     )
   }
-  { symbol, parameters: copied, body }
+  { symbol, parameters: copied, body, }
 }
 
 ///|
@@ -432,7 +432,7 @@ pub fn DataConstructor::trusted_new(
       }
     }
   }
-  { symbol, projections: copied }
+  { symbol, projections: copied, }
 }
 
 ///|
@@ -522,7 +522,7 @@ pub fn DataDeclaration::trusted_new(
       )
     }
   }
-  { type_symbol, constructors: copied }
+  { type_symbol, constructors: copied, }
 }
 
 ///|
@@ -605,7 +605,7 @@ pub fn InductiveCase::trusted_new(
       "inductive case contains an unbound value variable",
     )
   }
-  { proposition, formula }
+  { proposition, formula, }
 }
 
 ///|
@@ -659,7 +659,7 @@ pub fn InductiveDeclaration::trusted_new(
       }
     }
   }
-  { predicate, cases: copied }
+  { predicate, cases: copied, }
 }
 
 ///|
@@ -673,7 +673,7 @@ fn inductive_case_head(term : Term) -> Term? {
 }
 
 ///|
-fn inverse_polarity(polarity : Int) -> Int {
+fn inverse_polarity(polarity : Int32) -> Int32 {
   if polarity == 0 {
     0
   } else {
@@ -685,7 +685,7 @@ fn inverse_polarity(polarity : Int) -> Int {
 fn validate_inductive_polarity(
   term : Term,
   predicates : Map[LSymbol, Unit],
-  polarity : Int,
+  polarity : Int32,
   span : @identity.SourceSpan?,
 ) -> Unit raise TypeError {
   let neutral = fn(child) -> Unit raise TypeError {

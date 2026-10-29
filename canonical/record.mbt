@@ -134,7 +134,7 @@ pub fn encode_raw_task_record(
   fixture : BytesView,
   source : BytesView,
   unit_name : BytesView,
-  goal_ordinal : Int,
+  goal_ordinal : Int32,
   task : @theory.Task,
 ) -> Bytes {
   encode_task_checkpoint_record(
@@ -157,7 +157,7 @@ pub fn encode_task_checkpoint_record(
   source : BytesView,
   unit_name : BytesView,
   goal_name : BytesView,
-  goal_ordinal : Int,
+  goal_ordinal : Int32,
   stage : BytesView,
   task : @theory.Task,
 ) -> Bytes {

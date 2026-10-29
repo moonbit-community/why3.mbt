@@ -63,8 +63,8 @@ pub fn GeneratedStage::canonical_name(self : GeneratedStage) -> BytesView {
 /// byte offsets and logical line/column positions are stored separately.
 struct SourceSpan {
   relative_path : Bytes
-  start_byte : Int
-  end_byte : Int
+  start_byte : Int32
+  end_byte : Int32
   start_line : Int64
   start_column : Int64
   end_line : Int64
@@ -74,8 +74,8 @@ struct SourceSpan {
 ///|
 pub(all) struct SourceSpanView {
   relative_path : Bytes
-  start_byte : Int
-  end_byte : Int
+  start_byte : Int32
+  end_byte : Int32
   start_line : Int64
   start_column : Int64
   end_line : Int64
@@ -85,8 +85,8 @@ pub(all) struct SourceSpanView {
 ///|
 pub fn SourceSpan::new(
   relative_path : BytesView,
-  start_byte : Int,
-  end_byte : Int,
+  start_byte : Int32,
+  end_byte : Int32,
   start_line : Int64,
   start_column : Int64,
   end_line : Int64,
@@ -131,7 +131,7 @@ struct Origin {
 ///|
 /// Opaque origin classification.
 struct OriginKind {
-  tag : Int
+  tag : Int32
   generated_stage : GeneratedStage?
 } derive(Eq, Debug)
 
@@ -151,17 +151,17 @@ pub(all) enum OriginView {
 
 ///|
 fn user_origin_kind() -> OriginKind {
-  { tag: 0, generated_stage: None }
+  { tag: 0, generated_stage: None, }
 }
 
 ///|
 fn snapshot_origin_kind() -> OriginKind {
-  { tag: 1, generated_stage: None }
+  { tag: 1, generated_stage: None, }
 }
 
 ///|
 fn generated_origin_kind(stage : GeneratedStage) -> OriginKind {
-  { tag: 2, generated_stage: Some(stage) }
+  { tag: 2, generated_stage: Some(stage), }
 }
 
 ///|

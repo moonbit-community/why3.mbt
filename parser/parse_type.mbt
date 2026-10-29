@@ -148,7 +148,7 @@ fn set_reference(ident : Ident) -> Ident raise ParseError {
   if is_reference_ident(ident) {
     fail_binder_semantic(DoubleReference, ident.span)
   }
-  { ..ident, attributes: [Text(reference_attribute)] + ident.attributes }
+  { ..ident, attributes: [Text(reference_attribute)] + ident.attributes, }
 }
 
 ///|
@@ -202,16 +202,16 @@ priv struct BinderSlot {
 fn Parser::parse_binder_slot(self : Parser) -> BinderSlot raise {
   let mark = self.mark()
   if self.consume_symbol(Underscore) is Some(_) {
-    return { span: self.span_from(mark), ident: None }
+    return { span: self.span_from(mark), ident: None, }
   }
   if self.consume_symbol(Amp) is Some(_) {
     let ident = parse_attrs_ident(self, parser => {
       parser.parse_lident(true, false)
     })
-    return { span: self.span_from(mark), ident: Some(set_reference(ident)) }
+    return { span: self.span_from(mark), ident: Some(set_reference(ident)), }
   }
   let ident = parse_attrs_ident(self, parser => parser.parse_lident(true, false))
-  { span: self.span_from(mark), ident: Some(ident) }
+  { span: self.span_from(mark), ident: Some(ident), }
 }
 
 ///|
@@ -232,7 +232,7 @@ fn Parser::parse_binder_head_slots(self : Parser) -> Array[BinderSlot] raise {
   while starts_plain_lident_kind(self.peek_kind_n(0), true) {
     let mark = self.mark()
     let ident = binder_ident(self.parse_lident(false, true))
-    slots.push({ span: self.span_from(mark), ident: Some(ident) })
+    slots.push({ span: self.span_from(mark), ident: Some(ident), })
   }
   if !slots.is_empty() && starts_attribute(self) {
     let last_index = slots.length() - 1
@@ -298,7 +298,7 @@ fn type_as_binder(ty : Pty, span : Span, ghost : Bool) -> Array[Binder] raise {
 
 ///|
 fn type_as_param(ty : Pty, span : Span, ghost : Bool) -> Array[Param] {
-  [{ span, ident: None, ghost, param_type: ty }]
+  [{ span, ident: None, ghost, param_type: ty, }]
 }
 
 ///|
@@ -385,7 +385,7 @@ fn Parser::parse_binder_var_group(
   for slot in slots {
     let ident = apply_group_reference(slot, group_reference)
     if parameter {
-      params.push({ span: slot.span, ident, ghost, param_type: binder_type })
+      params.push({ span: slot.span, ident, ghost, param_type: binder_type, })
     } else {
       binders.push(make_binder(slot.span, ident, ghost, Some(binder_type)))
     }

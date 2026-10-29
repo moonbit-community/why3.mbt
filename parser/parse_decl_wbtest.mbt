@@ -1,5 +1,5 @@
 ///|
-fn declaration_test_span(offset : Int) -> Span {
+fn declaration_test_span(offset : Int32) -> Span {
   let at = SourcePos::{
     filename: b"decl.mlw",
     byte_offset: offset,
@@ -10,8 +10,8 @@ fn declaration_test_span(offset : Int) -> Span {
 }
 
 ///|
-fn declaration_test_ident(name : Bytes, offset : Int) -> Ident {
-  { name, attributes: [], span: declaration_test_span(offset) }
+fn declaration_test_ident(name : Bytes, offset : Int32) -> Ident {
+  { name, attributes: [], span: declaration_test_span(offset), }
 }
 
 ///|
@@ -60,7 +60,7 @@ test "AST declarations: exact numeric and arbitrary-byte payloads" {
     params: [],
     visibility: Public,
     mutable: false,
-    invariant: { terms: [] },
+    invariant: { terms: [], },
     witness: None,
     definition: TDrange(
       BigInt::from_string("-999999999999999999999999"),
@@ -91,29 +91,29 @@ test "AST file: complete nested tree derives Debug and Eq" {
   let x = declaration_test_ident(b"x", 1)
   let qx = Qident(x)
   let unit_type = PTtuple([])
-  let wildcard = Pattern::{ desc: Pwild, span }
+  let wildcard = Pattern::{ desc: Pwild, span, }
   let binder = Binder::{
     span,
     ident: Some(x),
     ghost: false,
     binder_type: Some(unit_type),
   }
-  let truth = Term::{ desc: Ttrue, span }
+  let truth = Term::{ desc: Ttrue, span, }
   let spec = Spec::{
     preconditions: [truth],
-    postconditions: [{ span, branches: [(wildcard, truth)] }],
+    postconditions: [{ span, branches: [(wildcard, truth)], }],
     exceptional_postconditions: [
-      { span, branches: [(qx, Some((wildcard, truth)))] },
+      { span, branches: [(qx, Some((wildcard, truth)))], },
     ],
     reads: [qx],
     writes: [truth],
     aliases: [(truth, truth)],
-    variant: { items: [(truth, Some(qx))] },
+    variant: { items: [(truth, Some(qx))], },
     check_reads_writes: true,
     diverges: true,
     partial: true,
   }
-  let body = Expr::{ desc: Econst(ConstStr(b"\xff")), span }
+  let body = Expr::{ desc: Econst(ConstStr(b"\xff")), span, }
   let function_def = FunctionDef::{
     name: declaration_test_ident(b"f", 2),
     ghost: true,
@@ -252,7 +252,7 @@ test "abstract, scoped alias, range, and float type definitions are distinct" {
           definition: TDalias(
             PTtyapp(Qdot(Qident({ name: b"M", .. }), { name: b"t", .. }), [])
           ),
-          ..,
+          ..
         },
       ]
     ),
@@ -283,7 +283,7 @@ test "logic declarations enforce main forms and retain with-clause locations" {
           params: [],
           return_type: Some(PTtyapp(Qident({ name: b"int", .. }), [])),
           definition: Some({ desc: Tconst(ConstInt(_)), .. }),
-          ..,
+          ..
         },
       ]
     ),
@@ -614,7 +614,7 @@ test "a valueless return stops before the following let declaration" {
             Dlet({ name: b"f", .. }, false, RKnone, _),
             Dlet({ name: b"g", .. }, false, RKnone, _),
           ],
-          ..,
+          ..
         },
       ]
     ) else {

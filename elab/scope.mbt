@@ -2,7 +2,7 @@
 
 ///|
 priv struct DLocal {
-  id : Int
+  id : Int32
   name : Bytes
   origin : @identity.Origin
   ty : Dty
@@ -13,7 +13,7 @@ priv struct PureTyping {
   semantic_context : @identity.CompilationContext
   environment : @environment.Environment
   delayed : DtyContext
-  mut next_local_id : Int
+  mut next_local_id : Int32
 }
 
 ///|
@@ -41,7 +41,7 @@ fn PureTyping::make_local(
   match ident {
     Some(ident) => {
       let origin = user_origin(ident)
-      { id, name: ident.name, origin, ty }
+      { id, name: ident.name, origin, ty, }
     }
     None => {
       let span = source_span(fallback_span)

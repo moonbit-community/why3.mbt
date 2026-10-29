@@ -134,7 +134,7 @@ fn collect_remove_unused_metas(
         name: b"remove_unused:remove_constant",
         arguments: [MetaLogicSymbol(symbol)],
       } => state.constants_to_remove[symbol.semantic_id()] = ()
-      { name: b"remove_unused:keep", arguments: [MetaLogicSymbol(symbol)] } =>
+      { name: b"remove_unused:keep", arguments: [MetaLogicSymbol(symbol)], } =>
         state.symbols_to_keep[symbol.semantic_id()] = ()
       _ => ()
     }

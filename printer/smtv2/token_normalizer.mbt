@@ -13,8 +13,8 @@ pub(all) enum SmtTokenKind {
 pub(all) struct SmtToken {
   kind : SmtTokenKind
   bytes : Bytes
-  start : Int
-  end : Int
+  start : Int32
+  end : Int32
 } derive(Eq, Debug)
 
 ///|
@@ -28,7 +28,10 @@ fn smt_atom_delimiter(byte : Byte) -> Bool {
 }
 
 ///|
-fn lex_quoted_symbol(input : BytesView, start : Int) -> Int raise PrinterError {
+fn lex_quoted_symbol(
+  input : BytesView,
+  start : Int32,
+) -> Int32 raise PrinterError {
   let mut index = start + 1
   while index < input.length() {
     let byte = input[index]
@@ -47,7 +50,10 @@ fn lex_quoted_symbol(input : BytesView, start : Int) -> Int raise PrinterError {
 }
 
 ///|
-fn lex_string_literal(input : BytesView, start : Int) -> Int raise PrinterError {
+fn lex_string_literal(
+  input : BytesView,
+  start : Int32,
+) -> Int32 raise PrinterError {
   let mut index = start + 1
   while index < input.length() {
     if input[index] == b'"' {
@@ -100,7 +106,7 @@ pub fn lex_smt_tokens(input : BytesView) -> Array[SmtToken] raise PrinterError {
         (Atom, index)
       }
     }
-    result.push({ kind, bytes: input[start:end].to_owned(), start, end })
+    result.push({ kind, bytes: input[start:end].to_owned(), start, end, })
     index = end
   }
   result
@@ -119,7 +125,7 @@ pub fn NormalizedSmtTokens::tokens(
 }
 
 ///|
-fn generated_token(stage : @identity.GeneratedStage, ordinal : Int) -> Bytes {
+fn generated_token(stage : @identity.GeneratedStage, ordinal : Int32) -> Bytes {
   let output = @buffer.Buffer()
   output.write_bytes(b"$generated[")
   output.write_bytes(stage.canonical_name())
@@ -131,10 +137,10 @@ fn generated_token(stage : @identity.GeneratedStage, ordinal : Int) -> Bytes {
 
 ///|
 fn generated_ordinal(
-  stages : Array[(@identity.GeneratedStage, Map[@identity.SemanticId, Int])],
+  stages : Array[(@identity.GeneratedStage, Map[@identity.SemanticId, Int32])],
   stage : @identity.GeneratedStage,
   semantic_id : @identity.SemanticId,
-) -> Int {
+) -> Int32 {
   for entry in stages {
     if entry.0 == stage {
       match entry.1.get(semantic_id) {
@@ -147,7 +153,7 @@ fn generated_ordinal(
       }
     }
   }
-  let identifiers : Map[@identity.SemanticId, Int] = Map([])
+  let identifiers : Map[@identity.SemanticId, Int32] = Map([])
   identifiers[semantic_id] = 0
   stages.push((stage, identifiers))
   0
@@ -157,7 +163,7 @@ fn generated_ordinal(
 pub fn normalize_smt_query(
   query : SmtQuery,
 ) -> NormalizedSmtTokens raise PrinterError {
-  let occurrences : Map[Int, PrintedIdentifier] = Map([])
+  let occurrences : Map[Int32, PrintedIdentifier] = Map([])
   for occurrence in query.identifiers {
     if occurrence.start < 0 ||
       occurrence.end <= occurrence.start ||
@@ -171,10 +177,10 @@ pub fn normalize_smt_query(
     occurrences[occurrence.start] = occurrence
   }
   let generated : Array[
-    (@identity.GeneratedStage, Map[@identity.SemanticId, Int]),
+    (@identity.GeneratedStage, Map[@identity.SemanticId, Int32]),
   ] = []
   let normalized : Array[Bytes] = []
-  let matched : Map[Int, Unit] = Map([])
+  let matched : Map[Int32, Unit] = Map([])
   for token in lex_smt_tokens(query.bytes) {
     match occurrences.get(token.start) {
       None => normalized.push(token.bytes)
@@ -205,5 +211,5 @@ pub fn normalize_smt_query(
       "printed identifier occurrence is hidden by whitespace or a comment",
     )
   }
-  { tokens: normalized }
+  { tokens: normalized, }
 }

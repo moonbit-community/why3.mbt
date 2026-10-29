@@ -48,7 +48,7 @@ pub fn RoutineSymbol::trusted_new(
   if field is Some(field) {
     require_mlw_context(anchor, field.semantic_id(), span)
   }
-  { id: context.fresh_id(), name: name.to_owned(), origin, cty, logic, field }
+  { id: context.fresh_id(), name: name.to_owned(), origin, cty, logic, field, }
 }
 
 ///|

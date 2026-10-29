@@ -13,7 +13,7 @@ priv struct CatalogDescriptor {
 priv struct SnapshotDecoder {
   context : @identity.CompilationContext
   descriptors : Array[CatalogDescriptor]
-  type_variables : Map[Int, @logic.TyVarSymbol]
+  type_variables : Map[Int32, @logic.TyVarSymbol]
   types : Map[String, @logic.TypeSymbol]
   logic : Map[String, @logic.LSymbol]
   propositions : Map[String, @logic.PrSymbol]
@@ -40,7 +40,7 @@ fn snapshot_symbol_kind(
 ///|
 fn catalog_descriptor(
   value : Json,
-  index : Int,
+  index : Int32,
 ) -> CatalogDescriptor raise SnapshotError {
   let path = "$.catalog[" + index.to_string() + "]"
   let entry = json_object(value, path)
@@ -246,7 +246,7 @@ fn SnapshotDecoder::decode_type_variables(
 ///|
 fn SnapshotDecoder::type_variable(
   self : SnapshotDecoder,
-  id : Int,
+  id : Int32,
   path : String,
 ) -> @logic.TyVarSymbol raise SnapshotError {
   match self.type_variables.get(id) {
@@ -931,7 +931,7 @@ fn SnapshotDecoder::decode_vsymbol(
   self : SnapshotDecoder,
   value : Json,
   path : String,
-) -> (Int, @logic.VSymbol) raise {
+) -> (Int32, @logic.VSymbol) raise {
   let object = json_object(value, path)
   let id = json_int(json_field(object, "id", path), path + ".id")
   let name = semantic_name(json_field(object, "name", path), path + ".name")
@@ -950,8 +950,8 @@ fn SnapshotDecoder::decode_vsymbol(
 
 ///|
 fn copy_variable_map(
-  variables : Map[Int, @logic.VSymbol],
-) -> Map[Int, @logic.VSymbol] {
+  variables : Map[Int32, @logic.VSymbol],
+) -> Map[Int32, @logic.VSymbol] {
   Map(variables.to_array())
 }
 
@@ -1077,8 +1077,8 @@ fn require_term_result(
 fn SnapshotDecoder::decode_term(
   self : SnapshotDecoder,
   value : Json,
-  locals : Map[Int, @logic.VSymbol],
-  program_variables : Map[Int, @logic.VSymbol],
+  locals : Map[Int32, @logic.VSymbol],
+  program_variables : Map[Int32, @logic.VSymbol],
   path : String,
 ) -> @logic.Term raise {
   let object = json_object(value, path)
@@ -1316,7 +1316,7 @@ fn SnapshotDecoder::decode_pvariable(
   self : SnapshotDecoder,
   value : Json,
   path : String,
-) -> (Int, @mlw.PVariable) raise {
+) -> (Int32, @mlw.PVariable) raise {
   let object = json_object(value, path)
   let id = json_int(json_field(object, "id", path), path + ".id")
   let name = semantic_name(json_field(object, "name", path), path + ".name")
@@ -1340,8 +1340,8 @@ fn SnapshotDecoder::decode_cty(
   path : String,
 ) -> @mlw.Cty raise {
   let object = json_object(value, path)
-  let variables_by_id : Map[Int, @mlw.PVariable] = Map([])
-  let pure_by_id : Map[Int, @logic.VSymbol] = Map([])
+  let variables_by_id : Map[Int32, @mlw.PVariable] = Map([])
+  let pure_by_id : Map[Int32, @logic.VSymbol] = Map([])
   let variables : Array[@mlw.PVariable] = []
   for
     index, descriptor in json_array(
@@ -1374,7 +1374,7 @@ fn SnapshotDecoder::decode_cty(
     }
     arguments.push(variable)
   }
-  let empty_locals : Map[Int, @logic.VSymbol] = Map([])
+  let empty_locals : Map[Int32, @logic.VSymbol] = Map([])
   let preconditions = [
     for
       index, condition in json_array(
@@ -1401,7 +1401,7 @@ fn SnapshotDecoder::decode_cty(
       json_field(post_object, "result", post_path),
       post_path + ".result",
     )
-    let post_locals : Map[Int, @logic.VSymbol] = Map([])
+    let post_locals : Map[Int32, @logic.VSymbol] = Map([])
     post_locals[id] = result
     postconditions.push(
       @mlw.Postcondition::trusted_new(

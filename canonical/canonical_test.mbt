@@ -100,7 +100,7 @@ test "snapshot keys have a context-free canonical form" {
 fn canonical_snapshot_origin(
   display_name : BytesView,
   theory_key : BytesView,
-  ordinal : UInt,
+  ordinal : UInt32,
 ) -> @identity.Origin {
   @identity.Origin::snapshot(
     display_name,

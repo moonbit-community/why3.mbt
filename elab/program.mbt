@@ -44,7 +44,7 @@ fn ProgramTyping::new(
   context : @identity.CompilationContext,
   environment : @environment.Environment,
 ) -> ProgramTyping {
-  { context, environment, pure: PureTyping::new(context, environment) }
+  { context, environment, pure: PureTyping::new(context, environment), }
 }
 
 ///|
@@ -54,7 +54,7 @@ fn program_origin(decoration : ProgramDecoration) -> @identity.Origin {
 
 ///|
 fn default_program_decoration(expression : @parser.Expr) -> ProgramDecoration {
-  { location: source_span(expression.span), attributes: [] }
+  { location: source_span(expression.span), attributes: [], }
 }
 
 ///|
@@ -73,9 +73,9 @@ fn find_program_local(
 ///|
 fn program_logic_scope(
   locals : ArrayView[(Bytes, ProgramLocal)],
-) -> (Array[(Bytes, DLocal)], Array[(Int, @logic.VSymbol)]) {
+) -> (Array[(Bytes, DLocal)], Array[(Int32, @logic.VSymbol)]) {
   let bindings : Array[(Bytes, DLocal)] = []
-  let values : Array[(Int, @logic.VSymbol)] = []
+  let values : Array[(Int32, @logic.VSymbol)] = []
   for entry in locals {
     bindings.push((entry.0, entry.1.delayed))
     values.push((entry.1.delayed.id, entry.1.variable.view().pure_symbol))
@@ -185,7 +185,7 @@ fn ProgramTyping::make_program_local(
     fallback_span,
     self.pure.delayed.known(ity.to_ty(Some(source_span(fallback_span))), None),
   )
-  { variable, delayed }
+  { variable, delayed, }
 }
 
 ///|
@@ -228,7 +228,7 @@ fn ProgramTyping::prepare_spec(
       parameter_scope.push((ident.name, binding))
     }
   }
-  { source: spec, arguments, parameter_scope }
+  { source: spec, arguments, parameter_scope, }
 }
 
 ///|
@@ -1056,7 +1056,7 @@ fn ProgramTyping::type_decorated_program_expression(
           attributes.push(checked_text_attribute(text, span))
           { ..decoration, attributes, }
         }
-        Position(position) => { ..decoration, location: source_span(position) }
+        Position(position) => { ..decoration, location: source_span(position), }
       }
       self.type_decorated_program_expression(
         pure_space, program_space, locals, inner, nested,
@@ -1716,7 +1716,7 @@ fn[A] normalize_program_elaboration_errors(
   action() catch {
     @logic.TypeError(diagnostic) => {
       let normalized = type_failure_diagnostic(diagnostic)
-      raise ElabError({ ..normalized, stage: ProgramTyping })
+      raise ElabError({ ..normalized, stage: ProgramTyping, })
     }
     @theory.TheoryError(diagnostic) =>
       raise ElabError(theory_failure_diagnostic(diagnostic))

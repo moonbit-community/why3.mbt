@@ -15,6 +15,9 @@ import {
 pub(all) suberror MlwError {
   MlwError(MlwDiagnostic)
 } derive(Eq, @debug.Debug)
+pub fn MlwError::equal(Self, Self) -> Bool
+pub fn MlwError::not_equal(Self, Self) -> Bool
+pub fn MlwError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
 type Cty
@@ -74,8 +77,12 @@ pub(all) enum ExprView {
 type Ity
 pub fn Ity::app(ProgramTypeSymbol, ArrayView[Self], @identity.SourceSpan?) -> Self raise MlwError
 pub fn Ity::context_anchor(Self) -> @identity.SemanticId
+pub fn Ity::equal(Self, Self) -> Bool
 pub fn Ity::from_ty(ProgramNamespace, @logic.Ty, @identity.SourceSpan?) -> Self raise
+pub fn Ity::hash(Self) -> Int32
+pub fn Ity::hash_combine(Self, Hasher) -> Unit
 pub fn Ity::is_closed(Self) -> Bool
+pub fn Ity::not_equal(Self, Self) -> Bool
 pub fn Ity::to_ty(Self, @identity.SourceSpan?) -> @logic.Ty raise @logic.TypeError
 pub fn Ity::variable(@logic.TyVarSymbol) -> Self
 pub fn Ity::view(Self) -> ItyView
@@ -92,6 +99,9 @@ pub(all) struct MlwDiagnostic {
   span : @identity.SourceSpan?
   message : String
 } derive(Eq, @debug.Debug)
+pub fn MlwDiagnostic::equal(Self, Self) -> Bool
+pub fn MlwDiagnostic::not_equal(Self, Self) -> Bool
+pub fn MlwDiagnostic::to_repr(Self) -> @debug.Repr
 
 pub(all) enum MlwErrorKind {
   MlwContextMismatch
@@ -105,6 +115,9 @@ pub(all) enum MlwErrorKind {
   InvalidProgramDeclaration
   ProgramModuleBuilderSealed
 } derive(Eq, @debug.Debug)
+pub fn MlwErrorKind::equal(Self, Self) -> Bool
+pub fn MlwErrorKind::not_equal(Self, Self) -> Bool
+pub fn MlwErrorKind::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ModuleItem {
   Udecl(ProgramDeclaration)
@@ -114,6 +127,10 @@ pub(all) enum ModuleItem {
 }
 
 type PVariable
+pub fn PVariable::equal(Self, Self) -> Bool
+pub fn PVariable::hash(Self) -> Int32
+pub fn PVariable::hash_combine(Self, Hasher) -> Unit
+pub fn PVariable::not_equal(Self, Self) -> Bool
 pub fn PVariable::semantic_id(Self) -> @identity.SemanticId
 pub fn PVariable::trusted_new(@identity.CompilationContext, @theory.SemanticName, Ity, Bool, @identity.SourceSpan?) -> Self raise
 pub fn PVariable::view(Self) -> PVariableView
@@ -194,6 +211,9 @@ pub(all) enum ProgramMask {
   Visible
   Ghost
 } derive(Eq, @debug.Debug)
+pub fn ProgramMask::equal(Self, Self) -> Bool
+pub fn ProgramMask::not_equal(Self, Self) -> Bool
+pub fn ProgramMask::to_repr(Self) -> @debug.Repr
 
 type ProgramNamespace
 pub fn ProgramNamespace::add_routine(Self, BytesView, RoutineSymbol, @identity.SourceSpan?) -> Self raise MlwError
@@ -217,6 +237,9 @@ pub(all) struct ProgramNamespaceView {
 pub(all) enum ProgramTermination {
   Total
 } derive(Eq, @debug.Debug)
+pub fn ProgramTermination::equal(Self, Self) -> Bool
+pub fn ProgramTermination::not_equal(Self, Self) -> Bool
+pub fn ProgramTermination::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ProgramTypeArgumentFlag {
   frozen : Bool
@@ -225,6 +248,9 @@ pub(all) struct ProgramTypeArgumentFlag {
   fixed : Bool
   visible : Bool
 } derive(Eq, @debug.Debug)
+pub fn ProgramTypeArgumentFlag::equal(Self, Self) -> Bool
+pub fn ProgramTypeArgumentFlag::not_equal(Self, Self) -> Bool
+pub fn ProgramTypeArgumentFlag::to_repr(Self) -> @debug.Repr
 
 type ProgramTypeDeclaration
 pub fn ProgramTypeDeclaration::trusted_new(ProgramTypeSymbol, ArrayView[RoutineSymbol], ArrayView[RoutineSymbol], ArrayView[@logic.Term], @identity.SourceSpan?) -> Self raise MlwError
@@ -241,7 +267,7 @@ pub(all) enum ProgramTypeDefinition {
   ProgramNoDef
   ProgramAlias(Ity)
   ProgramRange(@bigint.BigInt, @bigint.BigInt)
-  ProgramFloat(Int, Int)
+  ProgramFloat(Int32, Int32)
 }
 
 pub(all) struct ProgramTypeFlags {
@@ -252,8 +278,15 @@ pub(all) struct ProgramTypeFlags {
   argument_flags : Array[ProgramTypeArgumentFlag]
   region_flags : Array[ProgramTypeArgumentFlag]
 } derive(Eq, @debug.Debug)
+pub fn ProgramTypeFlags::equal(Self, Self) -> Bool
+pub fn ProgramTypeFlags::not_equal(Self, Self) -> Bool
+pub fn ProgramTypeFlags::to_repr(Self) -> @debug.Repr
 
 type ProgramTypeSymbol
+pub fn ProgramTypeSymbol::equal(Self, Self) -> Bool
+pub fn ProgramTypeSymbol::hash(Self) -> Int32
+pub fn ProgramTypeSymbol::hash_combine(Self, Hasher) -> Unit
+pub fn ProgramTypeSymbol::not_equal(Self, Self) -> Bool
 pub fn ProgramTypeSymbol::semantic_id(Self) -> @identity.SemanticId
 pub fn ProgramTypeSymbol::trusted_new(@identity.CompilationContext, @logic.TypeSymbol, @identity.Origin, ProgramTypeFlags, ProgramTypeDefinition, ArrayView[PVariable], ArrayView[PVariable], @identity.SourceSpan?) -> Self raise MlwError
 pub fn ProgramTypeSymbol::view(Self) -> ProgramTypeSymbolView
@@ -276,7 +309,11 @@ pub(all) enum RoutineLogic {
 }
 
 type RoutineSymbol
+pub fn RoutineSymbol::equal(Self, Self) -> Bool
+pub fn RoutineSymbol::hash(Self) -> Int32
+pub fn RoutineSymbol::hash_combine(Self, Hasher) -> Unit
 pub fn RoutineSymbol::new_user(@identity.CompilationContext, BytesView, @identity.Origin, Cty, @identity.SourceSpan?) -> Self raise MlwError
+pub fn RoutineSymbol::not_equal(Self, Self) -> Bool
 pub fn RoutineSymbol::semantic_id(Self) -> @identity.SemanticId
 pub fn RoutineSymbol::trusted_new(@identity.CompilationContext, BytesView, @identity.Origin, Cty, RoutineLogic, PVariable?, @identity.SourceSpan?) -> Self raise MlwError
 pub fn RoutineSymbol::view(Self) -> RoutineSymbolView
@@ -295,4 +332,3 @@ pub(all) struct RoutineSymbolView {
 // Type aliases
 
 // Traits
-

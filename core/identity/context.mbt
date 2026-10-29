@@ -27,7 +27,7 @@ pub(all) suberror ContextMismatch {
 /// Creates a fresh compilation context. Allocation through one context is
 /// intentionally single-threaded.
 pub fn CompilationContext::new() -> CompilationContext {
-  { token: Ref(()), next_local_id: 0L }
+  { token: Ref(()), next_local_id: 0L, }
 }
 
 ///|
@@ -35,7 +35,7 @@ pub fn CompilationContext::new() -> CompilationContext {
 pub fn CompilationContext::fresh_id(self : CompilationContext) -> SemanticId {
   let local_id = self.next_local_id
   self.next_local_id = local_id + 1L
-  { token: self.token, local_id }
+  { token: self.token, local_id, }
 }
 
 ///|
@@ -65,7 +65,7 @@ pub fn SemanticId::same_context(self : SemanticId, other : SemanticId) -> Bool {
 pub fn SemanticId::require_same_context(
   self : SemanticId,
   other : SemanticId,
-  operation? : String = "semantic operation",
+  operation~ : String = "semantic operation",
 ) -> Unit raise ContextMismatch {
   if !self.same_context(other) {
     raise ContextMismatch(operation)

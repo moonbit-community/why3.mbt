@@ -26,5 +26,5 @@ fn[A] fail_vc(
   span : @identity.SourceSpan?,
   message : String,
 ) -> A raise VcError {
-  raise VcError({ kind, span, message })
+  raise VcError({ kind, span, message, })
 }

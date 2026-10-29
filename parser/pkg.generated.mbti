@@ -43,6 +43,9 @@ pub fn parse_term_text(StringView, filename? : BytesView) -> Term raise ParseErr
 pub(all) suberror ParseError {
   ParseError(ParseDiagnostic)
 } derive(Eq, @debug.Debug)
+pub fn ParseError::equal(Self, Self) -> Bool
+pub fn ParseError::not_equal(Self, Self) -> Bool
+pub fn ParseError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
 pub(all) struct AlgebraicCase {
@@ -50,23 +53,35 @@ pub(all) struct AlgebraicCase {
   ident : Ident
   params : Array[Param]
 } derive(Eq, @debug.Debug)
+pub fn AlgebraicCase::equal(Self, Self) -> Bool
+pub fn AlgebraicCase::not_equal(Self, Self) -> Bool
+pub fn AlgebraicCase::to_repr(Self) -> @debug.Repr
 
 pub(all) enum AssertionKind {
   Assert
   Assume
   Check
 } derive(Eq, @debug.Debug)
+pub fn AssertionKind::equal(Self, Self) -> Bool
+pub fn AssertionKind::not_equal(Self, Self) -> Bool
+pub fn AssertionKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Assignment {
   target : Expr
   field : QualId?
   value : Expr
 } derive(Eq, @debug.Debug)
+pub fn Assignment::equal(Self, Self) -> Bool
+pub fn Assignment::not_equal(Self, Self) -> Bool
+pub fn Assignment::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Attribute {
   Text(Bytes)
   Position(Span)
 } derive(Eq, @debug.Debug)
+pub fn Attribute::equal(Self, Self) -> Bool
+pub fn Attribute::not_equal(Self, Self) -> Bool
+pub fn Attribute::to_repr(Self) -> @debug.Repr
 
 pub(all) enum BinaryLogicOp {
   DTand
@@ -78,6 +93,9 @@ pub(all) enum BinaryLogicOp {
   DTby
   DTso
 } derive(Eq, @debug.Debug)
+pub fn BinaryLogicOp::equal(Self, Self) -> Bool
+pub fn BinaryLogicOp::not_equal(Self, Self) -> Bool
+pub fn BinaryLogicOp::to_repr(Self) -> @debug.Repr
 
 pub struct Binder {
   span : Span
@@ -85,6 +103,9 @@ pub struct Binder {
   ghost : Bool
   binder_type : Pty?
 } derive(Eq, @debug.Debug)
+pub fn Binder::equal(Self, Self) -> Bool
+pub fn Binder::not_equal(Self, Self) -> Bool
+pub fn Binder::to_repr(Self) -> @debug.Repr
 
 pub(all) enum CloneSubstitution {
   CStsym(QualId, Array[Ident], Pty)
@@ -97,12 +118,18 @@ pub(all) enum CloneSubstitution {
   CSlemma(QualId)
   CSgoal(QualId)
 } derive(Eq, @debug.Debug)
+pub fn CloneSubstitution::equal(Self, Self) -> Bool
+pub fn CloneSubstitution::not_equal(Self, Self) -> Bool
+pub fn CloneSubstitution::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Constant {
   ConstInt(IntConstant)
   ConstReal(RealConstant)
   ConstStr(Bytes)
 } derive(Eq, @debug.Debug)
+pub fn Constant::equal(Self, Self) -> Bool
+pub fn Constant::not_equal(Self, Self) -> Bool
+pub fn Constant::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Decl {
   Dtype(Array[TypeDecl])
@@ -120,22 +147,34 @@ pub(all) enum Decl {
   Dimport(QualId)
   Dscope(Span, Bool, Ident, Array[Decl])
 } derive(Eq, @debug.Debug)
+pub fn Decl::equal(Self, Self) -> Bool
+pub fn Decl::not_equal(Self, Self) -> Bool
+pub fn Decl::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ExceptionBranch {
   exception : QualId
   pattern : Pattern?
   body : Expr
 } derive(Eq, @debug.Debug)
+pub fn ExceptionBranch::equal(Self, Self) -> Bool
+pub fn ExceptionBranch::not_equal(Self, Self) -> Bool
+pub fn ExceptionBranch::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ExceptionalPostCondition {
   span : Span
   branches : Array[(QualId, (Pattern, Term)?)]
 } derive(Eq, @debug.Debug)
+pub fn ExceptionalPostCondition::equal(Self, Self) -> Bool
+pub fn ExceptionalPostCondition::not_equal(Self, Self) -> Bool
+pub fn ExceptionalPostCondition::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Expr {
   desc : ExprDesc
   span : Span
 } derive(Eq, @debug.Debug)
+pub fn Expr::equal(Self, Self) -> Bool
+pub fn Expr::not_equal(Self, Self) -> Bool
+pub fn Expr::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ExprDesc {
   Eref
@@ -177,6 +216,9 @@ pub(all) enum ExprDesc {
   Eghost(Expr)
   Eattr(Attribute, Expr)
 } derive(Eq, @debug.Debug)
+pub fn ExprDesc::equal(Self, Self) -> Bool
+pub fn ExprDesc::not_equal(Self, Self) -> Bool
+pub fn ExprDesc::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Field {
   span : Span
@@ -185,11 +227,17 @@ pub(all) struct Field {
   mutable : Bool
   ghost : Bool
 } derive(Eq, @debug.Debug)
+pub fn Field::equal(Self, Self) -> Bool
+pub fn Field::not_equal(Self, Self) -> Bool
+pub fn Field::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ForDirection {
   To
   DownTo
 } derive(Eq, @debug.Debug)
+pub fn ForDirection::equal(Self, Self) -> Bool
+pub fn ForDirection::not_equal(Self, Self) -> Bool
+pub fn ForDirection::to_repr(Self) -> @debug.Repr
 
 pub(all) struct FunctionDef {
   name : Ident
@@ -202,18 +250,27 @@ pub(all) struct FunctionDef {
   spec : Spec
   body : Expr
 } derive(Eq, @debug.Debug)
+pub fn FunctionDef::equal(Self, Self) -> Bool
+pub fn FunctionDef::not_equal(Self, Self) -> Bool
+pub fn FunctionDef::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Ident {
   name : Bytes
   attributes : Array[Attribute]
   span : Span
 } derive(Eq, @debug.Debug)
+pub fn Ident::equal(Self, Self) -> Bool
+pub fn Ident::not_equal(Self, Self) -> Bool
+pub fn Ident::to_repr(Self) -> @debug.Repr
 
 pub(all) struct InductiveCase {
   span : Span
   ident : Ident
   body : Term
 } derive(Eq, @debug.Debug)
+pub fn InductiveCase::equal(Self, Self) -> Bool
+pub fn InductiveCase::not_equal(Self, Self) -> Bool
+pub fn InductiveCase::to_repr(Self) -> @debug.Repr
 
 pub(all) struct InductiveDecl {
   span : Span
@@ -221,16 +278,25 @@ pub(all) struct InductiveDecl {
   params : Array[Param]
   cases : Array[InductiveCase]
 } derive(Eq, @debug.Debug)
+pub fn InductiveDecl::equal(Self, Self) -> Bool
+pub fn InductiveDecl::not_equal(Self, Self) -> Bool
+pub fn InductiveDecl::to_repr(Self) -> @debug.Repr
 
 pub(all) enum InductiveSign {
   Ind
   Coind
 } derive(Eq, @debug.Debug)
+pub fn InductiveSign::equal(Self, Self) -> Bool
+pub fn InductiveSign::not_equal(Self, Self) -> Bool
+pub fn InductiveSign::to_repr(Self) -> @debug.Repr
 
 pub(all) struct IntConstant {
   kind : IntLiteralKind
   value : @bigint.BigInt
 } derive(Eq, @debug.Debug)
+pub fn IntConstant::equal(Self, Self) -> Bool
+pub fn IntConstant::not_equal(Self, Self) -> Bool
+pub fn IntConstant::to_repr(Self) -> @debug.Repr
 
 pub(all) enum IntLiteralKind {
   ILitUnk
@@ -239,10 +305,16 @@ pub(all) enum IntLiteralKind {
   ILitOct
   ILitBin
 } derive(Eq, @debug.Debug)
+pub fn IntLiteralKind::equal(Self, Self) -> Bool
+pub fn IntLiteralKind::not_equal(Self, Self) -> Bool
+pub fn IntLiteralKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Invariant {
   terms : Array[Term]
 } derive(Eq, @debug.Debug)
+pub fn Invariant::equal(Self, Self) -> Bool
+pub fn Invariant::not_equal(Self, Self) -> Bool
+pub fn Invariant::to_repr(Self) -> @debug.Repr
 
 pub(all) struct LogicDecl {
   span : Span
@@ -251,12 +323,18 @@ pub(all) struct LogicDecl {
   return_type : Pty?
   definition : Term?
 } derive(Eq, @debug.Debug)
+pub fn LogicDecl::equal(Self, Self) -> Bool
+pub fn LogicDecl::not_equal(Self, Self) -> Bool
+pub fn LogicDecl::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Mask {
   MaskVisible
   MaskTuple(Array[Mask])
   MaskGhost
 } derive(Eq, @debug.Debug)
+pub fn Mask::equal(Self, Self) -> Bool
+pub fn Mask::not_equal(Self, Self) -> Bool
+pub fn Mask::to_repr(Self) -> @debug.Repr
 
 pub(all) enum MetaArg {
   Mty(Pty)
@@ -269,12 +347,18 @@ pub(all) enum MetaArg {
   Mstr(Bytes)
   Mint(Int64)
 } derive(Eq, @debug.Debug)
+pub fn MetaArg::equal(Self, Self) -> Bool
+pub fn MetaArg::not_equal(Self, Self) -> Bool
+pub fn MetaArg::to_repr(Self) -> @debug.Repr
 
 pub(all) enum MlwFile {
   Modules(Array[MlwModule])
   Decls(Array[Decl])
 } derive(Eq, @debug.Debug)
 pub fn MlwFile::empty() -> Self
+pub fn MlwFile::equal(Self, Self) -> Bool
+pub fn MlwFile::not_equal(Self, Self) -> Bool
+pub fn MlwFile::to_repr(Self) -> @debug.Repr
 
 pub(all) struct MlwModule {
   kind : ModuleKind
@@ -283,11 +367,17 @@ pub(all) struct MlwModule {
   declarations : Array[Decl]
   span : Span
 } derive(Eq, @debug.Debug)
+pub fn MlwModule::equal(Self, Self) -> Bool
+pub fn MlwModule::not_equal(Self, Self) -> Bool
+pub fn MlwModule::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ModuleKind {
   Theory
   Module
 } derive(Eq, @debug.Debug)
+pub fn ModuleKind::equal(Self, Self) -> Bool
+pub fn ModuleKind::not_equal(Self, Self) -> Bool
+pub fn ModuleKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Param {
   span : Span
@@ -295,6 +385,9 @@ pub(all) struct Param {
   ghost : Bool
   param_type : Pty
 } derive(Eq, @debug.Debug)
+pub fn Param::equal(Self, Self) -> Bool
+pub fn Param::not_equal(Self, Self) -> Bool
+pub fn Param::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ParseDiagnostic {
   kind : ParseErrorKind
@@ -303,6 +396,9 @@ pub(all) struct ParseDiagnostic {
   expected : Array[String]
   message : String
 } derive(Eq, @debug.Debug)
+pub fn ParseDiagnostic::equal(Self, Self) -> Bool
+pub fn ParseDiagnostic::not_equal(Self, Self) -> Bool
+pub fn ParseDiagnostic::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ParseErrorKind {
   InvalidUtf16
@@ -331,11 +427,17 @@ pub(all) enum ParseErrorKind {
   UnsupportedEpsilon
   NestedModule
 } derive(Eq, @debug.Debug)
+pub fn ParseErrorKind::equal(Self, Self) -> Bool
+pub fn ParseErrorKind::not_equal(Self, Self) -> Bool
+pub fn ParseErrorKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Pattern {
   desc : PatternDesc
   span : Span
 } derive(Eq, @debug.Debug)
+pub fn Pattern::equal(Self, Self) -> Bool
+pub fn Pattern::not_equal(Self, Self) -> Bool
+pub fn Pattern::to_repr(Self) -> @debug.Repr
 
 pub(all) enum PatternDesc {
   Pwild
@@ -350,17 +452,26 @@ pub(all) enum PatternDesc {
   Pparen(Pattern)
   Pghost(Pattern)
 } derive(Eq, @debug.Debug)
+pub fn PatternDesc::equal(Self, Self) -> Bool
+pub fn PatternDesc::not_equal(Self, Self) -> Bool
+pub fn PatternDesc::to_repr(Self) -> @debug.Repr
 
 pub(all) struct PostCondition {
   span : Span
   branches : Array[(Pattern, Term)]
 } derive(Eq, @debug.Debug)
+pub fn PostCondition::equal(Self, Self) -> Bool
+pub fn PostCondition::not_equal(Self, Self) -> Bool
+pub fn PostCondition::to_repr(Self) -> @debug.Repr
 
 pub(all) enum PropositionKind {
   Plemma
   Paxiom
   Pgoal
 } derive(Eq, @debug.Debug)
+pub fn PropositionKind::equal(Self, Self) -> Bool
+pub fn PropositionKind::not_equal(Self, Self) -> Bool
+pub fn PropositionKind::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Pty {
   PTtyvar(Ident)
@@ -372,43 +483,64 @@ pub(all) enum Pty {
   PTparen(Pty)
   PTpure(Pty)
 } derive(Eq, @debug.Debug)
+pub fn Pty::equal(Self, Self) -> Bool
+pub fn Pty::not_equal(Self, Self) -> Bool
+pub fn Pty::to_repr(Self) -> @debug.Repr
 
 pub(all) enum QualId {
   Qident(Ident)
   Qdot(QualId, Ident)
 } derive(Eq, @debug.Debug)
+pub fn QualId::equal(Self, Self) -> Bool
+pub fn QualId::not_equal(Self, Self) -> Bool
+pub fn QualId::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Quantifier {
   DTforall
   DTexists
   DTlambda
 } derive(Eq, @debug.Debug)
+pub fn Quantifier::equal(Self, Self) -> Bool
+pub fn Quantifier::not_equal(Self, Self) -> Bool
+pub fn Quantifier::to_repr(Self) -> @debug.Repr
 
 pub(all) struct RealConstant {
   kind : RealLiteralKind
   value : RealValue
 } derive(Eq, @debug.Debug)
+pub fn RealConstant::equal(Self, Self) -> Bool
+pub fn RealConstant::not_equal(Self, Self) -> Bool
+pub fn RealConstant::to_repr(Self) -> @debug.Repr
 
 pub(all) enum RealLiteralKind {
   RLitUnk
   RLitDec(Int64)
   RLitHex(Int64)
 } derive(Eq, @debug.Debug)
+pub fn RealLiteralKind::equal(Self, Self) -> Bool
+pub fn RealLiteralKind::not_equal(Self, Self) -> Bool
+pub fn RealLiteralKind::to_repr(Self) -> @debug.Repr
 
 pub struct RealValue {
   significand : @bigint.BigInt
   pow2 : @bigint.BigInt
   pow5 : @bigint.BigInt
 } derive(Eq, @debug.Debug)
+pub fn RealValue::equal(Self, Self) -> Bool
 pub fn RealValue::normalized(@bigint.BigInt, @bigint.BigInt, @bigint.BigInt) -> Self
+pub fn RealValue::not_equal(Self, Self) -> Bool
 pub fn RealValue::pow2(Self) -> @bigint.BigInt
 pub fn RealValue::pow5(Self) -> @bigint.BigInt
 pub fn RealValue::significand(Self) -> @bigint.BigInt
+pub fn RealValue::to_repr(Self) -> @debug.Repr
 
 pub(all) struct RegularBranch {
   pattern : Pattern
   body : Expr
 } derive(Eq, @debug.Debug)
+pub fn RegularBranch::equal(Self, Self) -> Bool
+pub fn RegularBranch::not_equal(Self, Self) -> Bool
+pub fn RegularBranch::to_repr(Self) -> @debug.Repr
 
 pub(all) enum RoutineKind {
   RKnone
@@ -417,21 +549,30 @@ pub(all) enum RoutineKind {
   RKpred
   RKlemma
 } derive(Eq, @debug.Debug)
+pub fn RoutineKind::equal(Self, Self) -> Bool
+pub fn RoutineKind::not_equal(Self, Self) -> Bool
+pub fn RoutineKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SourcePos {
   filename : Bytes
-  byte_offset : Int
+  byte_offset : Int32
   line : Int64
   column : Int64
 } derive(Eq, @debug.Debug)
+pub fn SourcePos::equal(Self, Self) -> Bool
+pub fn SourcePos::not_equal(Self, Self) -> Bool
+pub fn SourcePos::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Span {
   start : SourcePos
   end : SourcePos
 } derive(Eq, @debug.Debug)
 pub fn Span::empty(SourcePos) -> Self
+pub fn Span::equal(Self, Self) -> Bool
 pub fn Span::is_empty(Self) -> Bool
 pub fn Span::join(Self, Self) -> Self
+pub fn Span::not_equal(Self, Self) -> Bool
+pub fn Span::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Spec {
   preconditions : Array[Term]
@@ -446,11 +587,17 @@ pub(all) struct Spec {
   partial : Bool
 } derive(Eq, @debug.Debug)
 pub fn Spec::empty() -> Self
+pub fn Spec::equal(Self, Self) -> Bool
+pub fn Spec::not_equal(Self, Self) -> Bool
+pub fn Spec::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Term {
   desc : TermDesc
   span : Span
 } derive(Eq, @debug.Debug)
+pub fn Term::equal(Self, Self) -> Bool
+pub fn Term::not_equal(Self, Self) -> Bool
+pub fn Term::to_repr(Self) -> @debug.Repr
 
 pub(all) enum TermDesc {
   Ttrue
@@ -478,6 +625,9 @@ pub(all) enum TermDesc {
   Tscope(QualId, Term)
   Tat(Term, Ident)
 } derive(Eq, @debug.Debug)
+pub fn TermDesc::equal(Self, Self) -> Bool
+pub fn TermDesc::not_equal(Self, Self) -> Bool
+pub fn TermDesc::to_repr(Self) -> @debug.Repr
 
 pub(all) struct TypeDecl {
   span : Span
@@ -489,6 +639,9 @@ pub(all) struct TypeDecl {
   witness : Expr?
   definition : TypeDef
 } derive(Eq, @debug.Debug)
+pub fn TypeDecl::equal(Self, Self) -> Bool
+pub fn TypeDecl::not_equal(Self, Self) -> Bool
+pub fn TypeDecl::to_repr(Self) -> @debug.Repr
 
 pub(all) enum TypeDef {
   TDalias(Pty)
@@ -497,18 +650,26 @@ pub(all) enum TypeDef {
   TDrange(@bigint.BigInt, @bigint.BigInt)
   TDfloat(Int64, Int64)
 } derive(Eq, @debug.Debug)
+pub fn TypeDef::equal(Self, Self) -> Bool
+pub fn TypeDef::not_equal(Self, Self) -> Bool
+pub fn TypeDef::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Variant {
   items : Array[(Term, QualId?)]
 } derive(Eq, @debug.Debug)
+pub fn Variant::equal(Self, Self) -> Bool
+pub fn Variant::not_equal(Self, Self) -> Bool
+pub fn Variant::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Visibility {
   Public
   Private
   Abstract
 } derive(Eq, @debug.Debug)
+pub fn Visibility::equal(Self, Self) -> Bool
+pub fn Visibility::not_equal(Self, Self) -> Bool
+pub fn Visibility::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 
 // Traits
-

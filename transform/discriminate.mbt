@@ -129,7 +129,7 @@ priv struct DiscriminatedInstance {
 fn compare_semantic_local_id(
   left : @identity.SemanticId,
   right : @identity.SemanticId,
-) -> Int {
+) -> Int32 {
   let left = left.local_id()
   let right = right.local_id()
   if left < right {
@@ -145,7 +145,7 @@ fn compare_semantic_local_id(
 fn symbol_rank(
   symbols : ArrayView[@logic.TypeSymbol],
   symbol : @logic.TypeSymbol,
-) -> Int {
+) -> Int32 {
   for index, candidate in symbols {
     if candidate == symbol {
       return index
@@ -159,7 +159,7 @@ fn compare_discriminated_type(
   left : @logic.Ty,
   right : @logic.Ty,
   type_symbol_order : ArrayView[@logic.TypeSymbol],
-) -> Int {
+) -> Int32 {
   match (left.view(), right.view()) {
     (TyVar(left), TyVar(right)) =>
       compare_semantic_local_id(left.semantic_id(), right.semantic_id())
@@ -212,7 +212,7 @@ fn compare_discriminated_type_lists(
   left : ArrayView[@logic.Ty],
   right : ArrayView[@logic.Ty],
   type_symbol_order : ArrayView[@logic.TypeSymbol],
-) -> Int {
+) -> Int32 {
   let shared = if left.length() < right.length() {
     left.length()
   } else {
@@ -255,7 +255,7 @@ fn compare_discriminated_instances(
   right : DiscriminatedInstance,
   logic_symbol_order : ArrayView[@logic.LSymbol],
   type_symbol_order : ArrayView[@logic.TypeSymbol],
-) -> Int {
+) -> Int32 {
   let left_rank = logic_symbol_order
     .search(left.original)
     .unwrap_or(logic_symbol_order.length())

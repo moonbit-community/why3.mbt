@@ -21,7 +21,7 @@ fn process_error(
   kind : @prover.ProcessErrorKind,
   message : String,
 ) -> @prover.ProcessError {
-  @prover.ProcessError({ kind, exit_code: None, signal: None, message })
+  @prover.ProcessError({ kind, exit_code: None, signal: None, message, })
 }
 
 ///|
@@ -99,7 +99,7 @@ async fn resolve_current_launcher() -> ResolvedLauncher {
   }
   let direct = executable_candidate(arguments[0]) catch { _ => None }
   if direct is Some(path) {
-    return { executable: { path, }, arguments: [] }
+    return { executable: { path, }, arguments: [], }
   }
   let source_file = @fs.realpath(arguments[0]) catch {
     _ =>
@@ -133,5 +133,5 @@ async fn resolve_current_launcher() -> ResolvedLauncher {
   }
   let tcc_path = moon_path[:moon_path.length() - 4].to_owned() + "internal/tcc"
   let tcc = resolve_executable(@utf8.encode(tcc_path))
-  { executable: tcc, arguments: ["@" + response_file] }
+  { executable: tcc, arguments: ["@" + response_file], }
 }
