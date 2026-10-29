@@ -25,7 +25,7 @@ pub(all) enum ProcessErrorKind {
 ///|
 pub(all) struct ProcessDiagnostic {
   kind : ProcessErrorKind
-  exit_code : Int?
+  exit_code : Int32?
   signal : Bytes?
   message : String
 } derive(Eq, Debug)
@@ -61,7 +61,7 @@ pub(all) enum ProverStream {
 ///|
 pub(all) struct OutputLimitDiagnostic {
   stream : ProverStream
-  limit_bytes : Int
+  limit_bytes : Int32
 } derive(Eq, Debug)
 
 ///|

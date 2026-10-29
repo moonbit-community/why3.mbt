@@ -117,7 +117,7 @@ fn make_parse_diagnostic(
   kind : ParseErrorKind,
   span : Span,
   actual? : String,
-  expected? : Array[String] = [],
+  expected~ : Array[String] = [],
 ) -> ParseDiagnostic {
   let expected = stable_expected(expected)
   {

@@ -157,8 +157,8 @@ fn scan_term(
 fn snapshot_key_matches(
   origin : @identity.Origin,
   theory_key : BytesView,
-  item : UInt,
-  inner : UInt,
+  item : UInt32,
+  inner : UInt32,
   digest : BytesView,
 ) -> Bool {
   guard origin.view() is SnapshotOrigin(_, key, _) else { return false }

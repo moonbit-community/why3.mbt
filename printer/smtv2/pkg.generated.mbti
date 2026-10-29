@@ -18,14 +18,17 @@ pub fn print_task(SmtV26Query, @theory.Task) -> SmtQuery raise PrinterError
 pub(all) suberror PrinterError {
   PrinterError(PrinterDiagnostic)
 } derive(Eq, @debug.Debug)
+pub fn PrinterError::equal(Self, Self) -> Bool
+pub fn PrinterError::not_equal(Self, Self) -> Bool
+pub fn PrinterError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
 type NormalizedSmtTokens
 pub fn NormalizedSmtTokens::tokens(Self) -> ArrayView[Bytes]
 
 pub(all) struct PrintedIdentifier {
-  start : Int
-  end : Int
+  start : Int32
+  end : Int32
   semantic_id : @identity.SemanticId
   origin : @identity.Origin
 }
@@ -34,6 +37,9 @@ pub(all) struct PrinterDiagnostic {
   kind : PrinterErrorKind
   message : String
 } derive(Eq, @debug.Debug)
+pub fn PrinterDiagnostic::equal(Self, Self) -> Bool
+pub fn PrinterDiagnostic::not_equal(Self, Self) -> Bool
+pub fn PrinterDiagnostic::to_repr(Self) -> @debug.Repr
 
 pub(all) enum PrinterErrorKind {
   ContextMismatch
@@ -49,6 +55,9 @@ pub(all) enum PrinterErrorKind {
   InvalidIdentifierOccurrence
   InvalidSmtToken
 } derive(Eq, @debug.Debug)
+pub fn PrinterErrorKind::equal(Self, Self) -> Bool
+pub fn PrinterErrorKind::not_equal(Self, Self) -> Bool
+pub fn PrinterErrorKind::to_repr(Self) -> @debug.Repr
 
 type SmtQuery
 pub fn SmtQuery::bytes(Self) -> BytesView
@@ -57,9 +66,12 @@ pub fn SmtQuery::identifiers(Self) -> ArrayView[PrintedIdentifier]
 pub(all) struct SmtToken {
   kind : SmtTokenKind
   bytes : Bytes
-  start : Int
-  end : Int
+  start : Int32
+  end : Int32
 } derive(Eq, @debug.Debug)
+pub fn SmtToken::equal(Self, Self) -> Bool
+pub fn SmtToken::not_equal(Self, Self) -> Bool
+pub fn SmtToken::to_repr(Self) -> @debug.Repr
 
 pub(all) enum SmtTokenKind {
   LeftParenthesis
@@ -68,6 +80,9 @@ pub(all) enum SmtTokenKind {
   QuotedSymbol
   StringLiteral
 } derive(Eq, @debug.Debug)
+pub fn SmtTokenKind::equal(Self, Self) -> Bool
+pub fn SmtTokenKind::not_equal(Self, Self) -> Bool
+pub fn SmtTokenKind::to_repr(Self) -> @debug.Repr
 
 type SmtV26Query
 pub fn SmtV26Query::context_anchor(Self) -> @identity.SemanticId
@@ -77,4 +92,3 @@ pub fn SmtV26Query::preludes(Self) -> ArrayView[Bytes]
 // Type aliases
 
 // Traits
-

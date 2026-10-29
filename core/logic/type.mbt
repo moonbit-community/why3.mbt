@@ -27,7 +27,7 @@ priv enum TypeDefinition {
   DefinitionNone
   DefinitionAlias(Ty)
   DefinitionRange(BigInt, BigInt)
-  DefinitionFloat(Int, Int)
+  DefinitionFloat(Int32, Int32)
 }
 
 ///|
@@ -66,7 +66,7 @@ pub(all) enum TypeDefinitionView {
   NoDef
   Alias(Ty)
   Range(BigInt, BigInt)
-  Float(Int, Int)
+  Float(Int32, Int32)
 }
 
 ///|
@@ -85,7 +85,7 @@ pub fn TyVarSymbol::new(
   name : BytesView,
   origin : @identity.Origin,
 ) -> TyVarSymbol {
-  { id: context.fresh_id(), name: name.to_owned(), origin }
+  { id: context.fresh_id(), name: name.to_owned(), origin, }
 }
 
 ///|
@@ -129,7 +129,7 @@ pub fn TypeSymbol::origin(self : TypeSymbol) -> @identity.Origin {
 }
 
 ///|
-pub fn TypeSymbol::arity(self : TypeSymbol) -> Int {
+pub fn TypeSymbol::arity(self : TypeSymbol) -> Int32 {
   self.parameters.length()
 }
 
@@ -327,8 +327,8 @@ pub fn TypeSymbol::trusted_float(
   context : @identity.CompilationContext,
   name : BytesView,
   origin : @identity.Origin,
-  exponent_digits : Int,
-  significand_digits : Int,
+  exponent_digits : Int32,
+  significand_digits : Int32,
   span : @identity.SourceSpan?,
 ) -> TypeSymbol raise TypeError {
   require_snapshot_origin(origin, span)
@@ -365,12 +365,12 @@ pub fn TypeSymbol::trusted_builtin(
 
 ///|
 pub fn Ty::variable(symbol : TyVarSymbol) -> Ty {
-  { node: VariableNode(symbol) }
+  { node: VariableNode(symbol), }
 }
 
 ///|
 fn Ty::application_unchecked(symbol : TypeSymbol, arguments : Array[Ty]) -> Ty {
-  { node: ApplicationNode(symbol, arguments) }
+  { node: ApplicationNode(symbol, arguments), }
 }
 
 ///|

@@ -8,7 +8,7 @@ pub(all) enum ProverTransport {
 ///|
 pub(all) enum ParentDeadlinePolicy {
   NoAutomaticDeadline
-  DeadlineAfterSeconds(Int)
+  DeadlineAfterSeconds(Int32)
 } derive(Eq, Debug)
 
 ///|
@@ -17,10 +17,10 @@ struct CommandSpec {
   transport : ProverTransport
   executable_request : Bytes
   arguments : Array[Bytes]
-  solver_seconds : Int
+  solver_seconds : Int32
   parent_deadline_policy : ParentDeadlinePolicy
-  stdout_limit_bytes : Int
-  stderr_limit_bytes : Int
+  stdout_limit_bytes : Int32
+  stderr_limit_bytes : Int32
 }
 
 ///|
@@ -29,10 +29,10 @@ pub(all) struct CommandSpecView {
   transport : ProverTransport
   executable_request : Bytes
   arguments : ArrayView[Bytes]
-  solver_seconds : Int
+  solver_seconds : Int32
   parent_deadline_policy : ParentDeadlinePolicy
-  stdout_limit_bytes : Int
-  stderr_limit_bytes : Int
+  stdout_limit_bytes : Int32
+  stderr_limit_bytes : Int32
 }
 
 ///|
@@ -51,7 +51,7 @@ pub fn CommandSpec::new(
   transport : ProverTransport,
   executable_request : BytesView,
   arguments : ArrayView[Bytes],
-  solver_seconds : Int,
+  solver_seconds : Int32,
 ) -> CommandSpec raise ConfigError {
   let seconds = validate_solver_seconds(solver_seconds)
   if executable_request.is_empty() || contains_nul(executable_request) {

@@ -3,8 +3,8 @@
 ///|
 pub fn prepare_proof(
   checked : CheckedFile,
-  solver_seconds? : Int = @prover.default_solver_seconds(),
-  executable_request? : BytesView? = None,
+  solver_seconds~ : Int32 = @prover.default_solver_seconds(),
+  executable_request~ : BytesView? = None,
 ) -> Array[@z3.PreparedCall] raise {
   let checked = tasks(checked)
   let profile = bind_z3_profile(checked.environment, checked.context)

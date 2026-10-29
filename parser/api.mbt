@@ -7,7 +7,7 @@
 ///|
 fn invalid_utf16_at(
   filename : BytesView,
-  byte_offset : Int,
+  byte_offset : Int32,
   line : Int64,
   column : Int64,
 ) -> Bytes raise ParseError {
@@ -66,7 +66,7 @@ fn encode_valid_utf16(
 /// Parses a complete WhyML file from raw bytes.
 pub fn parse_mlw_file(
   source : BytesView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> MlwFile raise ParseError {
   parse_mlw_file_entry(source, filename~)
 }
@@ -75,7 +75,7 @@ pub fn parse_mlw_file(
 /// Parses one logical term from raw bytes.
 pub fn parse_term(
   source : BytesView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> Term raise ParseError {
   parse_term_entry(source, filename~)
 }
@@ -84,7 +84,7 @@ pub fn parse_term(
 /// Parses one program expression from raw bytes.
 pub fn parse_expr(
   source : BytesView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> Expr raise ParseError {
   parse_expr_entry(source, filename~)
 }
@@ -93,7 +93,7 @@ pub fn parse_expr(
 /// Parses one pure or program declaration from raw bytes.
 pub fn parse_decl(
   source : BytesView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> Decl raise ParseError {
   parse_decl_entry(source, filename~)
 }
@@ -102,7 +102,7 @@ pub fn parse_decl(
 /// Parses a nonempty comma-separated list of logical terms from raw bytes.
 pub fn parse_term_list(
   source : BytesView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> Array[Term] raise ParseError {
   parse_term_list_entry(source, filename~)
 }
@@ -111,7 +111,7 @@ pub fn parse_term_list(
 /// Parses one qualified identifier from raw bytes.
 pub fn parse_qualid(
   source : BytesView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> QualId raise ParseError {
   parse_qualid_entry(source, filename~)
 }
@@ -120,7 +120,7 @@ pub fn parse_qualid(
 /// Parses a nonempty comma-separated list of qualified identifiers.
 pub fn parse_list_qualid(
   source : BytesView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> Array[QualId] raise ParseError {
   parse_qualid_list_entry(source, filename~)
 }
@@ -129,7 +129,7 @@ pub fn parse_list_qualid(
 /// Parses a nonempty comma-separated list of identifiers.
 pub fn parse_list_ident(
   source : BytesView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> Array[Ident] raise ParseError {
   parse_ident_list_entry(source, filename~)
 }
@@ -145,7 +145,7 @@ pub fn parse_list_ident(
 /// ```
 pub fn parse_mlw_file_text(
   source : StringView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> MlwFile raise ParseError {
   parse_mlw_file(encode_valid_utf16(source, filename), filename~)
 }
@@ -161,7 +161,7 @@ pub fn parse_mlw_file_text(
 /// ```
 pub fn parse_term_text(
   source : StringView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> Term raise ParseError {
   parse_term(encode_valid_utf16(source, filename), filename~)
 }
@@ -182,7 +182,7 @@ pub fn parse_term_text(
 /// ```
 pub fn parse_expr_text(
   source : StringView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> Expr raise ParseError {
   parse_expr(encode_valid_utf16(source, filename), filename~)
 }
@@ -191,7 +191,7 @@ pub fn parse_expr_text(
 /// Parses one pure or program declaration from validated UTF-16 text.
 pub fn parse_decl_text(
   source : StringView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> Decl raise ParseError {
   parse_decl(encode_valid_utf16(source, filename), filename~)
 }
@@ -200,7 +200,7 @@ pub fn parse_decl_text(
 /// Parses a nonempty comma-separated list of terms from validated text.
 pub fn parse_term_list_text(
   source : StringView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> Array[Term] raise ParseError {
   parse_term_list(encode_valid_utf16(source, filename), filename~)
 }
@@ -209,7 +209,7 @@ pub fn parse_term_list_text(
 /// Parses one qualified identifier from validated UTF-16 text.
 pub fn parse_qualid_text(
   source : StringView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> QualId raise ParseError {
   parse_qualid(encode_valid_utf16(source, filename), filename~)
 }
@@ -218,7 +218,7 @@ pub fn parse_qualid_text(
 /// Parses a nonempty comma-separated list of qualified identifiers from text.
 pub fn parse_list_qualid_text(
   source : StringView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> Array[QualId] raise ParseError {
   parse_list_qualid(encode_valid_utf16(source, filename), filename~)
 }
@@ -227,7 +227,7 @@ pub fn parse_list_qualid_text(
 /// Parses a nonempty comma-separated list of identifiers from validated text.
 pub fn parse_list_ident_text(
   source : StringView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> Array[Ident] raise ParseError {
   parse_list_ident(encode_valid_utf16(source, filename), filename~)
 }

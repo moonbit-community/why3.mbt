@@ -140,7 +140,7 @@ test "pure typing preserves arity mismatch and occurs-check classes" {
 fn expect_unsupported_before_task(
   source : BytesView,
   filename : BytesView,
-  unit_index : Int,
+  unit_index : Int32,
   feature : @why3_elab.UnsupportedFeature,
   start_line : Int64,
   start_column : Int64,

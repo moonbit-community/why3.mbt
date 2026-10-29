@@ -24,7 +24,7 @@ pub fn encode_smt_token_record(
   source : BytesView,
   unit_name : BytesView,
   goal_name : BytesView,
-  goal_ordinal : Int,
+  goal_ordinal : Int32,
   stream : @smtv2.NormalizedSmtTokens,
 ) -> Bytes {
   if goal_ordinal < 0 {

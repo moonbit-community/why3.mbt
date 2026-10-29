@@ -17,16 +17,25 @@ pub fn minimal_env(@identity.CompilationContext) -> FrozenEnvironment raise
 pub(all) suberror BindError {
   BindError(BindDiagnostic)
 } derive(Eq, @debug.Debug)
+pub fn BindError::equal(Self, Self) -> Bool
+pub fn BindError::not_equal(Self, Self) -> Bool
+pub fn BindError::to_repr(Self) -> @debug.Repr
 
 pub(all) suberror SnapshotError {
   SnapshotError(SnapshotDiagnostic)
 } derive(Eq, @debug.Debug)
+pub fn SnapshotError::equal(Self, Self) -> Bool
+pub fn SnapshotError::not_equal(Self, Self) -> Bool
+pub fn SnapshotError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
 pub(all) struct BindDiagnostic {
   kind : BindErrorKind
   message : String
 } derive(Eq, @debug.Debug)
+pub fn BindDiagnostic::equal(Self, Self) -> Bool
+pub fn BindDiagnostic::not_equal(Self, Self) -> Bool
+pub fn BindDiagnostic::to_repr(Self) -> @debug.Repr
 
 pub(all) enum BindErrorKind {
   MissingSymbol
@@ -34,6 +43,9 @@ pub(all) enum BindErrorKind {
   SymbolKindMismatch
   CatalogContextMismatch
 } derive(Eq, @debug.Debug)
+pub fn BindErrorKind::equal(Self, Self) -> Bool
+pub fn BindErrorKind::not_equal(Self, Self) -> Bool
+pub fn BindErrorKind::to_repr(Self) -> @debug.Repr
 
 pub(all) enum DriverSymbol {
   DriverType(@logic.TypeSymbol)
@@ -46,7 +58,7 @@ pub(all) enum DriverSymbol {
 type DriverSymbolCatalog
 pub fn DriverSymbolCatalog::context_anchor(Self) -> @identity.SemanticId
 pub fn DriverSymbolCatalog::keys(Self) -> ArrayView[@identity.SnapshotSymbolKey]
-pub fn DriverSymbolCatalog::length(Self) -> Int
+pub fn DriverSymbolCatalog::length(Self) -> Int32
 pub fn DriverSymbolCatalog::resolve_logic(Self, @identity.SnapshotSymbolKey) -> @logic.LSymbol raise BindError
 pub fn DriverSymbolCatalog::resolve_program_type(Self, @identity.SnapshotSymbolKey) -> @mlw.ProgramTypeSymbol raise BindError
 pub fn DriverSymbolCatalog::resolve_proposition(Self, @identity.SnapshotSymbolKey) -> @logic.PrSymbol raise BindError
@@ -77,6 +89,9 @@ pub(all) struct SnapshotDiagnostic {
   path : String
   message : String
 } derive(Eq, @debug.Debug)
+pub fn SnapshotDiagnostic::equal(Self, Self) -> Bool
+pub fn SnapshotDiagnostic::not_equal(Self, Self) -> Bool
+pub fn SnapshotDiagnostic::to_repr(Self) -> @debug.Repr
 
 pub(all) enum SnapshotErrorKind {
   PayloadLengthMismatch
@@ -90,23 +105,26 @@ pub(all) enum SnapshotErrorKind {
   UnsupportedSnapshotVariant
   SemanticInvariantFailure
 } derive(Eq, @debug.Debug)
+pub fn SnapshotErrorKind::equal(Self, Self) -> Bool
+pub fn SnapshotErrorKind::not_equal(Self, Self) -> Bool
+pub fn SnapshotErrorKind::to_repr(Self) -> @debug.Repr
 
 type SnapshotManifest
 pub fn SnapshotManifest::view(Self) -> SnapshotManifestView
 
 pub(all) struct SnapshotManifestView {
-  schema_version : Int
-  snapshot_schema_version : Int
+  schema_version : Int32
+  snapshot_schema_version : Int32
   why3_version : Bytes
   why3_commit : Bytes
   why3_tree : Bytes
   driver_profile : Bytes
-  payload_length : Int
+  payload_length : Int32
   payload_sha256 : Bytes
-  theory_count : Int
-  module_count : Int
-  symbol_count : Int
-  type_variable_count : Int
+  theory_count : Int32
+  module_count : Int32
+  symbol_count : Int32
+  type_variable_count : Int32
 }
 
 type StdlibHandles
@@ -137,4 +155,3 @@ pub(all) struct StdlibHandlesView {
 // Type aliases
 
 // Traits
-

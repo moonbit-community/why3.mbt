@@ -12,7 +12,7 @@ pub(all) struct PureFileView {
 
 ///|
 pub fn PureFile::view(self : PureFile) -> PureFileView {
-  { theories: self.theories[:] }
+  { theories: self.theories[:], }
 }
 
 ///|

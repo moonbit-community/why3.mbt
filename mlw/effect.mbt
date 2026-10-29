@@ -26,7 +26,7 @@ pub(all) struct EffectView {
 
 ///|
 pub fn Effect::pure(ghost : Bool) -> Effect {
-  { reads: [], ghost }
+  { reads: [], ghost, }
 }
 
 ///|
@@ -37,7 +37,7 @@ pub fn Effect::from_reads(reads : ArrayView[PVariable], ghost : Bool) -> Effect 
       unique.push(variable)
     }
   }
-  { reads: unique, ghost }
+  { reads: unique, ghost, }
 }
 
 ///|
@@ -48,7 +48,7 @@ fn Effect::union(self : Effect, other : Effect) -> Effect {
       reads.push(variable)
     }
   }
-  { reads, ghost: self.ghost || other.ghost }
+  { reads, ghost: self.ghost || other.ghost, }
 }
 
 ///|
@@ -63,5 +63,5 @@ fn Effect::without(self : Effect, binder : PVariable) -> Effect {
 
 ///|
 pub fn Effect::view(self : Effect) -> EffectView {
-  { reads: self.reads[:], termination: Total, ghost: self.ghost }
+  { reads: self.reads[:], termination: Total, ghost: self.ghost, }
 }

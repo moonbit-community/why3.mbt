@@ -12,7 +12,7 @@ struct GoalInfo {
   unit_name : Bytes
   goal : @logic.PrSymbol
   display_name : Bytes
-  ordinal : Int
+  ordinal : Int32
   origin : @identity.Origin
   expl_attributes : Array[Bytes]
 }
@@ -23,7 +23,7 @@ pub(all) struct GoalInfoView {
   unit_name : Bytes
   goal : @logic.PrSymbol
   display_name : Bytes
-  ordinal : Int
+  ordinal : Int32
   origin : @identity.Origin
   expl_attributes : ArrayView[Bytes]
 }
@@ -46,7 +46,7 @@ pub fn GoalInfo::new(
   unit_kind : GoalUnitKind,
   unit_name : BytesView,
   goal : @logic.PrSymbol,
-  ordinal : Int,
+  ordinal : Int32,
 ) -> GoalInfo {
   if ordinal < 0 {
     abort("goal ordinal cannot be negative")
@@ -108,7 +108,7 @@ pub fn PreparedCall::new(
       message: "prepared call combines different compilation contexts",
     })
   }
-  { raw_task, prepared_task, query, command, goal_info }
+  { raw_task, prepared_task, query, command, goal_info, }
 }
 
 ///|

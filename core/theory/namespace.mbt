@@ -18,7 +18,7 @@ pub(all) struct NamespaceView {
 
 ///|
 pub fn Namespace::empty() -> Namespace {
-  { types: [], logic: [], propositions: [], subspaces: [] }
+  { types: [], logic: [], propositions: [], subspaces: [], }
 }
 
 ///|
@@ -91,7 +91,7 @@ pub fn Namespace::add_type(
   symbol : @logic.TypeSymbol,
   span : @identity.SourceSpan?,
 ) -> Namespace raise TheoryError {
-  { ..self, types: add_entry(self.types, name, symbol, span) }
+  { ..self, types: add_entry(self.types, name, symbol, span), }
 }
 
 ///|
@@ -101,7 +101,7 @@ pub fn Namespace::add_logic(
   symbol : @logic.LSymbol,
   span : @identity.SourceSpan?,
 ) -> Namespace raise TheoryError {
-  { ..self, logic: add_entry(self.logic, name, symbol, span) }
+  { ..self, logic: add_entry(self.logic, name, symbol, span), }
 }
 
 ///|
@@ -111,7 +111,7 @@ pub fn Namespace::add_proposition(
   symbol : @logic.PrSymbol,
   span : @identity.SourceSpan?,
 ) -> Namespace raise TheoryError {
-  { ..self, propositions: add_entry(self.propositions, name, symbol, span) }
+  { ..self, propositions: add_entry(self.propositions, name, symbol, span), }
 }
 
 ///|

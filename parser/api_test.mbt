@@ -15,7 +15,7 @@ test "diagnostic: ParseError is catchable through the public package" {
   }
   let diagnostic = @parser.ParseDiagnostic::{
     kind: UnexpectedEof,
-    span: { start: at, end: at },
+    span: { start: at, end: at, },
     actual: None,
     expected: ["term"],
     message: "unexpected end of input; expected term",
@@ -30,7 +30,7 @@ test "diagnostic: ParseError is catchable through the public package" {
 ///|
 fn public_term_error(
   source : BytesView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> @parser.ParseDiagnostic {
   try @parser.parse_term(source, filename~) catch {
     ParseError(diagnostic) => diagnostic
@@ -42,7 +42,7 @@ fn public_term_error(
 ///|
 fn public_term_text_error(
   source : StringView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> @parser.ParseDiagnostic {
   try @parser.parse_term_text(source, filename~) catch {
     ParseError(diagnostic) => diagnostic
@@ -55,7 +55,7 @@ fn public_term_text_error(
 fn unsafe_fixed_utf16_string(code_units : FixedArray[UInt16]) -> String = "%string.unsafe_from_uint16_fixedarray"
 
 ///|
-fn unsafe_test_utf16_string(code_units : ArrayView[Int]) -> String {
+fn unsafe_test_utf16_string(code_units : ArrayView[Int32]) -> String {
   unsafe_fixed_utf16_string(
     FixedArray::makei(code_units.length(), index => {
       code_units[index].to_uint16()

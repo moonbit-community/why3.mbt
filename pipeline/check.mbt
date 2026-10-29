@@ -3,7 +3,7 @@
 ///|
 pub fn check(
   source : BytesView,
-  filename? : BytesView = b"",
+  filename~ : BytesView = b"",
 ) -> CheckedFile raise {
   let parsed = @parser.parse_mlw_file(source, filename~)
   let context = @identity.CompilationContext::new()

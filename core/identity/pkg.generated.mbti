@@ -11,6 +11,9 @@ import {
 pub(all) suberror ContextMismatch {
   ContextMismatch(String)
 } derive(Eq, @debug.Debug)
+pub fn ContextMismatch::equal(Self, Self) -> Bool
+pub fn ContextMismatch::not_equal(Self, Self) -> Bool
+pub fn ContextMismatch::to_repr(Self) -> @debug.Repr
 
 // Types and methods
 type CompilationContext
@@ -44,21 +47,30 @@ pub(all) enum GeneratedStage {
   Wp
 } derive(Eq, @debug.Debug)
 pub fn GeneratedStage::canonical_name(Self) -> BytesView
+pub fn GeneratedStage::equal(Self, Self) -> Bool
+pub fn GeneratedStage::not_equal(Self, Self) -> Bool
+pub fn GeneratedStage::to_repr(Self) -> @debug.Repr
 
 type Origin derive(Eq, @debug.Debug)
 pub fn Origin::allows_generated_name_normalization(Self) -> Bool
 pub fn Origin::attributes(Self) -> ArrayView[Bytes]
 pub fn Origin::display_name(Self) -> BytesView
+pub fn Origin::equal(Self, Self) -> Bool
 pub fn Origin::generated(GeneratedStage, BytesView, SourceSpan?, ArrayView[Bytes]) -> Self
 pub fn Origin::kind(Self) -> OriginKind
+pub fn Origin::not_equal(Self, Self) -> Bool
 pub fn Origin::snapshot(BytesView, SnapshotSymbolKey, ArrayView[Bytes]) -> Self
 pub fn Origin::snapshot_key(Self) -> SnapshotSymbolKey?
 pub fn Origin::snapshot_with_span(BytesView, SnapshotSymbolKey, SourceSpan?, ArrayView[Bytes]) -> Self
 pub fn Origin::source_span(Self) -> SourceSpan?
+pub fn Origin::to_repr(Self) -> @debug.Repr
 pub fn Origin::user(BytesView, SourceSpan?, ArrayView[Bytes]) -> Self
 pub fn Origin::view(Self) -> OriginView
 
 type OriginKind derive(Eq, @debug.Debug)
+pub fn OriginKind::equal(Self, Self) -> Bool
+pub fn OriginKind::not_equal(Self, Self) -> Bool
+pub fn OriginKind::to_repr(Self) -> @debug.Repr
 pub fn OriginKind::view(Self) -> OriginKindView
 
 pub(all) enum OriginKindView {
@@ -66,38 +78,59 @@ pub(all) enum OriginKindView {
   SnapshotKind
   GeneratedKind(GeneratedStage)
 } derive(Eq, @debug.Debug)
+pub fn OriginKindView::equal(Self, Self) -> Bool
+pub fn OriginKindView::not_equal(Self, Self) -> Bool
+pub fn OriginKindView::to_repr(Self) -> @debug.Repr
 
 pub(all) enum OriginView {
   UserOrigin(Bytes, SourceSpan?, ArrayView[Bytes])
   SnapshotOrigin(Bytes, SnapshotSymbolKey, ArrayView[Bytes])
   GeneratedOrigin(GeneratedStage, Bytes, SourceSpan?, ArrayView[Bytes])
 } derive(Eq, @debug.Debug)
+pub fn OriginView::equal(Self, Self) -> Bool
+pub fn OriginView::not_equal(Self, Self) -> Bool
+pub fn OriginView::to_repr(Self) -> @debug.Repr
 
 type SemanticAttributes derive(Eq, @debug.Debug)
 pub fn SemanticAttributes::contains(Self, BytesView) -> Bool
 pub fn SemanticAttributes::empty() -> Self
+pub fn SemanticAttributes::equal(Self, Self) -> Bool
 pub fn SemanticAttributes::from_array(ArrayView[Bytes]) -> Self
 pub fn SemanticAttributes::items(Self) -> ArrayView[Bytes]
+pub fn SemanticAttributes::not_equal(Self, Self) -> Bool
+pub fn SemanticAttributes::to_repr(Self) -> @debug.Repr
 
 type SemanticId
+pub fn SemanticId::equal(Self, Self) -> Bool
+pub fn SemanticId::hash(Self) -> Int32
+pub fn SemanticId::hash_combine(Self, Hasher) -> Unit
 pub fn SemanticId::local_id(Self) -> Int64
+pub fn SemanticId::not_equal(Self, Self) -> Bool
 pub fn SemanticId::require_same_context(Self, Self, operation? : String) -> Unit raise ContextMismatch
 pub fn SemanticId::same_context(Self, Self) -> Bool
 pub impl Eq for SemanticId
 pub impl Hash for SemanticId
 
 type SnapshotSymbolKey derive(Eq, @debug.Debug)
-pub fn SnapshotSymbolKey::new(BytesView, UInt, UInt, SnapshotSymbolKind, BytesView) -> Self
+pub fn SnapshotSymbolKey::equal(Self, Self) -> Bool
+pub fn SnapshotSymbolKey::hash(Self) -> Int32
+pub fn SnapshotSymbolKey::hash_combine(Self, Hasher) -> Unit
+pub fn SnapshotSymbolKey::new(BytesView, UInt32, UInt32, SnapshotSymbolKind, BytesView) -> Self
+pub fn SnapshotSymbolKey::not_equal(Self, Self) -> Bool
+pub fn SnapshotSymbolKey::to_repr(Self) -> @debug.Repr
 pub fn SnapshotSymbolKey::view(Self) -> SnapshotSymbolKeyView
 pub impl Hash for SnapshotSymbolKey
 
 pub(all) struct SnapshotSymbolKeyView {
   theory_key : Bytes
-  theory_item_ordinal : UInt
-  declaration_inner_ordinal : UInt
+  theory_item_ordinal : UInt32
+  declaration_inner_ordinal : UInt32
   symbol_kind : SnapshotSymbolKind
   symbol_digest : Bytes
 } derive(Eq, @debug.Debug)
+pub fn SnapshotSymbolKeyView::equal(Self, Self) -> Bool
+pub fn SnapshotSymbolKeyView::not_equal(Self, Self) -> Bool
+pub fn SnapshotSymbolKeyView::to_repr(Self) -> @debug.Repr
 
 pub(all) enum SnapshotSymbolKind {
   Type
@@ -107,22 +140,30 @@ pub(all) enum SnapshotSymbolKind {
   Region
 } derive(Eq, @debug.Debug)
 pub fn SnapshotSymbolKind::canonical_name(Self) -> BytesView
+pub fn SnapshotSymbolKind::equal(Self, Self) -> Bool
+pub fn SnapshotSymbolKind::not_equal(Self, Self) -> Bool
+pub fn SnapshotSymbolKind::to_repr(Self) -> @debug.Repr
 
 type SourceSpan derive(Eq, @debug.Debug)
-pub fn SourceSpan::new(BytesView, Int, Int, Int64, Int64, Int64, Int64) -> Self
+pub fn SourceSpan::equal(Self, Self) -> Bool
+pub fn SourceSpan::new(BytesView, Int32, Int32, Int64, Int64, Int64, Int64) -> Self
+pub fn SourceSpan::not_equal(Self, Self) -> Bool
+pub fn SourceSpan::to_repr(Self) -> @debug.Repr
 pub fn SourceSpan::view(Self) -> SourceSpanView
 
 pub(all) struct SourceSpanView {
   relative_path : Bytes
-  start_byte : Int
-  end_byte : Int
+  start_byte : Int32
+  end_byte : Int32
   start_line : Int64
   start_column : Int64
   end_line : Int64
   end_column : Int64
 } derive(Eq, @debug.Debug)
+pub fn SourceSpanView::equal(Self, Self) -> Bool
+pub fn SourceSpanView::not_equal(Self, Self) -> Bool
+pub fn SourceSpanView::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 
 // Traits
-

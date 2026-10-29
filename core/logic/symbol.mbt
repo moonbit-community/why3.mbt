@@ -11,14 +11,14 @@ struct VSymbol {
 ///|
 priv enum LogicSymbolRole {
   OrdinaryRole
-  ConstructorRole(Int)
+  ConstructorRole(Int32)
   ProjectionRole
 }
 
 ///|
 pub(all) enum LogicSymbolRoleView {
   Ordinary
-  Constructor(Int)
+  Constructor(Int32)
   Projection
 } derive(Eq, Debug)
 
@@ -80,7 +80,7 @@ pub fn VSymbol::new(
     span,
     "variable type belongs to another compilation context",
   )
-  { id: context.fresh_id(), name: name.to_owned(), origin, ty }
+  { id: context.fresh_id(), name: name.to_owned(), origin, ty, }
 }
 
 ///|
@@ -104,7 +104,7 @@ pub fn VSymbol::ty(self : VSymbol) -> Ty {
 
 ///|
 pub fn VSymbol::view(self : VSymbol) -> VSymbolView {
-  { id: self.id, name: self.name, origin: self.origin, ty: self.ty }
+  { id: self.id, name: self.name, origin: self.origin, ty: self.ty, }
 }
 
 ///|
@@ -219,7 +219,7 @@ pub fn LSymbol::trusted_constructor(
   origin : @identity.Origin,
   argument_types : ArrayView[Ty],
   result_type : Ty,
-  constructor_count : Int,
+  constructor_count : Int32,
   span : @identity.SourceSpan?,
 ) -> LSymbol raise TypeError {
   require_snapshot_origin(origin, span)
@@ -301,7 +301,7 @@ pub fn PrSymbol::new(
   name : BytesView,
   origin : @identity.Origin,
 ) -> PrSymbol {
-  { id: context.fresh_id(), name: name.to_owned(), origin }
+  { id: context.fresh_id(), name: name.to_owned(), origin, }
 }
 
 ///|
@@ -311,7 +311,7 @@ pub fn PrSymbol::semantic_id(self : PrSymbol) -> @identity.SemanticId {
 
 ///|
 pub fn PrSymbol::view(self : PrSymbol) -> PrSymbolView {
-  { id: self.id, name: self.name, origin: self.origin }
+  { id: self.id, name: self.name, origin: self.origin, }
 }
 
 ///|

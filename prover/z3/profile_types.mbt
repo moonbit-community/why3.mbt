@@ -115,7 +115,7 @@ priv struct ResultRegexp {
 
 ///|
 priv struct ResultExitCode {
-  code : Int
+  code : Int32
   answer : ProverAnswerRule
 }
 
@@ -127,7 +127,7 @@ pub(all) struct ResultRegexpView {
 
 ///|
 pub(all) struct ResultExitCodeView {
-  code : Int
+  code : Int32
   answer : ProverAnswerRule
 }
 
@@ -180,16 +180,16 @@ struct Z3StaticSpec {
 pub(all) struct Z3StaticSpecView {
   printer : Z3Printer
   transforms : ArrayView[TransformId]
-  driver_meta_group_count : Int
-  driver_meta_count : Int
-  snapshot_meta_group_count : Int
-  snapshot_meta_count : Int
-  syntax_count : Int
-  remove_count : Int
+  driver_meta_group_count : Int32
+  driver_meta_count : Int32
+  snapshot_meta_group_count : Int32
+  snapshot_meta_count : Int32
+  syntax_count : Int32
+  remove_count : Int32
   preludes : ArrayView[Bytes]
-  theory_prelude_count : Int
-  result_regexp_count : Int
-  result_exit_code_count : Int
+  theory_prelude_count : Int32
+  result_regexp_count : Int32
+  result_exit_code_count : Int32
   command : Z3CommandTemplate
   monomorphic_checkpoints : ArrayView[Bytes]
   polymorphic_checkpoints : ArrayView[Bytes]
@@ -197,16 +197,16 @@ pub(all) struct Z3StaticSpecView {
 
 ///|
 fn ResultRegexp::view(self : ResultRegexp) -> ResultRegexpView {
-  { pattern: self.pattern, answer: self.answer }
+  { pattern: self.pattern, answer: self.answer, }
 }
 
 ///|
 fn ResultExitCode::view(self : ResultExitCode) -> ResultExitCodeView {
-  { code: self.code, answer: self.answer }
+  { code: self.code, answer: self.answer, }
 }
 
 ///|
-fn meta_count(groups : ArrayView[UnboundMetaGroup]) -> Int {
+fn meta_count(groups : ArrayView[UnboundMetaGroup]) -> Int32 {
   let mut count = 0
   for group in groups {
     count = count + group.entries.length()

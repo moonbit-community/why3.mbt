@@ -29,7 +29,7 @@ fn bytes_starts_with(value : BytesView, prefix : BytesView) -> Bool {
 }
 
 ///|
-fn find_bytes(value : BytesView, needle : BytesView) -> Int? {
+fn find_bytes(value : BytesView, needle : BytesView) -> Int32? {
   if needle.is_empty() {
     return Some(0)
   }

@@ -8,11 +8,11 @@
 /// carries the logical filename/line selected by source directives.
 priv struct LexerCursor {
   input : BytesView
-  mut index : Int
+  mut index : Int32
   mut position : SourcePos
   mut token_start : SourcePos
-  mut comment_depth : Int
-  mut byte_advance_count : Int
+  mut comment_depth : Int32
+  mut byte_advance_count : Int32
 }
 
 ///|
@@ -34,7 +34,7 @@ fn LexerCursor::at_end(self : LexerCursor) -> Bool {
 }
 
 ///|
-fn LexerCursor::peek(self : LexerCursor, offset? : Int = 0) -> Byte? {
+fn LexerCursor::peek(self : LexerCursor, offset~ : Int32 = 0) -> Byte? {
   let index = self.index + offset
   if index >= 0 && index < self.input.length() {
     Some(self.input[index])
@@ -63,7 +63,7 @@ fn LexerCursor::mark_token_start(self : LexerCursor) -> Unit {
 
 ///|
 fn LexerCursor::current_span(self : LexerCursor) -> Span {
-  { start: self.token_start, end: self.position }
+  { start: self.token_start, end: self.position, }
 }
 
 ///|
@@ -72,12 +72,16 @@ fn LexerCursor::empty_span(self : LexerCursor) -> Span {
 }
 
 ///|
-fn LexerCursor::view(self : LexerCursor, start : Int, end : Int) -> BytesView {
+fn LexerCursor::view(
+  self : LexerCursor,
+  start : Int32,
+  end : Int32,
+) -> BytesView {
   self.input[start:end]
 }
 
 ///|
-fn LexerCursor::advance_raw(self : LexerCursor, count : Int) -> Unit {
+fn LexerCursor::advance_raw(self : LexerCursor, count : Int32) -> Unit {
   self.index = self.index + count
   self.byte_advance_count = self.byte_advance_count + count
   self.position = self.position.advance_raw(count)
@@ -92,7 +96,7 @@ fn LexerCursor::advance_comment_byte(self : LexerCursor) -> Unit {
 }
 
 ///|
-fn LexerCursor::advance_newline(self : LexerCursor, count : Int) -> Unit {
+fn LexerCursor::advance_newline(self : LexerCursor, count : Int32) -> Unit {
   self.index = self.index + count
   self.byte_advance_count = self.byte_advance_count + count
   self.position = self.position.advance_newline(count)

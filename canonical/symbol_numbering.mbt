@@ -11,7 +11,7 @@ pub(all) enum GlobalSymbolKind {
 }
 
 ///|
-fn GlobalSymbolKind::tag(self : GlobalSymbolKind) -> Int {
+fn GlobalSymbolKind::tag(self : GlobalSymbolKind) -> Int32 {
   match self {
     Type => 0
     Logic => 1
@@ -35,13 +35,13 @@ fn GlobalSymbolKind::canonical_name(self : GlobalSymbolKind) -> BytesView {
 ///|
 /// Mutable numbering state used by one canonical preorder traversal.
 struct GlobalSymbolNumbering {
-  entries : Map[(Int, @identity.SemanticId), UInt]
-  next_indices : FixedArray[UInt]
+  entries : Map[(Int32, @identity.SemanticId), UInt32]
+  next_indices : FixedArray[UInt32]
 }
 
 ///|
 pub fn GlobalSymbolNumbering::new() -> GlobalSymbolNumbering {
-  { entries: Map([]), next_indices: FixedArray::make(5, 0U) }
+  { entries: Map([]), next_indices: FixedArray::make(5, 0U), }
 }
 
 ///|
@@ -49,7 +49,7 @@ pub fn GlobalSymbolNumbering::encounter(
   self : GlobalSymbolNumbering,
   kind : GlobalSymbolKind,
   id : @identity.SemanticId,
-) -> UInt {
+) -> UInt32 {
   let tag = kind.tag()
   let key = (tag, id)
   match self.entries.get(key) {

@@ -15,7 +15,7 @@ import {
 // Values
 pub fn bytes_to_lower_hex(BytesView) -> Bytes
 
-pub fn canonical_schema_version() -> Int
+pub fn canonical_schema_version() -> Int32
 
 pub fn encode_bytes(BytesView) -> CanonicalJson
 
@@ -49,11 +49,11 @@ pub fn encode_prover_result_record(BytesView, BytesView, @z3.GoalInfo, @prover.P
 
 pub fn encode_prsymbol(@logic.PrSymbol) -> CanonicalJson
 
-pub fn encode_raw_task_record(BytesView, BytesView, BytesView, Int, @theory.Task) -> Bytes
+pub fn encode_raw_task_record(BytesView, BytesView, BytesView, Int32, @theory.Task) -> Bytes
 
 pub fn encode_routine_symbol(@mlw.RoutineSymbol) -> CanonicalJson raise
 
-pub fn encode_smt_token_record(BytesView, BytesView, BytesView, BytesView, Int, @smtv2.NormalizedSmtTokens) -> Bytes
+pub fn encode_smt_token_record(BytesView, BytesView, BytesView, BytesView, Int32, @smtv2.NormalizedSmtTokens) -> Bytes
 
 pub fn encode_smt_token_stream(@smtv2.NormalizedSmtTokens) -> CanonicalJson
 
@@ -65,7 +65,7 @@ pub fn encode_symbol_events(ArrayView[(Bytes, GlobalSymbolKind, @identity.Semant
 
 pub fn encode_task(@theory.Task) -> CanonicalJson
 
-pub fn encode_task_checkpoint_record(BytesView, BytesView, BytesView, BytesView, Int, BytesView, @theory.Task) -> Bytes
+pub fn encode_task_checkpoint_record(BytesView, BytesView, BytesView, BytesView, Int32, BytesView, @theory.Task) -> Bytes
 
 pub fn encode_term(@logic.Term) -> CanonicalJson
 
@@ -90,8 +90,11 @@ pub fn sha256_hex(BytesView) -> Bytes
 // Types and methods
 type CanonicalJson derive(Eq, @debug.Debug)
 pub fn CanonicalJson::bytes(Self) -> BytesView
+pub fn CanonicalJson::equal(Self, Self) -> Bool
+pub fn CanonicalJson::not_equal(Self, Self) -> Bool
 pub fn CanonicalJson::sha256(Self) -> Bytes
 pub fn CanonicalJson::sha256_hex(Self) -> Bytes
+pub fn CanonicalJson::to_repr(Self) -> @debug.Repr
 
 pub(all) enum GlobalSymbolKind {
   Type
@@ -102,10 +105,9 @@ pub(all) enum GlobalSymbolKind {
 }
 
 type GlobalSymbolNumbering
-pub fn GlobalSymbolNumbering::encounter(Self, GlobalSymbolKind, @identity.SemanticId) -> UInt
+pub fn GlobalSymbolNumbering::encounter(Self, GlobalSymbolKind, @identity.SemanticId) -> UInt32
 pub fn GlobalSymbolNumbering::new() -> Self
 
 // Type aliases
 
 // Traits
-

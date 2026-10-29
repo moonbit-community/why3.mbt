@@ -16,7 +16,7 @@ pub(all) struct ProgramNamespaceView {
 
 ///|
 pub fn ProgramNamespace::empty() -> ProgramNamespace {
-  { types: [], routines: [], subspaces: [] }
+  { types: [], routines: [], subspaces: [], }
 }
 
 ///|
@@ -71,7 +71,7 @@ pub fn ProgramNamespace::add_type(
   symbol : ProgramTypeSymbol,
   span : @identity.SourceSpan?,
 ) -> ProgramNamespace raise MlwError {
-  { ..self, types: add_program_entry(self.types, name, symbol, span) }
+  { ..self, types: add_program_entry(self.types, name, symbol, span), }
 }
 
 ///|
@@ -81,7 +81,7 @@ pub fn ProgramNamespace::add_routine(
   symbol : RoutineSymbol,
   span : @identity.SourceSpan?,
 ) -> ProgramNamespace raise MlwError {
-  { ..self, routines: add_program_entry(self.routines, name, symbol, span) }
+  { ..self, routines: add_program_entry(self.routines, name, symbol, span), }
 }
 
 ///|

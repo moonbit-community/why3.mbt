@@ -21,6 +21,9 @@ pub fn lower_routine(@identity.CompilationContext, @mlw.Pmodule, @mlw.Cty, @mlw.
 pub(all) suberror VcError {
   VcError(VcDiagnostic)
 } derive(Eq, @debug.Debug)
+pub fn VcError::equal(Self, Self) -> Bool
+pub fn VcError::not_equal(Self, Self) -> Bool
+pub fn VcError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
 type Kode
@@ -28,14 +31,14 @@ pub fn Kode::continue_normally() -> Self
 pub fn Kode::view(Self) -> KodeView
 
 pub(all) enum KodeView {
-  Kseq(Kode, Int, Kode)
+  Kseq(Kode, Int32, Kode)
   Kpar(Kode, Kode)
   Kif(@mlw.PVariable, Kode, Kode)
   Klet(@mlw.PVariable, @logic.Term, @logic.Term)
   Kval(ArrayView[@mlw.PVariable], @logic.Term)
   Kcut(@logic.Term)
   Kstop(@logic.Term)
-  Kcont(Int)
+  Kcont(Int32)
 }
 
 pub(all) struct VcDiagnostic {
@@ -43,6 +46,9 @@ pub(all) struct VcDiagnostic {
   span : @identity.SourceSpan?
   message : String
 } derive(Eq, @debug.Debug)
+pub fn VcDiagnostic::equal(Self, Self) -> Bool
+pub fn VcDiagnostic::not_equal(Self, Self) -> Bool
+pub fn VcDiagnostic::to_repr(Self) -> @debug.Repr
 
 pub(all) enum VcErrorKind {
   ContextMismatch
@@ -50,8 +56,10 @@ pub(all) enum VcErrorKind {
   UnsupportedComputation
   InvariantFailure
 } derive(Eq, @debug.Debug)
+pub fn VcErrorKind::equal(Self, Self) -> Bool
+pub fn VcErrorKind::not_equal(Self, Self) -> Bool
+pub fn VcErrorKind::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 
 // Traits
-

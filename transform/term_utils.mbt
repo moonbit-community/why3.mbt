@@ -221,7 +221,7 @@ fn if_simplified(
 }
 
 ///|
-fn variable_occurrences(term : @logic.Term, target : @logic.VSymbol) -> Int {
+fn variable_occurrences(term : @logic.Term, target : @logic.VSymbol) -> Int32 {
   let mut count = 0
   let visit = fn(child) { count = count + variable_occurrences(child, target) }
   match term.view() {

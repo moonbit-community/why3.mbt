@@ -2,3 +2,7 @@ import {
   "moonbit-community/why3/core/identity",
   "moonbit-community/why3/core/logic",
 }
+
+import {
+  "moonbitlang/core/debug",
+}

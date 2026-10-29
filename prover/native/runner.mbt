@@ -17,7 +17,7 @@ struct NativeRunner {
 pub async fn NativeRunner::new(command : @prover.CommandSpec) -> NativeRunner {
   let executable = resolve_executable(command.view().executable_request)
   let launcher = resolve_current_launcher()
-  { command, executable, launcher }
+  { command, executable, launcher, }
 }
 
 ///|
@@ -26,7 +26,7 @@ pub fn NativeRunner::resolved_executable(self : NativeRunner) -> StringView {
 }
 
 ///|
-fn signal_name(number : Int) -> Bytes {
+fn signal_name(number : Int32) -> Bytes {
   match number {
     9 => b"SIGKILL"
     15 => b"SIGTERM"

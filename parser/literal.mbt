@@ -60,7 +60,7 @@ pub fn RealValue::pow5(self : RealValue) -> BigInt {
 }
 
 ///|
-fn digit_value(byte : Byte) -> Int? {
+fn digit_value(byte : Byte) -> Int32? {
   let value = byte.to_int()
   if value >= b'0'.to_int() && value <= b'9'.to_int() {
     Some(value - b'0'.to_int())
@@ -76,7 +76,7 @@ fn digit_value(byte : Byte) -> Int? {
 ///|
 fn parse_bigint_digits(
   digits : BytesView,
-  radix : Int,
+  radix : Int32,
   span : Span,
 ) -> BigInt raise ParseError {
   let base = BigInt::from_int(radix)
@@ -99,7 +99,7 @@ fn parse_bigint_digits(
 }
 
 ///|
-fn int_radix(kind : IntLiteralKind, span : Span) -> Int raise ParseError {
+fn int_radix(kind : IntLiteralKind, span : Span) -> Int32 raise ParseError {
   match kind {
     ILitBin => 2
     ILitOct => 8
@@ -114,16 +114,16 @@ fn int_radix(kind : IntLiteralKind, span : Span) -> Int raise ParseError {
 fn make_int_constant(
   kind : IntLiteralKind,
   digits : BytesView,
-  negative? : Bool = false,
+  negative~ : Bool = false,
   span~ : Span,
 ) -> IntConstant raise ParseError {
   let value = parse_bigint_digits(digits, int_radix(kind, span), span)
-  { kind, value: if negative { -value } else { value } }
+  { kind, value: if negative { -value } else { value }, }
 }
 
 ///|
 fn IntConstant::negated(self : IntConstant) -> IntConstant {
-  { ..self, value: -self.value }
+  { ..self, value: -self.value, }
 }
 
 ///|
@@ -154,7 +154,7 @@ fn normalized_real_value(
 ) -> RealValue {
   if significand.is_zero() {
     let zero = BigInt::from_int(0)
-    return { significand: zero, pow2: zero, pow5: zero }
+    return { significand: zero, pow2: zero, pow5: zero, }
   }
   let (significand, factor2) = extract_factor(
     significand,
@@ -166,7 +166,7 @@ fn normalized_real_value(
     BigInt::from_int(5),
     BigInt::from_int(1),
   )
-  { significand, pow2: pow2 + factor2, pow5: pow5 + factor5 }
+  { significand, pow2: pow2 + factor2, pow5: pow5 + factor5, }
 }
 
 ///|
@@ -182,11 +182,11 @@ pub fn RealValue::normalized(
 
 ///|
 fn make_real_constant(
-  radix : Int,
+  radix : Int32,
   integer_digits : BytesView,
   fraction_digits : BytesView,
   exponent : Int64,
-  negative? : Bool = false,
+  negative~ : Bool = false,
   span~ : Span,
 ) -> RealConstant raise ParseError {
   if integer_digits.is_empty() && fraction_digits.is_empty() {
@@ -209,12 +209,12 @@ fn make_real_constant(
   } else {
     normalized_real_value(significand, power, BigInt::from_int(0))
   }
-  { kind, value }
+  { kind, value, }
 }
 
 ///|
 fn RealConstant::negated(self : RealConstant) -> RealConstant {
-  { ..self, value: { ..self.value, significand: -self.value.significand } }
+  { ..self, value: { ..self.value, significand: -self.value.significand, }, }
 }
 
 ///|

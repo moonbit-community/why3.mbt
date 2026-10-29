@@ -166,7 +166,7 @@ fn SnapshotDecoder::decode_program_declaration(
             )
           }
         ]
-        let no_variables : Map[Int, @logic.VSymbol] = Map([])
+        let no_variables : Map[Int32, @logic.VSymbol] = Map([])
         let invariants = [
           for
             invariant_index, invariant in json_array(
@@ -410,8 +410,8 @@ fn SnapshotDecoder::decode_module_items(
   self : SnapshotDecoder,
   value : Json,
   path : String,
-  ordinal : Ref[Int],
-  prefix : ArrayView[Int],
+  ordinal : Ref[Int32],
+  prefix : ArrayView[Int32],
 ) -> Array[@mlw.ModuleItem] raise {
   let result : Array[@mlw.ModuleItem] = []
   for index, item in json_array(value, path) {

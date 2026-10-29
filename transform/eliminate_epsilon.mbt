@@ -64,7 +64,7 @@ fn partial_arguments_are_canonical(
 ///|
 fn epsilon_expression_matches(
   term : @logic.Term,
-  index : Int,
+  index : Int32,
   reversed : ArrayView[@logic.VSymbol],
 ) -> Bool {
   if index == reversed.length() {
@@ -90,7 +90,7 @@ fn epsilon_expression_matches(
 ///|
 fn epsilon_head_matches(
   term : @logic.Term,
-  index : Int,
+  index : Int32,
   reversed : ArrayView[@logic.VSymbol],
   variable : @logic.VSymbol,
 ) -> Bool {

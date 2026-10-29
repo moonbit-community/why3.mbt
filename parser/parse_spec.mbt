@@ -179,7 +179,7 @@ fn Parser::parse_variant_clause(self : Parser) -> Variant raise {
   for item in items {
     named.push((named_term(name, b"Variant", item.0), item.1))
   }
-  { items: named }
+  { items: named, }
 }
 
 ///|
@@ -238,7 +238,7 @@ fn Parser::parse_single_spec(self : Parser) -> Spec raise {
     ignore(self.expect_symbol(RightBrc))
     return {
       ..Spec::empty(),
-      postconditions: [{ span: branches_span, branches }],
+      postconditions: [{ span: branches_span, branches, }],
     }
   }
   if self.consume_keyword(Raises) is Some(_) {
@@ -254,7 +254,7 @@ fn Parser::parse_single_spec(self : Parser) -> Spec raise {
     ignore(self.expect_symbol(RightBrc))
     return {
       ..Spec::empty(),
-      exceptional_postconditions: [{ span: branches_span, branches }],
+      exceptional_postconditions: [{ span: branches_span, branches, }],
     }
   }
   if self.consume_keyword(Reads) is Some(_) {
@@ -263,7 +263,7 @@ fn Parser::parse_single_spec(self : Parser) -> Spec raise {
       parser.parse_lqualid()
     })
     ignore(self.expect_symbol(RightBrc))
-    return { ..Spec::empty(), reads, check_reads_writes: true }
+    return { ..Spec::empty(), reads, check_reads_writes: true, }
   }
   if self.consume_keyword(Writes) is Some(_) {
     ignore(self.expect_symbol(LeftBrc))
@@ -271,7 +271,7 @@ fn Parser::parse_single_spec(self : Parser) -> Spec raise {
       parser.parse_single_term()
     })
     ignore(self.expect_symbol(RightBrc))
-    return { ..Spec::empty(), writes, check_reads_writes: true }
+    return { ..Spec::empty(), writes, check_reads_writes: true, }
   }
   if self.consume_keyword(Alias) is Some(_) {
     ignore(self.expect_symbol(LeftBrc))
@@ -281,13 +281,13 @@ fn Parser::parse_single_spec(self : Parser) -> Spec raise {
       parser => parser.parse_spec_alias(),
     )
     ignore(self.expect_symbol(RightBrc))
-    return { ..Spec::empty(), aliases, check_reads_writes: true }
+    return { ..Spec::empty(), aliases, check_reads_writes: true, }
   }
   if self.consume_keyword(Diverges) is Some(_) {
-    return { ..Spec::empty(), diverges: true }
+    return { ..Spec::empty(), diverges: true, }
   }
   if self.at_keyword(Variant) {
-    return { ..Spec::empty(), variant: self.parse_variant_clause() }
+    return { ..Spec::empty(), variant: self.parse_variant_clause(), }
   }
   self.fail_syntax("specification clause")
 }
@@ -328,7 +328,7 @@ fn Parser::parse_return_cast(self : Parser) -> ReturnInfo raise {
   let ghost = self.consume_keyword(Ghost) is Some(_)
   let pattern = self.parse_return_ident()
   let return_type = self.parse_cast()
-  { pattern, return_type, mask: if ghost { MaskGhost } else { MaskVisible } }
+  { pattern, return_type, mask: if ghost { MaskGhost } else { MaskVisible }, }
 }
 
 ///|
@@ -408,7 +408,7 @@ fn Parser::parse_generic_return(self : Parser) -> ReturnInfo raise {
         }
       },
     )
-    return { ..mixed, pattern: make_pattern(Pwild, self.span_from(mark)) }
+    return { ..mixed, pattern: make_pattern(Pwild, self.span_from(mark)), }
   }
   let ghost = self.consume_keyword(Ghost) is Some(_)
   let return_type = self.parse_ty()
@@ -456,7 +456,7 @@ fn apply_return(pattern : Pattern, spec : Spec) -> Spec {
       post.branches[0].0.desc is Pvar(ident) &&
       ident.name == b"result" &&
       post.span == ident.span {
-      postconditions.push({ ..post, branches: [(pattern, post.branches[0].1)] })
+      postconditions.push({ ..post, branches: [(pattern, post.branches[0].1)], })
     } else {
       postconditions.push(post)
     }

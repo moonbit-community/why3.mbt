@@ -86,7 +86,7 @@ fn sexp_record(fields : Array[(String, Sexp)]) -> Sexp {
 }
 
 ///|
-fn ascii_digit(value : Int) -> Char {
+fn ascii_digit(value : Int32) -> Char {
   match value {
     0 => '0'
     1 => '1'
@@ -103,7 +103,7 @@ fn ascii_digit(value : Int) -> Char {
 }
 
 ///|
-fn write_decimal_escape(builder : StringBuilder, value : Int) -> Unit {
+fn write_decimal_escape(builder : StringBuilder, value : Int32) -> Unit {
   builder.write_char('\\')
   builder.write_char(ascii_digit(value / 100))
   builder.write_char(ascii_digit(value / 10 % 10))

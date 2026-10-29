@@ -1,5 +1,5 @@
 ///|
-fn ast_test_span(offset : Int) -> Span {
+fn ast_test_span(offset : Int32) -> Span {
   let at = SourcePos::{
     filename: b"ast.mlw",
     byte_offset: offset,
@@ -10,8 +10,8 @@ fn ast_test_span(offset : Int) -> Span {
 }
 
 ///|
-fn ast_test_ident(name : Bytes, offset : Int) -> Ident {
-  { name, attributes: [], span: ast_test_span(offset) }
+fn ast_test_ident(name : Bytes, offset : Int32) -> Ident {
+  { name, attributes: [], span: ast_test_span(offset), }
 }
 
 ///|
@@ -47,9 +47,9 @@ test "AST types: tuple, paren, pure, ref, arrow, and scope stay explicit" {
 
 ///|
 test "AST patterns: wrapper span and descriptor are separate" {
-  let inner = Pattern::{ desc: Pwild, span: ast_test_span(1) }
-  let parenthesized = Pattern::{ desc: Pparen(inner), span: ast_test_span(3) }
-  let outer = Pattern::{ desc: Pghost(parenthesized), span: ast_test_span(4) }
+  let inner = Pattern::{ desc: Pwild, span: ast_test_span(1), }
+  let parenthesized = Pattern::{ desc: Pparen(inner), span: ast_test_span(3), }
+  let outer = Pattern::{ desc: Pghost(parenthesized), span: ast_test_span(4), }
   assert_eq(outer.span, ast_test_span(4))
   guard outer.desc is Pghost(actual_parenthesized) &&
     actual_parenthesized.desc is Pparen(actual_inner) else {
@@ -67,7 +67,12 @@ test "AST binders: anonymous untyped Ptree binders remain representable" {
   let named = make_binder(span, Some(ast_test_ident(b"x", 0)), false, None)
   guard named.ident is Some(identifier) else { fail("expected named binder") }
   assert_eq(identifier.name, b"x")
-  let param = Param::{ span, ident: None, ghost: true, param_type: PTtuple([]) }
+  let param = Param::{
+    span,
+    ident: None,
+    ghost: true,
+    param_type: PTtuple([]),
+  }
   assert_true(param.param_type is PTtuple([]))
 }
 
@@ -101,7 +106,7 @@ fn param_error(input : BytesView) -> ParseDiagnostic {
 ///|
 fn pattern_error(
   input : BytesView,
-  let_pattern? : Bool = false,
+  let_pattern~ : Bool = false,
 ) -> ParseDiagnostic {
   try {
     if let_pattern {
@@ -186,7 +191,7 @@ fn make_nested_source(
   prefix : String,
   atom : String,
   suffix : String,
-  depth : Int,
+  depth : Int32,
 ) -> Bytes {
   let builder = StringBuilder(
     size_hint=(prefix.length() + suffix.length()) * depth + atom.length(),
@@ -438,7 +443,7 @@ test "pattern precedence: cast binds above ghost, which binds above as" {
           { desc: Pas({ desc: Pvar(_), .. }, { name: b"x", .. }, true), .. },
           _
         ),
-        ..,
+        ..
       },
       { desc: Pvar({ name: b"q", .. }), .. }
     ),
@@ -481,7 +486,7 @@ test "pattern parser: repeated nonassociative wrappers and trailing tokens fail"
 ///|
 fn parse_type_entry(
   input : BytesView,
-  filename? : BytesView = b"<type-test>",
+  filename~ : BytesView = b"<type-test>",
 ) -> Pty raise ParseError {
   let parser = Parser::new(input, filename~)
   finish_internal_entry(parser, parser => parser.parse_ty())
@@ -490,7 +495,7 @@ fn parse_type_entry(
 ///|
 fn parse_binders_entry(
   input : BytesView,
-  filename? : BytesView = b"<binder-test>",
+  filename~ : BytesView = b"<binder-test>",
 ) -> Array[Binder] raise ParseError {
   let parser = Parser::new(input, filename~)
   finish_internal_entry(parser, parser => parser.parse_binders())
@@ -499,7 +504,7 @@ fn parse_binders_entry(
 ///|
 fn parse_params_entry(
   input : BytesView,
-  filename? : BytesView = b"<param-test>",
+  filename~ : BytesView = b"<param-test>",
 ) -> Array[Param] raise ParseError {
   let parser = Parser::new(input, filename~)
   finish_internal_entry(parser, parser => parser.parse_params(true))
@@ -508,7 +513,7 @@ fn parse_params_entry(
 ///|
 fn parse_pattern_entry(
   input : BytesView,
-  filename? : BytesView = b"<pattern-test>",
+  filename~ : BytesView = b"<pattern-test>",
 ) -> Pattern raise ParseError {
   let parser = Parser::new(input, filename~)
   finish_internal_entry(parser, parser => parser.parse_pattern())
@@ -517,7 +522,7 @@ fn parse_pattern_entry(
 ///|
 fn parse_let_pattern_entry(
   input : BytesView,
-  filename? : BytesView = b"<let-pattern-test>",
+  filename~ : BytesView = b"<let-pattern-test>",
 ) -> Pattern raise ParseError {
   let parser = Parser::new(input, filename~)
   finish_internal_entry(parser, parser => parser.parse_let_pattern())

@@ -32,5 +32,5 @@ fn[A] fail_bind(
   path : String,
   message : String,
 ) -> A raise BindError {
-  raise BindError({ kind, path, message })
+  raise BindError({ kind, path, message, })
 }

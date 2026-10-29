@@ -192,5 +192,5 @@ fn TokenKind::actual(self : TokenKind) -> String {
 
 ///|
 fn located_token(kind : TokenKind, span : Span) -> LocatedToken {
-  { actual: kind.actual(), kind, span }
+  { actual: kind.actual(), kind, span, }
 }

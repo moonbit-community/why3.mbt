@@ -14,7 +14,7 @@ fn decl_user_origin(name : BytesView) -> @identity.Origin {
 fn decl_snapshot_origin(
   name : BytesView,
   kind : @identity.SnapshotSymbolKind,
-  ordinal : UInt,
+  ordinal : UInt32,
 ) -> @identity.Origin {
   @identity.Origin::snapshot(
     name,

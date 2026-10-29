@@ -5,7 +5,7 @@
 ///|
 priv struct SyntaxBinding {
   template : Bytes
-  override_state : Int
+  override_state : Int32
 }
 
 ///|
@@ -38,11 +38,11 @@ fn add_syntax_binding(
   }
   let incoming = overriding.to_int()
   match entries.get(id) {
-    None => entries[id] = { template, override_state: incoming }
+    None => entries[id] = { template, override_state: incoming, }
     Some(existing) =>
       match (existing.override_state, incoming) {
-        (0, 1) => entries[id] = { template, override_state: 2 }
-        (1, 0) => entries[id] = { ..existing, override_state: 2 }
+        (0, 1) => entries[id] = { template, override_state: 2, }
+        (1, 0) => entries[id] = { ..existing, override_state: 2, }
         _ =>
           fail_printer(
             InvalidSyntaxMeta,

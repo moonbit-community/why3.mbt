@@ -216,13 +216,13 @@ fn pure_sp_sequence(
         reads_with_term(reads_with_term(tail.reads, value), constraint),
         variable.view().pure_symbol,
       )
-      { safety, normal, reads }
+      { safety, normal, reads, }
     }
     _ => {
       let tail = pure_sp(environment, second, post_reads)
       let head = pure_sp(environment, first, tail.reads)
       match head.normal {
-        None => { safety: head.safety, normal: None, reads: head.reads }
+        None => { safety: head.safety, normal: None, reads: head.reads, }
         Some(head_sp) => {
           let bound = symbol_difference(tail.reads, head.reads)
           let tail_safety = forall_simplified(
@@ -240,7 +240,7 @@ fn pure_sp_sequence(
                 ),
               )
           }
-          { safety, normal, reads: head.reads }
+          { safety, normal, reads: head.reads, }
         }
       }
     }
@@ -326,7 +326,7 @@ fn pure_sp(
         reads: reads_with_term(post_reads, formula),
       }
     Kstop(formula) =>
-      { safety: formula, normal: None, reads: formula.free_variables() }
+      { safety: formula, normal: None, reads: formula.free_variables(), }
     Kcont(index) => {
       if index != 0 {
         fail_vc(

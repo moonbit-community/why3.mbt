@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: LGPL-2.1-only WITH OCaml-LGPL-linking-exception
 
 ///|
-extern "C" fn exit_process(code : Int) -> Unit = "exit"
+extern "C" fn exit_process(code : Int32) -> Unit = "exit"
 
 ///|
 fn selected_goal_indices(
   infos : ArrayView[@z3.GoalInfo],
   options : CliOptions,
-) -> Array[Int] raise CliError {
-  let candidates : Array[Int] = []
+) -> Array[Int32] raise CliError {
+  let candidates : Array[Int32] = []
   for index, info in infos {
     let view = info.view()
     if options.theory is Some(theory) && view.unit_name != theory {
@@ -40,7 +40,7 @@ async fn run_check(
   options : CliOptions,
   fixture : BytesView,
   source : BytesView,
-) -> Int {
+) -> Int32 {
   match options.output_mode {
     HumanOutput =>
       @stdio.stdout.write(
@@ -104,7 +104,7 @@ async fn run_task(
   options : CliOptions,
   fixture : BytesView,
   source : BytesView,
-) -> Int {
+) -> Int32 {
   let tasked = @pipeline.tasks(checked)
   let infos = tasked.goal_infos()
   let selected = selected_goal_indices(infos, options)
@@ -140,10 +140,10 @@ async fn run_task(
 ///|
 async fn write_smt_files(
   calls : ArrayView[@z3.PreparedCall],
-  selected : ArrayView[Int],
+  selected : ArrayView[Int32],
   directory : String,
 ) -> Unit {
-  let outputs : Array[(Int, String)] = []
+  let outputs : Array[(Int32, String)] = []
   for index in selected {
     let info = calls[index].goal_info().view()
     let filename = six_digit_ordinal(info.ordinal) +
@@ -184,7 +184,7 @@ async fn run_emit_smt(
   options : CliOptions,
   fixture : BytesView,
   source : BytesView,
-) -> Int {
+) -> Int32 {
   let calls = @pipeline.prepare_proof(checked)
   let infos = [ for call in calls => call.goal_info() ]
   let selected = selected_goal_indices(infos, options)
@@ -234,7 +234,7 @@ async fn run_prove(
   options : CliOptions,
   fixture : BytesView,
   source : BytesView,
-) -> Int {
+) -> Int32 {
   ignore(options.prover)
   let calls = @pipeline.prepare_proof(
     checked,
@@ -291,7 +291,7 @@ async fn run_prove(
 }
 
 ///|
-async fn run_cli(arguments : ArrayView[String]) -> Int {
+async fn run_cli(arguments : ArrayView[String]) -> Int32 {
   let options = parse_arguments(arguments)
   let source = @fs.read_file(options.file).binary()
   let fixture = @utf8.encode(options.file)

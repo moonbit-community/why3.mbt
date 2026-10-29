@@ -83,7 +83,7 @@ pub fn DriverSymbolResolver::new(
     table[key] = symbol
     ordered_keys.push(key)
   }
-  { anchor, entries: table, ordered_keys }
+  { anchor, entries: table, ordered_keys, }
 }
 
 ///|
@@ -135,7 +135,7 @@ fn DriverSymbolResolver::resolve(
 pub fn DriverSymbolResolver::resolve_type(
   self : DriverSymbolResolver,
   key : @identity.SnapshotSymbolKey,
-  path? : String = "$.symbol",
+  path~ : String = "$.symbol",
 ) -> @logic.TypeSymbol raise BindError {
   match self.resolve(key, path) {
     ResolvedType(symbol) => symbol
@@ -147,7 +147,7 @@ pub fn DriverSymbolResolver::resolve_type(
 pub fn DriverSymbolResolver::resolve_logic(
   self : DriverSymbolResolver,
   key : @identity.SnapshotSymbolKey,
-  path? : String = "$.symbol",
+  path~ : String = "$.symbol",
 ) -> @logic.LSymbol raise BindError {
   match self.resolve(key, path) {
     ResolvedLogic(symbol) => symbol
@@ -159,7 +159,7 @@ pub fn DriverSymbolResolver::resolve_logic(
 pub fn DriverSymbolResolver::resolve_proposition(
   self : DriverSymbolResolver,
   key : @identity.SnapshotSymbolKey,
-  path? : String = "$.symbol",
+  path~ : String = "$.symbol",
 ) -> @logic.PrSymbol raise BindError {
   match self.resolve(key, path) {
     ResolvedProposition(symbol) => symbol

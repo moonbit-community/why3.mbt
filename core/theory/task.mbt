@@ -18,7 +18,7 @@ pub fn Task::context_anchor(self : Task) -> @identity.SemanticId {
 
 ///|
 pub fn Task::view(self : Task) -> TaskView {
-  { items: self.items[:] }
+  { items: self.items[:], }
 }
 
 ///|
@@ -38,7 +38,7 @@ priv struct TaskAccumulator {
 fn TaskAccumulator::new(
   context : @identity.CompilationContext,
 ) -> TaskAccumulator {
-  { context, items: [], seen_symbols: Map([]), seen_uses: Map([]) }
+  { context, items: [], seen_symbols: Map([]), seen_uses: Map([]), }
 }
 
 ///|
@@ -117,7 +117,7 @@ pub fn Task::trusted_new(
   if goals > 1 {
     fail_theory(MultipleGoals, span, "task contains multiple goals")
   }
-  { anchor, items: items.to_owned() }
+  { anchor, items: items.to_owned(), }
 }
 
 ///|

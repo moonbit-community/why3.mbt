@@ -43,12 +43,12 @@ pub fn Postcondition::trusted_new(
   if !formula.is_formula() {
     fail_mlw(InvalidComputationType, span, "postcondition must be a formula")
   }
-  { result, formula }
+  { result, formula, }
 }
 
 ///|
 pub fn Postcondition::view(self : Postcondition) -> PostconditionView {
-  { result: self.result, formula: self.formula }
+  { result: self.result, formula: self.formula, }
 }
 
 ///|

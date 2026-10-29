@@ -55,6 +55,9 @@ pub fn simplify_formula(@identity.CompilationContext, @theory.Task) -> @theory.T
 pub(all) suberror TransformError {
   TransformError(TransformDiagnostic)
 } derive(Eq, @debug.Debug)
+pub fn TransformError::equal(Self, Self) -> Bool
+pub fn TransformError::not_equal(Self, Self) -> Bool
+pub fn TransformError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
 pub(all) struct TransformDiagnostic {
@@ -62,6 +65,9 @@ pub(all) struct TransformDiagnostic {
   stage : @identity.GeneratedStage
   message : String
 } derive(Eq, @debug.Debug)
+pub fn TransformDiagnostic::equal(Self, Self) -> Bool
+pub fn TransformDiagnostic::not_equal(Self, Self) -> Bool
+pub fn TransformDiagnostic::to_repr(Self) -> @debug.Repr
 
 pub(all) enum TransformErrorKind {
   ContextMismatch
@@ -69,8 +75,10 @@ pub(all) enum TransformErrorKind {
   UnsupportedStructure
   InvariantFailure
 } derive(Eq, @debug.Debug)
+pub fn TransformErrorKind::equal(Self, Self) -> Bool
+pub fn TransformErrorKind::not_equal(Self, Self) -> Bool
+pub fn TransformErrorKind::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 
 // Traits
-

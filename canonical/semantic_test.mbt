@@ -4,7 +4,7 @@
 fn semantic_snapshot_origin(
   name : BytesView,
   kind : @identity.SnapshotSymbolKind,
-  ordinal : UInt,
+  ordinal : UInt32,
 ) -> @identity.Origin {
   @identity.Origin::snapshot(
     name,
@@ -29,7 +29,7 @@ fn semantic_builtin_type(
   context : @identity.CompilationContext,
   name : BytesView,
   kind : @logic.BuiltinTypeKind,
-  ordinal : UInt,
+  ordinal : UInt32,
 ) -> @logic.Ty raise @logic.TypeError {
   let symbol = @logic.TypeSymbol::trusted_builtin(
     context,

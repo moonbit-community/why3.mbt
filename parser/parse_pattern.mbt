@@ -6,7 +6,7 @@
 
 ///|
 fn make_pattern(desc : PatternDesc, span : Span) -> Pattern {
-  { desc, span }
+  { desc, span, }
 }
 
 ///|
@@ -146,7 +146,7 @@ fn Parser::parse_pattern_as_binder(self : Parser) -> (Ident, Bool) raise {
 ///|
 fn Parser::parse_pat_wrapped(
   self : Parser,
-  minimum_binding : Int,
+  minimum_binding : Int32,
   allow_prefix_ghost : Bool,
 ) -> Pattern raise {
   let mark = self.mark()

@@ -14,6 +14,9 @@ pub fn split_theory(@identity.CompilationContext, Theory, @identity.SourceSpan?)
 pub(all) suberror TheoryError {
   TheoryError(TheoryDiagnostic)
 } derive(Eq, @debug.Debug)
+pub fn TheoryError::equal(Self, Self) -> Bool
+pub fn TheoryError::not_equal(Self, Self) -> Bool
+pub fn TheoryError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
 pub(all) enum CloneTypeInstantiation {
@@ -23,12 +26,12 @@ pub(all) enum CloneTypeInstantiation {
 
 type CloneWitness
 pub fn CloneWitness::context_anchor(Self) -> @identity.SemanticId
-pub fn CloneWitness::trusted_new(@identity.SemanticId, TheoryKey, UInt, ArrayView[CloneTypeInstantiation], ArrayView[(@logic.LSymbol, @logic.LSymbol)], ArrayView[(@logic.PrSymbol, @logic.PrSymbol)], @identity.SourceSpan?) -> Self raise TheoryError
+pub fn CloneWitness::trusted_new(@identity.SemanticId, TheoryKey, UInt32, ArrayView[CloneTypeInstantiation], ArrayView[(@logic.LSymbol, @logic.LSymbol)], ArrayView[(@logic.PrSymbol, @logic.PrSymbol)], @identity.SourceSpan?) -> Self raise TheoryError
 pub fn CloneWitness::view(Self) -> CloneWitnessView
 
 pub(all) struct CloneWitnessView {
   source : TheoryKey
-  source_item_identity : UInt
+  source_item_identity : UInt32
   type_instantiations : ArrayView[CloneTypeInstantiation]
   logic_instantiations : ArrayView[(@logic.LSymbol, @logic.LSymbol)]
   proposition_instantiations : ArrayView[(@logic.PrSymbol, @logic.PrSymbol)]
@@ -122,6 +125,9 @@ pub(all) struct TheoryDiagnostic {
   span : @identity.SourceSpan?
   message : String
 } derive(Eq, @debug.Debug)
+pub fn TheoryDiagnostic::equal(Self, Self) -> Bool
+pub fn TheoryDiagnostic::not_equal(Self, Self) -> Bool
+pub fn TheoryDiagnostic::to_repr(Self) -> @debug.Repr
 
 pub(all) enum TheoryErrorKind {
   DuplicateName
@@ -136,6 +142,9 @@ pub(all) enum TheoryErrorKind {
   MissingGoal
   MultipleGoals
 } derive(Eq, @debug.Debug)
+pub fn TheoryErrorKind::equal(Self, Self) -> Bool
+pub fn TheoryErrorKind::not_equal(Self, Self) -> Bool
+pub fn TheoryErrorKind::to_repr(Self) -> @debug.Repr
 
 pub(all) enum TheoryItem {
   TheoryDecl(@logic.Decl)
@@ -145,8 +154,12 @@ pub(all) enum TheoryItem {
 }
 
 type TheoryKey
-pub fn TheoryKey::lexical_compare(Self, Self) -> Int
+pub fn TheoryKey::equal(Self, Self) -> Bool
+pub fn TheoryKey::hash(Self) -> Int32
+pub fn TheoryKey::hash_combine(Self, Hasher) -> Unit
+pub fn TheoryKey::lexical_compare(Self, Self) -> Int32
 pub fn TheoryKey::new(ArrayView[Bytes], BytesView) -> Self raise TheoryError
+pub fn TheoryKey::not_equal(Self, Self) -> Bool
 pub fn TheoryKey::segments(Self) -> Array[Bytes]
 pub fn TheoryKey::view(Self) -> TheoryKeyView
 pub impl Eq for TheoryKey
@@ -167,4 +180,3 @@ pub(all) struct TheoryView {
 // Type aliases
 
 // Traits
-

@@ -113,7 +113,7 @@ fn is_tight_operator_tail(byte : Byte) -> Bool {
 }
 
 ///|
-fn find_closing_bracket(name : Bytes, start : Int) -> Int? {
+fn find_closing_bracket(name : Bytes, start : Int32) -> Int32? {
   let mut index = start
   while index < name.length() {
     if name[index] == b']' {
@@ -226,7 +226,7 @@ fn notation_decode(name : Bytes) -> Notation {
 
 ///|
 fn token_ident(token : LocatedToken, name : Bytes) -> Ident {
-  { name, attributes: [], span: token.span }
+  { name, attributes: [], span: token.span, }
 }
 
 ///|
@@ -343,7 +343,7 @@ fn parse_attributes(parser : Parser) -> Array[Attribute] raise {
 
 ///|
 fn Ident::add_attributes(self : Ident, attributes : Array[Attribute]) -> Ident {
-  { ..self, attributes: self.attributes + attributes }
+  { ..self, attributes: self.attributes + attributes, }
 }
 
 ///|
@@ -388,7 +388,7 @@ fn Parser::parse_prefix_op(self : Parser) -> Ident raise {
     return token_ident(token, op_prefix(b"-"))
   }
   let (operator, span) = parse_op_symbol(self)
-  { name: op_prefix(operator), attributes: [], span }
+  { name: op_prefix(operator), attributes: [], span, }
 }
 
 ///|
@@ -516,7 +516,7 @@ fn Parser::parse_lident_op(self : Parser, nonqualified : Bool) -> Ident raise {
   match closing.kind {
     Symbol(RightPar) => {
       ignore(self.advance())
-      { name, attributes: [], span: inner_span }
+      { name, attributes: [], span: inner_span, }
     }
     RightParUscore(suffix) => {
       ignore(self.advance())
@@ -718,7 +718,7 @@ fn starts_ident(parser : Parser) -> Bool {
 ///|
 fn parse_qualid_entry(
   input : BytesView,
-  filename? : BytesView = b"<qualid-test>",
+  filename~ : BytesView = b"<qualid-test>",
 ) -> QualId raise ParseError {
   let parser = Parser::new(input, filename~)
   finish_internal_entry(parser, parser => parser.parse_qualid())
@@ -727,7 +727,7 @@ fn parse_qualid_entry(
 ///|
 fn parse_qualid_list_entry(
   input : BytesView,
-  filename? : BytesView = b"<qualid-list-test>",
+  filename~ : BytesView = b"<qualid-list-test>",
 ) -> Array[QualId] raise ParseError {
   let parser = Parser::new(input, filename~)
   finish_internal_entry(parser, parser => {
@@ -743,7 +743,7 @@ fn parse_qualid_list_entry(
 ///|
 fn parse_ident_list_entry(
   input : BytesView,
-  filename? : BytesView = b"<ident-list-test>",
+  filename~ : BytesView = b"<ident-list-test>",
 ) -> Array[Ident] raise ParseError {
   let parser = Parser::new(input, filename~)
   finish_internal_entry(parser, parser => {

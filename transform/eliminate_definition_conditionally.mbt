@@ -15,7 +15,7 @@ fn rewrite_definition_symbols(task : @theory.Task) -> Map[@logic.LSymbol, Unit] 
   for item in task.view().items {
     if item is TheoryMeta(meta) &&
       meta.view()
-      is { name: b"rewrite_def", arguments: [MetaLogicSymbol(symbol)] } {
+      is { name: b"rewrite_def", arguments: [MetaLogicSymbol(symbol)], } {
       result[symbol] = ()
     }
   }

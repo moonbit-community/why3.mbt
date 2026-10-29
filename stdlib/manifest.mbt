@@ -2,34 +2,34 @@
 
 ///|
 struct SnapshotManifest {
-  schema_version : Int
-  snapshot_schema_version : Int
+  schema_version : Int32
+  snapshot_schema_version : Int32
   why3_version : Bytes
   why3_commit : Bytes
   why3_tree : Bytes
   driver_profile : Bytes
-  payload_length : Int
+  payload_length : Int32
   payload_sha256 : Bytes
-  theory_count : Int
-  module_count : Int
-  symbol_count : Int
-  type_variable_count : Int
+  theory_count : Int32
+  module_count : Int32
+  symbol_count : Int32
+  type_variable_count : Int32
 }
 
 ///|
 pub(all) struct SnapshotManifestView {
-  schema_version : Int
-  snapshot_schema_version : Int
+  schema_version : Int32
+  snapshot_schema_version : Int32
   why3_version : Bytes
   why3_commit : Bytes
   why3_tree : Bytes
   driver_profile : Bytes
-  payload_length : Int
+  payload_length : Int32
   payload_sha256 : Bytes
-  theory_count : Int
-  module_count : Int
-  symbol_count : Int
-  type_variable_count : Int
+  theory_count : Int32
+  module_count : Int32
+  symbol_count : Int32
+  type_variable_count : Int32
 }
 
 ///|

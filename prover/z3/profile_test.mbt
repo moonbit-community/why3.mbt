@@ -2,7 +2,7 @@
 
 ///|
 test "static Z3 profile decodes the complete frozen inventory" {
-  let spec = z3_static_spec()
+  let spec = @z3.z3_static_spec()
   let view = spec.view()
   assert_eq(view.printer, SmtV26)
   assert_eq(view.transforms.length(), 15)

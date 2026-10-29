@@ -8,7 +8,7 @@ priv struct PendingLogic {
   symbol : @logic.LSymbol
   parameter_bindings : Array[(Bytes, DLocal)]
   semantic_parameters : Array[@logic.VSymbol]
-  semantic_values : Array[(Int, @logic.VSymbol)]
+  semantic_values : Array[(Int32, @logic.VSymbol)]
   result_type : Dty?
 }
 
@@ -229,7 +229,7 @@ fn PureTyping::prepare_logic(
   let argument_types : Array[@logic.Ty] = []
   let parameter_bindings : Array[(Bytes, DLocal)] = []
   let semantic_parameters : Array[@logic.VSymbol] = []
-  let semantic_values : Array[(Int, @logic.VSymbol)] = []
+  let semantic_values : Array[(Int32, @logic.VSymbol)] = []
   for parameter in declaration.params {
     if parameter.ghost {
       fail_unsupported(

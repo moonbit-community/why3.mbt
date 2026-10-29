@@ -4,14 +4,14 @@
 
 ///|
 priv enum KodeNode {
-  Seq(Kode, Int, Kode)
+  Seq(Kode, Int32, Kode)
   Par(Kode, Kode)
   If(@mlw.PVariable, Kode, Kode)
   Let(@mlw.PVariable, @logic.Term, @logic.Term)
   Val(Array[@mlw.PVariable], @logic.Term)
   Cut(@logic.Term)
   Stop(@logic.Term)
-  Cont(Int)
+  Cont(Int32)
 }
 
 ///|
@@ -21,29 +21,29 @@ struct Kode {
 
 ///|
 pub(all) enum KodeView {
-  Kseq(Kode, Int, Kode)
+  Kseq(Kode, Int32, Kode)
   Kpar(Kode, Kode)
   Kif(@mlw.PVariable, Kode, Kode)
   Klet(@mlw.PVariable, @logic.Term, @logic.Term)
   Kval(ArrayView[@mlw.PVariable], @logic.Term)
   Kcut(@logic.Term)
   Kstop(@logic.Term)
-  Kcont(Int)
+  Kcont(Int32)
 }
 
 ///|
-fn kseq(first : Kode, continuation : Int, second : Kode) -> Kode {
-  { node: Seq(first, continuation, second) }
+fn kseq(first : Kode, continuation : Int32, second : Kode) -> Kode {
+  { node: Seq(first, continuation, second), }
 }
 
 ///|
 fn kpar(left : Kode, right : Kode) -> Kode {
-  { node: Par(left, right) }
+  { node: Par(left, right), }
 }
 
 ///|
 fn kif(condition : @mlw.PVariable, yes : Kode, no : Kode) -> Kode {
-  { node: If(condition, yes, no) }
+  { node: If(condition, yes, no), }
 }
 
 ///|
@@ -52,27 +52,27 @@ fn klet(
   value : @logic.Term,
   constraint : @logic.Term,
 ) -> Kode {
-  { node: Let(binder, value, constraint) }
+  { node: Let(binder, value, constraint), }
 }
 
 ///|
 fn kval(binders : ArrayView[@mlw.PVariable], constraint : @logic.Term) -> Kode {
-  { node: Val(binders.to_owned(), constraint) }
+  { node: Val(binders.to_owned(), constraint), }
 }
 
 ///|
 fn kcut(formula : @logic.Term) -> Kode {
-  { node: Cut(formula) }
+  { node: Cut(formula), }
 }
 
 ///|
 fn kstop(formula : @logic.Term) -> Kode {
-  { node: Stop(formula) }
+  { node: Stop(formula), }
 }
 
 ///|
 pub fn Kode::continue_normally() -> Kode {
-  { node: Cont(0) }
+  { node: Cont(0), }
 }
 
 ///|

@@ -81,7 +81,7 @@ pub fn Spec::empty() -> Spec {
     reads: [],
     writes: [],
     aliases: [],
-    variant: { items: [] },
+    variant: { items: [], },
     check_reads_writes: false,
     diverges: false,
     partial: false,

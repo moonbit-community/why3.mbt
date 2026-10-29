@@ -19,6 +19,9 @@ pub fn type_match(Ty, Ty, @identity.SourceSpan?) -> TySubstitution raise TypeErr
 pub(all) suberror TypeError {
   TypeError(TypeDiagnostic)
 } derive(Eq, @debug.Debug)
+pub fn TypeError::equal(Self, Self) -> Bool
+pub fn TypeError::not_equal(Self, Self) -> Bool
+pub fn TypeError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
 pub(all) enum BinaryLogicOp {
@@ -27,6 +30,9 @@ pub(all) enum BinaryLogicOp {
   Implies
   Iff
 } derive(Eq, @debug.Debug)
+pub fn BinaryLogicOp::equal(Self, Self) -> Bool
+pub fn BinaryLogicOp::not_equal(Self, Self) -> Bool
+pub fn BinaryLogicOp::to_repr(Self) -> @debug.Repr
 
 pub(all) enum BuiltinTypeKind {
   BuiltinInteger
@@ -34,12 +40,18 @@ pub(all) enum BuiltinTypeKind {
   BuiltinBoolean
   BuiltinString
 } derive(Eq, @debug.Debug)
+pub fn BuiltinTypeKind::equal(Self, Self) -> Bool
+pub fn BuiltinTypeKind::not_equal(Self, Self) -> Bool
+pub fn BuiltinTypeKind::to_repr(Self) -> @debug.Repr
 
 type Constant derive(Eq, @debug.Debug)
+pub fn Constant::equal(Self, Self) -> Bool
 pub fn Constant::from_parser(@parser.Constant) -> Self
 pub fn Constant::integer(IntegerLiteralKind, @bigint.BigInt) -> Self
+pub fn Constant::not_equal(Self, Self) -> Bool
 pub fn Constant::real(RealLiteralKind, @parser.RealValue) -> Self
 pub fn Constant::string(BytesView) -> Self
+pub fn Constant::to_repr(Self) -> @debug.Repr
 pub fn Constant::view(Self) -> ConstantView
 
 pub(all) enum ConstantView {
@@ -86,6 +98,10 @@ pub(all) enum DeclDependency {
   LogicDependency(LSymbol)
   PropositionDependency(PrSymbol)
 }
+pub fn DeclDependency::equal(Self, Self) -> Bool
+pub fn DeclDependency::hash(Self) -> Int32
+pub fn DeclDependency::hash_combine(Self, Hasher) -> Unit
+pub fn DeclDependency::not_equal(Self, Self) -> Bool
 pub fn DeclDependency::semantic_id(Self) -> @identity.SemanticId
 pub impl Eq for DeclDependency
 pub impl Hash for DeclDependency
@@ -124,6 +140,9 @@ pub(all) enum IntegerLiteralKind {
   IntegerOctal
   IntegerBinary
 } derive(Eq, @debug.Debug)
+pub fn IntegerLiteralKind::equal(Self, Self) -> Bool
+pub fn IntegerLiteralKind::not_equal(Self, Self) -> Bool
+pub fn IntegerLiteralKind::to_repr(Self) -> @debug.Repr
 
 type KnownMap
 pub fn KnownMap::add(Self, Decl, @identity.SourceSpan?) -> Self raise TypeError
@@ -133,10 +152,14 @@ pub fn KnownMap::new(@identity.CompilationContext) -> Self
 pub fn KnownMap::trusted_add_snapshot(Self, Decl, @identity.SourceSpan?) -> Self raise TypeError
 
 type LSymbol
+pub fn LSymbol::equal(Self, Self) -> Bool
+pub fn LSymbol::hash(Self) -> Int32
+pub fn LSymbol::hash_combine(Self, Hasher) -> Unit
 pub fn LSymbol::new_function(@identity.CompilationContext, BytesView, @identity.Origin, ArrayView[Ty], Ty, @identity.SourceSpan?) -> Self raise TypeError
 pub fn LSymbol::new_predicate(@identity.CompilationContext, BytesView, @identity.Origin, ArrayView[Ty], @identity.SourceSpan?) -> Self raise TypeError
+pub fn LSymbol::not_equal(Self, Self) -> Bool
 pub fn LSymbol::semantic_id(Self) -> @identity.SemanticId
-pub fn LSymbol::trusted_constructor(@identity.CompilationContext, BytesView, @identity.Origin, ArrayView[Ty], Ty, Int, @identity.SourceSpan?) -> Self raise TypeError
+pub fn LSymbol::trusted_constructor(@identity.CompilationContext, BytesView, @identity.Origin, ArrayView[Ty], Ty, Int32, @identity.SourceSpan?) -> Self raise TypeError
 pub fn LSymbol::trusted_projection(@identity.CompilationContext, BytesView, @identity.Origin, Ty, Ty, @identity.SourceSpan?) -> Self raise TypeError
 pub fn LSymbol::view(Self) -> LSymbolView
 pub impl Eq for LSymbol
@@ -165,9 +188,12 @@ pub(all) struct LogicDefinitionView {
 
 pub(all) enum LogicSymbolRoleView {
   Ordinary
-  Constructor(Int)
+  Constructor(Int32)
   Projection
 } derive(Eq, @debug.Debug)
+pub fn LogicSymbolRoleView::equal(Self, Self) -> Bool
+pub fn LogicSymbolRoleView::not_equal(Self, Self) -> Bool
+pub fn LogicSymbolRoleView::to_repr(Self) -> @debug.Repr
 
 type Pattern
 pub fn Pattern::bound_variables(Self) -> ArrayView[VSymbol]
@@ -188,7 +214,11 @@ pub(all) enum PatternView {
 }
 
 type PrSymbol
+pub fn PrSymbol::equal(Self, Self) -> Bool
+pub fn PrSymbol::hash(Self) -> Int32
+pub fn PrSymbol::hash_combine(Self, Hasher) -> Unit
 pub fn PrSymbol::new(@identity.CompilationContext, BytesView, @identity.Origin) -> Self
+pub fn PrSymbol::not_equal(Self, Self) -> Bool
 pub fn PrSymbol::semantic_id(Self) -> @identity.SemanticId
 pub fn PrSymbol::view(Self) -> PrSymbolView
 pub impl Eq for PrSymbol
@@ -205,17 +235,26 @@ pub(all) enum PropositionKind {
   Plemma
   Pgoal
 } derive(Eq, @debug.Debug)
+pub fn PropositionKind::equal(Self, Self) -> Bool
+pub fn PropositionKind::not_equal(Self, Self) -> Bool
+pub fn PropositionKind::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Quantifier {
   ForallQuantifier
   ExistsQuantifier
 } derive(Eq, @debug.Debug)
+pub fn Quantifier::equal(Self, Self) -> Bool
+pub fn Quantifier::not_equal(Self, Self) -> Bool
+pub fn Quantifier::to_repr(Self) -> @debug.Repr
 
 pub(all) enum RealLiteralKind {
   RealUnknown
   RealDecimal(Int64)
   RealHexadecimal(Int64)
 } derive(Eq, @debug.Debug)
+pub fn RealLiteralKind::equal(Self, Self) -> Bool
+pub fn RealLiteralKind::not_equal(Self, Self) -> Bool
+pub fn RealLiteralKind::to_repr(Self) -> @debug.Repr
 
 type Term
 pub fn Term::add_attributes(Self, ArrayView[Bytes]) -> Self
@@ -229,6 +268,7 @@ pub fn Term::constant(Constant, Ty, @identity.SourceSpan?) -> Self raise TypeErr
 pub fn Term::contains_logic_symbol(Self, LSymbol) -> Bool
 pub fn Term::decorate(Self, @identity.Origin, ArrayView[Bytes]) -> Self
 pub fn Term::elaborated_apply(LSymbol, ArrayView[Self], Ty?, @identity.SourceSpan?) -> Self raise TypeError
+pub fn Term::equal(Self, Self) -> Bool
 pub fn Term::false_formula() -> Self
 pub fn Term::free_type_variables(Self) -> Array[TyVarSymbol]
 pub fn Term::free_variables(Self) -> Array[VSymbol]
@@ -237,6 +277,7 @@ pub fn Term::is_formula(Self) -> Bool
 pub fn Term::is_value(Self) -> Bool
 pub fn Term::let_in(VSymbol, Self, Self, @identity.SourceSpan?) -> Self raise TypeError
 pub fn Term::not(Self, @identity.SourceSpan?) -> Self raise TypeError
+pub fn Term::not_equal(Self, Self) -> Bool
 pub fn Term::origin(Self) -> @identity.Origin?
 pub fn Term::quantify(Quantifier, ArrayView[VSymbol], ArrayView[Array[Self]], Self, @identity.SourceSpan?) -> Self raise TypeError
 pub fn Term::source_decorate(Self, @identity.SourceSpan?, ArrayView[Bytes]) -> Self
@@ -283,8 +324,12 @@ pub(all) enum TermView {
 type Ty
 pub fn Ty::app(TypeSymbol, ArrayView[Self], @identity.SourceSpan?) -> Self raise TypeError
 pub fn Ty::context_anchor(Self) -> @identity.SemanticId
+pub fn Ty::equal(Self, Self) -> Bool
 pub fn Ty::free_variables(Self) -> Array[TyVarSymbol]
+pub fn Ty::hash(Self) -> Int32
+pub fn Ty::hash_combine(Self, Hasher) -> Unit
 pub fn Ty::is_closed(Self) -> Bool
+pub fn Ty::not_equal(Self, Self) -> Bool
 pub fn Ty::variable(TyVarSymbol) -> Self
 pub fn Ty::view(Self) -> TyView
 pub impl Eq for Ty
@@ -301,8 +346,12 @@ pub fn TySubstitution::new() -> Self
 pub fn TySubstitution::then(Self, Self, @identity.SourceSpan?) -> Self raise TypeError
 
 type TyVarSymbol
+pub fn TyVarSymbol::equal(Self, Self) -> Bool
+pub fn TyVarSymbol::hash(Self) -> Int32
+pub fn TyVarSymbol::hash_combine(Self, Hasher) -> Unit
 pub fn TyVarSymbol::name(Self) -> BytesView
 pub fn TyVarSymbol::new(@identity.CompilationContext, BytesView, @identity.Origin) -> Self
+pub fn TyVarSymbol::not_equal(Self, Self) -> Bool
 pub fn TyVarSymbol::origin(Self) -> @identity.Origin
 pub fn TyVarSymbol::semantic_id(Self) -> @identity.SemanticId
 pub impl Eq for TyVarSymbol
@@ -317,7 +366,7 @@ pub(all) enum TypeDefinitionView {
   NoDef
   Alias(Ty)
   Range(@bigint.BigInt, @bigint.BigInt)
-  Float(Int, Int)
+  Float(Int32, Int32)
 }
 
 pub(all) struct TypeDiagnostic {
@@ -327,6 +376,9 @@ pub(all) struct TypeDiagnostic {
   expected_type : Bytes?
   message : String
 } derive(Eq, @debug.Debug)
+pub fn TypeDiagnostic::equal(Self, Self) -> Bool
+pub fn TypeDiagnostic::not_equal(Self, Self) -> Bool
+pub fn TypeDiagnostic::to_repr(Self) -> @debug.Repr
 
 pub(all) enum TypeErrorKind {
   ArityMismatch
@@ -356,17 +408,24 @@ pub(all) enum TypeErrorKind {
   InvalidDeclaration
   EmptyDeclaration
 } derive(Eq, @debug.Debug)
+pub fn TypeErrorKind::equal(Self, Self) -> Bool
+pub fn TypeErrorKind::not_equal(Self, Self) -> Bool
+pub fn TypeErrorKind::to_repr(Self) -> @debug.Repr
 
 type TypeSymbol
-pub fn TypeSymbol::arity(Self) -> Int
+pub fn TypeSymbol::arity(Self) -> Int32
 pub fn TypeSymbol::builtin_kind(Self) -> BuiltinTypeKind?
+pub fn TypeSymbol::equal(Self, Self) -> Bool
+pub fn TypeSymbol::hash(Self) -> Int32
+pub fn TypeSymbol::hash_combine(Self, Hasher) -> Unit
 pub fn TypeSymbol::name(Self) -> BytesView
 pub fn TypeSymbol::new_abstract(@identity.CompilationContext, BytesView, @identity.Origin, ArrayView[TyVarSymbol], @identity.SourceSpan?) -> Self raise TypeError
 pub fn TypeSymbol::new_alias(@identity.CompilationContext, BytesView, @identity.Origin, ArrayView[TyVarSymbol], Ty, @identity.SourceSpan?) -> Self raise TypeError
+pub fn TypeSymbol::not_equal(Self, Self) -> Bool
 pub fn TypeSymbol::origin(Self) -> @identity.Origin
 pub fn TypeSymbol::semantic_id(Self) -> @identity.SemanticId
 pub fn TypeSymbol::trusted_builtin(@identity.CompilationContext, BytesView, @identity.Origin, BuiltinTypeKind, @identity.SourceSpan?) -> Self raise TypeError
-pub fn TypeSymbol::trusted_float(@identity.CompilationContext, BytesView, @identity.Origin, Int, Int, @identity.SourceSpan?) -> Self raise TypeError
+pub fn TypeSymbol::trusted_float(@identity.CompilationContext, BytesView, @identity.Origin, Int32, Int32, @identity.SourceSpan?) -> Self raise TypeError
 pub fn TypeSymbol::trusted_range(@identity.CompilationContext, BytesView, @identity.Origin, @bigint.BigInt, @bigint.BigInt, @identity.SourceSpan?) -> Self raise TypeError
 pub fn TypeSymbol::view(Self) -> TypeSymbolView
 pub impl Eq for TypeSymbol
@@ -381,7 +440,11 @@ pub(all) struct TypeSymbolView {
 }
 
 type VSymbol
+pub fn VSymbol::equal(Self, Self) -> Bool
+pub fn VSymbol::hash(Self) -> Int32
+pub fn VSymbol::hash_combine(Self, Hasher) -> Unit
 pub fn VSymbol::new(@identity.CompilationContext, BytesView, @identity.Origin, Ty, @identity.SourceSpan?) -> Self raise TypeError
+pub fn VSymbol::not_equal(Self, Self) -> Bool
 pub fn VSymbol::semantic_id(Self) -> @identity.SemanticId
 pub fn VSymbol::ty(Self) -> Ty
 pub fn VSymbol::view(Self) -> VSymbolView
@@ -398,4 +461,3 @@ pub(all) struct VSymbolView {
 // Type aliases
 
 // Traits
-

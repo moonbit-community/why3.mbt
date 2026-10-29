@@ -1,10 +1,15 @@
 ///|
 test "location: initial and empty EOF span" {
   let at = initial_source_pos(b"input.mlw")
-  assert_eq(at, { filename: b"input.mlw", byte_offset: 0, line: 1L, column: 0L })
+  assert_eq(at, {
+    filename: b"input.mlw",
+    byte_offset: 0,
+    line: 1L,
+    column: 0L,
+  })
   let span = Span::empty(at)
   assert_true(span.is_empty())
-  assert_eq(span, { start: at, end: at })
+  assert_eq(span, { start: at, end: at, })
 }
 
 ///|
@@ -68,7 +73,7 @@ test "location: span join crosses logical filenames by byte offsets" {
   let logical = physical
     .advance_raw(6)
     .switch_logical_location(Some(b"generated.mlw"), 40L, 0L)
-  let right = Span::{ start: logical, end: logical.advance_raw(4) }
+  let right = Span::{ start: logical, end: logical.advance_raw(4), }
   let joined = right.join(left)
   assert_eq(joined.start, left.start)
   assert_eq(joined.end, right.end)

@@ -52,8 +52,8 @@ test "normalizer alpha-renames only generated identifier occurrences" {
   let query : SmtQuery = {
     bytes: b"(x x x x)\n",
     identifiers: [
-      { start: 1, end: 2, semantic_id: first, origin: generated_origin },
-      { start: 3, end: 4, semantic_id: first, origin: generated_origin },
+      { start: 1, end: 2, semantic_id: first, origin: generated_origin, },
+      { start: 3, end: 4, semantic_id: first, origin: generated_origin, },
       {
         start: 5,
         end: 6,

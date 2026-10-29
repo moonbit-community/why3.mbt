@@ -8,7 +8,7 @@ struct TermSubstitution {
 
 ///|
 pub fn TermSubstitution::new() -> TermSubstitution {
-  { entries: Map([]), order: [] }
+  { entries: Map([]), order: [], }
 }
 
 ///|
@@ -35,7 +35,7 @@ pub fn TermSubstitution::bind(
     order.push(variable)
   }
   entries[variable] = replacement
-  { entries, order }
+  { entries, order, }
 }
 
 ///|

@@ -21,6 +21,9 @@ pub fn z3_static_spec() -> Z3StaticSpec raise BindError
 pub(all) suberror BindError {
   BindError(BindDiagnostic)
 } derive(Eq, @debug.Debug)
+pub fn BindError::equal(Self, Self) -> Bool
+pub fn BindError::not_equal(Self, Self) -> Bool
+pub fn BindError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
 pub(all) struct BindDiagnostic {
@@ -28,6 +31,9 @@ pub(all) struct BindDiagnostic {
   path : String
   message : String
 } derive(Eq, @debug.Debug)
+pub fn BindDiagnostic::equal(Self, Self) -> Bool
+pub fn BindDiagnostic::not_equal(Self, Self) -> Bool
+pub fn BindDiagnostic::to_repr(Self) -> @debug.Repr
 
 pub(all) enum BindErrorKind {
   InvalidProfile
@@ -41,6 +47,9 @@ pub(all) enum BindErrorKind {
   ResidualEpsilon
   UnsupportedDatatype
 } derive(Eq, @debug.Debug)
+pub fn BindErrorKind::equal(Self, Self) -> Bool
+pub fn BindErrorKind::not_equal(Self, Self) -> Bool
+pub fn BindErrorKind::to_repr(Self) -> @debug.Repr
 
 type DriverSymbolResolver
 pub fn DriverSymbolResolver::context_anchor(Self) -> @identity.SemanticId
@@ -50,7 +59,7 @@ pub fn DriverSymbolResolver::resolve_proposition(Self, @identity.SnapshotSymbolK
 pub fn DriverSymbolResolver::resolve_type(Self, @identity.SnapshotSymbolKey, path? : String) -> @logic.TypeSymbol raise BindError
 
 type GoalInfo
-pub fn GoalInfo::new(GoalUnitKind, BytesView, @logic.PrSymbol, Int) -> Self
+pub fn GoalInfo::new(GoalUnitKind, BytesView, @logic.PrSymbol, Int32) -> Self
 pub fn GoalInfo::view(Self) -> GoalInfoView
 
 pub(all) struct GoalInfoView {
@@ -58,7 +67,7 @@ pub(all) struct GoalInfoView {
   unit_name : Bytes
   goal : @logic.PrSymbol
   display_name : Bytes
-  ordinal : Int
+  ordinal : Int32
   origin : @identity.Origin
   expl_attributes : ArrayView[Bytes]
 }
@@ -67,6 +76,9 @@ pub(all) enum GoalUnitKind {
   TheoryUnit
   ModuleUnit
 } derive(Eq, @debug.Debug)
+pub fn GoalUnitKind::equal(Self, Self) -> Bool
+pub fn GoalUnitKind::not_equal(Self, Self) -> Bool
+pub fn GoalUnitKind::to_repr(Self) -> @debug.Repr
 
 type PreparedCall
 pub fn PreparedCall::command(Self) -> @prover.CommandSpec
@@ -86,6 +98,9 @@ pub(all) enum ProverAnswerRule {
   RuleFailure(Bytes)
   RuleHighFailure
 } derive(Eq, @debug.Debug)
+pub fn ProverAnswerRule::equal(Self, Self) -> Bool
+pub fn ProverAnswerRule::not_equal(Self, Self) -> Bool
+pub fn ProverAnswerRule::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ResolvedDriverSymbol {
   ResolvedType(@logic.TypeSymbol)
@@ -94,7 +109,7 @@ pub(all) enum ResolvedDriverSymbol {
 }
 
 pub(all) struct ResultExitCodeView {
-  code : Int
+  code : Int32
   answer : ProverAnswerRule
 }
 
@@ -108,6 +123,9 @@ pub(all) enum SyntaxKind {
   LogicSyntax
   LiteralSyntax
 } derive(Eq, @debug.Debug)
+pub fn SyntaxKind::equal(Self, Self) -> Bool
+pub fn SyntaxKind::not_equal(Self, Self) -> Bool
+pub fn SyntaxKind::to_repr(Self) -> @debug.Repr
 
 pub(all) enum TransformId {
   CounterexamplesDependentIntros
@@ -127,6 +145,9 @@ pub(all) enum TransformId {
   EncodingSmtIfPoly
 } derive(Eq, @debug.Debug)
 pub fn TransformId::canonical_name(Self) -> BytesView
+pub fn TransformId::equal(Self, Self) -> Bool
+pub fn TransformId::not_equal(Self, Self) -> Bool
+pub fn TransformId::to_repr(Self) -> @debug.Repr
 
 type Z3CommandTemplate
 pub fn Z3CommandTemplate::view(Self) -> Z3CommandTemplateView
@@ -141,12 +162,15 @@ pub(all) struct Z3CommandTemplateView {
 pub(all) enum Z3Printer {
   SmtV26
 } derive(Eq, @debug.Debug)
+pub fn Z3Printer::equal(Self, Self) -> Bool
+pub fn Z3Printer::not_equal(Self, Self) -> Bool
+pub fn Z3Printer::to_repr(Self) -> @debug.Repr
 
 type Z3Profile
 pub fn Z3Profile::builtin_type(Self, @logic.BuiltinTypeKind) -> @logic.TypeSymbol?
 pub fn Z3Profile::checkpoint_sequence(Self, Bool) -> ArrayView[Bytes]
 pub fn Z3Profile::command(Self) -> Z3CommandTemplate
-pub fn Z3Profile::command_spec(Self, solver_seconds? : Int, executable_request? : BytesView?) -> @prover.CommandSpec raise @prover.ConfigError
+pub fn Z3Profile::command_spec(Self, solver_seconds? : Int32, executable_request? : BytesView?) -> @prover.CommandSpec raise @prover.ConfigError
 pub fn Z3Profile::driver_update(Self, @theory.Task) -> @theory.Task raise BindError
 pub fn Z3Profile::printer_query(Self, @theory.Task) -> @smtv2.SmtV26Query raise BindError
 pub fn Z3Profile::result_exit_code_rules(Self) -> Array[ResultExitCodeView]
@@ -157,36 +181,36 @@ pub fn Z3Profile::view(Self) -> Z3ProfileView
 pub(all) struct Z3ProfileView {
   context_anchor : @identity.SemanticId
   transforms : ArrayView[TransformId]
-  driver_meta_group_count : Int
-  driver_meta_count : Int
-  validated_snapshot_meta_count : Int
-  syntax_count : Int
-  remove_count : Int
+  driver_meta_group_count : Int32
+  driver_meta_count : Int32
+  validated_snapshot_meta_count : Int32
+  syntax_count : Int32
+  remove_count : Int32
   preludes : ArrayView[Bytes]
-  theory_prelude_count : Int
-  result_regexp_count : Int
-  result_exit_code_count : Int
+  theory_prelude_count : Int32
+  result_regexp_count : Int32
+  result_exit_code_count : Int32
   command : Z3CommandTemplate
 }
 
 type Z3StaticSpec
-pub fn Z3StaticSpec::command_spec(Self, solver_seconds? : Int, executable_request? : BytesView?) -> @prover.CommandSpec raise @prover.ConfigError
+pub fn Z3StaticSpec::command_spec(Self, solver_seconds? : Int32, executable_request? : BytesView?) -> @prover.CommandSpec raise @prover.ConfigError
 pub fn Z3StaticSpec::required_keys(Self) -> Array[@identity.SnapshotSymbolKey]
 pub fn Z3StaticSpec::view(Self) -> Z3StaticSpecView
 
 pub(all) struct Z3StaticSpecView {
   printer : Z3Printer
   transforms : ArrayView[TransformId]
-  driver_meta_group_count : Int
-  driver_meta_count : Int
-  snapshot_meta_group_count : Int
-  snapshot_meta_count : Int
-  syntax_count : Int
-  remove_count : Int
+  driver_meta_group_count : Int32
+  driver_meta_count : Int32
+  snapshot_meta_group_count : Int32
+  snapshot_meta_count : Int32
+  syntax_count : Int32
+  remove_count : Int32
   preludes : ArrayView[Bytes]
-  theory_prelude_count : Int
-  result_regexp_count : Int
-  result_exit_code_count : Int
+  theory_prelude_count : Int32
+  result_regexp_count : Int32
+  result_exit_code_count : Int32
   command : Z3CommandTemplate
   monomorphic_checkpoints : ArrayView[Bytes]
   polymorphic_checkpoints : ArrayView[Bytes]
@@ -207,4 +231,3 @@ pub(all) enum Z3SyntaxSymbol {
 // Type aliases
 
 // Traits
-

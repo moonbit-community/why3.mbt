@@ -224,7 +224,7 @@ fn wp_if(
 }
 
 ///|
-fn term_occurrences(term : @logic.Term, target : @logic.VSymbol) -> Int {
+fn term_occurrences(term : @logic.Term, target : @logic.VSymbol) -> Int32 {
   match term.view() {
     Tvar(variable) => if variable == target { 1 } else { 0 }
     Tconst(_) | Ttrue | Tfalse => 0

@@ -24,7 +24,7 @@ pub(all) enum ProgramTypeDefinition {
   ProgramNoDef
   ProgramAlias(Ity)
   ProgramRange(BigInt, BigInt)
-  ProgramFloat(Int, Int)
+  ProgramFloat(Int32, Int32)
 }
 
 ///|
@@ -184,7 +184,7 @@ pub fn Ity::app(
   for argument in arguments {
     require_mlw_context(symbol.id, argument.context_anchor(), span)
   }
-  { node: ItyApplication(symbol, arguments) }
+  { node: ItyApplication(symbol, arguments), }
 }
 
 ///|
@@ -192,7 +192,7 @@ pub fn Ity::app(
 /// monomorphic instantiation. User routines must reject this shape at their
 /// declaration boundary.
 pub fn Ity::variable(symbol : @logic.TyVarSymbol) -> Ity {
-  { node: ItyVariable(symbol) }
+  { node: ItyVariable(symbol), }
 }
 
 ///|
@@ -318,7 +318,7 @@ pub fn PVariable::trusted_new(
     ity.to_ty(span),
     span,
   )
-  { id: context.fresh_id(), name, ity, ghost, pure_symbol }
+  { id: context.fresh_id(), name, ity, ghost, pure_symbol, }
 }
 
 ///|

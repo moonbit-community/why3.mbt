@@ -71,7 +71,7 @@ fn make_binder(
   ghost : Bool,
   binder_type : Pty?,
 ) -> Binder {
-  { span, ident, ghost, binder_type }
+  { span, ident, ghost, binder_type, }
 }
 
 ///|

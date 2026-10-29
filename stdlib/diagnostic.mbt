@@ -32,7 +32,7 @@ fn[A] fail_snapshot(
   path : String,
   message : String,
 ) -> A raise SnapshotError {
-  raise SnapshotError({ kind, path, message })
+  raise SnapshotError({ kind, path, message, })
 }
 
 ///|
@@ -56,5 +56,5 @@ pub(all) suberror BindError {
 
 ///|
 fn[A] fail_bind(kind : BindErrorKind, message : String) -> A raise BindError {
-  raise BindError({ kind, message })
+  raise BindError({ kind, message, })
 }

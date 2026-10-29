@@ -27,5 +27,5 @@ fn[A] fail_environment(
   span : @identity.SourceSpan?,
   message : String,
 ) -> A raise EnvironmentError {
-  raise EnvironmentError({ kind, span, message })
+  raise EnvironmentError({ kind, span, message, })
 }

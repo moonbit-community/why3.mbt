@@ -6,36 +6,48 @@ import {
 }
 
 // Values
-pub fn default_solver_seconds() -> Int
+pub fn default_solver_seconds() -> Int32
 
-pub fn maximum_solver_seconds() -> Int
+pub fn maximum_solver_seconds() -> Int32
 
-pub fn parent_deadline_seconds(Int) -> Int? raise ConfigError
+pub fn parent_deadline_seconds(Int32) -> Int32? raise ConfigError
 
-pub fn prover_stream_limit_bytes() -> Int
+pub fn prover_stream_limit_bytes() -> Int32
 
-pub fn validate_solver_seconds(Int) -> Int raise ConfigError
+pub fn validate_solver_seconds(Int32) -> Int32 raise ConfigError
 
 // Errors
 pub(all) suberror ConfigError {
   ConfigError(ConfigDiagnostic)
 } derive(Eq, @debug.Debug)
+pub fn ConfigError::equal(Self, Self) -> Bool
+pub fn ConfigError::not_equal(Self, Self) -> Bool
+pub fn ConfigError::to_repr(Self) -> @debug.Repr
 
 pub(all) suberror MalformedProverOutput {
   MalformedProverOutput(MalformedProverOutputDiagnostic)
 } derive(Eq, @debug.Debug)
+pub fn MalformedProverOutput::equal(Self, Self) -> Bool
+pub fn MalformedProverOutput::not_equal(Self, Self) -> Bool
+pub fn MalformedProverOutput::to_repr(Self) -> @debug.Repr
 
 pub(all) suberror OutputLimitExceeded {
   OutputLimitExceeded(OutputLimitDiagnostic)
 } derive(Eq, @debug.Debug)
+pub fn OutputLimitExceeded::equal(Self, Self) -> Bool
+pub fn OutputLimitExceeded::not_equal(Self, Self) -> Bool
+pub fn OutputLimitExceeded::to_repr(Self) -> @debug.Repr
 
 pub(all) suberror ProcessError {
   ProcessError(ProcessDiagnostic)
 } derive(Eq, @debug.Debug)
+pub fn ProcessError::equal(Self, Self) -> Bool
+pub fn ProcessError::not_equal(Self, Self) -> Bool
+pub fn ProcessError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
 type CommandSpec
-pub fn CommandSpec::new(BytesView, ProverTransport, BytesView, ArrayView[Bytes], Int) -> Self raise ConfigError
+pub fn CommandSpec::new(BytesView, ProverTransport, BytesView, ArrayView[Bytes], Int32) -> Self raise ConfigError
 pub fn CommandSpec::view(Self) -> CommandSpecView
 
 pub(all) struct CommandSpecView {
@@ -43,49 +55,70 @@ pub(all) struct CommandSpecView {
   transport : ProverTransport
   executable_request : Bytes
   arguments : ArrayView[Bytes]
-  solver_seconds : Int
+  solver_seconds : Int32
   parent_deadline_policy : ParentDeadlinePolicy
-  stdout_limit_bytes : Int
-  stderr_limit_bytes : Int
+  stdout_limit_bytes : Int32
+  stderr_limit_bytes : Int32
 }
 
 pub(all) struct ConfigDiagnostic {
   kind : ConfigErrorKind
   message : String
 } derive(Eq, @debug.Debug)
+pub fn ConfigDiagnostic::equal(Self, Self) -> Bool
+pub fn ConfigDiagnostic::not_equal(Self, Self) -> Bool
+pub fn ConfigDiagnostic::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ConfigErrorKind {
   InvalidTimeout
   InvalidCommand
   NonUtf8Path
 } derive(Eq, @debug.Debug)
+pub fn ConfigErrorKind::equal(Self, Self) -> Bool
+pub fn ConfigErrorKind::not_equal(Self, Self) -> Bool
+pub fn ConfigErrorKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct MalformedProverOutputDiagnostic {
   kind : MalformedProverOutputKind
   message : String
 } derive(Eq, @debug.Debug)
+pub fn MalformedProverOutputDiagnostic::equal(Self, Self) -> Bool
+pub fn MalformedProverOutputDiagnostic::not_equal(Self, Self) -> Bool
+pub fn MalformedProverOutputDiagnostic::to_repr(Self) -> @debug.Repr
 
 pub(all) enum MalformedProverOutputKind {
   InvalidUtf8
   UnrecognizedOutput
 } derive(Eq, @debug.Debug)
+pub fn MalformedProverOutputKind::equal(Self, Self) -> Bool
+pub fn MalformedProverOutputKind::not_equal(Self, Self) -> Bool
+pub fn MalformedProverOutputKind::to_repr(Self) -> @debug.Repr
 
 pub(all) struct OutputLimitDiagnostic {
   stream : ProverStream
-  limit_bytes : Int
+  limit_bytes : Int32
 } derive(Eq, @debug.Debug)
+pub fn OutputLimitDiagnostic::equal(Self, Self) -> Bool
+pub fn OutputLimitDiagnostic::not_equal(Self, Self) -> Bool
+pub fn OutputLimitDiagnostic::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ParentDeadlinePolicy {
   NoAutomaticDeadline
-  DeadlineAfterSeconds(Int)
+  DeadlineAfterSeconds(Int32)
 } derive(Eq, @debug.Debug)
+pub fn ParentDeadlinePolicy::equal(Self, Self) -> Bool
+pub fn ParentDeadlinePolicy::not_equal(Self, Self) -> Bool
+pub fn ParentDeadlinePolicy::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ProcessDiagnostic {
   kind : ProcessErrorKind
-  exit_code : Int?
+  exit_code : Int32?
   signal : Bytes?
   message : String
 } derive(Eq, @debug.Debug)
+pub fn ProcessDiagnostic::equal(Self, Self) -> Bool
+pub fn ProcessDiagnostic::not_equal(Self, Self) -> Bool
+pub fn ProcessDiagnostic::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ProcessErrorKind {
   ExecutableNotFound
@@ -97,11 +130,17 @@ pub(all) enum ProcessErrorKind {
   SignaledProcess
   Cancelled
 } derive(Eq, @debug.Debug)
+pub fn ProcessErrorKind::equal(Self, Self) -> Bool
+pub fn ProcessErrorKind::not_equal(Self, Self) -> Bool
+pub fn ProcessErrorKind::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ProcessExitStatus {
-  Exited(Int)
+  Exited(Int32)
   Signaled(Bytes)
 } derive(Eq, @debug.Debug)
+pub fn ProcessExitStatus::equal(Self, Self) -> Bool
+pub fn ProcessExitStatus::not_equal(Self, Self) -> Bool
+pub fn ProcessExitStatus::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ProverResult {
   Valid
@@ -111,15 +150,24 @@ pub(all) enum ProverResult {
   OutOfMemory
   StepLimitExceeded
 } derive(Eq, @debug.Debug)
+pub fn ProverResult::equal(Self, Self) -> Bool
+pub fn ProverResult::not_equal(Self, Self) -> Bool
+pub fn ProverResult::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ProverStream {
   StandardOutput
   StandardError
 } derive(Eq, @debug.Debug)
+pub fn ProverStream::equal(Self, Self) -> Bool
+pub fn ProverStream::not_equal(Self, Self) -> Bool
+pub fn ProverStream::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ProverTransport {
   StandardInput
 } derive(Eq, @debug.Debug)
+pub fn ProverTransport::equal(Self, Self) -> Bool
+pub fn ProverTransport::not_equal(Self, Self) -> Bool
+pub fn ProverTransport::to_repr(Self) -> @debug.Repr
 
 type RawProcessOutcome
 pub fn RawProcessOutcome::new(BytesView, BytesView, ProcessExitStatus) -> Self
@@ -134,4 +182,3 @@ pub(all) struct RawProcessOutcomeView {
 // Type aliases
 
 // Traits
-

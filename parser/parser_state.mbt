@@ -5,11 +5,11 @@
 // Lazy parser cursor, syntax failures, checkpoints, and list helpers.
 
 ///|
-const DEFAULT_MAX_NESTING : Int = 256
+const DEFAULT_MAX_NESTING : Int32 = 256
 
 ///|
 priv struct SyntaxFailureInfo {
-  token_index : Int
+  token_index : Int32
   span : Span
   actual : String
   expected : Array[String]
@@ -58,21 +58,21 @@ fn SyntaxFailureInfo::to_diagnostic(
 ///|
 priv struct Parser {
   lexer : LazyLexer
-  mut index : Int
-  mut advance_count : Int
-  mut nesting_depth : Int
-  mut max_nesting_observed : Int
-  max_nesting : Int
-  mut list_push_count : Int
-  mut list_finalize_count : Int
-  mut application_fold_count : Int
+  mut index : Int32
+  mut advance_count : Int32
+  mut nesting_depth : Int32
+  mut max_nesting_observed : Int32
+  max_nesting : Int32
+  mut list_push_count : Int32
+  mut list_finalize_count : Int32
+  mut application_fold_count : Int32
 }
 
 ///|
 fn Parser::new(
   input : BytesView,
-  filename? : BytesView = b"<input>",
-  max_nesting? : Int = DEFAULT_MAX_NESTING,
+  filename~ : BytesView = b"<input>",
+  max_nesting~ : Int32 = DEFAULT_MAX_NESTING,
 ) -> Parser {
   {
     lexer: LazyLexer::new(input, filename),
@@ -89,12 +89,12 @@ fn Parser::new(
 
 ///|
 /// Speculative lookahead only populates the monotonic cache.
-fn Parser::peek_item_n(self : Parser, offset : Int) -> LexItem {
+fn Parser::peek_item_n(self : Parser, offset : Int32) -> LexItem {
   self.lexer.ensure(self.index + offset)
 }
 
 ///|
-fn Parser::peek_kind_n(self : Parser, offset : Int) -> TokenKind? {
+fn Parser::peek_kind_n(self : Parser, offset : Int32) -> TokenKind? {
   match self.peek_item_n(offset) {
     Token(token) => Some(token.kind)
     DeferredLexError(_) => None
@@ -117,17 +117,17 @@ fn Parser::advance(self : Parser) -> LocatedToken raise ParseError {
 }
 
 ///|
-fn Parser::mark(self : Parser) -> Int {
+fn Parser::mark(self : Parser) -> Int32 {
   self.index
 }
 
 ///|
-fn Parser::restore(self : Parser, mark : Int) -> Unit {
+fn Parser::restore(self : Parser, mark : Int32) -> Unit {
   self.index = mark
 }
 
 ///|
-fn Parser::span_from(self : Parser, mark : Int) -> Span {
+fn Parser::span_from(self : Parser, mark : Int32) -> Span {
   let first = match self.lexer.ensure(mark) {
     Token(token) => token.span
     DeferredLexError(diagnostic) => diagnostic.span
@@ -336,7 +336,7 @@ fn[A] parse_comma_list1(
   parser : Parser,
   starts : (Parser) -> Bool,
   parse_item : (Parser) -> A raise,
-  expected? : String = "list item",
+  expected~ : String = "list item",
 ) -> Array[A] raise {
   guard starts(parser) else { parser.fail_syntax(expected) }
   parse_comma_list0(parser, starts, parse_item)
@@ -347,8 +347,8 @@ fn[A] parse_comma_list2(
   parser : Parser,
   starts : (Parser) -> Bool,
   parse_item : (Parser) -> A raise,
-  expected? : String = "list item",
-  first? : A? = None,
+  expected~ : String = "list item",
+  first~ : A? = None,
 ) -> Array[A] raise {
   let result : Array[A] = []
   if first is Some(item) {
@@ -377,7 +377,7 @@ fn[A] parse_semicolon_list1(
   parser : Parser,
   starts : (Parser) -> Bool,
   parse_item : (Parser) -> A raise,
-  expected? : String = "list item",
+  expected~ : String = "list item",
 ) -> Array[A] raise {
   guard starts(parser) else { parser.fail_syntax(expected) }
   let result : Array[A] = [parse_item(parser)]
@@ -398,7 +398,7 @@ fn[A] parse_bar_list1(
   parser : Parser,
   starts : (Parser) -> Bool,
   parse_item : (Parser) -> A raise,
-  expected? : String = "list item",
+  expected~ : String = "list item",
 ) -> Array[A] raise {
   ignore(parser.consume_symbol(Bar))
   guard starts(parser) else { parser.fail_syntax(expected) }
@@ -418,7 +418,7 @@ fn[A] parse_with_list1(
   parser : Parser,
   starts : (Parser) -> Bool,
   parse_item : (Parser) -> A raise,
-  expected? : String = "list item",
+  expected~ : String = "list item",
 ) -> Array[A] raise {
   guard starts(parser) else { parser.fail_syntax(expected) }
   let result : Array[A] = [parse_item(parser)]
@@ -437,7 +437,7 @@ fn[A] parse_mapping_list_with_default(
   parser : Parser,
   starts : (Parser) -> Bool,
   parse_item : (Parser) -> A raise,
-  expected? : String = "mapping item",
+  expected~ : String = "mapping item",
 ) -> (Array[(A, A)], A?) raise {
   let mappings : Array[(A, A)] = []
   if parser.consume_symbol(Underscore) is Some(_) {
@@ -483,7 +483,7 @@ priv enum PrattAssociativity {
 fn pratt_binding(
   kind : TokenKind,
   expression : Bool,
-) -> (Int, PrattAssociativity)? {
+) -> (Int32, PrattAssociativity)? {
   match kind {
     Symbol(Semicolon) if expression => Some((10, PrattLeft))
     Symbol(LArrow) if expression => Some((20, PrattNonassoc))
@@ -503,26 +503,26 @@ fn pratt_binding(
 }
 
 ///|
-fn negation_binding_power() -> Int {
+fn negation_binding_power() -> Int32 {
   80
 }
 
 ///|
-fn ordinary_prefix_binding_power() -> Int {
+fn ordinary_prefix_binding_power() -> Int32 {
   140
 }
 
 ///|
-fn signed_numeral_binding_power() -> Int {
+fn signed_numeral_binding_power() -> Int32 {
   150
 }
 
 ///|
-fn postfix_binding_power() -> Int {
+fn postfix_binding_power() -> Int32 {
   160
 }
 
 ///|
-fn tight_prefix_binding_power() -> Int {
+fn tight_prefix_binding_power() -> Int32 {
   170
 }

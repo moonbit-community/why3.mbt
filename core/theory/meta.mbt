@@ -25,12 +25,12 @@ pub(all) struct MetaView {
 
 ///|
 pub fn Meta::new(name : BytesView, arguments : ArrayView[MetaArgument]) -> Meta {
-  { name: name.to_owned(), arguments: arguments.to_owned() }
+  { name: name.to_owned(), arguments: arguments.to_owned(), }
 }
 
 ///|
 pub fn Meta::view(self : Meta) -> MetaView {
-  { name: self.name, arguments: self.arguments[:] }
+  { name: self.name, arguments: self.arguments[:], }
 }
 
 ///|
@@ -63,7 +63,7 @@ pub(all) enum CloneTypeInstantiation {
 struct CloneWitness {
   anchor : @identity.SemanticId
   source : TheoryKey
-  source_item_identity : UInt
+  source_item_identity : UInt32
   type_instantiations : Array[CloneTypeInstantiation]
   logic_instantiations : Array[(@logic.LSymbol, @logic.LSymbol)]
   proposition_instantiations : Array[(@logic.PrSymbol, @logic.PrSymbol)]
@@ -72,7 +72,7 @@ struct CloneWitness {
 ///|
 pub(all) struct CloneWitnessView {
   source : TheoryKey
-  source_item_identity : UInt
+  source_item_identity : UInt32
   type_instantiations : ArrayView[CloneTypeInstantiation]
   logic_instantiations : ArrayView[(@logic.LSymbol, @logic.LSymbol)]
   proposition_instantiations : ArrayView[(@logic.PrSymbol, @logic.PrSymbol)]
@@ -97,7 +97,7 @@ fn require_same_id(
 pub fn CloneWitness::trusted_new(
   context_anchor : @identity.SemanticId,
   source : TheoryKey,
-  source_item_identity : UInt,
+  source_item_identity : UInt32,
   type_instantiations : ArrayView[CloneTypeInstantiation],
   logic_instantiations : ArrayView[(@logic.LSymbol, @logic.LSymbol)],
   proposition_instantiations : ArrayView[(@logic.PrSymbol, @logic.PrSymbol)],

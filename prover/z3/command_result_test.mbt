@@ -4,14 +4,14 @@
 fn outcome(
   stdout : BytesView,
   stderr : BytesView,
-  status? : @prover.ProcessExitStatus = @prover.Exited(0),
+  status~ : @prover.ProcessExitStatus = @prover.Exited(0),
 ) -> @prover.RawProcessOutcome {
   @prover.RawProcessOutcome::new(stdout, stderr, status)
 }
 
 ///|
 test "z3 argv freezes default, zero, and maximum timeout" {
-  let spec = z3_static_spec()
+  let spec = @z3.z3_static_spec()
   let default = spec.command_spec().view()
   assert_eq(default.executable_request, b"z3")
   assert_eq(default.arguments, [
@@ -35,26 +35,28 @@ test "z3 argv freezes default, zero, and maximum timeout" {
 
 ///|
 test "z3 result parser follows frozen canned answer precedence" {
-  assert_eq(parse_result(outcome(b"unsat\n", b"")), @prover.Valid)
-  assert_eq(parse_result(outcome(b"sat\n", b"")), @prover.Unknown(b"sat"))
+  assert_eq(@z3.parse_result(outcome(b"unsat\n", b"")), @prover.Valid)
+  assert_eq(@z3.parse_result(outcome(b"sat\n", b"")), @prover.Unknown(b"sat"))
   assert_eq(
-    parse_result(outcome(b"unknown\n(:reason-unknown \"incomplete\")\n", b"")),
+    @z3.parse_result(
+      outcome(b"unknown\n(:reason-unknown \"incomplete\")\n", b""),
+    ),
     @prover.Unknown(b"incomplete"),
   )
   assert_eq(
-    parse_result(
+    @z3.parse_result(
       outcome(b"", b"interrupted by timeout\n", status=@prover.Exited(1)),
     ),
     @prover.Timeout,
   )
   assert_eq(
-    parse_result(
+    @z3.parse_result(
       outcome(b"", b"(error \"out of memory\")\n", status=@prover.Exited(1)),
     ),
     @prover.OutOfMemory,
   )
   assert_eq(
-    parse_result(
+    @z3.parse_result(
       outcome(
         b"",
         b"Maximal allocation counts 100 have been exceeded\n",
@@ -64,7 +66,7 @@ test "z3 result parser follows frozen canned answer precedence" {
     @prover.StepLimitExceeded,
   )
   assert_eq(
-    parse_result(
+    @z3.parse_result(
       outcome(
         b"unsat\n",
         b"diagnostic after answer\n",
@@ -78,7 +80,7 @@ test "z3 result parser follows frozen canned answer precedence" {
 ///|
 test "z3 result parser keeps process and malformed errors out of outcomes" {
   try
-    parse_result(
+    @z3.parse_result(
       outcome(b"", b"unclassified failure\n", status=@prover.Exited(17)),
     )
   catch {
@@ -90,7 +92,7 @@ test "z3 result parser keeps process and malformed errors out of outcomes" {
   } noraise {
     _ => fail("expected unclassified nonzero exit to fail")
   }
-  try parse_result(outcome(b"\xff\n", b"")) catch {
+  try @z3.parse_result(outcome(b"\xff\n", b"")) catch {
     @prover.MalformedProverOutput(diagnostic) =>
       assert_eq(diagnostic.kind, @prover.InvalidUtf8)
     _ => fail("expected malformed prover output")
@@ -98,7 +100,7 @@ test "z3 result parser keeps process and malformed errors out of outcomes" {
     _ => fail("expected invalid UTF-8 to fail")
   }
   try
-    parse_result(outcome(b"", b"", status=@prover.Signaled(b"SIGTERM")))
+    @z3.parse_result(outcome(b"", b"", status=@prover.Signaled(b"SIGTERM")))
   catch {
     @prover.ProcessError(diagnostic) => {
       assert_eq(diagnostic.kind, @prover.SignaledProcess)
@@ -108,7 +110,7 @@ test "z3 result parser keeps process and malformed errors out of outcomes" {
   } noraise {
     _ => fail("expected signal without answer to fail")
   }
-  try parse_result(outcome(b"", b"")) catch {
+  try @z3.parse_result(outcome(b"", b"")) catch {
     @prover.MalformedProverOutput(diagnostic) =>
       assert_eq(diagnostic.kind, @prover.UnrecognizedOutput)
     _ => fail("expected empty prover output to be malformed")

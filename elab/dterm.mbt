@@ -32,7 +32,7 @@ fn make_dterm(
   result_type : Dty?,
   span : @parser.Span,
 ) -> DTerm {
-  { node, result_type, source_span: Some(source_span(span)), attributes: [] }
+  { node, result_type, source_span: Some(source_span(span)), attributes: [], }
 }
 
 ///|
@@ -478,7 +478,7 @@ fn PureTyping::type_term(
           { ..inner, attributes, }
         }
         Position(position) =>
-          { ..inner, source_span: Some(source_span(position)) }
+          { ..inner, source_span: Some(source_span(position)), }
       }
     }
     Tscope(qualid, inner) => {
@@ -537,8 +537,8 @@ fn PureTyping::type_term(
 
 ///|
 fn find_semantic_local(
-  values : ArrayView[(Int, @logic.VSymbol)],
-  id : Int,
+  values : ArrayView[(Int32, @logic.VSymbol)],
+  id : Int32,
 ) -> @logic.VSymbol raise @logic.TypeError {
   for index = values.length() - 1; index >= 0; index = index - 1 {
     if values[index].0 == id {
@@ -585,7 +585,7 @@ fn decorate_finalized(term : DTerm, semantic : @logic.Term) -> @logic.Term {
 fn PureTyping::finalize_term(
   self : PureTyping,
   space : @theory.Namespace,
-  values : ArrayView[(Int, @logic.VSymbol)],
+  values : ArrayView[(Int32, @logic.VSymbol)],
   term : DTerm,
   formula_expected : Bool,
 ) -> @logic.Term raise {
@@ -777,7 +777,7 @@ fn PureTyping::formula(
   self : PureTyping,
   space : @theory.Namespace,
   locals : ArrayView[(Bytes, DLocal)],
-  values : ArrayView[(Int, @logic.VSymbol)],
+  values : ArrayView[(Int32, @logic.VSymbol)],
   term : @parser.Term,
 ) -> @logic.Term raise {
   let delayed = self.type_term(space, locals, term)
@@ -790,7 +790,7 @@ fn PureTyping::value(
   self : PureTyping,
   space : @theory.Namespace,
   locals : ArrayView[(Bytes, DLocal)],
-  values : ArrayView[(Int, @logic.VSymbol)],
+  values : ArrayView[(Int32, @logic.VSymbol)],
   term : @parser.Term,
   expected : Dty,
 ) -> @logic.Term raise {

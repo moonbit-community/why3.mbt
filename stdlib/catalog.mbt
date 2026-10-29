@@ -55,7 +55,7 @@ fn DriverSymbol::snapshot_kind(
 fn DriverSymbolCatalog::new(
   anchor : @identity.SemanticId,
 ) -> DriverSymbolCatalog {
-  { anchor, entries: Map([]), ordered_keys: [], locator_keys: Map([]) }
+  { anchor, entries: Map([]), ordered_keys: [], locator_keys: Map([]), }
 }
 
 ///|
@@ -116,7 +116,7 @@ pub fn DriverSymbolCatalog::context_anchor(
 }
 
 ///|
-pub fn DriverSymbolCatalog::length(self : DriverSymbolCatalog) -> Int {
+pub fn DriverSymbolCatalog::length(self : DriverSymbolCatalog) -> Int32 {
   self.ordered_keys.length()
 }
 

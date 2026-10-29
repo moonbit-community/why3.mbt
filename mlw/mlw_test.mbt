@@ -4,7 +4,7 @@
 fn snapshot_origin(
   name : BytesView,
   kind : @identity.SnapshotSymbolKind,
-  item : UInt,
+  item : UInt32,
 ) -> @identity.Origin {
   @identity.Origin::snapshot(
     name,

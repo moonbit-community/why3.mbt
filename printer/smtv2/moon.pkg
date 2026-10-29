@@ -4,3 +4,7 @@ import {
   "moonbit-community/why3/core/theory",
   "moonbitlang/core/buffer",
 }
+
+import {
+  "moonbitlang/core/debug",
+}

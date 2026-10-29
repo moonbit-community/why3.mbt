@@ -21,15 +21,15 @@ fn builtin_removal(task : @theory.Task) -> BuiltinRemoval {
   for item in task.view().items {
     guard item is TheoryMeta(meta) else { continue }
     match meta.view() {
-      { name: b"syntax_logic", arguments: [MetaLogicSymbol(symbol), ..] } =>
+      { name: b"syntax_logic", arguments: [MetaLogicSymbol(symbol), ..], } =>
         abstract_logic[symbol] = ()
-      { name: b"remove_prop", arguments: [MetaPropositionSymbol(symbol)] } =>
+      { name: b"remove_prop", arguments: [MetaPropositionSymbol(symbol)], } =>
         remove_propositions[symbol] = ()
-      { name: b"remove_logic", arguments: [MetaLogicSymbol(symbol)] } =>
+      { name: b"remove_logic", arguments: [MetaLogicSymbol(symbol)], } =>
         remove_logic[symbol] = ()
-      { name: b"remove_def", arguments: [MetaLogicSymbol(symbol)] } =>
+      { name: b"remove_def", arguments: [MetaLogicSymbol(symbol)], } =>
         remove_definitions[symbol] = ()
-      { name: b"remove_type", arguments: [MetaTypeSymbol(symbol)] } =>
+      { name: b"remove_type", arguments: [MetaTypeSymbol(symbol)], } =>
         remove_types[symbol] = ()
       _ => ()
     }

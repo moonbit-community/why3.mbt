@@ -203,7 +203,7 @@ fn SnapshotDecoder::decode_declaration(
           json_string(definition_fields[0], definition_path + "[0]"),
           definition_path + "[0]",
         )
-        let locals : Map[Int, @logic.VSymbol] = Map([])
+        let locals : Map[Int32, @logic.VSymbol] = Map([])
         let parameters : Array[@logic.VSymbol] = []
         for
           parameter_index, parameter in json_array(
@@ -225,7 +225,7 @@ fn SnapshotDecoder::decode_declaration(
           locals[id] = variable
           parameters.push(variable)
         }
-        let no_program_variables : Map[Int, @logic.VSymbol] = Map([])
+        let no_program_variables : Map[Int32, @logic.VSymbol] = Map([])
         definitions.push(
           @logic.LogicDefinition::trusted_recursive(
             self.context,
@@ -294,7 +294,7 @@ fn SnapshotDecoder::decode_declaration(
             json_string(case_fields[0], case_path + "[0]"),
             case_path + "[0]",
           )
-          let no_variables : Map[Int, @logic.VSymbol] = Map([])
+          let no_variables : Map[Int32, @logic.VSymbol] = Map([])
           cases.push(
             @logic.InductiveCase::trusted_new(
               self.context,
@@ -334,7 +334,7 @@ fn SnapshotDecoder::decode_declaration(
         json_string(fields[2], path + "[2]"),
         path + "[2]",
       )
-      let no_variables : Map[Int, @logic.VSymbol] = Map([])
+      let no_variables : Map[Int32, @logic.VSymbol] = Map([])
       let origin = proposition.view().origin
       @logic.Decl::proposition(
         self.context,

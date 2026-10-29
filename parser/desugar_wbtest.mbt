@@ -15,7 +15,7 @@ test "desugar constants: internal spellings match Why3 1.7.2" {
 }
 
 ///|
-fn desugar_test_span(offset : Int) -> Span {
+fn desugar_test_span(offset : Int32) -> Span {
   let position = SourcePos::{
     filename: b"desugar.mlw",
     byte_offset: offset,
@@ -26,12 +26,12 @@ fn desugar_test_span(offset : Int) -> Span {
 }
 
 ///|
-fn desugar_test_ident(name : Bytes, offset : Int) -> Ident {
-  { name, attributes: [], span: desugar_test_span(offset) }
+fn desugar_test_ident(name : Bytes, offset : Int32) -> Ident {
+  { name, attributes: [], span: desugar_test_span(offset), }
 }
 
 ///|
-fn desugar_test_term(name : Bytes, offset : Int) -> Term {
+fn desugar_test_term(name : Bytes, offset : Int32) -> Term {
   {
     desc: Tident(Qident(desugar_test_ident(name, offset))),
     span: desugar_test_span(offset),
@@ -39,7 +39,7 @@ fn desugar_test_term(name : Bytes, offset : Int) -> Term {
 }
 
 ///|
-fn desugar_test_expr(name : Bytes, offset : Int) -> Expr {
+fn desugar_test_expr(name : Bytes, offset : Int32) -> Expr {
   {
     desc: Eident(Qident(desugar_test_ident(name, offset))),
     span: desugar_test_span(offset),
@@ -47,7 +47,7 @@ fn desugar_test_expr(name : Bytes, offset : Int) -> Expr {
 }
 
 ///|
-fn desugar_test_pattern(name : Bytes, offset : Int) -> Pattern {
+fn desugar_test_pattern(name : Bytes, offset : Int32) -> Pattern {
   {
     desc: Pvar(desugar_test_ident(name, offset)),
     span: desugar_test_span(offset),
@@ -75,7 +75,7 @@ test "term pattern-let unfolding covers variable, wildcard, wrappers, cast, and 
     unfold_term_pattern_let(variable, value, body)
     is Tlet({ name: b"x", .. }, _, _),
   )
-  let wildcard = Pattern::{ desc: Pwild, span: desugar_test_span(2) }
+  let wildcard = Pattern::{ desc: Pwild, span: desugar_test_span(2), }
   guard unfold_term_pattern_let(wildcard, value, body) is Tlet(ident, _, _) else {
     fail("expected wildcard let")
   }
@@ -97,7 +97,7 @@ test "term pattern-let unfolding covers variable, wildcard, wrappers, cast, and 
   }
   assert_true(cast_value.desc is Tcast(_, _))
   assert_eq(cast_value.span, value.span)
-  let unit = Pattern::{ desc: Ptuple([]), span: desugar_test_span(6) }
+  let unit = Pattern::{ desc: Ptuple([]), span: desugar_test_span(6), }
   guard unfold_term_pattern_let(unit, value, body)
     is Tlet(unit_ident, unit_value, _) else {
     fail("expected unit wildcard let")
@@ -113,7 +113,7 @@ test "complex term pattern-let keeps the original branch but casts the scrutinee
   let body = desugar_test_term(b"body", 30)
   let constructor_pattern = Pattern::{
     desc: Papp(Qident(desugar_test_ident(b"Some", 4)), [
-      { desc: Pvar(desugar_test_ident(b"x", 9)), span: desugar_test_span(9) },
+      { desc: Pvar(desugar_test_ident(b"x", 9)), span: desugar_test_span(9), },
     ]),
     span: desugar_test_span(4),
   }
@@ -150,7 +150,7 @@ test "term function-literal reduction preserves default-only and redundant-last 
   guard literal.desc
     is Tattr(
       Text(attribute),
-      { desc: Tquant(DTlambda, [binder], [], branch), span: lambda_span }
+      { desc: Tquant(DTlambda, [binder], [], branch), span: lambda_span, }
     ) else {
     fail("expected function literal lambda")
   }
@@ -217,7 +217,7 @@ test "partial application accepts only parameterized functions and any nodes" {
     Efun(
       [binder],
       None,
-      { desc: Pwild, span },
+      { desc: Pwild, span, },
       MaskVisible,
       Spec::empty(),
       body,
@@ -239,7 +239,7 @@ test "partial application accepts only parameterized functions and any nodes" {
       [param],
       RKnone,
       None,
-      { desc: Pwild, span },
+      { desc: Pwild, span, },
       MaskVisible,
       Spec::empty(),
     ),
@@ -268,7 +268,7 @@ test "ghost push and expression pattern-let follow the exact recursive branches"
         desc: Pcast(
           {
             desc: Pas(
-              { desc: Por(x, y), span: desugar_test_span(1) },
+              { desc: Por(x, y), span: desugar_test_span(1), },
               alias_ident,
               false,
             ),
@@ -292,16 +292,16 @@ test "ghost push and expression pattern-let follow the exact recursive branches"
               desc: Pas(
                 {
                   desc: Por({ desc: Pghost({ desc: Pvar(_), .. }), .. }, _),
-                  ..,
+                  ..
                 },
                 _,
                 false
               ),
-              ..,
+              ..
             },
             _
           ),
-          ..,
+          ..
         },
         { desc: Pvar({ name: b"y", .. }), .. },
       ]
@@ -318,7 +318,7 @@ test "ghost push and expression pattern-let follow the exact recursive branches"
     simplify_expr_pattern_let(
       RKnone,
       value,
-      { desc: Pghost(x), span: x.span },
+      { desc: Pghost(x), span: x.span, },
       body,
       desugar_test_span(30),
     )
@@ -356,7 +356,7 @@ test "assignment lowering handles references, arbitrary unary calls, arrays, and
   let x = desugar_test_expr(b"x", 1)
   let value = desugar_test_expr(b"v", 2)
   guard desugar_assignment(x, value, full)
-    is Eassign([{ target: reference, field: None, value: actual }]) else {
+    is Eassign([{ target: reference, field: None, value: actual, }]) else {
     fail("expected reference assignment")
   }
   assert_true(reference.desc is Easref(Qident({ name: b"x", .. })))
@@ -402,7 +402,7 @@ test "assignment lowering handles references, arbitrary unary calls, arrays, and
           {
             desc: Eattr(
               Text(b"second"),
-              { desc: Eassign(items), span: inner_span }
+              { desc: Eassign(items), span: inner_span, }
             ),
             span: middle_span,
           }
@@ -469,8 +469,8 @@ test "any witness preconditions unfold simple posts and right-associate conjunct
     span: desugar_test_span(21),
   }
   let preconditions = preconditions_of_any(any_span, return_type, [
-    { span: desugar_test_span(10), branches: [(x, p)] },
-    { span: desugar_test_span(20), branches: [(cast_result, q)] },
+    { span: desugar_test_span(10), branches: [(x, p)], },
+    { span: desugar_test_span(20), branches: [(cast_result, q)], },
   ])
   guard preconditions
     is [
@@ -479,7 +479,7 @@ test "any witness preconditions unfold simple posts and right-associate conjunct
           Text(attribute),
           { desc: Tquant(DTexists, [binder], [], conjunction), .. }
         ),
-        ..,
+        ..
       },
     ] else {
     fail("expected witness existential")
@@ -505,7 +505,7 @@ test "any witness preconditions unfold simple posts and right-associate conjunct
     span: desugar_test_span(11),
   }
   let tuple_post = preconditions_of_any(any_span, return_type, [
-    { span: desugar_test_span(10), branches: [(tuple, p)] },
+    { span: desugar_test_span(10), branches: [(tuple, p)], },
   ])
   assert_true(
     tuple_post[0].desc
@@ -561,19 +561,19 @@ test "expression function literals reproduce proxy names and fold-left let order
                           range0_value,
                           { desc: Efun(_, _, _, _, _, body), .. }
                         ),
-                        ..,
+                        ..
                       }
                     ),
-                    ..,
+                    ..
                   }
                 ),
-                ..,
+                ..
               }
             ),
-            ..,
+            ..
           }
         ),
-        ..,
+        ..
       }
     ) else {
     fail("expected proxy let tree")
@@ -598,7 +598,7 @@ test "expression function literals reproduce proxy names and fold-left let order
           { desc: Eident(Qident({ name: b"r'i1", .. })), .. },
           { desc: Eident(Qident({ name: b"def'e", .. })), .. }
         ),
-        ..,
+        ..
       }
     ),
   )
@@ -610,7 +610,7 @@ test "label traversal reaches only the first loop through allowed wrappers" {
   let condition = make_expr(Etrue, desugar_test_span(1))
   let loop_body = desugar_test_expr(b"body", 2)
   let while_expr = make_expr(
-    Ewhile(condition, { terms: [] }, { items: [] }, loop_body),
+    Ewhile(condition, { terms: [], }, { items: [], }, loop_body),
     desugar_test_span(1),
   )
   let untouched = desugar_test_expr(b"right", 3)
@@ -635,14 +635,14 @@ test "label traversal reaches only the first loop through allowed wrappers" {
                   _,
                   { desc: Eoptexn({ name: b"L'Continue", .. }, _, _), .. }
                 ),
-                ..,
+                ..
               }
             ),
-            ..,
+            ..
           },
           actual_right
         ),
-        ..,
+        ..
       }
     ) else {
     fail("expected labeled loop exceptions")
