@@ -8,7 +8,7 @@ test "checked file separates checking, raw tasks, and prepared calls" {
   let checked = @pipeline.check(closure_a_source, filename=b"closure-a.mlw")
   assert_eq(checked.typed_units().length(), 1)
   assert_eq(checked.raw_goals().length(), 0)
-  guard checked.typed_units()[0] is Theory(theory)
+  guard! checked.typed_units()[0] is Theory(theory)
   assert_eq(theory.view().name.view().name, b"T")
   let tasked = @pipeline.tasks(checked)
   assert_eq(tasked.raw_goals().length(), 1)

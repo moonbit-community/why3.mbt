@@ -112,7 +112,8 @@ fn Parser::parse_term_block(self : Parser) -> Term raise {
   guard starts_term_block(self) else { self.fail_syntax("term block") }
   ignore(self.advance())
   self.enter_nesting(opening.span)
-  let term = try {
+  let term = {
+    errdefer self.leave_nesting()
     let desc = if opening.kind is Keyword(Begin) {
       if self.consume_keyword(End) is Some(_) {
         Ttuple([])
@@ -141,11 +142,6 @@ fn Parser::parse_term_block(self : Parser) -> Term raise {
       desc
     }
     make_term(desc, self.span_from(mark))
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   term
@@ -176,7 +172,8 @@ fn Parser::parse_term_fun_literal(self : Parser) -> Term raise {
   let mark = self.mark()
   let opening = self.expect_symbol(LeftSqBar)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let (mappings, default) = parse_alternative(
       self,
       parser => {
@@ -199,11 +196,6 @@ fn Parser::parse_term_fun_literal(self : Parser) -> Term raise {
     )
     let closing = self.expect_symbol(BarRightSq)
     desugar_term_function_literal(opening.span, closing.span, mappings, default)
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   ignore(mark)
@@ -318,7 +310,8 @@ fn mixfix_term_call(
 fn Parser::parse_term_index(self : Parser, base : Term) -> Term raise {
   let opening = self.expect_symbol(LeftSq)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     if self.consume_symbol(DotDot) is Some(_) {
       let upper = self.parse_term()
       let (suffix, closing_span) = parse_rightsq(self)
@@ -352,11 +345,6 @@ fn Parser::parse_term_index(self : Parser, base : Term) -> Term raise {
           first,
         ])
       }
-    }
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
     }
   }
   self.leave_nesting()
@@ -437,18 +425,14 @@ fn Parser::parse_if_term(self : Parser) -> Term raise {
   let mark = self.mark()
   let opening = self.expect_keyword(If)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let condition = self.parse_term()
     ignore(self.expect_keyword(Then))
     let consequent = self.parse_term()
     ignore(self.expect_keyword(Else))
     let alternative = self.parse_term()
     make_term(Tif(condition, consequent, alternative), self.span_from(mark))
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result
@@ -485,7 +469,8 @@ fn Parser::parse_let_term(self : Parser) -> Term raise {
   let mark = self.mark()
   let opening = self.expect_keyword(Let)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let head = parse_alternative(
       self,
       // `let f = ...` is a pattern let, while `let f x = ...` and symbolic
@@ -511,11 +496,6 @@ fn Parser::parse_let_term(self : Parser) -> Term raise {
       }
     }
     make_term(desc, self.span_from(mark))
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result
@@ -533,7 +513,8 @@ fn Parser::parse_match_term(self : Parser) -> Term raise {
   let mark = self.mark()
   let opening = self.expect_keyword(Match)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let scrutinee = self.parse_term()
     ignore(self.expect_keyword(With))
     let cases = parse_bar_list1(
@@ -544,11 +525,6 @@ fn Parser::parse_match_term(self : Parser) -> Term raise {
     )
     ignore(self.expect_keyword(End))
     make_term(Tcase(scrutinee, cases), self.span_from(mark))
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result
@@ -598,7 +574,8 @@ fn Parser::parse_trigger_group(self : Parser) -> Array[Term] raise {
 fn Parser::parse_triggers(self : Parser) -> Array[Array[Term]] raise {
   guard self.consume_symbol(LeftSq) is Some(opening) else { return [] }
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     // Unlike bar_list1, trigger groups reject a leading `|` and an empty list.
     guard starts_single_term(self) else { self.fail_syntax("trigger term") }
     let groups : Array[Array[Term]] = [self.parse_trigger_group()]
@@ -608,11 +585,6 @@ fn Parser::parse_triggers(self : Parser) -> Array[Array[Term]] raise {
     }
     ignore(self.expect_symbol(RightSq))
     groups
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result
@@ -628,17 +600,13 @@ fn Parser::parse_quantified_term(self : Parser) -> Term raise {
     _ => return self.fail_syntax("quantifier")
   }
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let binders = self.parse_quant_vars()
     let triggers = self.parse_triggers()
     ignore(self.expect_symbol(Dot))
     let body = self.parse_term()
     make_term(Tquant(quantifier, binders, triggers, body), self.span_from(mark))
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result
@@ -649,16 +617,12 @@ fn Parser::parse_lambda_term(self : Parser) -> Term raise {
   let mark = self.mark()
   let opening = self.expect_keyword(Fun)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let binders = self.parse_binders()
     ignore(self.expect_symbol(Arrow))
     let body = self.parse_term()
     make_term(Tquant(DTlambda, binders, [], body), self.span_from(mark))
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result

@@ -103,7 +103,8 @@ fn Parser::parse_expr_block(self : Parser) -> Expr raise {
   }
   ignore(self.advance())
   self.enter_nesting(opening.span)
-  let expression = try {
+  let expression = {
+    errdefer self.leave_nesting()
     let desc = if opening.kind is Keyword(Begin) {
       if self.consume_keyword(End) is Some(_) {
         Etuple([])
@@ -153,11 +154,6 @@ fn Parser::parse_expr_block(self : Parser) -> Expr raise {
       desc
     }
     make_expr(desc, self.span_from(mark))
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   expression
@@ -182,15 +178,11 @@ fn Parser::parse_expr_pure_symbol(self : Parser) -> Expr raise {
   let mark = self.mark()
   if self.consume_symbol(LeftBrc) is Some(opening) {
     self.enter_nesting(opening.span)
-    let expression = try {
+    let expression = {
+      errdefer self.leave_nesting()
       let path = self.parse_qualid()
       ignore(self.expect_symbol(RightBrc))
       make_expr(Eidpur(path), self.span_from(mark))
-    } catch {
-      error => {
-        self.leave_nesting()
-        raise error
-      }
     }
     self.leave_nesting()
     return expression
@@ -199,15 +191,11 @@ fn Parser::parse_expr_pure_symbol(self : Parser) -> Expr raise {
   ignore(self.expect_symbol(Dot))
   let opening = self.expect_symbol(LeftBrc)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let ident = self.parse_ident()
     ignore(self.expect_symbol(RightBrc))
     make_expr(Eidpur(path.append(ident)), self.span_from(mark))
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result
@@ -219,15 +207,11 @@ fn Parser::parse_pure_term_expr(self : Parser) -> Expr raise {
   ignore(self.expect_keyword(Pure))
   let opening = self.expect_symbol(LeftBrc)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let term = self.parse_term()
     ignore(self.expect_symbol(RightBrc))
     make_expr(Epure(term), self.span_from(mark))
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result
@@ -247,7 +231,8 @@ fn Parser::parse_expr_qualid(self : Parser) -> (Expr, Bool) raise {
 fn Parser::parse_expr_fun_literal(self : Parser) -> Expr raise {
   let opening = self.expect_symbol(LeftSqBar)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let (mappings, default) = parse_alternative(
       self,
       parser => {
@@ -270,11 +255,6 @@ fn Parser::parse_expr_fun_literal(self : Parser) -> Expr raise {
     )
     let closing = self.expect_symbol(BarRightSq)
     desugar_expr_function_literal(opening.span, closing.span, mappings, default)
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result
@@ -401,7 +381,8 @@ fn mixfix_expr_call(
 fn Parser::parse_expr_index(self : Parser, base : Expr) -> Expr raise {
   let opening = self.expect_symbol(LeftSq)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     if self.consume_symbol(DotDot) is Some(_) {
       let upper = self.parse_expr()
       let (suffix, closing_span) = parse_rightsq(self)
@@ -435,11 +416,6 @@ fn Parser::parse_expr_index(self : Parser, base : Expr) -> Expr raise {
           first,
         ])
       }
-    }
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
     }
   }
   self.leave_nesting()
@@ -900,7 +876,8 @@ fn Parser::parse_let_expr(self : Parser) -> Expr raise {
   let mark = self.mark()
   let opening = self.expect_keyword(Let)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let desc = if self.consume_keyword(Rec) is Some(_) {
       self.parse_let_rec_expr()
     } else {
@@ -919,11 +896,6 @@ fn Parser::parse_let_expr(self : Parser) -> Expr raise {
       }
     }
     make_expr(desc, self.span_from(mark))
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result
@@ -934,7 +906,8 @@ fn Parser::parse_anonymous_function(self : Parser) -> Expr raise {
   let mark = self.mark()
   let opening = self.expect_keyword(Fun)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let binders = self.parse_binders()
     let before = self.parse_spec()
     let arrow = self.expect_symbol(Arrow)
@@ -957,11 +930,6 @@ fn Parser::parse_anonymous_function(self : Parser) -> Expr raise {
       ),
       span,
     )
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result
@@ -986,7 +954,8 @@ fn Parser::parse_any_expr(self : Parser) -> Expr raise {
   let mark = self.mark()
   let opening = self.expect_keyword(Any)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let return_info = self.parse_return_named()
     let mut specification = apply_return(return_info.pattern, self.parse_spec())
     let span = self.span_from(mark)
@@ -1011,11 +980,6 @@ fn Parser::parse_any_expr(self : Parser) -> Expr raise {
       ),
       span,
     )
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result
@@ -1046,7 +1010,8 @@ fn Parser::parse_val_expr(self : Parser) -> Expr raise {
   let mark = self.mark()
   let opening = self.expect_keyword(Val)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let partiality = self.parse_partiality()
     let kind = self.parse_routine_kind()
     let desc = if self.consume_keyword(Ref) is Some(reference_token) {
@@ -1075,11 +1040,6 @@ fn Parser::parse_val_expr(self : Parser) -> Expr raise {
       )
     }
     make_expr(desc, self.span_from(mark))
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result
@@ -1128,7 +1088,8 @@ fn Parser::parse_match_expr(self : Parser) -> Expr raise {
   let mark = self.mark()
   let opening = self.expect_keyword(Match)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let scrutinee = self.parse_seq_expr()
     let with_token = self.expect_keyword(With)
     let (regular, exceptions) = self.parse_extended_match_cases()
@@ -1140,11 +1101,6 @@ fn Parser::parse_match_expr(self : Parser) -> Expr raise {
       })
     }
     make_expr(Ematch(scrutinee, regular, exceptions), self.span_from(mark))
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result
@@ -1155,7 +1111,8 @@ fn Parser::parse_local_exception(self : Parser) -> Expr raise {
   let mark = self.mark()
   let opening = self.expect_keyword(Exception)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let name = parse_attrs_ident(self, parser => parser.parse_uident(false))
     let (exception_type, mask) = if self.at_keyword(In) {
       (PTtuple([]), MaskVisible)
@@ -1166,11 +1123,6 @@ fn Parser::parse_local_exception(self : Parser) -> Expr raise {
     ignore(self.expect_keyword(In))
     let body = self.parse_seq_expr()
     make_expr(Eexn(name, exception_type, mask, body), self.span_from(mark))
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result
@@ -1204,7 +1156,8 @@ fn Parser::parse_while_expr(self : Parser) -> Expr raise {
   let mark = self.mark()
   let opening = self.expect_keyword(While)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let condition = self.parse_seq_expr()
     let do_token = self.expect_keyword(Do)
     let (invariant, variant) = self.parse_loop_annotation()
@@ -1231,11 +1184,6 @@ fn Parser::parse_while_expr(self : Parser) -> Expr raise {
       span,
     )
     make_expr(Eoptexn(break_ident, MaskVisible, loop_expression), span)
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result
@@ -1372,7 +1320,8 @@ fn Parser::parse_for_expr(self : Parser) -> Expr raise {
   let mark = self.mark()
   let opening = self.expect_keyword(For)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let head = parse_alternative(
       self,
       parser => parser.parse_counted_for_head(),
@@ -1381,11 +1330,6 @@ fn Parser::parse_for_expr(self : Parser) -> Expr raise {
     match head {
       CountedForHead(ident) => self.parse_counted_for_tail(mark, ident)
       IteratorForHead(pattern) => self.parse_iterator_for_tail(mark, pattern)
-    }
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
     }
   }
   self.leave_nesting()
@@ -1397,7 +1341,8 @@ fn Parser::parse_if_expr(self : Parser) -> Expr raise {
   let mark = self.mark()
   let opening = self.expect_keyword(If)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let condition = self.parse_seq_expr()
     ignore(self.expect_keyword(Then))
     let consequent = self.parse_contract_expr()
@@ -1407,11 +1352,6 @@ fn Parser::parse_if_expr(self : Parser) -> Expr raise {
       make_expr(Etuple([]), self.span_from(mark))
     }
     make_expr(Eif(condition, consequent, alternative), self.span_from(mark))
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result
@@ -1423,7 +1363,8 @@ fn Parser::parse_raise_expr(self : Parser) -> Expr raise {
   ignore(self.expect_keyword(Raise))
   let (exception, argument) = if self.consume_symbol(LeftPar) is Some(opening) {
     self.enter_nesting(opening.span)
-    let pair = try {
+    let pair = {
+      errdefer self.leave_nesting()
       let exception = self.parse_uqualid()
       let argument = if starts_expr_arg(self) {
         Some(self.parse_expr_arg())
@@ -1432,11 +1373,6 @@ fn Parser::parse_raise_expr(self : Parser) -> Expr raise {
       }
       ignore(self.expect_symbol(RightPar))
       (exception, argument)
-    } catch {
-      error => {
-        self.leave_nesting()
-        raise error
-      }
     }
     self.leave_nesting()
     pair
@@ -1492,7 +1428,8 @@ fn Parser::parse_try_expr(self : Parser) -> Expr raise {
   let mark = self.mark()
   let opening = self.expect_keyword(Try)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let body = self.parse_seq_expr()
     ignore(self.expect_keyword(With))
     ignore(self.consume_symbol(Bar))
@@ -1502,11 +1439,6 @@ fn Parser::parse_try_expr(self : Parser) -> Expr raise {
     }
     ignore(self.expect_keyword(End))
     make_expr(Ematch(body, [], handlers), self.span_from(mark))
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result
@@ -1539,16 +1471,12 @@ fn Parser::parse_label_expr(self : Parser) -> Expr raise {
   let mark = self.mark()
   let opening = self.expect_keyword(Label)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let label = parse_attrs_ident(self, parser => parser.parse_uident(false))
     ignore(self.expect_keyword(In))
     let body = self.parse_seq_expr()
     { ..label_over_loop(label, body), span: self.span_from(mark), }
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result

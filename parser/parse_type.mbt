@@ -54,11 +54,9 @@ fn Parser::parse_ty_block(self : Parser) -> Pty raise {
   }
   ignore(self.advance())
   self.enter_nesting(opening.span)
-  let result = self.parse_ty_block_body(opening) catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
+  let result = {
+    errdefer self.leave_nesting()
+    self.parse_ty_block_body(opening)
   }
   self.leave_nesting()
   result

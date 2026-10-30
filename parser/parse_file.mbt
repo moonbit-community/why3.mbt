@@ -20,7 +20,8 @@ fn Parser::parse_scope_declaration(self : Parser) -> Decl raise {
   let head_mark = self.mark()
   let opening = self.expect_keyword(Scope)
   self.enter_nesting(opening.span)
-  let result = try {
+  let result = {
+    errdefer self.leave_nesting()
     let is_import = self.consume_keyword(Import) is Some(_)
     let name = parse_attrs_ident(self, parser => parser.parse_uident(true))
     let head_span = self.span_from(head_mark)
@@ -40,11 +41,6 @@ fn Parser::parse_scope_declaration(self : Parser) -> Decl raise {
     ignore(self.expect_keyword(End))
     self.record_list_finalize()
     Dscope(head_span, is_import, name, declarations)
-  } catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
   }
   self.leave_nesting()
   result

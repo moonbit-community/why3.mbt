@@ -49,7 +49,8 @@ fn Parser::parse_pat_block(self : Parser) -> Pattern raise {
   let mark = self.mark()
   if self.consume_symbol(LeftPar) is Some(opening) {
     self.enter_nesting(opening.span)
-    let pattern = try {
+    let pattern = {
+      errdefer self.leave_nesting()
       if self.consume_symbol(RightPar) is Some(_) {
         make_pattern(Ptuple([]), self.span_from(mark))
       } else {
@@ -57,33 +58,22 @@ fn Parser::parse_pat_block(self : Parser) -> Pattern raise {
         ignore(self.expect_symbol(RightPar))
         make_pattern(Pparen(inner), self.span_from(mark))
       }
-    } catch {
-      error => {
-        self.leave_nesting()
-        raise error
-      }
     }
     self.leave_nesting()
     return pattern
   }
   let opening = self.expect_symbol(LeftBrc)
   self.enter_nesting(opening.span)
-  let fields = parse_semicolon_list1(
-    self,
-    parser => starts_pattern_field(parser),
-    parser => parser.parse_pattern_field(),
-    expected="record pattern field",
-  ) catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
-  }
-  ignore(self.expect_symbol(RightBrc)) catch {
-    error => {
-      self.leave_nesting()
-      raise error
-    }
+  let fields = {
+    errdefer self.leave_nesting()
+    let fields = parse_semicolon_list1(
+      self,
+      parser => starts_pattern_field(parser),
+      parser => parser.parse_pattern_field(),
+      expected="record pattern field",
+    )
+    ignore(self.expect_symbol(RightBrc))
+    fields
   }
   self.leave_nesting()
   make_pattern(Prec(fields), self.span_from(mark))
