@@ -1,6 +1,4 @@
 import {
-  "moonbit-community/why3/core/logic",
-  "moonbit-community/why3/core/theory",
   "moonbit-community/why3/elab",
   "moonbit-community/why3/canonical",
   "moonbit-community/why3/parser",
@@ -11,7 +9,6 @@ import {
   "moonbit-community/why3/printer/smtv2",
   "moonbit-community/why3/transform",
   "moonbit-community/why3/vc",
-  "moonbitlang/core/buffer",
   "moonbitlang/core/debug",
   "moonbitlang/core/encoding/utf8",
   "moonbitlang/core/env",

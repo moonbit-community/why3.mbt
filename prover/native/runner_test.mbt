@@ -15,8 +15,8 @@ fn test_command(
 }
 
 ///|
-async fn test_runner(command : @prover.CommandSpec) -> NativeRunner {
-  NativeRunner::new(command) catch {
+async fn test_runner(command : @prover.CommandSpec) -> @native.NativeRunner {
+  @native.NativeRunner::new(command) catch {
     @prover.ProcessError(diagnostic) => abort(@debug.to_string(diagnostic))
     err => abort(@debug.to_string(err))
   }
@@ -29,7 +29,7 @@ async fn test_capture() -> Unit {
   )
   let runner = test_runner(command)
   assert_true(!runner.resolved_executable().is_empty())
-  guard runner.run(b"query-bytes") is Completed(raw)
+  guard! runner.run(b"query-bytes") is Completed(raw)
   let outcome = raw.view()
   assert_eq(outcome.stderr, b"diagnostic:C")
   assert_eq(outcome.stdout, b"query-bytes")
@@ -39,7 +39,7 @@ async fn test_capture() -> Unit {
 ///|
 async fn test_signal_status() -> Unit {
   let runner = test_runner(test_command(b"kill -KILL $$"))
-  guard runner.run(b"") is Completed(raw)
+  guard! runner.run(b"") is Completed(raw)
   assert_eq(raw.view().status, @prover.Signaled(b"SIGKILL"))
 }
 
@@ -107,7 +107,7 @@ async fn test_missing_executable() -> Unit {
     [],
     0,
   )
-  try NativeRunner::new(command) catch {
+  try @native.NativeRunner::new(command) catch {
     @prover.ProcessError(diagnostic) =>
       assert_eq(diagnostic.kind, @prover.ExecutableNotFound)
     err => fail("expected missing executable, got \{@debug.to_string(err)}")
@@ -154,7 +154,7 @@ async fn test_root_exit_reaps_descendant() -> Unit {
       b"sleep 30 & child=$!; printf '%s' \"$child\" > _build/why3_native_runner_root_exit_descendant.pid; exit 0",
     ),
   )
-  guard runner.run(b"") is Completed(raw)
+  guard! runner.run(b"") is Completed(raw)
   assert_eq(raw.view().status, @prover.Exited(0))
   assert_descendant_reaped(pid_file)
 }

@@ -20,4 +20,5 @@ jobs:
       - run: moon version --all
       - run: moon update
       - run: moon check
+      - run: moon check --target native --deny-warn
       - run: moon test
