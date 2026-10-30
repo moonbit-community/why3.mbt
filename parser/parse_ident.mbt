@@ -134,11 +134,11 @@ fn notation_decode(name : Bytes) -> Notation {
   if name[5] != b' ' && name[6] != b' ' {
     return SNword(name)
   }
-  let kind_start = if name.view(end=6) == b"infix " {
+  let kind_start = if name.exact_view(end=6) == b"infix " {
     6
-  } else if name.view(end=6) == b"prefix" {
+  } else if name.exact_view(end=6) == b"prefix" {
     7
-  } else if name.view(end=6) == b"mixfix" {
+  } else if name.exact_view(end=6) == b"mixfix" {
     if find_closing_bracket(name, 7) is Some(index) {
       index + 1
     } else {
@@ -169,9 +169,9 @@ fn notation_decode(name : Bytes) -> Notation {
     return SNword(name)
   }
   let decoded = if kind_start == 6 {
-    SNinfix(name.view(start=6, end=notation_end).to_owned())
+    SNinfix(name.exact_view(start=6, end=notation_end).to_owned())
   } else if kind_start == 7 {
-    let operator = name.view(start=7, end=notation_end).to_owned()
+    let operator = name.exact_view(start=7, end=notation_end).to_owned()
     let mut tight = !operator.is_empty() &&
       (operator[0] == b'!' || operator[0] == b'?')
     let mut index = 1
@@ -186,11 +186,11 @@ fn notation_decode(name : Bytes) -> Notation {
     }
   } else {
     let suffix = if operator_end < notation_end {
-      name.view(start=operator_end, end=notation_end).to_owned()
+      name.exact_view(start=operator_end, end=notation_end).to_owned()
     } else {
       b""
     }
-    let shape = name.view(start=8, end=operator_end)
+    let shape = name.exact_view(start=8, end=operator_end)
     if shape == b"]" {
       SNget(suffix)
     } else if shape == b"]<-" {
@@ -208,7 +208,7 @@ fn notation_decode(name : Bytes) -> Notation {
         if notation_end == length {
           name
         } else {
-          name.view(end=notation_end).to_owned()
+          name.exact_view(end=notation_end).to_owned()
         },
       )
     }
@@ -219,7 +219,8 @@ fn notation_decode(name : Bytes) -> Notation {
     SNword(name)
   } else {
     SNword(
-      decoded.render() + name.view(start=notation_end, end=length).to_owned(),
+      decoded.render() +
+      name.exact_view(start=notation_end, end=length).to_owned(),
     )
   }
 }
