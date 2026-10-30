@@ -24,7 +24,7 @@ priv struct Why3SexpLayout {
 fn Sexp::to_why3_layout(self : Sexp) -> Why3SexpLayout {
   match self {
     Atom(value) => {
-      let builder = StringBuilder::new()
+      let builder = StringBuilder()
       write_atom(builder, value)
       let text = builder.to_string()
       { document: @prettyprinter.text(text), flat_length: text.length(), }
